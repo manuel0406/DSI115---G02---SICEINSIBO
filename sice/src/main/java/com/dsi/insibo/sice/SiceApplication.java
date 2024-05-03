@@ -15,7 +15,7 @@ public class SiceApplication {
 
 	@GetMapping
 	public String holaMundo(){
-		return "prueba";
+		return "home";
 	}
 
 }
