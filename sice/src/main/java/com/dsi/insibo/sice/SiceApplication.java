@@ -13,9 +13,5 @@ public class SiceApplication {
 		SpringApplication.run(SiceApplication.class, args);
 	}
 
-	@GetMapping
-	public String holaMundo(){
-		return "home";
-	}
-
+	
 }
