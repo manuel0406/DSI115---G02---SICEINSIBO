@@ -6,17 +6,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class AlumnoController {
 
-    @GetMapping("/home")
+    @GetMapping("/ExpedienteAlumno/Crear")
 	public String holaMundo(){
 		return "Expediente_alumno/registro";
 	}
 
 
-@GetMapping("/home/editar")
+@GetMapping("/ExpedienteAlumno/editar")
 	public String Editar(){
 		return "Expediente_alumno/editar";
 	}
 
-
-
+@GetMapping("/ExpedienteAlumno/ver")
+public String verAlumno(){
+	return "Expediente_alumno/verAlumno";
+}
 }

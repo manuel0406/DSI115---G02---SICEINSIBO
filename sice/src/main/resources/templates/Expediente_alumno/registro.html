@@ -4,7 +4,7 @@
 <head th:replace="home :: head">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>editar</title>
+    <title>Crear</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 
@@ -92,7 +92,12 @@
 
                 <div class="col-4">
                     <label for="exampleInputEmail1" class="form-label fs-6">Genero:</label>
-                    <input type="text" class="form-control" id="genero" />
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>Seleccione</option>
+                        <option value="1">M</option>
+                        <option value="2">F</option>
+                     
+                      </select>
                 </div>
 
             </div>
@@ -106,6 +111,20 @@
                 <div class="col-6">
                     <label for="exampleInputEmail1" class="form-label fs-6">Correo electrónico:</label>
                     <input type="text" class="form-control" id="correo" />
+                </div>
+                <div class="col-3">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Vive con:</label>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>Seleccione</option>
+                        <option value="1">Ambos padres</option>
+                        <option value="2">Madre</option>
+                        <option value="3">Padre</option>
+                        <option value="4">Abuela</option>
+                        <option value="5">Abuelo</option>
+                        <option value="6">Tía</option>
+                        <option value="6">Tío</option>
+
+                      </select>
                 </div>
 
             </div>
@@ -139,7 +158,17 @@
 
                 <div class="col-4">
                     <label for="exampleInputEmail1" class="form-label fs-6">Parentesco:</label>
-                    <input type="text" class="form-control" id="parentesco" />
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>Seleccione</option>
+                        <option value="1">Madre</option>
+                        <option value="2">Padre</option>
+                        <option value="3">Abuela</option>
+                        <option value="4">Abuelo</option>
+                        <option value="5">Tío/a</option>
+                        <option value="6">Hermano/a</option>
+                        <option value="7">Primo/a</option>
+
+                      </select>
                 </div>
 
                 <div class="col-4">
