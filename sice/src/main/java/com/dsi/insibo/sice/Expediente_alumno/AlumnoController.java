@@ -12,6 +12,11 @@ public class AlumnoController {
 	}
 
 
+@GetMapping("/home/editar")
+	public String Editar(){
+		return "Expediente_alumno/editar";
+	}
+
 
 
 }

@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+
+<head th:replace="home :: head">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>editar</title>
 </head>
 <body>
-    <main>
-        <div th:fragment="content">
-            <p>Este es el contenido específico de mi página.</p>
-        </div>
-    </main>
+   <header th:replace="home :: header" >
+
+   </header>
+   <h1> editar</h1>
     
 </body>
+
+<footer th:replace="home ::footer">
+
+</footer>
 </html>

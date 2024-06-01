@@ -1,49 +1,198 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:fragment="head">
+<head th:replace="home :: head">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <title>editar</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
 <body>
-    <!--Esto es una barra de navegación-->
-    <header th:fragment="header">
-        <nav class="navbar navbar-expand-lg custom-navbar">
-            <div class="container-fluid">
-                <a class="navbar-brand text-white fw-bold" href="#">SICE</a>
-                <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                   
-<!-- <span class="navbar-toggler-icon custom-toggler-icon"></span> -->
-                    <i class="bi bi-list text-white"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center">
-                        <li class="nav-item">
-                            <a class="nav-link active text-white" aria-current="page" href="#">
-                                <i class="bi bi-house-door text-white"></i> Home
-                            </a>
-                        </li>
-                    </ul>
-                    <form class="d-flex" role="search">
-                        <button class="btn btn-outline-danger text-white" type="submit">
-                            <i class="bi bi-box-arrow-in-right"></i> Cerrar sesión
-                        </button>
-                    </form>
+    <header th:replace="home :: header"></header>
+    <div class="container">
+        <form>
+            <div class="row g-3 align-items-center text-center">
+                <h3 class="text-center custom-h2">
+                    IDENTIFICACION DEL CENTRO EDUCATIVO
+                </h3>
+
+                <div class="col-3">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Grado:</label>
+                    <input type="text" class="form-control" id="grado" />
+                </div>
+                <div class="col-3">
+                    <label for="exampleInputPassword1" class="form-label fs-6">Especialidad del bachillerato:</label>
+                    <input type="text" class="form-control" id="especialidad" />
+                </div>
+                <div class="col-3">
+                    <label for="exampleInputPassword1" class="form-label fs-6">Sección:
+                    </label>
+                    <input type="text" class="form-control" id="seccion" />
+                </div>
+                <div class="col-3">
+                    <label for="exampleInputPassword1" class="form-label fs-6">Jornada:
+                    </label>
+                    <input type="text" class="form-control" id="jornada" />
                 </div>
             </div>
-        </nav>
-    </header>
 
-    <h1 class="container text-center">Esto es una prueba!</h1>
-    
+            <div class="row">
+                <h3 class="text-center custom-h2 my-2">
+                    IDENTIFICACION DEL ESTUDIANTE
+                </h3>
 
-    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+                <div class="col-3">
+                    <label for="exampleInputEmail1" class="form-label fs-6">NIE:</label>
+                    <input type="text" class="form-control" id="nie" />
+                </div>
+
+                <div class="col-3">
+                    <label for="exampleInputEmail1" class="form-label fs-6">DUI:</label>
+                    <input type="text" class="form-control" id="dui" />
+                </div>
+
+                <div class="col-3">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Pasaporte/Otro:</label>
+                    <input type="text" class="form-control" id="pasaporte" />
+                </div>
+
+                <div class="col-3">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Teléfono:</label>
+                    <input type="text" class="form-control" id="telefono" />
+                </div>
+
+
+            </div>
+
+            <div class="row my-2">
+
+                <div class="col-6">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Nombres:</label>
+                    <input type="text" class="form-control" id="nombres" />
+                </div>
+
+                <div class="col-6">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Apellidos:</label>
+                    <input type="text" class="form-control" id="apellidos" />
+                </div>
+
+            </div>
+
+            <div class="row my-2">
+                <div class="col-4">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Fecha de Nacimiento:</label>
+                    <input type="text" class="form-control" id="fechaNacimiento" />
+                </div>
+
+                <div class="col-4">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Dirección actual:</label>
+                    <input type="text" class="form-control" id="direccion" />
+                </div>
+
+                <div class="col-4">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Genero:</label>
+                    <input type="text" class="form-control" id="genero" />
+                </div>
+
+            </div>
+
+            <div class="row my-2">
+                <div class="col-3">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Nacionalidad:</label>
+                    <input type="text" class="form-control" id="nacionalidad" />
+                </div>
+
+                <div class="col-6">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Correo electrónico:</label>
+                    <input type="text" class="form-control" id="correo" />
+                </div>
+
+            </div>
+
+            <div class="row my-2">
+                <div class="col-4">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Padece enfermedad:</label>
+                    <input type="text" class="form-control" id="enfermedad" />
+                </div>
+
+                <div class="col-4">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Medicamento:</label>
+                    <input type="text" class="form-control" id="medicamento" />
+                </div>
+
+                <div class="col-4">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Forma medicación:</label>
+                    <input type="text" class="form-control" id="formaMedicacion" />
+                </div>
+
+            </div>
+            <div class="row my-2">
+                <h3 class="text-center custom-h2 my-2 ">
+                    DATOS DEL RESPONSABLE
+                </h3>
+
+                <div class="col-4">
+                    <label for="exampleInputEmail1" class="form-label fs-6">DUI:</label>
+                    <input type="text" class="form-control" id="duiEncargado" />
+                </div>
+
+                <div class="col-4">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Parentesco:</label>
+                    <input type="text" class="form-control" id="parentesco" />
+                </div>
+
+                <div class="col-4">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Teléfono:</label>
+                    <input type="text" class="form-control" id="telefonoEncargado" />
+                </div>
+            </div>
+
+
+            <div class="row my-2">
+                <div class="col-6">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Nombres:</label>
+                    <input type="text" class="form-control" id="nombreResponsable" />
+                </div>
+
+                <div class="col-6">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Apellidos:</label>
+                    <input type="text" class="form-control" id="apellidoResponsable" />
+                </div>
+
+
+            </div>
+            <div class="row my-2">
+                <div class="col-4">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Lugar de trabajo:</label>
+                    <input type="text" class="form-control" id="nombreResponsable" />
+                </div>
+
+                <div class="col-6">
+                    <label for="exampleInputEmail1" class="form-label fs-6">Correo electrónico:</label>
+                    <input type="text" class="form-control" id="apellidoResponsable" />
+                </div>
+
+            </div>
+
+            <div class="row justify-content-center text-center ">
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary my-2">Guardar</button>
+
+                </div>
+
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-danger my-2">Cancelar</button>
+                </div>
+            </div>
+
+
+
+
+        </form>
+    </div>
 </body>
+
+<footer th:replace="home ::footer"></footer>
 
 </html>
