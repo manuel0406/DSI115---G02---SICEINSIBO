@@ -11,7 +11,8 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class AsistenciaPersonal {
-     @Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idAsistenciaP;
 
