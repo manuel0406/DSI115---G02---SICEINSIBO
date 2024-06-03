@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SICE - INSIBO</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body class="cuerpoRecuperar">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div id="formContent" class="card">
+            <div class="card-body">
+              <!-- Tarjetero de titulos -->
+              <h2 class="tituloIniciarSesion"> Recuperar Contraseña  </h2>
+  
+              <!-- Icono -->
+              <div class="fadeIn first text-center my-3">
+                <img th:src="@{/imagenes/LogoINSIBO.jpg}" id="icon" alt="User Icon" class="img-fluid" style="max-width: 150px;" />
+              </div>
+
+              <div class="fadeIn first text-center my-3">
+                <p class="advertencia"><b>¡Importante aviso de seguridad!</b><br>
+                    Estamos comprometidos con la protección de tu cuenta. Si has solicitado restablecer tu contraseña, ten en cuenta que, por razones de seguridad, la nueva contraseña será enviada únicamente a tu correo registrado o comunicarte con el administrador. Si no encuentras el correo en tu bandeja de entrada, por favor verifica la carpeta de spam. Gracias por tu comprensión y colaboración en mantener tu cuenta segura.</p>
+              </div>
+  
+              <!-- Formulario de iniciar sesión -->
+              <!-- Formulario de iniciar sesión -->
+              <form id="formulario">
+                <!-- Entrada de Usuario -->
+                <div class="form-group">
+                  <label class="entradaIniciarSesion" for="login">Correo Electrónico:</label>
+                  <input type="text" id="correoIniciarSesion" class="form-control fadeIn second" name="login" placeholder="Ingrese su correo...">
+                </div>
+                <div class="form-group row">
+                  <div class="col">
+                    <input class="btnRecuperar" type="button" value="Recuperar contraseña" id="botonRecuperar">
+                  </div>
+                  <div class="col">
+                    <input class="btnCancelar" type="button" value="Cancelar" id="botonCancelar">
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js" integrity="sha384-pzjw8f+ua7Kw1TIqLh9zzkHfGIQw6A2bWZEkBfCEN2phZZX4uz8VVcmMSkDap3Bt" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgT4V3K6tFfr3k3tH7HhxppIPFqSBKCUAlBhkJ98KzMfiSmw3hP" crossorigin="anonymous"></script>
+  </body>
+</html>
