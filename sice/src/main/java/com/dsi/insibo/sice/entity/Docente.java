@@ -13,9 +13,6 @@ public class Docente {
     @Id
     private String duiDocente;
 
-    @ManyToOne
-    private Usuario usuario;
-
     private String nit;
     private String nup;
     private String nombreDocente;
@@ -42,12 +39,7 @@ public class Docente {
     public void setDuiDocente(String duiDocente) {
         this.duiDocente = duiDocente;
     }
-    public Usuario getUsuario() {
-        return usuario;
-    }
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+    
     public String getNit() {
         return nit;
     }
