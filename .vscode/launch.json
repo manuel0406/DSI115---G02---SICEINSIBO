@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-SiceApplication<sice>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.dsi.insibo.sice.SiceApplication",
+            "projectName": "sice",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

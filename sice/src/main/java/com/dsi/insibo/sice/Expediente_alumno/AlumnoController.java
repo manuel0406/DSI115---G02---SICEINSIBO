@@ -1,38 +1,58 @@
 package com.dsi.insibo.sice.Expediente_alumno;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.dsi.insibo.sice.entity.Alumno;
+import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Usuario;
 
+
+
 @Controller
+@RequestMapping("/ExpedienteAlumno")
 public class AlumnoController {
 
 	@Autowired
 	private AlumnoService alumnoService;
- @GetMapping("/guardar")
-    public String guardarAlumno(@RequestParam int nie, @RequestParam String nombre) {
+    @Autowired
+	private BachilleratoService bachilleratoService;
 
-        Alumno alumno = alumnoService.guardarAlumno(nie, nombre);
-        return "Usuario guardado con ID: "+  alumno.getNie();
-    }
+	@PostMapping("/guardar")
+	public String guardarAlumno(@ModelAttribute Alumno alumno) {
 
-    @GetMapping("/ExpedienteAlumno/Crear")
-	public String holaMundo(){
-		return "Expediente_alumno/registro";
+		alumnoService.guardarAlumno(alumno);
+		return "redirect:/ExpedienteAlumno/Crear";
 	}
 
+	@GetMapping("/Crear")
+	public String crear(Model model) {
 
-@GetMapping("/ExpedienteAlumno/editar")
-	public String Editar(){
+		Alumno alumno = new Alumno();
+		
+		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
+		model.addAttribute("alumno", alumno);
+		model.addAttribute("bachilleratos", listaBachilleratos);
+
+
+		return "/Expediente_alumno/registro";
+	}
+
+	@GetMapping("/editar")
+	public String editar() {
 		return "Expediente_alumno/editar";
 	}
 
-@GetMapping("/ExpedienteAlumno/ver")
-public String verAlumno(){
-	return "Expediente_alumno/verAlumno";
-}
+	@GetMapping("/ver")
+	public String verAlumno() {
+		return "Expediente_alumno/verAlumno";
+	}
 }

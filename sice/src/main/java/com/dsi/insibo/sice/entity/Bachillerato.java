@@ -1,10 +1,12 @@
 package com.dsi.insibo.sice.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class Bachillerato {
+public class Bachillerato implements Serializable{
     @Id
     private String codigoBachillerato;
     private String nombreCarrera;
@@ -34,6 +36,11 @@ public class Bachillerato {
     }
     public void setGrado(int grado) {
         this.grado = grado;
+    }
+    @Override
+    public String toString() {
+        return "Bachillerato [codigoBachillerato=" + codigoBachillerato + ", nombreCarrera=" + nombreCarrera
+                + ", seccion=" + seccion + ", grado=" + grado + "]";
     }
     
 }
