@@ -1,16 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head th:replace="home :: head">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
+
 <body>
     <header th:replace="home :: header">
 
     </header>
 
-    
-    
+    <div class="container my-4">
+       <div class="row my-2">
+
+        <div class="col-4">
+            <div class="card" style="width: 18rem;">
+                <div class="card-header thead">
+                  Carrera
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item" id="aps">APS</li>
+                  <li class="list-group-item" id="eca">ECA</li>
+                  <li class="list-group-item" id="se">SE</li>
+                  <li class="list-group-item" id="ds" >DS</li>
+                  <li class="list-group-item" id="ac">AC</li>
+                </ul>
+              </div>
+
+              <div class="card my-4" style="width: 18rem;">
+                <div class="card-header thead">
+                  Año
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item" id="n1">1</li>
+                  <li class="list-group-item" id="n2">2</li>
+                  <li class="list-group-item" id="n3">3</li>
+                </ul>
+              </div>
+
+              <div class="card my-4" style="width: 18rem;">
+                <div class="card-header thead">
+                  Sección
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item" id="a">A</li>
+                  <li class="list-group-item" id="b">B</li>
+                  <li class="list-group-item" id="c">C</li>
+                  <li class="list-group-item" id="d">D</li>
+
+                </ul>
+              </div>
+
+        </div>
+        <div class="col-8">
+            <table class="table">
+                <thead class="thead table-dark ">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nie</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Acciones</th>
+
+                  </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <!-- Iterar sobre la lista de alumnos -->
+                    <tr th:each="alumno, stat : ${alumnos}">
+                        <th scope="row" th:text="${stat.index + 1}"></th>
+                        <td th:text="${alumno.nie}"></td>
+                        <td th:text="${alumno.apellidoAlumno}"></td>
+                        <td th:text="${alumno.nombreAlumno}"></td>
+                        <td >
+                            <a class="btn btn-success"  th:text="'Ver'"> </a>
+                            <a class="btn btn-primary"  th:text="'Editar'"> </a>
+                            <a class="btn btn-danger"  th:text="'Eliminar'"> </a>
+                            
+                        </td>
+
+                    </tr>
+                </tbody>
+              </table>
+        </div>
+
+       </div>
+    </div>
+
+
+
 </body>
+
 </html>

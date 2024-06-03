@@ -52,7 +52,11 @@ public class AlumnoController {
 	}
 
 	@GetMapping("/ver")
-	public String verAlumno() {
+	public String verAlumno(Model model) {
+
+		Alumno alumno = new Alumno();
+		List<Alumno> listaAlumnos= alumnoService.listarAlumnos();
+		model.addAttribute("alumnos", listaAlumnos);
 		return "Expediente_alumno/verAlumno";
 	}
 }
