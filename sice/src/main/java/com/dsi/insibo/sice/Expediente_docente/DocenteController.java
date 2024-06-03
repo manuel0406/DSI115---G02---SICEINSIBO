@@ -14,5 +14,11 @@ public class DocenteController {
         return "Expediente_docente/fichaDocente";
     }
 
+    @GetMapping("/fichaAdministrativo")
+    public String getMethodName() {
+        return "Expediente_docente/fichaAdministrativo";
+    }
+    
+
 
 }
