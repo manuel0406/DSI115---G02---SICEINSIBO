@@ -4,6 +4,7 @@
 <head th:fragment="head">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" th:href="@{/imagenes/INSIBO.ico}">
   <title>SICE - INSIBO</title>
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
   <link rel="stylesheet" th:href="@{/css/style.css}" />
@@ -30,7 +31,6 @@
               </div>
   
               <!-- Formulario de iniciar sesión -->
-              <!-- Formulario de iniciar sesión -->
               <form id="formulario">
                 <!-- Entrada de Usuario -->
                 <div class="form-group">
@@ -39,10 +39,10 @@
                 </div>
                 <div class="form-group row">
                   <div class="col">
-                    <input class="btnRecuperar" type="button" value="Recuperar contraseña" id="botonRecuperar">
+                    <input class="btnRecuperar" type="button" value="Recuperar contraseña" id="botonRecuperar" onclick="recuperar()">
                   </div>
                   <div class="col">
-                    <input class="btnCancelar" type="button" value="Cancelar" id="botonCancelar">
+                    <a href="/iniciarSesion" class="btn btn-secondary btnCancelar">Cancelar</a>
                   </div>
                 </div>
               </form>
@@ -54,5 +54,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js" integrity="sha384-pzjw8f+ua7Kw1TIqLh9zzkHfGIQw6A2bWZEkBfCEN2phZZX4uz8VVcmMSkDap3Bt" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgT4V3K6tFfr3k3tH7HhxppIPFqSBKCUAlBhkJ98KzMfiSmw3hP" crossorigin="anonymous"></script>
+    <script type="text/javascript" th:src="@{/js/recuperarContra.js}"></script>
+
   </body>
 </html>

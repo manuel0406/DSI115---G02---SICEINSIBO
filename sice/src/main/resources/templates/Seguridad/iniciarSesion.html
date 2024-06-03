@@ -7,6 +7,7 @@
   <title>SICE - INSIBO</title>
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
   <link rel="stylesheet" th:href="@{/css/style.css}" />
+  <link rel="icon" type="image/x-icon" th:href="@{/imagenes/INSIBO.ico}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
@@ -24,8 +25,6 @@
             <div class="fadeIn first text-center my-3">
               <img th:src="@{/imagenes/LogoINSIBO.jpg}" id="icon" alt="User Icon" class="img-fluid" style="max-width: 150px;" />
             </div>
-
-            <!-- Formulario de iniciar sesión -->
             <!-- Formulario de iniciar sesión -->
             <form id="formulario">
               <!-- Entrada de Usuario -->
@@ -36,10 +35,10 @@
               <!-- Salida de Usuario -->
               <div class="form-group">
                 <label class="entradaIniciarSesion" for="password">Contraseña:</label>
-                <input type="password" id="passwordIniciarSesion" class="form-control fadeIn third" name="password" placeholder="Ingrese su contraseña...">
+                <input  type="password" id="passwordIniciarSesion" class="form-control fadeIn third" name="password" placeholder="Ingrese su contraseña...">
               </div>
               <div class="form-group">
-                <input class="btnIniciarSesion" type="button" value="Iniciar Sesión" id="botonIniciar">
+                <input class="btnIniciarSesion" type="submit" value="Iniciar Sesión" id="botonIniciar">
               </div>
             </form>
           </div>

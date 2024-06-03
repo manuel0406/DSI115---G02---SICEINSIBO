@@ -46,6 +46,13 @@
   padding: 10px 20px; /* Espaciado interno del botón */
 }
 
+.btnIniciarSesion:hover {
+  background-color: white;
+  color: black;
+  border-color: black;
+}
+
+
 .preguntaRecuperar {
   text-align: center; /* Centrar el texto dentro del párrafo */
 }
@@ -97,6 +104,12 @@
   font-family: Verdana, sans-serif;
   margin: auto; /* Centra el contenido horizontalmente */
   text-align: justify; /* Justifica el texto */
+}
+
+.btnCancelar:hover, .btnRecuperar:hover {
+  background-color: white;
+  color: black;
+  border-color: black;
 }
 
 /* --------------------------- FIN DE ESTILO DE RECUPERAR CONTRASEÑA ----------------------- */
