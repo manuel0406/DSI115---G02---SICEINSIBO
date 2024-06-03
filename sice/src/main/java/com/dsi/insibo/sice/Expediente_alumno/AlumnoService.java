@@ -1,5 +1,8 @@
 package com.dsi.insibo.sice.Expediente_alumno;
 
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +13,25 @@ import com.dsi.insibo.sice.entity.Alumno;
 public class AlumnoService {
     
     @Autowired
-    private AlumnoRepositoty alumnoRepository;
+    private AlumnoRepository alumnoRepository;
 
-    public Alumno guardarAlumno(int nie, String nombre) {
-       
-        Alumno alumno = new Alumno();
-        alumno.setNie(nie);
-        alumno.setNombreAlumno(nombre);
-        return alumnoRepository.save(alumno);
+    public List<Alumno> listarAlumnos(){
+        return (List<Alumno>)alumnoRepository.findAll();
     }
+
+    public void guardarAlumno(Alumno alumno) {      
+        
+        alumnoRepository.save(alumno);
+    }
+
+    public Alumno buscarPorIdAlumno(int id){
+
+        return alumnoRepository.findById(id).orElse(null);
+
+    }
+
+    public void eliminar(int nie){
+        alumnoRepository.deleteById(nie);
+    }
+
 }

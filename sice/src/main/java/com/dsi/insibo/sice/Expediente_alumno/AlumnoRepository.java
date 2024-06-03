@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import com.dsi.insibo.sice.entity.Alumno;
 
 @Repository
-public interface  AlumnoRepositoty extends JpaRepository<Alumno, Integer> {
+public interface  AlumnoRepository extends JpaRepository<Alumno, Integer> {
     
 }
