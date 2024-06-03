@@ -5,3 +5,98 @@
 .custom-h2{
   background-color: #84b6f4;
 }
+
+
+/* ----------------------------------------------------------------------------------------- */
+/*                               ESTILO DE INICIAR SESION                                    */
+/* ----------------------------------------------------------------------------------------- */
+.cuerpoIniciarSesion {
+  background-color: #005187; 
+  height: 100vh; /* Hace que el fondo cubra toda la pantalla */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Verdana, sans-serif;
+}
+
+.tituloIniciarSesion {
+  text-align: center;
+  font-size: 22px; /* Tamaño del texto reducido */
+  font-weight: bold; /* Negrita */
+}
+
+.entradaIniciarSesion{
+  font-weight: bold; /* Negrita */
+ 
+}
+
+#correoIniciarSesion {
+  margin-bottom: 15px; /* Margen inferior para separar los campos */
+}
+
+.btnIniciarSesion {
+  background-color: #005187; /* Cambio de color de fondo */
+  color: white; /* Color del texto */
+  font-weight: bold; /* Texto en negrita */
+  text-align: center; /* Centrar el texto */
+  width: 100%; /* Ancho del botón */
+  margin: 20px auto; /* Margen superior e inferior y centrado horizontal */
+  border: 2px solid white; /* Borde blanco alrededor del botón */
+  border-radius: 20px; /* Esquinas redondeadas */
+  padding: 10px 20px; /* Espaciado interno del botón */
+}
+
+.preguntaRecuperar {
+  text-align: center; /* Centrar el texto dentro del párrafo */
+}
+
+.enlaceRecuperar {
+  color: #014470;  /* Cambiar el color del enlace a rojo */
+  font-weight: bold; /* Texto en negrita */
+  text-decoration: none; /* Eliminar la línea subrayada del enlace */
+  cursor: pointer; /* Activar el cursor en modo de clic */
+}
+
+.enlaceRecuperar:hover {
+  color: #84b6f4; /* Cambiar el color del enlace al pasar el cursor sobre él */
+}
+
+/* --------------------------- FIN DE ESTILO DE INICIAR SESION ------------------------------ */
+
+/* ----------------------------------------------------------------------------------------- */
+/*                               ESTILO DE RECUPERAR CONTRASEÑA                              */
+/* ----------------------------------------------------------------------------------------- */
+.btnRecuperar{
+  background-color: #005187; /* Cambio de color de fondo */
+  color: white; /* Color del texto */
+  font-weight: bold; /* Texto en negrita */
+  text-align: center; /* Centrar el texto */
+  width: 100%; /* Ancho del botón */
+  border: 2px solid white; /* Borde blanco alrededor del botón */
+  border-radius: 20px; /* Esquinas redondeadas */
+  padding: 10px 20px; /* Espaciado interno del botón */
+}
+
+.btnCancelar{
+  background-color: #000000; /* Cambio de color de fondo */
+  color: white; /* Color del texto */
+  font-weight: bold; /* Texto en negrita */
+  text-align: center; /* Centrar el texto */
+  width: 100%; /* Ancho del botón */
+  border: 2px solid white; /* Borde blanco alrededor del botón */
+  border-radius: 20px; /* Esquinas redondeadas */
+  padding: 10px 20px; /* Espaciado interno del botón */
+}
+
+.cuerpoRecuperar {
+  background-color: #005187; 
+  height: 100vh; /* Hace que el fondo cubra toda la pantalla */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Verdana, sans-serif;
+  margin: auto; /* Centra el contenido horizontalmente */
+  text-align: justify; /* Justifica el texto */
+}
+
+/* --------------------------- FIN DE ESTILO DE RECUPERAR CONTRASEÑA ----------------------- */

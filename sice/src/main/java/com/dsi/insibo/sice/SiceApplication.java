@@ -12,6 +12,4 @@ public class SiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SiceApplication.class, args);
 	}
-
-	
 }
