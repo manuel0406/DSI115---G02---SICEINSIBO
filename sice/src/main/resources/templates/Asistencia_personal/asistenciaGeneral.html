@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="home :: head">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asistencia General</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body style="border-color: #fcffff">
+
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-light data-bs-toggle="modal" data-bs-target="#exampleModal">Generar llegadas tardías</button>
+    </div>
+    <div>
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="matutino-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#matutino-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="matutino-tab-pane"
+            aria-selected="true"
+          >
+            Matutino
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="vespertino-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#vespertino-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="vespertino-tab-pane"
+            aria-selected="false"
+          >
+            Vespertino
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div
+          class="tab-pane fade show active"
+          id="matutino-tab-pane"
+          role="tabpanel"
+          aria-labelledby="matutino-tab"
+          tabindex="0"
+        >
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Usuario</th>
+                  <th scope="col">Inicio</th>
+                  <th scope="col">Fin</th>
+                  <th scope="col">Área</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Nombre Apellido</td>
+                  <td>01/06/2024 8:00</td>
+                  <td>01/06/2024 14:00</td>
+                  <td>Docente</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div
+          class="tab-pane fade"
+          id="vespertino-tab-pane"
+          role="tabpanel"
+          aria-labelledby="vespertino-tab"
+          tabindex="0"
+        >
+          tabla 2
+        </div>
+      </div>
+    </div>
+    <!--Modal-->
+    
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Elegir Período</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="">
+            <div>
+                <label for="fechaInicio">Inicio</label>
+                <input name="fechaInicio" type="date">
+            </div>
+            <div>
+                <label for="fechaFin">Fin</label>
+                <input name="fechaFin" type="date">
+            </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light">Aceptar</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  </body>
+</html>
