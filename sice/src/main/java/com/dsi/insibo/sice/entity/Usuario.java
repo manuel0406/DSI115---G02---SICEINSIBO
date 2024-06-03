@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Usuario {
@@ -17,7 +18,17 @@ public class Usuario {
     private String rolUsuario;
     private boolean primerIngreso;
     private String estadoUsuario;
+    @ManyToOne
+    private Docente docente;
+    @ManyToOne
+    private PersonalAdministrativo personalAdministrativo;
     
+    public Docente getDocente() {
+        return docente;
+    }
+    public void setDocente(Docente docente) {
+        this.docente = docente;
+    }
     public int getIdUsuario() {
         return idUsuario;
     }
@@ -53,6 +64,12 @@ public class Usuario {
     }
     public void setEstadoUsuario(String estadoUsuario) {
         this.estadoUsuario = estadoUsuario;
+    }
+    public PersonalAdministrativo getPersonalAdministrativo() {
+        return personalAdministrativo;
+    }
+    public void setPersonalAdministrativo(PersonalAdministrativo personalAdministrativo) {
+        this.personalAdministrativo = personalAdministrativo;
     }
 
     

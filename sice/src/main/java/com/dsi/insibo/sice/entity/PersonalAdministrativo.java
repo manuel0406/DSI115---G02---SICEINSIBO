@@ -14,10 +14,7 @@ public class PersonalAdministrativo {
     @Id
     private String duiPersonal;
 
-    @ManyToOne
-    
-    private Usuario usuario;
-
+ 
     private String nombrePersonal;
     private String apellidoPersonal;
     private String telefonoPersonal;
@@ -43,12 +40,7 @@ public class PersonalAdministrativo {
     public void setDuiPersonal(String duiPersonal) {
         this.duiPersonal = duiPersonal;
     }
-    public Usuario getUsuario() {
-        return usuario;
-    }
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+   
     public String getNombrePersonal() {
         return nombrePersonal;
     }
