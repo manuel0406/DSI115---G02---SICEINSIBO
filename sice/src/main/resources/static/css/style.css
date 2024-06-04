@@ -52,6 +52,11 @@
   border-color: black;
 }
 
+#correoInvalido{
+  color: red;
+  display: none;
+  font-weight: bold;
+}
 
 .preguntaRecuperar {
   text-align: center; /* Centrar el texto dentro del párrafo */
