@@ -15,9 +15,6 @@ public class AlumnoService {
     @Autowired
     private AlumnoRepository alumnoRepository;
 
-    public List<Alumno> filtrarAlumnos(String carrera, Integer grado, String seccion) {
-        return alumnoRepository.filtrarAlumnos(carrera, grado, seccion);
-    }
 
     public List<Alumno> listarAlumnos(){
         return (List<Alumno>)alumnoRepository.findAll();
