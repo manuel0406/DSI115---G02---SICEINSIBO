@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class recuperarContraController {
     @GetMapping("/recuperarContra")
 	public String verRecuperarContra(){
+		
 		return "Seguridad/recuperarContra";
 	}
 }
