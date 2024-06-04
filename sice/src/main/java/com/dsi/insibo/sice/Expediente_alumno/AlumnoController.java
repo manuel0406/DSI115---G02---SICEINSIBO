@@ -60,15 +60,5 @@ public class AlumnoController {
 		return "Expediente_alumno/verAlumno";
 	}
 
-	/*@GetMapping("/filtrarAlumnos")
-    public String filtrarAlumnos(@RequestParam(required = false) String carrera,
-                                 @RequestParam(required = false) Integer grado,
-                                 @RequestParam(required = false) String seccion,
-                                 Model model) {
-
-									
-        List<Alumno> listaAlumnosFiltrados = alumnoService.filtrarAlumnos(carrera, grado, seccion);
-        model.addAttribute("alumnos", listaAlumnosFiltrados);
-        return "fragments/alumnos :: alumnosTable";
-    }*/
+	
 }
