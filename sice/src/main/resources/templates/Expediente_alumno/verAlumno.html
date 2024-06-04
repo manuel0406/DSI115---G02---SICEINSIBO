@@ -87,7 +87,8 @@
                         <td  class="text-center">
                             <a class="btn btn-success"  th:text="'Ver'"> </a>
                             <a class="btn btn-primary"  th:text="'Editar'" th:href="@{/ExpedienteAlumno/editar/} + ${alumno.nie}"> </a>
-                            <a class="btn btn-danger"  th:text="'Eliminar'"> </a>
+                            <a class="btn btn-danger"  th:text="'Eliminar'" th:href="@{/ExpedienteAlumno/delete/} + ${alumno.nie}"
+                            onclick="return confirm('¿Está seguro en eliminar el registro?')"> </a>
                             
                         </td>
 

@@ -62,7 +62,7 @@ public class AlumnoController {
 	public String eliminar(@PathVariable("nie") int nie) {
 
 		alumnoService.eliminar(nie);
-		return "redirect: /Expediente_alumno/registro";
+		return "redirect:/ExpedienteAlumno/ver";
 	}
 
 	@GetMapping("/ver")
