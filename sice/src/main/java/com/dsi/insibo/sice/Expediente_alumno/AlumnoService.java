@@ -27,7 +27,7 @@ public class AlumnoService {
 
     public Alumno buscarPorIdAlumno(int id){
 
-        return alumnoRepository.findById(id).orElse(null);
+        return alumnoRepository.findById(id).get();
 
     }
 
