@@ -1,21 +1,28 @@
 package com.dsi.insibo.sice.Seguridad;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import com.dsi.insibo.sice.entity.Usuario;
-import org.springframework.ui.Model;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.dsi.insibo.sice.entity.Usuario;
 
 @Controller
-public class UsuarioController {
+public class UsuarioController  {
 
-    @GetMapping("/validarCorreo")
-    public String obtenerNombreUsuarioPorCorreo(Model model) {
-        Usuario usuario = new Usuario();
-        model.addAttribute("correoUsuario", usuario);
-        System.out.println("El correo es: ");
+    @GetMapping("/iniciarSesion")
+    public String verIniciarSesion(Model model) {
 
-        
-        // Realiza aquí la lógica para validar el correo y obtener el nombre de usuario
-        return "/recuperarContra"; // Cambia esto según lo que necesites hacer después de validar el correo
+        Usuario usuario= new Usuario();
+        model.addAttribute("usuario", usuario);
+        return "/seguridad/iniciarSesion";
     }
+
+    @PostMapping("/validarCorreo")
+	public String validarUsuario(@ModelAttribute Usuario user) {
+
+		System.out.println("El correo es: "+ user.getCorreoUsuario());
+		return "redirect:/recuperarContra";
+	}
 }

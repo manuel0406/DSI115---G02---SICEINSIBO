@@ -26,7 +26,7 @@
               <img th:src="@{/imagenes/LogoINSIBO.jpg}" id="icon" alt="User Icon" class="img-fluid" style="max-width: 150px;" />
             </div>
             <!-- Formulario de iniciar sesión -->
-            <form id="formulario" th:object="${usuario}"  method="get">
+            <form id="formulario" th:object="${usuario}"  method="post" th:action="@{/validarCorreo}">
               <!-- Entrada de Usuario -->
               <div class="form-group">
                 <label class="entradaIniciarSesion" for="correo">Correo Electrónico:</label>
