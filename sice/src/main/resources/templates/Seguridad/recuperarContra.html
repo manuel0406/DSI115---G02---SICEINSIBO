@@ -31,7 +31,7 @@
               </div>
   
               <!-- Formulario de iniciar sesión -->
-              <form id="formulario">
+              <form id="formulario" th:object="${usuario}" method="post" th:action="@{/correoDeRecuperacion}" oninput="validateForm()">
                 <!-- Entrada de Usuario -->
                 <div class="form-group">
                   <label class="entradaIniciarSesion" for="login">Correo Electrónico:</label>
@@ -40,11 +40,11 @@
                       <i class="bi bi-exclamation-circle-fill"></i> Correo inválido
                     </span>
                   </div>
-                  <input type="text" id="correoIniciarSesion" class="form-control fadeIn second" name="login" placeholder="Ingrese su correo...">
+                  <input th:field="*{correoUsuario}" type="text" id="correoIniciarSesion" class="form-control fadeIn second" name="login" placeholder="Ingrese su correo..." required>
                 </div>
                 <div class="form-group row">
                   <div class="col">
-                    <input class="btnRecuperar" type="button" value="Recuperar contraseña" id="botonRecuperar" onclick="recuperar()">
+                    <input class="btnRecuperar" type="submit" value="Recuperar contraseña" id="botonRecuperar" onclick="recuperar()" disabled>
                   </div>
                   <div class="col">
                     <a href="/iniciarSesion" class="btn btn-secondary btnCancelar">Cancelar</a>

@@ -43,3 +43,14 @@ document.getElementById('passwordIniciarSesion').addEventListener('keypress', fu
     }
 });
 
+function validateForm() {
+    const correo = document.getElementById('correoIniciarSesion').value;
+    const password = document.getElementById('passwordIniciarSesion').value;
+    const botonIniciar = document.getElementById('botonIniciar');
+
+    if (correo && password) {
+        botonIniciar.disabled = false;
+    } else {
+        botonIniciar.disabled = true;
+    }
+}

@@ -34,3 +34,14 @@ function moveToNextInput(event) {
       form.elements[index + 1].focus();
   }
 }
+
+function validateForm() {
+  const correo = document.getElementById('correoIniciarSesion').value;
+  const botonIniciar = document.getElementById('botonRecuperar');
+
+  if (correo) {
+      botonIniciar.disabled = false;
+  } else {
+      botonIniciar.disabled = true;
+  }
+}

@@ -1,5 +1,6 @@
 package com.dsi.insibo.sice.Seguridad;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
@@ -19,10 +20,25 @@ public class UsuarioController  {
         return "/seguridad/iniciarSesion";
     }
 
+    @Autowired
+    private UsuarioService usuarioService;
     @PostMapping("/validarCorreo")
 	public String validarUsuario(@ModelAttribute Usuario user) {
 
-		System.out.println("El correo es: "+ user.getCorreoUsuario());
-		return "redirect:/recuperarContra";
+        // Obtenemos la informacion de los campos
+        String correo =  user.getCorreoUsuario();
+        String contra = user.getContrasenaUsuario();
+
+        //Buscamos en la base el correo y la contraseña
+        Usuario usuario = usuarioService.buscarPorCorreoYContrasena(correo, contra);
+
+        // Validamosla existencia del usuario
+        if(usuario==null){
+            return "redirect:/iniciarSesion";
+        }
+        else{
+            System.out.println("El correo es: "+ usuario.getIdUsuario());
+            return "redirect:/recuperarContra";
+        }
 	}
 }

@@ -26,7 +26,7 @@
               <img th:src="@{/imagenes/LogoINSIBO.jpg}" id="icon" alt="User Icon" class="img-fluid" style="max-width: 150px;" />
             </div>
             <!-- Formulario de iniciar sesión -->
-            <form id="formulario" th:object="${usuario}"  method="post" th:action="@{/validarCorreo}">
+            <form id="formulario" th:object="${usuario}"  method="post" th:action="@{/validarCorreo}" oninput="validateForm()">
               <!-- Entrada de Usuario -->
               <div class="form-group">
                 <label class="entradaIniciarSesion" for="correo">Correo Electrónico:</label>
@@ -35,15 +35,15 @@
                     <i class="bi bi-exclamation-circle-fill"></i> Correo inválido
                   </span>
                 </div>
-                <input th:field="*{correoUsuario}" type="text" id="correoIniciarSesion" class="form-control fadeIn second" name="correoUsuario" placeholder="Ingrese su correo...">
+                <input th:field="*{correoUsuario}" type="text" id="correoIniciarSesion" class="form-control fadeIn second" name="correoUsuario" placeholder="Ingrese su correo..." required>
               </div>
               <!-- Salida de Usuario -->
               <div class="form-group">
                 <label class="entradaIniciarSesion" for="contra">Contraseña:</label>
-                <input  th:field="*{contrasenaUsuario}" type="password" id="passwordIniciarSesion" class="form-control fadeIn third" name="password" placeholder="Ingrese su contraseña...">
+                <input  th:field="*{contrasenaUsuario}" type="password" id="passwordIniciarSesion" class="form-control fadeIn third" name="password" placeholder="Ingrese su contraseña..." required>
               </div>
               <div class="form-group">
-                <input class="btnIniciarSesion" type="submit" value="Iniciar Sesión" id="botonIniciar">
+                <input class="btnIniciarSesion" type="submit" value="Iniciar Sesión" id="botonIniciar" disabled>
               </div>
             </form>            
           </div>
