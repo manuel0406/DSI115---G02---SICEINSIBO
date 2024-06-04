@@ -16,8 +16,12 @@ public class AlumnoService {
     private AlumnoRepository alumnoRepository;
 
 
-    public List<Alumno> listarAlumnos(){
-        return (List<Alumno>)alumnoRepository.findAll();
+    public List<Alumno> listarAlumnos(String carrera, String grado, String seccion){
+        if(carrera !=null){
+            return (List<Alumno>)alumnoRepository.findAll(carrera, grado, seccion);
+
+        }
+        return alumnoRepository.findAll();
     }
 
     public void guardarAlumno(Alumno alumno) {      
