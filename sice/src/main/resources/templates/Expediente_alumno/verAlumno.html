@@ -18,46 +18,50 @@
 
         <div class="col-4">
             <div class="card" style="width: 18rem;">
-                <div class="card-header thead">
-                  Carrera
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item" id="aps">APS</li>
-                  <li class="list-group-item" id="eca">ECA</li>
-                  <li class="list-group-item" id="se">SE</li>
-                  <li class="list-group-item" id="ds" >DS</li>
-                  <li class="list-group-item" id="ac">AC</li>
-                </ul>
-              </div>
+                
+               <div class="container">
+                <form>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label fs-6">Carrera:</label>
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected>Seleccione</option>
+                            <option value="1">Atención Primaria en Salud</option>
+                            <option value="2">Electrónica</option>
+                            <option value="3">Sistemas Electricos</option>
+                          </select>
 
-              <div class="card my-4" style="width: 18rem;">
-                <div class="card-header thead">
-                  Año
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item" id="n1">1</li>
-                  <li class="list-group-item" id="n2">2</li>
-                  <li class="list-group-item" id="n3">3</li>
-                </ul>
-              </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label fs-6">Año:</label>
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected>Seleccione</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3 </option>
+                          </select>
+                    </div>
+                    <div class="mb-3 ">
+                        <label for="exampleInputEmail1" class="form-label fs-6">Sección:</label>
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected>Seleccione</option>
+                            <option value="1">A</option>
+                            <option value="2">B</option>
+                            <option value="3">C</option>
+                            <option value="3">D</option>
+                          </select>
 
-              <div class="card my-4" style="width: 18rem;">
-                <div class="card-header thead">
-                  Sección
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item" id="a">A</li>
-                  <li class="list-group-item" id="b">B</li>
-                  <li class="list-group-item" id="c">C</li>
-                  <li class="list-group-item" id="d">D</li>
+                    </div>
 
-                </ul>
-              </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+               </div>
+            </div>
+
 
         </div>
         <div class="col-8">
-            <table class="table">
-                <thead class="thead table-dark ">
+            <table class="table ">
+                <thead class="thead table-dark text-center ">
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Nie</th>
@@ -74,7 +78,7 @@
                         <td th:text="${alumno.nie}"></td>
                         <td th:text="${alumno.apellidoAlumno}"></td>
                         <td th:text="${alumno.nombreAlumno}"></td>
-                        <td >
+                        <td  class="text-center">
                             <a class="btn btn-success"  th:text="'Ver'"> </a>
                             <a class="btn btn-primary"  th:text="'Editar'"> </a>
                             <a class="btn btn-danger"  th:text="'Eliminar'"> </a>
