@@ -51,6 +51,18 @@
   padding: 10px 20px; /* Espaciado interno del botón */
 }
 
+.btnIniciarSesion:hover {
+  background-color: white;
+  color: black;
+  border-color: black;
+}
+
+#correoInvalido{
+  color: red;
+  display: none;
+  font-weight: bold;
+}
+
 .preguntaRecuperar {
   text-align: center; /* Centrar el texto dentro del párrafo */
 }
@@ -104,4 +116,132 @@
   text-align: justify; /* Justifica el texto */
 }
 
+.btnCancelar:hover, .btnRecuperar:hover {
+  background-color: white;
+  color: black;
+  border-color: black;
+}
+
 /* --------------------------- FIN DE ESTILO DE RECUPERAR CONTRASEÑA ----------------------- */
+
+/* ----------------------------------------------------------------------------------------- */
+/*                               ESTILO DE GESTIONAR CREDENCIALES                            */
+/* ----------------------------------------------------------------------------------------- */
+.cuerpoGestionarCredenciales {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Verdana, sans-serif;
+  margin: auto; /* Centra el contenido horizontalmente */
+  text-align: justify; /* Justifica el texto */
+}
+
+.btnCerrarSesion:hover, .btnBuscar:hover{
+  background-color: rgb(0, 0, 0);
+  color: rgb(250, 250, 250);
+  border-color: rgb(255, 255, 255);
+}
+
+.btnCerrarSesion, .btnBuscar{
+  background-color: #ffffff; /* Cambio de color de fondo */
+  color: rgb(0, 0, 0); /* Color del texto */
+  font-weight: bold; /* Texto en negrita */
+  text-align: center; /* Centrar el texto */
+  border: 1px solid rgb(0, 0, 0); /* Borde blanco alrededor del botón */
+  border-radius: 10px; /* Esquinas redondeadas */
+  padding: 10px 20px; /* Espaciado interno del botón */
+}
+
+.barraLateral {
+  height: 100vh;
+  width: 240px; /* Ancho reducido de la barra lateral */
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #ffffff;
+  color: black;
+  z-index: 1000;
+  padding-top: 10px; /* Para dejar espacio al sidebar */
+  margin-right: 20px; /* Margen derecho */
+  border-right: 0.5px solid rgb(163, 163, 163); /* Línea negra en el margen derecho */
+}
+
+.barraArriba {
+  background-color: #005187; /* Reemplaza ##005187 con el color que desees */
+  color: white;
+  margin-left: 240px; /* Ancho del sidebar */
+}
+
+
+.item{
+  color: #000000;
+}
+
+.barraLateral p, .barraLateral a {
+  padding: 10px 15px;
+  margin: 0; /* Agrega este estilo para eliminar cualquier margen adicional */
+  font-size: 18px;
+  display: block;
+}
+
+.barraLateral a{
+  text-decoration: none;
+}
+
+.EncabezadoLateral {
+  font-weight: bold; /* Aplica negrita */
+  text-align: center; /* Centra el texto */
+}
+
+.barraLateral a:not(.active):hover {
+  background-color: #b9babb;
+  color: #000000;
+  cursor: pointer;
+}
+
+#LogoINSIBOCredenciales{
+  max-width: 150px;
+  display: block;
+  margin: 0 auto;
+}
+
+.item.active {
+  background-color: #03376eaf; /* Color de fondo para indicar activación */
+  color: white; /* Color de texto para indicar activación */
+}
+
+.centro{
+  margin-top: 80px;
+}
+
+#Usuarios th {
+  color: rgb(138, 138, 138); /* Cambia el color a rojo */
+}
+
+.tituloTabla {
+  font-size: 20px;
+}
+
+.contenedorTabla {
+  padding: 20px; /* Ajusta el espaciado según sea necesario */
+  border-radius: 10px; /* Opcional: añade bordes redondeados al contenedor */
+  border: 1px solid #ccc; /* Borde de 1 píxel sólido de color gris (#ccc) */
+}
+
+#Usuarios {
+  border-collapse: separate; /* Indica que los bordes de las celdas no se colapsen */
+  border-spacing: 10px; /* Establece el espaciado entre las celdas */
+}
+
+#encabezadoAcciones{
+  text-align: center; /* Centra el contenido de las celdas en el cuerpo de la tabla */
+}
+
+.centro {
+  margin: auto;
+  width: fit-content;
+  margin-top: 80px; /* Adjust margin value as needed */
+  
+}
+/* --------------------------- FIN DE ESTILO DE GESTIONAR CREDENCIALES --------------------- */
+
