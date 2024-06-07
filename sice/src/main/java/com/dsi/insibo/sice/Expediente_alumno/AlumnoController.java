@@ -58,6 +58,7 @@ public class AlumnoController {
 		model.addAttribute("bachilleratos", listaBachilleratos);
 		return "/Expediente_alumno/registro";
 	}
+	
 	@GetMapping("/delete/{nie}")
 	public String eliminar(@PathVariable("nie") int nie) {
 
