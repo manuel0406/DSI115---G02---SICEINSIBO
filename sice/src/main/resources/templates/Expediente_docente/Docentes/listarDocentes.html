@@ -28,8 +28,9 @@
 
 <body>
     <header th:replace="home :: header"></header>
+    <header th:replace="Expediente_docente/barra :: barraExpediente"></header>
 
-    <div class="sidebar">
+    <!--     <div class="sidebar">
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">Personal Docente</a>
@@ -38,10 +39,10 @@
                 <a class="nav-link" href="#">Personal Administrativo</a>
             </li>
         </ul>
-    </div>
+    </div> -->
 
     <div class="content container mt-4">
-<!--         <div class="d-flex justify-content-between align-items-center mb-3">
+        <!--         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 th:text="${titulo}"></h1>
             <button type="button" class="btn btn-primary">Nuevo Docente</button>
         </div> -->
@@ -72,7 +73,7 @@
                     <td th:text="${docenteDTO.docente.duiDocente}"></td>
                     <td>
                         <div class="d-flex justify-content-left">
-                            <button type="button" class="btn btn-success btn-sm mx-1" data-bs-toggle="tooltip"
+<!--                             <button type="button" class="btn btn-success btn-sm mx-1" data-bs-toggle="tooltip"
                                 data-bs-placement="top" title="Ver Ficha">
                                 <i class="bi bi-file-earmark-text"></i>
                             </button>
@@ -84,10 +85,30 @@
                                 data-bs-placement="top" title="Eliminar">
                                 <i class="bi bi-trash"></i>
                             </button>
-                            <button type="button" class="btn btn-secondary btn-sm mx-1" data-bs-toggle="tooltip"
+                            <button type="button" th:href="@{/fichaDocente}" class="btn btn-secondary btn-sm mx-1"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Anexos">
+                                <i class="bi bi-folder"></i>
+                            </button> -->
+
+                            <a  class="btn btn-success btn-sm mx-1" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Ver Ficha">
+                                <i class="bi bi-file-earmark-text"></i>
+                            </a>
+
+                            <a  class="btn btn-primary btn-sm mx-1" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Editar">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+
+                            <a  class="btn btn-danger btn-sm mx-1" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Eliminar">
+                                <i class="bi bi-trash"></i>
+                            </a>
+
+                            <a th:href="@{/anexosDocente}" class="btn btn-secondary btn-sm mx-1" data-bs-toggle="tooltip"
                                 data-bs-placement="top" title="Anexos">
                                 <i class="bi bi-folder"></i>
-                            </button>
+                            </a>
                         </div>
                     </td>
                 </tr>

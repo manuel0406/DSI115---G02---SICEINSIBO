@@ -43,4 +43,14 @@ public class DocenteController {
         docenteService.guardarDocente(docente);
         return "redirect:/personalDocente";
     }
+
+    @GetMapping("/anexosDocente")
+    public String docentes() {
+        return "Expediente_docente/Docentes/anexosDocente";
+    }
+
+    @GetMapping("/barra")
+    public String barra() {
+        return "Expediente_docente/barra";
+    }
 }
