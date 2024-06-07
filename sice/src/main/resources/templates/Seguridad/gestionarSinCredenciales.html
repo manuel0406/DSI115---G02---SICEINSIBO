@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SICE: Gestionar Permisos</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+  <link rel="icon" type="image/x-icon" th:href="@{/imagenes/INSIBO.ico}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body class="cuerpoGestionarCredenciales">
+
+    <!-- Sidebar fijo en el lado izquierdo -->
+  <div class="barraLateral">
+    <p class="EncabezadoLateral">Instituto Nacional Simon Bolivar</p>
+    <img th:src="@{/imagenes/LogoINSIBO.jpg}" id="LogoINSIBOCredenciales" alt="User Icon" class="img-fluid" />
+    <p class="EncabezadoMenus"><b>Permisos</b></p>
+    <a class="item active"><i class="bi bi-shield-lock"></i></i> Sin Credenciales</a>
+    <a th:href="@{/gestionarCredenciales}" class="item"><i class="bi bi-person-circle"></i> Con Credenciales</a>
+  </div>
+
+    <!-- Navbar fija -->
+    <nav class="navbar fixed-top barraArriba">
+      <div class="container-fluid">
+        <div class="navbar-header mx-auto">
+          <h3 class="tituloBarra"><b>SICE - Gestionar de Permisos/Roles</b></h3>
+        </div>
+        <button class="btnCerrarSesion" type="button" onclick="window.location.href='/iniciarSesion'">Cerrar sesión</button>
+      </div>
+    </nav>
+  
+    <div class="centro">
+      <!-- Contenido de la página -->
+    </div>
+  
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+  </body>
+</html>
