@@ -15,6 +15,8 @@ public class Docente {
 
     private String nit;
     private String nup;
+    private String nip;
+    private String telefonoFijoDocente;
     private String nombreDocente;
     private String apellidoDocente;
     private LocalDate fechaNacimientoD;
@@ -33,6 +35,19 @@ public class Docente {
     private boolean atestadosDocente;
     private LocalDate fechaEntrega;
     
+    
+    public String getNip() {
+        return nip;
+    }
+    public void setNip(String nip) {
+        this.nip = nip;
+    }
+    public String getTelefonoFijoDocente() {
+        return telefonoFijoDocente;
+    }
+    public void setTelefonoFijoDocente(String telefonoFijoDocente) {
+        this.telefonoFijoDocente = telefonoFijoDocente;
+    }
     public String getDuiDocente() {
         return duiDocente;
     }

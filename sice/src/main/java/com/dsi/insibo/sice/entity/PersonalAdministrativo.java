@@ -28,12 +28,28 @@ public class PersonalAdministrativo {
     private String direccionPersonal;
     private String zonaPersonal;
     private String nitPersonal;
+    private String nupPersonal;
+    private String telefonoFijoPersonal;
     private String especialidadEnEstudioP;
     private boolean curriculumPersonal;
     private boolean atestadosPersonal;
     private Date fechaEntregaPersonal;
     private Date fechaIngresoPersonal;
     
+
+    
+    public String getNupPersonal() {
+        return nupPersonal;
+    }
+    public void setNupPersonal(String nupPersonal) {
+        this.nupPersonal = nupPersonal;
+    }
+    public String getTelefonoFijoPersonal() {
+        return telefonoFijoPersonal;
+    }
+    public void setTelefonoFijoPersonal(String telefonoFijoPersonal) {
+        this.telefonoFijoPersonal = telefonoFijoPersonal;
+    }
     public String getDuiPersonal() {
         return duiPersonal;
     }
