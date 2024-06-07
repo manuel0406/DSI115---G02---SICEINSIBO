@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+    <!--Esto es una barra de navegación-->
+    <header th:fragment="header">
+        <nav class="navbar navbar-expand-lg custom-navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand text-white fw-bold text-center" href="#">SICE</a>
+                <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">                 
+
+                    <i class="bi bi-list text-white"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex ">
+                        <li class="nav-item">
+                            <a class="nav-link active text-white" aria-current="page" href="#">
+                                <i class="bi bi-house-door text-white"></i> Inicio
+                            </a>
+                        </li>
+                    </ul>
+                    <form class="d-flex" role="search">
+                        <button class="btn btn-outline-danger text-white" type="submit">
+                            <i class="bi bi-box-arrow-in-right"></i> Cerrar sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!--Aca comienza-->
+    <div class="container-fluid">
+        <div class="row">
+            <aside class="barra-lateral col-12 col-sm-auto p-0">
+                <div class="logo">
+                    <h2 class="py-4 m-0">Año 2024</h2>
+                </div>
+                <nav class="menu d-flex d-sm-block justify-content-center flex-wrap">
+                    <a href="/Actividades">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-check" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+                            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+                          </svg>
+                        Gestor de Actividades
+                    </a>
+                    <a href="/calificaciones">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-x" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6.146 6.146a.5.5 0 0 1 .708 0L8 7.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 8l1.147 1.146a.5.5 0 0 1-.708.708L8 8.707 6.854 9.854a.5.5 0 0 1-.708-.708L7.293 8 6.146 6.854a.5.5 0 0 1 0-.708"/>
+                            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+                            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+                          </svg>
+                        Gestor de Calificaciones
+                    </a>
+                </nav>
+            </aside>
+            <main class="main col">
+                <div class="row">
+                    <div class="columna col-12">
+                        <div class="widget registrar">
+                            <fieldset class="border p-2">
+                                <legend  class="float-none w-auto">Registro de Notas</legend>
+                                <form action="">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <label for="inputPassword6" class="col-form-label">Seleccione Grado: </label>
+                                                </div>
+                                                <div class="col-9">
+                                                    <select class="form-select" aria-label="Default select example">
+                                                        <option selected>Desplegar Opciones</option>
+                                                        <option value="1">One</option>
+                                                        <option value="2">Two</option>
+                                                        <option value="3">Three</option>
+                                                      </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <label for="inputPassword6" class="col-form-label">Seleccione Materia: </label>
+                                                </div>
+                                                <div class="col-9">
+                                                    <select class="form-select" aria-label="Default select example">
+                                                        <option selected>Desplegar Opciones</option>
+                                                        <option value="1">One</option>
+                                                        <option value="2">Two</option>
+                                                        <option value="3">Three</option>
+                                                      </select>
+                                                </div> 
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <br>
+                                                    <label for="inputPassword6" class="col-form-label">Seleccione Periodo: </label>
+                                                </div>
+                                                <div class="col-9">
+                                                    <br>
+                                                    <select class="form-select" aria-label="Default select example">
+                                                        <option selected>Desplegar Opciones</option>
+                                                        <option value="1">Primer Periodo</option>
+                                                        <option value="2">Segundo Periodo</option>
+                                                        <option value="3">Tercer Periodo</option>
+                                                        <option value="2">Cuarto Periodo</option>
+                                                        <option value="3">Periodo Extraordinario</option>
+                                                      </select>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </form>
+                             </fieldset>
+
+                            
+                             <table id="example" class="table table-striped" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nombre Completo</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>Prom</th>
+                                        <th>Administrar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nombre Completo</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>0%</th>
+                                        <th>Prom</th>
+                                        <th>Administrar</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        
+                        <button type="button" class="btn btn-success btn-fixed-bottom-right">Exportar Datos</button>
+                    </div>
+                </div>
+
+                
+            </main>
+        </div>
+    </div>
+
+    <!--Aca Termina-->
+    
+
+
+    <footer th:fragment="footer">
+        <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    </footer>
+
+    
+</body>
+
+</html>
