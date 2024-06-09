@@ -65,21 +65,21 @@
 
                     <div class="col-md-6">
                         <label for="docente_departamento" class="form-label">Departamento</label>
-                        <select id="docente_departamento" th:field="*{departamentoD}" class="form-select">
+                        <select id="docente_departamento" th:field="*{departamentoD}" class="form-select" th:data-selected="${profesor.departamentoD}">
                             <option value="">Seleccionar...</option>
                         </select>
                     </div>
                     
                     <div class="col-md-6">
                         <label for="docente_municipio" class="form-label">Municipio</label>
-                        <select id="docente_municipio" th:field="*{municipioD}" class="form-select">
+                        <select id="docente_municipio" th:field="*{municipioD}" class="form-select" th:data-selected="${profesor.municipioD}">
                             <option value="">Seleccionar...</option>
                         </select>
                     </div>
                     
                     <div class="col-md-6">
                         <label for="docente_distrito" class="form-label">Distrito</label>
-                        <select id="docente_distrito" th:field="*{distritoDocente}" class="form-select">
+                        <select id="docente_distrito" th:field="*{distritoDocente}" class="form-select" th:data-selected="${profesor.distritoDocente}">
                             <option value="">Seleccionar...</option>
                         </select>
                     </div>
