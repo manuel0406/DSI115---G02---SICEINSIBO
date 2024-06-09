@@ -12,6 +12,23 @@
   
 }
 
+/* docente */
+.sidebar {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding-top: 20px;
+  background-color: #005187;
+  border-right: 1px solid #dee2e6;
+}
+
+.content {
+  margin-left: 250px;
+  padding: 20px;
+}
+
+
 /* ----------------------------------------------------------------------------------------- */
 /*                               ESTILO DE INICIAR SESION                                    */
 /* ----------------------------------------------------------------------------------------- */
