@@ -1,13 +1,9 @@
 package com.dsi.insibo.sice.entity;
 
 import java.sql.Date;
-import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
 @Entity
 public class PersonalAdministrativo {
     
@@ -19,7 +15,7 @@ public class PersonalAdministrativo {
     private String apellidoPersonal;
     private String telefonoPersonal;
     private String profesionPersonal;
-    private LocalDate fechaNacimientoP;
+    private Date fechaNacimientoP;
     private String gradoAcademicoP;
     private String correoPersonal;
     private String departamentoPersonal;
@@ -81,12 +77,7 @@ public class PersonalAdministrativo {
     public void setProfesionPersonal(String profesionPersonal) {
         this.profesionPersonal = profesionPersonal;
     }
-    public LocalDate getFechaNacimientoP() {
-        return fechaNacimientoP;
-    }
-    public void setFechaNacimientoP(LocalDate fechaNacimientoP) {
-        this.fechaNacimientoP = fechaNacimientoP;
-    }
+    
     public String getGradoAcademicoP() {
         return gradoAcademicoP;
     }
@@ -164,6 +155,12 @@ public class PersonalAdministrativo {
     }
     public void setFechaIngresoPersonal(Date fechaIngresoPersonal) {
         this.fechaIngresoPersonal = fechaIngresoPersonal;
+    }
+    public Date getFechaNacimientoP() {
+        return fechaNacimientoP;
+    }
+    public void setFechaNacimientoP(Date fechaNacimientoP) {
+        this.fechaNacimientoP = fechaNacimientoP;
     }
 
     
