@@ -11,6 +11,19 @@
   color: white
   
 }
+/* Alumnos*/
+.nav-pills li a:hover{
+  background-color: rgb(83, 161, 250);
+ 
+}
+
+
+th, td{
+  text-align: center;
+  vertical-align: center;
+}
+
+
 
 /* docente */
 .sidebar {

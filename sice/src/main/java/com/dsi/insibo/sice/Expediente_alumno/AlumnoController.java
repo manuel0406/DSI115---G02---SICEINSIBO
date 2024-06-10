@@ -13,16 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Bachillerato;
 
-
-
-
 @Controller
 @RequestMapping("/ExpedienteAlumno")
 public class AlumnoController {
 
 	@Autowired
 	private AlumnoService alumnoService;
-    @Autowired
+	@Autowired
 	private BachilleratoService bachilleratoService;
 
 	@PostMapping("/guardar")
@@ -36,26 +33,25 @@ public class AlumnoController {
 	public String crear(Model model) {
 
 		Alumno alumno = new Alumno();
-		
+
 		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachilleratos", listaBachilleratos);
-
 
 		return "/Expediente_alumno/registro";
 	}
 
 	@GetMapping("/editar/{nie}")
-	public String editar(@PathVariable("nie") int nie,Model model) {
+	public String editar(@PathVariable("nie") int nie, Model model) {
 
 		Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
-		
+
 		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachilleratos", listaBachilleratos);
 		return "/Expediente_alumno/registro";
 	}
-	
+
 	@GetMapping("/delete/{nie}")
 	public String eliminar(@PathVariable("nie") int nie) {
 
@@ -64,18 +60,46 @@ public class AlumnoController {
 	}
 
 	@GetMapping("/ver")
-	public String verAlumno(Model model, @Param("carrera") String carrera, @Param("grado") String grado, @Param("seccion") String seccion) {
+	public String verAlumno(Model model, @Param("carrera") String carrera, @Param("grado") String grado,
+			@Param("seccion") String seccion) {
 
 		Alumno alumno = new Alumno();
-		List<Alumno> listaAlumnos= alumnoService.listarAlumnos(carrera, grado, seccion);
+		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion);
 		model.addAttribute("alumnos", listaAlumnos);
 		model.addAttribute("carrera", carrera);
 		model.addAttribute("grado", grado);
 		model.addAttribute("seccion", seccion);
 
-		
 		return "Expediente_alumno/verAlumno";
 	}
 
-	
+	@GetMapping("/Alumno/{nie}")
+	public String infomacionAlumno(@PathVariable("nie") int nie, Model model) {
+
+		Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
+		Bachillerato bachillerato = alumno.getBachillerato();
+		model.addAttribute("alumno", alumno);
+		model.addAttribute("bachillerato", bachillerato);
+		return "/Expediente_alumno/AlumnoInformacion";
+	}
+
+	@GetMapping("/Enfermedades/{nie}")
+	public String enfermedadAlumno(@PathVariable("nie") int nie, Model model) {
+
+		Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
+		Bachillerato bachillerato = alumno.getBachillerato();
+		model.addAttribute("alumno", alumno);
+		model.addAttribute("bachillerato", bachillerato);
+		return "/Expediente_alumno/AlumnoEnfermedad";
+	}
+	@GetMapping("/Responsable/{nie}")
+	public String responsableAlumno(@PathVariable("nie") int nie, Model model) {
+
+		Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
+		Bachillerato bachillerato = alumno.getBachillerato();
+		model.addAttribute("alumno", alumno);
+		model.addAttribute("bachillerato", bachillerato);
+		return "/Expediente_alumno/AlumnoDatosResponsable";
+	}
+
 }

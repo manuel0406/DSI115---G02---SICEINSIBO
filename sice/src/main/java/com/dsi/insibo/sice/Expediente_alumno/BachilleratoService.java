@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Bachillerato;
 
 @Service
@@ -16,4 +17,10 @@ public class BachilleratoService  {
     public List<Bachillerato> listaBachilleratos(){
         return (List<Bachillerato>) bachilleratoRepository.findAll();
     }
+
+   /*  public Bachillerato buscarPorIdAlumno(){
+
+        return bachilleratoRepository.findById(id).get();
+
+    }*/
 }
