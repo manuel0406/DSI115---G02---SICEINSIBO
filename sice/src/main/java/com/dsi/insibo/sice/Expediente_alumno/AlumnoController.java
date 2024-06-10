@@ -35,6 +35,7 @@ public class AlumnoController {
 		Alumno alumno = new Alumno();
 
 		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
+		model.addAttribute("titulo", "Crear Alumno");
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachilleratos", listaBachilleratos);
 
@@ -47,6 +48,7 @@ public class AlumnoController {
 		Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
 
 		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
+		model.addAttribute("titulo", "Editar");
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachilleratos", listaBachilleratos);
 		return "/Expediente_alumno/registro";
@@ -63,8 +65,9 @@ public class AlumnoController {
 	public String verAlumno(Model model, @Param("carrera") String carrera, @Param("grado") String grado,
 			@Param("seccion") String seccion) {
 
-		Alumno alumno = new Alumno();
+		
 		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion);
+		model.addAttribute("titulo", "Ver");
 		model.addAttribute("alumnos", listaAlumnos);
 		model.addAttribute("carrera", carrera);
 		model.addAttribute("grado", grado);
@@ -78,6 +81,7 @@ public class AlumnoController {
 
 		Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
 		Bachillerato bachillerato = alumno.getBachillerato();
+		model.addAttribute("titulo", "Información");
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachillerato", bachillerato);
 		return "/Expediente_alumno/AlumnoInformacion";
@@ -85,9 +89,10 @@ public class AlumnoController {
 
 	@GetMapping("/Enfermedades/{nie}")
 	public String enfermedadAlumno(@PathVariable("nie") int nie, Model model) {
-
+		
 		Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
 		Bachillerato bachillerato = alumno.getBachillerato();
+		model.addAttribute("titulo", "Padecimientos");
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachillerato", bachillerato);
 		return "/Expediente_alumno/AlumnoEnfermedad";
@@ -99,6 +104,7 @@ public class AlumnoController {
 		Bachillerato bachillerato = alumno.getBachillerato();
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachillerato", bachillerato);
+		model.addAttribute("titulo", "Encargado");
 		return "/Expediente_alumno/AlumnoDatosResponsable";
 	}
 

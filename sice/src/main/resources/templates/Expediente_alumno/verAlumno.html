@@ -6,72 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
-
+    
 </head>
 
 <body>
-    <header th:replace="home :: header">
-
-    </header>
+    <header th:replace="home :: header"></header>
 
     <div class="container my-4">
-        <div class="text-end">
-            <a th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-secondary " th:text="'Agregar Alumno'"> </a>
-
+        <div class="text-end mb-3">
+            <a th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-secondary" th:text="'Agregar Alumno'"></a>
         </div>
+
         <div class="row my-2">
-
-            <div class="col-3">
-                <div class="card" style="width: 18rem;">
-
+            <div class="col-md-4 col-lg-3 mb-3">
+                <div class="card">
                     <div class="container my-2">
-                        <h1 class="fs-6"> Filtrar Alumnos</h1>
+                        <h1 class="fs-6">Filtrar Alumnos</h1>
                         <form th:action="@{/ExpedienteAlumno/ver}" method="get">
                             <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label fs-6">Carrera:</label>
-                                <select id="carrera" name="carrera" th:value="${carrera}" class="form-select"
-                                    aria-label="Default select example">
+                                <label for="carrera" class="form-label fs-6">Carrera:</label>
+                                <select id="carrera" name="carrera" th:value="${carrera}" class="form-select">
                                     <option value="" selected>Seleccione</option>
                                     <option value="Atención Primaria en Salud">Atención Primaria en Salud</option>
                                     <option value="Electrónica">Electrónica</option>
                                     <option value="Sistemas Electricos">Sistemas Electricos</option>
                                 </select>
-
                             </div>
                             <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label fs-6">Año:</label>
-                                <select id="grado" name="grado" th:value="${grado}" class="form-select"
-                                    aria-label="Default select example">
+                                <label for="grado" class="form-label fs-6">Año:</label>
+                                <select id="grado" name="grado" th:value="${grado}" class="form-select">
                                     <option value="" selected>Seleccione</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
-                                    <option value="3">3 </option>
+                                    <option value="3">3</option>
                                 </select>
                             </div>
-                            <div class="mb-3 ">
-                                <label for="exampleInputEmail1" class="form-label fs-6">Sección:</label>
-                                <select id="seccion" name="seccion" th:value="${seccion}" class="form-select"
-                                    aria-label="Default select example">
+                            <div class="mb-3">
+                                <label for="seccion" class="form-label fs-6">Sección:</label>
+                                <select id="seccion" name="seccion" th:value="${seccion}" class="form-select">
                                     <option value="" selected>Seleccione</option>
                                     <option value="A">A</option>
                                     <option value="B">B</option>
                                     <option value="C">C</option>
                                     <option value="D">D</option>
                                 </select>
-
                             </div>
                             <input type="submit" class="btn btn-primary" value="Filtrar">
-
-
                         </form>
                     </div>
                 </div>
-
-
             </div>
-            <div class="col-9">
-                <table class="table ">
-                    <thead class="thead table-dark text-start ">
+            <div class="col-md-8 col-lg-9">
+                <table class="table table-responsive">
+                    <thead class="thead table-dark text-start">
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Nie</th>
@@ -81,7 +68,6 @@
                             <th scope="col">Sección</th>
                             <th scope="col">Año</th>
                             <th scope="col">Acciones</th>
-
                         </tr>
                     </thead>
                     <tbody class="table-group-divider fs-6">
@@ -91,34 +77,29 @@
                             <td class="text-start fs-6" th:text="${alumno.nie}"></td>
                             <td class="text-start fs-6" th:text="${alumno.apellidoAlumno}"></td>
                             <td class="text-start fs-6" th:text="${alumno.nombreAlumno}"></td>
-                            <td  class="text-start fs-6" th:text="${alumno.bachillerato.nombreCarrera}"></td>
-                            <td  class="" th:text="${alumno.bachillerato.seccion}"></td>
-                            <td class="" th:text="${alumno.bachillerato.grado}"></td>
+                            <td class="text-start fs-6" th:text="${alumno.bachillerato.nombreCarrera}"></td>
+                            <td class="text-center fs-6" th:text="${alumno.bachillerato.seccion}"></td>
+                            <td class="text-center fs-6" th:text="${alumno.bachillerato.grado}"></td>
                             <td class="text-center">
-                                <a class="btn btn-success" th:href="@{/ExpedienteAlumno/Alumno/} + ${alumno.nie}"
-                                    >
-                                    <i class="bi bi-file-earmark-text"></i> </a>
-                                <a class="btn btn-primary"
-                                    th:href="@{/ExpedienteAlumno/editar/} + ${alumno.nie}"> 
-                                    <i class="bi bi-pencil-square"></i></a>
-                                <a class="btn btn-danger delete-btn" 
-                                    th:href="@{/ExpedienteAlumno/delete/} + ${alumno.nie}" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Eliminar">  <i class="bi bi-trash"></i></a>
-
+                                <a class="btn btn-success" th:href="@{/ExpedienteAlumno/Alumno/} + ${alumno.nie}">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </a>
+                                <a class="btn btn-primary" th:href="@{/ExpedienteAlumno/editar/} + ${alumno.nie}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a class="btn btn-danger delete-btn" th:href="@{/ExpedienteAlumno/delete/} + ${alumno.nie}" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </a>
                             </td>
-
                         </tr>
                     </tbody>
                 </table>
             </div>
-
         </div>
-
     </div>
 
     <!-- Modal de Confirmación -->
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -136,12 +117,11 @@
         </div>
     </div>
 
+    <footer th:replace="home :: footer"></footer>
 
+    <!-- Incluye Bootstrap JS y Popper.js -->
+   
+    <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
 </body>
-<footer th:replace="home :: footer"></footer>
-
-<script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
-
-
 
 </html>
