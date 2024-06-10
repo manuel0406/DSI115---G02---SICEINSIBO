@@ -17,11 +17,12 @@
     <header th:replace="home :: header"></header>
     <header th:replace="Expediente_docente/barra :: barraExpediente"></header>
 
-    <div class="content container mt-4">
+    <div class="content container mt-2">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 th:text="${titulo}"></h1>
-            <a th:href="@{/fichaDocente}" class="btn btn-primary">Nuevo Docente</a>
+            <a th:href="@{/expedientedocente/formulario}" class="btn btn-primary ">Nuevo Docente</a>
         </div>
+
 
         <table class="table table-striped table-hover">
             <thead class="table-dark">
@@ -32,7 +33,7 @@
                     <th>Teléfono</th>
                     <th>Edad</th>
                     <th>DUI</th>
-                    <th style="width: 14%; text-align: left;">Acciones</th>
+                    <th style="width: 10%; text-align: left;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,34 +46,48 @@
                     <td th:text="${docenteDTO.docente.duiDocente}"></td>
                     <td>
                         <div class="d-flex justify-content-left">
-                            <a  class="btn btn-success btn-sm mx-1" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Ver Ficha">
+<!--                             <a class="btn btn-success btn-sm mx-1" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Ver Ficha">
                                 <i class="bi bi-file-earmark-text"></i>
-                            </a>
+                            </a> -->
 
-                            <a  class="btn btn-primary btn-sm mx-1" th:href="@{/editfichaDocente/} + ${docenteDTO.docente.duiDocente}" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Editar">
+                            <a class="btn btn-primary btn-sm mx-1"
+                                th:href="@{/expedientedocente/editarexpediente/} + ${docenteDTO.docente.duiDocente}"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
 
-                            <a  class="btn btn-danger btn-sm mx-1 delete-btn" th:href="@{/deletefichaDocente/} + ${docenteDTO.docente.duiDocente}" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Eliminar">
+                            <a class="btn btn-danger btn-sm mx-1 delete-btn"
+                                th:href="@{/expedientedocente/eliminarexpediente/} + ${docenteDTO.docente.duiDocente}"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
                                 <i class="bi bi-trash"></i>
                             </a>
 
-                            <a th:href="@{/anexosDocente}" class="btn btn-secondary btn-sm mx-1" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Anexos">
-                                <i class="bi bi-folder"></i>
+                            <!-- http://localhost:8080/expedientedocente/editarexpediente/{id}?format=pdf -->
+
+                            <a th:href="@{/expedientedocente/editarexpediente/{id}(id=${docenteDTO.docente.duiDocente}, format='pdf')}"
+                                class="btn btn-secondary btn-sm mx-1" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Imprimir" target="_blank" onclick="openInPopup(this.href); return false;">
+                                <i class="bi bi-printer"></i>
                             </a>
+
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a class="btn btn-secondary" th:href="@{/expedientedocente/plantadocente(format='pdf')}"
+                data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual" target="_blank"
+                onclick="openInPopup(this.href); return false;">
+                <i class="bi bi-printer"></i> Imprimir listado
+            </a>
+        </div>
     </div>
 
     <!-- Modal de Confirmación -->
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -90,9 +105,17 @@
         </div>
     </div>
 
+
+
+
     <footer th:replace="home :: footer"></footer>
     <script type="text/javascript" src="/js/modalEliminacion.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function openInPopup(url) {
+            window.open(url, 'popup', 'width=800,height=600');
+        }
+    </script>
 </body>
 
 </html>

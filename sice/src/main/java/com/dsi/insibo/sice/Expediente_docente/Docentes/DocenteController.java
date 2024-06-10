@@ -16,8 +16,13 @@ import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
+@RequestMapping("/expedientedocente")
 public class DocenteController {
     
     // Direccionadores estaticos
@@ -33,8 +38,8 @@ public class DocenteController {
 
     // Direccionadores de acción
 
-    // Creando docente
-    @GetMapping("/fichaDocente")
+    // Ficha general de expediente docente /expedientedocente/formulario
+    @GetMapping("/formulario")
     public String docentes(Model model) {
         Docente profesor = new Docente();
 
@@ -42,14 +47,14 @@ public class DocenteController {
         return "Expediente_docente/Docentes/fichaDocente";
     }
 
-    //guardando
+    //guardando formulario
     @PostMapping("/guardar")
     public String guardar(@Validated @ModelAttribute Docente docente, BindingResult result, Model model, RedirectAttributes attribute) {
     
         if(result.hasErrors()){
             model.addAttribute("profesor", docente);
             System.out.println("Se tienen errores en el formulario");
-            return "Expediente_docente/Docentes/fichaDocente";
+            return "expedientedocente/formulario";
         }
     
         boolean creado = docenteService.guardarDocente(docente);
@@ -60,42 +65,38 @@ public class DocenteController {
             attribute.addFlashAttribute("success", "Expediente actualizado con exito!");
         }
     
-        return "redirect:/personalDocente";
+        return "redirect:plantadocente";
     }
     
-
-    // Lista docentes usando la DB
+    // Lista docentes usando la DB /expedientedocente/plantadocente
     @Autowired
     private DocenteService docenteService;
 
-    @GetMapping("/personalDocente")
+    @GetMapping("/plantadocente")
     public String listarDocentes(Model model) {
         List<DocenteDTO> listadoDocentes = docenteService.listarDocentes();
-
         model.addAttribute("titulo", "Listado de docentes");
         model.addAttribute("Docentes", listadoDocentes);
-
-        return "Expediente_docente/Docentes/listarDocentes";
+        return "Expediente_docente/Docentes/listarDocentes";  // Vista HTML
     }
 
-    // Editar ficha
-    // Editando docente
-    @GetMapping("/editfichaDocente/{id}")
+    // Editando docente /expedientedocente/editarformulario/{id}
+    @GetMapping("/editarexpediente/{id}")
     public String editarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
-        if(profesor == null){
+        if (profesor == null) {
             System.out.println("El docente no existe");
             attribute.addFlashAttribute("error", "El expediente no existe");
-            return "redirect:/personalDocente";
+            return "redirect:/expedientedocente/plantadocente";
         }
-
-
+    
         model.addAttribute("profesor", profesor);
         return "Expediente_docente/Docentes/fichaDocente";
     }
+    
 
     // Eliminar ficha
-    @GetMapping("/deletefichaDocente/{id}")
+    @GetMapping("/eliminarexpediente/{id}")
     public String eliminarDocente(@PathVariable("id") String idDocente, RedirectAttributes attribute) {
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
 
@@ -103,12 +104,12 @@ public class DocenteController {
         if(profesor == null){
             System.out.println("El docente no existe");
             attribute.addFlashAttribute("error", "El expediente no existe");
-            return "redirect:/personalDocente";
+            return "redirect:/expedientedocente/plantadocente";
         }
 
         docenteService.eliminar(idDocente);
         attribute.addFlashAttribute("warning", "El expediente se elimino");
 
-        return "redirect:/personalDocente";
+        return "redirect:/expedientedocente/plantadocente";
     }
 }
