@@ -19,9 +19,17 @@ public class DocenteService {
                 .collect(Collectors.toList());
     }
 
-    public void guardarDocente(Docente docente) {
+    public boolean guardarDocente(Docente docente) {
+        // Verificar si el docente ya existe en la base de datos
+        boolean existe = docenteRepository.existsById(docente.getDuiDocente());
+    
+        // Guardar el docente
         docenteRepository.save(docente);
+    
+        // Devolver true si se creó un nuevo expediente, false si se actualizó uno existente
+        return !existe;
     }
+    
 
     public Docente buscarPorIdDocente(String duiDocente) {
         return docenteRepository.findById(duiDocente).orElse(null);

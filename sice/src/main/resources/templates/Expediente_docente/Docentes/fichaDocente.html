@@ -31,9 +31,9 @@
 
                     <div class="col-md-6">
                         <label for="docente_nombres" class="form-label">Nombres:</label>
-                        <input type="text" th:field="*{nombreDocente}" class="form-control" id="docente_nombres"
-                            required>
+                        <input type="text" th:field="*{nombreDocente}" class="form-control" id="docente_nombres" required>
                     </div>
+                    
 
                     <div class="col-md-6">
                         <label for="docente_apellidos" class="form-label">Apellidos:</label>
@@ -176,7 +176,7 @@
                     <div class="col-12">
                         <label for="docente_titulo" class="form-label">Título que lo acredita como docente:</label>
                         <input type="text" th:field="*{tituloDocente}" class="form-control" id="docente_titulo"
-                            name="titulo">
+                            name="titulo" required>
                     </div>
 
 
@@ -256,3 +256,5 @@
         </script>
 </body>
 </html>
+
+
