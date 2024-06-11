@@ -14,4 +14,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>  {
     //Estado: Activo | Desactivado | Bloqueado |
     List<Usuario> findByEstadoUsuario(String estadoUsuario, Pageable pageable);
     List<Usuario> findByEstadoUsuario(String estadoUsuario);
+    
 }

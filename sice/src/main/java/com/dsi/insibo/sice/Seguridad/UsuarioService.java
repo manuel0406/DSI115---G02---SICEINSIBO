@@ -36,4 +36,8 @@ public class UsuarioService {
         return usuarioRepository.findByCorreoUsuario(correoUsuario);
     }
 
+    public void guardarUsuario(Usuario usuario) {
+        usuarioRepository.save(usuario);
+    }
+
 }

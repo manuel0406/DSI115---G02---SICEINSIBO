@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.dsi.insibo.sice.Seguridad.UsuarioService;
 import com.dsi.insibo.sice.entity.Docente;
+import com.dsi.insibo.sice.entity.Usuario;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +26,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/expedientedocente")
 public class DocenteController {
+
+    @Autowired
+    private UsuarioService usuarioService;
     
     // Direccionadores estaticos
     @GetMapping("/anexosDocente")
@@ -51,6 +56,22 @@ public class DocenteController {
     @PostMapping("/guardar")
     public String guardar(@Validated @ModelAttribute Docente docente, BindingResult result, Model model, RedirectAttributes attribute) {
     
+        //Obtenemos informacion relevante del usuario
+        String correo = docente.getCorreoDocente() ;
+        String rol = "Docente";
+        String estado = "Desactivado";
+        boolean inicio = true;
+        String contrasena = "";
+
+        //Asignaciones al objeto usuario
+        Usuario usuario = new Usuario();
+        usuario.setCorreoUsuario(correo);
+        usuario.setDocente(docente);
+        usuario.setRolUsuario(rol);
+        usuario.setEstadoUsuario(estado);
+        usuario.setPrimerIngreso(inicio);
+        usuario.setContrasenaUsuario(contrasena);
+
         if(result.hasErrors()){
             model.addAttribute("profesor", docente);
             System.out.println("Se tienen errores en el formulario");
@@ -58,6 +79,7 @@ public class DocenteController {
         }
     
         boolean creado = docenteService.guardarDocente(docente);
+        usuarioService.guardarUsuario(usuario);
     
         if (creado) {
             attribute.addFlashAttribute("success", "Expediente creado con exito!");
