@@ -2,25 +2,31 @@ package com.dsi.insibo.sice.Asistencia_personal;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
+@RequestMapping("/asistenciaPersonal")
 public class AsistenciaController {
 
-	@GetMapping("/AsistenciaPersonal/Cargar")
+	@GetMapping("/cargar")
 	public String subiendoArchivo(){
 		return "Asistencia_personal/cargarArchivo";
 	}
-    @GetMapping("/AsistenciaPersonal/AsistenciaGeneral")
+    @GetMapping("/asistenciaGeneral")
 	public String llegadaGeneral(){
 		return "Asistencia_personal/asistenciaGeneral";
 	}
-    @GetMapping("/AsistenciaPersonal/AsistenciaTardia")
+    @GetMapping("/asistenciaTardia")
 	public String llegadasTardia(){
 		return "Asistencia_personal/asistenciaTardia";
 	}
-	@GetMapping("/AsistenciaPersonal/Justificacion")
+	@GetMapping("/justificacion")
 	public String mostrarJustificacion(){
 		return "Asistencia_personal/mostrarJustificacion";
+	}
+	@GetMapping("/justificacionAgregar")
+	public String agregarJustificacion(){
+		return "Asistencia_personal/agregarJustificacion";
 	}
 }
