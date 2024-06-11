@@ -317,13 +317,13 @@
 /* ----------------------------------------------------------------------------------------- */
 /*                               INPUT         yo                  */
 /* ----------------------------------------------------------------------------------------- */
-.container{
+.contenedorI{
   width: 300px;
   padding: 2rem;
   background-color: #4d82bc;
   border-radius: 2rem;
 }
-.container .wrapper{
+.contenedorI .wrapper{
   position: relative;
   height: 200px;
   width: 100%;
@@ -385,7 +385,7 @@
 .wrapper.active .file-name{
   display: block;
 }
-.container #custom-btn{
+.contenedorI #custom-btn{
   margin-top: 1rem;
   display: block;
   width: 100%;
