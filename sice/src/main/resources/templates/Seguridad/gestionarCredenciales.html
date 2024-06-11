@@ -13,63 +13,73 @@
 
 <body class="cuerpoGestionarCredenciales">
 
-    <!-- Sidebar fijo en el lado izquierdo -->
-  <div class="barraLateral">
-    <p class="EncabezadoLateral">Instituto Nacional Simon Bolivar</p>
-    <img th:src="@{/imagenes/LogoINSIBO.jpg}" id="LogoINSIBOCredenciales" alt="User Icon" class="img-fluid" />
-    <p class="EncabezadoMenus"><b>Permisos</b></p>
-    <a th:href="@{/gestionarSinCredenciales}" class="item sinCredenciales"><i class="bi bi-shield-lock"></i> Sin Credenciales</a>
-    <a class="item conCredenciales active"><i class="bi bi-person-circle"></i> Con Credenciales</a>  
-  </div>
+  <!-- Navbar fija -->
+  <nav class="navbar fixed-top barraArriba">
+    <div class="container-fluid">
+      <h3 class="tituloBarra mx-auto"><b>SICE - Gestionar de Permisos/Roles</b></h3>
+      <button class="btnCerrarSesion" type="button" onclick="window.location.href='/iniciarSesion'">Cerrar sesión</button>
+    </div>
+  </nav>
 
-    <!-- Navbar fija -->
-    <nav class="navbar fixed-top barraArriba">
-      
-      <div class="container-fluid">
-        <div class="navbar-header mx-auto">
-          <h3 class="tituloBarra"><b>SICE - Gestionar de Permisos/Roles</b></h3>
-        </div>
-        <button class="btnCerrarSesion" type="button" onclick="window.location.href='/iniciarSesion'">Cerrar sesión</button>
-        </div>
-    </nav>
-  
-    <div class="centro">
-      <form class="d-flex mb-3">
-        <label for="buscar" class="me-2 align-self-center"><b>Nombre:</b></label>
-        <input class="form-control me-2" type="search" placeholder="Buscar persona..." aria-label="Buscar" id="buscar">
-        <button class="btnBuscar" type="submit">Buscar persona <i class="bi bi-search"></i></button>
-      </form>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar fijo en el lado izquierdo -->
+      <div class="col-md-2 barraLateral">
+        <p class="EncabezadoLateral">Instituto Nacional Simon Bolivar</p>
+        <img th:src="@{/imagenes/LogoINSIBO.jpg}" id="LogoINSIBOCredenciales" alt="User Icon" class="img-fluid" />
+        <p class="EncabezadoMenus"><b>Permisos</b></p>
+        <a th:href="@{/gestionarSinCredenciales?pagina=1}" class="item sinCredenciales"><i class="bi bi-shield-lock"></i> Sin Credenciales</a>
+        <a class="item conCredenciales active"><i class="bi bi-person-circle"></i> Con Credenciales</a>
+      </div>
 
-      <div class="contenedorTabla">
-        <h2 class="tituloTabla"><b>Empleados con credenciales</b></h2>
-        <table class="table" id="Usuarios">
-          <thead>
-            <tr>
-              <th scope="col">Nombre completo</th>
-              <th scope="col">Correo</th>
-              <th scope="col">Contraseña</th>
-              <th scope="col" id="encabezadoAcciones">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Ivan Alexander Carranza Sanchez</td>
-              <td>cs21024@ues.edu.sv</td>
-              <td>********</td>
-              <td>
-                <button type="button" class="btn btn-outline-dark"><i class="bi bi-lock"></i></button>
-                <button type="button" class="btn btn-outline-dark"><i class="bi bi-unlock-fill"></i></button>
-                <button type="button" class="btn btn-outline-dark"><i class="bi bi-eye"></i></button>
-              </td>
-            </tr>
-            <!-- Otras filas de la tabla aquí -->
-          </tbody>
-        </table>
+      <!-- Contenido central -->
+      <div class="col-md-10 offset-md-2 centro">
+        <form class="d-flex mb-3">
+          <label for="buscar" class="me-2 align-self-center"><b>Nombre:</b></label>
+          <input class="form-control me-2" type="search" placeholder="Buscar persona..." aria-label="Buscar" id="buscar">
+          <button class="btn btn-outline-dark" type="submit">Buscar persona <i class="bi bi-search"></i></button>
+        </form>
+
+        <div class="container-fluid">
+          <h2 class="tituloTabla"><b>Empleados con credenciales</b></h2>
+          <table class="table" id="Usuarios">
+            <thead>
+              <tr>
+                <th scope="col">Nombre completo</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Contraseña</th>
+                <th scope="col" id="encabezadoAcciones">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="user : ${Usuarios}">
+                <td th:text="${user.nombre}"></td>
+                <td th:text="${user.usuario.correoUsuario}"></td>
+                <td class="contrasena" th:text="${user.usuario.contrasenaUsuario}"></td>
+                <td th:text="${user.usuario.rolUsuario}"></td>
+                <td>
+                  <button th:id="${user.usuario.idUsuario}" type="button" class="btn btn-outline-dark"><i class="bi bi-lock"></i></button>
+                  <button th:id="${user.usuario.idUsuario}" type="button" class="btn btn-outline-dark"><i class="bi bi-unlock-fill"></i></button>
+                  <button th:id="${user.usuario.idUsuario}" type="button" class="btn btn-outline-dark"><i class="bi bi-eye"></i></button>
+                </td>
+              </tr>
+              <!-- Otras filas de la tabla aquí -->
+            </tbody>
+          </table>
+          <div style="white-space: nowrap;">
+            <div th:each="i : ${#numbers.sequence(1, Cantidad)}" style="display: inline-block;">
+              <button th:text="${i}" th:id="${i}" type="button" class="btn btn-outline-dark" onclick="irHacia(this)"></button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
-  </body>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+  <script type="text/javascript" th:src="@{/js/conCredenciales.js}"></script>
+</body>
+
 </html>

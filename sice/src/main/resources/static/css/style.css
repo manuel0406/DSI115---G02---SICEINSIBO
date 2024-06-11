@@ -11,6 +11,19 @@
   color: white
   
 }
+/* Alumnos*/
+.nav-pills li a:hover{
+  background-color: rgb(83, 161, 250);
+ 
+}
+
+
+th, td{
+  text-align: center;
+  vertical-align: center;
+}
+
+
 
 /* docente */
 .sidebar {
@@ -152,6 +165,7 @@
   margin: auto; /* Centra el contenido horizontalmente */
   text-align: justify; /* Justifica el texto */
 }
+
 
 .btnCerrarSesion:hover, .btnBuscar:hover{
   background-color: rgb(0, 0, 0);
