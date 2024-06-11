@@ -23,7 +23,7 @@ public class DocenteService {
         docenteRepository.save(docente);
     }
 
-    public Docente buscarPorIdAlumno(String duiDocente) {
+    public Docente buscarPorIdDocente(String duiDocente) {
         return docenteRepository.findById(duiDocente).orElse(null);
     }
 

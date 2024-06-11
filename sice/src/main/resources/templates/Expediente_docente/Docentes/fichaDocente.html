@@ -23,8 +23,6 @@
             </div>
             <div class="card-body">
 
-
-
                 <form class="row g-3" th:object="${profesor}" th:action="@{/guardar}" method="post">
                     <!-- Datos Personales -->
                     <div class="col-12">
@@ -52,6 +50,7 @@
                             id="docente_fecha_nacimiento">
                     </div>
 
+                    
                     <!-- Ubicación -->
                     <div class="col-12">
                         <h4 class="text-center">Ubicación</h4>
@@ -64,91 +63,36 @@
                             6.</div>
                     </div>
 
-
-
-
-
-<!--                     <div class="col-md-6">
-                        <label for="docente_departamento" class="form-label">Departamento</label>
-                        <select id="docente_departamento" name="departamentoD" class="form-select">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="docente_municipio" class="form-label">Municipio</label>
-                        <select id="docente_municipio" name="municipioD" class="form-select">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="docente_distrito" class="form-label">Distrito</label>
-                        <select id="docente_distrito" name="distritoDocente" class="form-select">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
-                    </div> -->
-
                     <div class="col-md-6">
                         <label for="docente_departamento" class="form-label">Departamento</label>
                         <select id="docente_departamento" th:field="*{departamentoD}" class="form-select">
-                            <option value="">Choose...</option>
+                            <option value="">Seleccionar...</option>
                         </select>
                     </div>
                     
-
                     <div class="col-md-6">
                         <label for="docente_municipio" class="form-label">Municipio</label>
                         <select id="docente_municipio" th:field="*{municipioD}" class="form-select">
-                            <option value="">Choose...</option>
+                            <option value="">Seleccionar...</option>
                         </select>
                     </div>
                     
-
                     <div class="col-md-6">
                         <label for="docente_distrito" class="form-label">Distrito</label>
                         <select id="docente_distrito" th:field="*{distritoDocente}" class="form-select">
-                            <option value="">Choose...</option>
+                            <option value="">Seleccionar...</option>
                         </select>
                     </div>
-                    
-
-
-<!--                     <div class="col-md-6">
-                        <label for="docente_zona" class="form-label">Zona</label>
-                        <select id="docente_zona" class="form-select">
-                            <option selected>Choose...</option>
-                            <option>Rural</option>
-                            <option>Urbano</option>
-                        </select>
-                    </div> -->
-
-<!--                     <div class="col-md-6">
-                        <label for="docente_zona" class="form-label">Zona</label>
-                        <select id="docente_zona" name="zonaDocente" class="form-select">
-                            <option selected>Choose...</option>
-                            <option>Rural</option>
-                            <option>Urbano</option>
-                        </select>
-                    </div> -->
-                     
 
                     <div class="col-md-6">
                         <label for="docente_zona" class="form-label">Zona</label>
                         <select id="docente_zona" th:field="*{zonaDocente}" class="form-select">
-                            <option value="" selected>Choose...</option>
+                            <option value="" selected>Seleccionar...</option>
                             <option value="Rural">Rural</option>
                             <option value="Urbano">Urbano</option>
                         </select>
                     </div>
                     
-
-
-
-
 
                     <!-- Documentos de Identificación -->
                     <div class="col-12">
@@ -161,7 +105,7 @@
 
                     <div class="col-md-6">
                         <label for="docente_nip" class="form-label">NIP</label>
-                        <input type="text" class="form-control" id="docente_nip">
+                        <input type="text" th:field="*{nip}" class="form-control" id="docente_nip">
                     </div>
 
                     <div class="col-md-6">
@@ -173,6 +117,7 @@
                         <label for="docente_nup" class="form-label">NUP</label>
                         <input type="text" th:field="*{nup}" class="form-control" id="docente_nup">
                     </div>
+
 
                     <!-- Información de Contacto -->
                     <div class="col-12">
@@ -189,14 +134,15 @@
 
                     <div class="col-md-6">
                         <label for="docente_telefono_fijo" class="form-label">Telefono Fijo:</label>
-                        <input type="text" th:field="*{telefonoDocente}" class="form-control"
+                        <input type="text" th:field="*{telefonoFijoDocente}" class="form-control"
                             id="docente_telefono_fijo">
                     </div>
 
                     <div class="col-md-6">
                         <label for="docente_celular" class="form-label">Celular:</label>
-                        <input type="text" class="form-control" id="docente_celular">
+                        <input type="text" th:field="*{telefonoDocente}" class="form-control" id="docente_celular">
                     </div>
+
 
                     <!-- Otros Datos -->
                     <div class="col-12">
@@ -212,8 +158,12 @@
 
                     <div class="col-12">
                         <label for="docente_fecha_ingreso" class="form-label">Fecha de ingreso al MYNEDUCIT:</label>
-                        <input type="date" th:field="*{fechaMineducyt}" class="form-control" id="docente_fecha_ingreso"
-                            name="fecha_ingreso">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <input type="date" th:field="*{fechaMineducyt}" class="form-control"  id="docente_fecha_ingreso"
+                                name="fecha_ingreso">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="col-12">
@@ -222,8 +172,8 @@
                             name="titulo">
                     </div>
 
-                    <!-- Atestados -->
 
+                    <!-- Atestados -->
                     <div class="col-12">
                         <h4 class="text-center">Atestados</h4>
                     </div>
@@ -256,12 +206,14 @@
                         </div>
                     </div>
 
-
                     <div class="col-12">
                         <label for="docente_fecha_entrega" class="form-label">Fecha de entrega:</label>
-                        <input type="date" th:field="*{fechaEntrega}" class="form-control" id="docente_fecha_entrega"
-                            name="fecha_entrega">
-                    </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <input type="date" th:field="*{fechaEntrega}" class="form-control" id="docente_fecha_entrega" name="fecha_entrega">
+                            </div>
+                        </div>
+
 
                     <!-- Botón Guardar -->
                     <div class="col-12 text-center mt-4">
@@ -271,17 +223,7 @@
             </div>
         </div>
 
-        <!-- Botón Ir a Anexos -->
-        <div class="col-md-12 text-right mt-4">
-            <button type="submit" class="btn btn-primary">Ir a Anexos</button>
-        </div>
-    </div>
-
-
     <footer th:replace="home :: footer"></footer>
-
-
-
     <script type="text/javascript" src="/js/direccion.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

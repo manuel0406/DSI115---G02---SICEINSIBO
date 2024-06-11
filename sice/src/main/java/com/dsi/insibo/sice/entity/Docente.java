@@ -1,11 +1,8 @@
 package com.dsi.insibo.sice.entity;
 
-import java.time.LocalDate;
-
+import java.sql.Date;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Docente {
@@ -15,9 +12,11 @@ public class Docente {
 
     private String nit;
     private String nup;
+    private String nip;
+    private String telefonoFijoDocente;
     private String nombreDocente;
     private String apellidoDocente;
-    private LocalDate fechaNacimientoD;
+    private Date fechaNacimientoD;
     private String direccionDocente;
     private String municipioD;
     private String departamentoD;
@@ -25,14 +24,27 @@ public class Docente {
     private String correoDocente;
     private String telefonoDocente;
     private String profesionDocente;
-    private LocalDate fechaMineducyt;
+    private Date fechaMineducyt;
     private String zonaDocente;
     private String tituloDocente;
     private String especialidadEnEstudio;
     private boolean curriculumDocente;
     private boolean atestadosDocente;
-    private LocalDate fechaEntrega;
+    private Date fechaEntrega;
     
+    
+    public String getNip() {
+        return nip;
+    }
+    public void setNip(String nip) {
+        this.nip = nip;
+    }
+    public String getTelefonoFijoDocente() {
+        return telefonoFijoDocente;
+    }
+    public void setTelefonoFijoDocente(String telefonoFijoDocente) {
+        this.telefonoFijoDocente = telefonoFijoDocente;
+    }
     public String getDuiDocente() {
         return duiDocente;
     }
@@ -64,10 +76,10 @@ public class Docente {
     public void setApellidoDocente(String apellidoDocente) {
         this.apellidoDocente = apellidoDocente;
     }
-    public LocalDate getFechaNacimientoD() {
+    public Date getFechaNacimientoD() {
         return fechaNacimientoD;
     }
-    public void setFechaNacimientoD(LocalDate fechaNacimientoD) {
+    public void setFechaNacimientoD(Date fechaNacimientoD) {
         this.fechaNacimientoD = fechaNacimientoD;
     }
     public String getDireccionDocente() {
@@ -112,10 +124,10 @@ public class Docente {
     public void setProfesionDocente(String profesionDocente) {
         this.profesionDocente = profesionDocente;
     }
-    public LocalDate getFechaMineducyt() {
+    public Date getFechaMineducyt() {
         return fechaMineducyt;
     }
-    public void setFechaMineducyt(LocalDate fechaMineducyt) {
+    public void setFechaMineducyt(Date fechaMineducyt) {
         this.fechaMineducyt = fechaMineducyt;
     }
     public String getZonaDocente() {
@@ -148,10 +160,10 @@ public class Docente {
     public void setAtestadosDocente(boolean atestadosDocente) {
         this.atestadosDocente = atestadosDocente;
     }
-    public LocalDate getFechaEntrega() {
+    public Date getFechaEntrega() {
         return fechaEntrega;
     }
-    public void setFechaEntrega(LocalDate fechaEntrega) {
+    public void setFechaEntrega(Date fechaEntrega) {
         this.fechaEntrega = fechaEntrega;
     }
 
