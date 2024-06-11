@@ -97,22 +97,13 @@ public class ListarDocentesPdf extends AbstractPdfView {
         document.add(headerTable);
         // FIN
 
-        // Tabla de título
-/*         PdfPTable tablaTitulo = new PdfPTable(1);
-        PdfPCell celdaTitulo = new PdfPCell(new Phrase("Planta docente", titleFont2));
-        celdaTitulo.setHorizontalAlignment(Element.ALIGN_CENTER);
-        celdaTitulo.setVerticalAlignment(Element.ALIGN_CENTER);
-        celdaTitulo.setBorder(PdfPCell.NO_BORDER);
-        tablaTitulo.addCell(celdaTitulo);
-        tablaTitulo.setSpacingAfter(20);
-        document.add(tablaTitulo); */
-
         // Tabla de docentes
-        PdfPTable tablaDocentes = new PdfPTable(6);
+        PdfPTable tablaDocentes = new PdfPTable(7); // Añadir una columna más para el número de registro
         tablaDocentes.setWidthPercentage(100);
-        tablaDocentes.setWidths(new float[]{2, 2, 2, 2, 1, 2}); // Anchos relativos de las columnas
+        tablaDocentes.setWidths(new float[]{1, 2, 2, 2, 2, 1, 2}); // Anchos relativos de las columnas
 
         // Encabezados de la tabla de docentes
+        addTableHeader(tablaDocentes, "N.º", headerFont);
         addTableHeader(tablaDocentes, "Nombres", headerFont);
         addTableHeader(tablaDocentes, "Apellidos", headerFont);
         addTableHeader(tablaDocentes, "Profesión", headerFont);
@@ -121,14 +112,16 @@ public class ListarDocentesPdf extends AbstractPdfView {
         addTableHeader(tablaDocentes, "DUI", headerFont);
 
         // Datos de los docentes
-        listadoDocentes.forEach(docente -> {
+        int registro = 1;
+        for (DocenteDTO docente : listadoDocentes) {
+            addTableCell(tablaDocentes, String.valueOf(registro++), bodyFont); // Añadir número de registro
             addTableCell(tablaDocentes, docente.getDocente().getNombreDocente(), bodyFont);
             addTableCell(tablaDocentes, docente.getDocente().getApellidoDocente(), bodyFont);
             addTableCell(tablaDocentes, docente.getDocente().getProfesionDocente(), bodyFont);
             addTableCell(tablaDocentes, docente.getDocente().getTelefonoDocente(), bodyFont);
             addTableCell(tablaDocentes, String.valueOf(docente.getEdad()), bodyFont);
             addTableCell(tablaDocentes, docente.getDocente().getDuiDocente(), bodyFont);
-        });
+        }
 
         document.add(tablaDocentes);
 
@@ -142,7 +135,7 @@ public class ListarDocentesPdf extends AbstractPdfView {
     private void addTableHeader(PdfPTable table, String header, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(header, font));
         cell.setBackgroundColor(new Color(0, 51, 102));
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT); // Alinear a la izquierda
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setPadding(5);
         table.addCell(cell);
