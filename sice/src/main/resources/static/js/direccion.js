@@ -110,41 +110,55 @@ const data = {
     const municipioSelect = document.getElementById("docente_municipio");
     const distritoSelect = document.getElementById("docente_distrito");
 
-    // Populamos los selectores con las opciones por defecto al cargar la página
-    const defaultOption = document.createElement("option");
-    defaultOption.value = '';
-    defaultOption.textContent = 'Seleccionar...';
-    municipioSelect.appendChild(defaultOption.cloneNode(true));
-    distritoSelect.appendChild(defaultOption.cloneNode(true));
-
-    function populateSelect(select, options) {
-      select.innerHTML = "<option value='' selected>Seleccionar...</option>"; // Agrega value='' y selected a la primera opción
-      options.forEach(option => {
-        const optionElement = document.createElement("option");
-        optionElement.value = option; // Asigna el valor de la opción
-        optionElement.textContent = option;
-        select.appendChild(optionElement);
-      });
+    function populateSelect(select, options, selectedValue) {
+        select.innerHTML = "<option value='' selected>Seleccionar...</option>"; // Agrega value='' y selected a la primera opción
+        options.forEach(option => {
+            const optionElement = document.createElement("option");
+            optionElement.value = option;
+            optionElement.textContent = option;
+            if (option === selectedValue) {
+                optionElement.selected = true;
+            }
+            select.appendChild(optionElement);
+        });
     }
-    
 
     function onDepartamentoChange() {
         const selectedDepartamento = departamentoSelect.value;
         const municipios = selectedDepartamento !== '' ? Object.keys(data.departamentos[selectedDepartamento].municipios) : [];
-        populateSelect(municipioSelect, municipios);
-        populateSelect(distritoSelect, []); // Limpiamos los distritos cuando cambia el departamento
+        populateSelect(municipioSelect, municipios, municipioSelect.getAttribute('data-selected'));
+        populateSelect(distritoSelect, [], distritoSelect.getAttribute('data-selected')); // Limpiamos los distritos cuando cambia el departamento
     }
 
     function onMunicipioChange() {
         const selectedDepartamento = departamentoSelect.value;
         const selectedMunicipio = municipioSelect.value;
         const distritos = selectedDepartamento !== '' && selectedMunicipio !== '' ? data.departamentos[selectedDepartamento].municipios[selectedMunicipio] : [];
-        populateSelect(distritoSelect, distritos);
+        populateSelect(distritoSelect, distritos, distritoSelect.getAttribute('data-selected'));
     }
 
     const departamentos = Object.keys(data.departamentos);
-    populateSelect(departamentoSelect, departamentos);
+    populateSelect(departamentoSelect, departamentos, departamentoSelect.getAttribute('data-selected'));
 
     departamentoSelect.addEventListener("change", onDepartamentoChange);
     municipioSelect.addEventListener("change", onMunicipioChange);
+
+    // Inicializa los selectores si ya tienen valores seleccionados
+    const initialDepartamento = departamentoSelect.getAttribute('data-selected');
+    const initialMunicipio = municipioSelect.getAttribute('data-selected');
+    const initialDistrito = distritoSelect.getAttribute('data-selected');
+
+    if (initialDepartamento) {
+        departamentoSelect.value = initialDepartamento;
+        onDepartamentoChange();
+    }
+
+    if (initialMunicipio) {
+        municipioSelect.value = initialMunicipio;
+        onMunicipioChange();
+    }
+
+    if (initialDistrito) {
+        distritoSelect.value = initialDistrito;
+    }
 });
