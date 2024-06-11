@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Bachillerato;
 
@@ -23,9 +25,10 @@ public class AlumnoController {
 	private BachilleratoService bachilleratoService;
 
 	@PostMapping("/guardar")
-	public String guardarAlumno(@ModelAttribute Alumno alumno) {
+	public String guardarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes) {
 
 		alumnoService.guardarAlumno(alumno);
+		attributes.addFlashAttribute("success", "¡Alumno guardado con exito!");
 		return "redirect:/ExpedienteAlumno/ver";
 	}
 
@@ -43,9 +46,25 @@ public class AlumnoController {
 	}
 
 	@GetMapping("/editar/{nie}")
-	public String editar(@PathVariable("nie") int nie, Model model) {
+	public String editar(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
-		Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
+		Alumno alumno= null;
+		if (nie>0) {
+			 alumno = alumnoService.buscarPorIdAlumno(nie);
+
+			 if (alumno == null) {
+				System.out.println("Error: ¡El NIE ingresado no existe!");
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
+				return "redirect:/ExpedienteAlumno/ver";
+			 }
+
+		}else{
+			System.out.println("Error: ¡El NIE ingresado no es valido!");
+			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es valido!");
+				return "redirect:/ExpedienteAlumno/ver";
+
+		}
+		
 
 		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
 		model.addAttribute("titulo", "Editar");
@@ -55,9 +74,27 @@ public class AlumnoController {
 	}
 
 	@GetMapping("/delete/{nie}")
-	public String eliminar(@PathVariable("nie") int nie) {
+	public String eliminar(@PathVariable("nie") int nie, RedirectAttributes attributes) {
+
+		Alumno alumno= null;
+		if (nie>0) {
+			 alumno = alumnoService.buscarPorIdAlumno(nie);
+
+			 if (alumno == null) {
+				System.out.println("Error: ¡El NIE ingresado no existe!");
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");				
+				return "redirect:/ExpedienteAlumno/ver";
+			 }
+
+		}else{
+			System.out.println("Error: ¡El NIE ingresado no es valido!");
+			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es valido!");
+				return "redirect:/ExpedienteAlumno/ver";
+
+		}
 
 		alumnoService.eliminar(nie);
+		attributes.addFlashAttribute("warning", "¡Registro eliminado con exito!");
 		return "redirect:/ExpedienteAlumno/ver";
 	}
 

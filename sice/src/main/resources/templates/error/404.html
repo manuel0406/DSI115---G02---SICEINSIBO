@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:fragment="head">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title   th:text="${titulo}"></title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+    <!--Esto es una barra de navegación-->
+    <header th:replace="home :: header"></header>
+    <h1 class="container text-center">Error 404: página no encontrada</h1>
+    
+
+
+    <footer th:fragment="footer">
+        <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+    <script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
+   
+
+        
+    </footer>
+
+    
+</body>
+
+</html>
