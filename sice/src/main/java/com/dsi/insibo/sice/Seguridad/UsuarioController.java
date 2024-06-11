@@ -37,10 +37,9 @@ public class UsuarioController  {
             return "redirect:/iniciarSesion";
         }
         else{
-            System.out.println("El rol cambio: "+ usuario.getRolUsuario());
             if("Administrador".equals(usuario.getRolUsuario())){
                 System.out.println("El rol cambio: "+ usuario.getRolUsuario());
-                return "redirect:/gestionarCredenciales";
+                return "redirect:/gestionarCredenciales?pagina=1";
             }
             else{ 
                 System.out.println("El correo es: "+ usuario.getIdUsuario());
