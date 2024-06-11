@@ -72,67 +72,159 @@
                     <div class="columna col-12">
                         <div class="widget registrar">
                             <fieldset class="border p-2">
-                                <legend  class="float-none w-auto">Registro de Actividades</legend>
-                                <form action="">
+                                <legend class="float-none w-auto">Registro de Actividades</legend>
+                                <form th:action="@{/Actividades/add}" th:object="${actividad}" method="post">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="row">
                                                 <div class="col-3">
-                                                    <label for="inputPassword6" class="col-form-label">Seleccione Grado: </label>
+                                                    <label for="inputPassword6" class="col-form-label">Seleccione Grado:</label>
                                                 </div>
                                                 <div class="col-9">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>Desplegar Opciones</option>
-                                                        <option value="1">One</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option>
-                                                      </select>
+                                                    <select class="form-select" aria-label="Default select example" required>
+                                                        <option th:each="bachillerato : ${grados}"
+                                                                th:value="${bachillerato.codigoBachillerato}"
+                                                                th:text="${bachillerato.grado +'° '+ bachillerato.nombreCarrera  + ' - Sección ' + bachillerato.seccion}">
+                                                        </option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="row">
                                                 <div class="col-3">
-                                                    <label for="inputPassword6" class="col-form-label">Seleccione Materia: </label>
+                                                    <label for="materia" class="col-form-label">Seleccione Materia:</label>
                                                 </div>
                                                 <div class="col-9">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>Desplegar Opciones</option>
-                                                        <option value="1">One</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option>
-                                                      </select>
-                                                </div> 
+                                                    <select id="materia" th:field="*{materia.codMateria}" class="form-select" aria-label="Default select example" onchange="filtrarPorMateria(this.value)" required>
+                                                        <option value="">Todas las Materias</option>
+                                                        <option th:each="materia : ${materias}"
+                                                                th:value="${materia.codMateria}"
+                                                                th:text="${materia.nomMateria}"
+                                                                th:selected="${materia.codMateria == actividad.materia?.codMateria}">
+                                                        </option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-3">
                                                     <br>
-                                                    <label for="inputPassword6" class="col-form-label">Seleccione Periodo: </label>
+                                                    <label for="periodo" class="col-form-label">Seleccione Periodo:</label>
                                                 </div>
                                                 <div class="col-9">
                                                     <br>
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>Desplegar Opciones</option>
-                                                        <option value="1">Primer Periodo</option>
-                                                        <option value="2">Segundo Periodo</option>
-                                                        <option value="3">Tercer Periodo</option>
-                                                        <option value="2">Cuarto Periodo</option>
-                                                        <option value="3">Periodo Extraordinario</option>
-                                                      </select>
-                                                </div> 
+                                                    <select id="periodo" th:field="*{periodo.idPeriodo}" class="form-select" aria-label="Default select example" required>
+                                                        <option th:each="periodo : ${periodos}"
+                                                                th:value="${periodo.idPeriodo}"
+                                                                th:text="${periodo.numeroPeriodo == 1 ? 'Primer periodo' : periodo.numeroPeriodo == 2 ? 'Segundo periodo' : periodo.numeroPeriodo == 3 ? 'Tercer periodo' : periodo.numeroPeriodo == 4 ? 'Cuarto Periodo' : periodo.numeroPeriodo == 5 ? 'Periodo Extraordinario' : periodo.numeroPeriodo}"
+                                                                th:selected="${periodo.idPeriodo == actividad.periodo?.idPeriodo}">
+                                                        </option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>  
+                                    </div>
+            
+                                    <!-- Botón para abrir modal de nueva actividad -->
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <button type="button" class="btn btn-success btn btn-success btn-fixed-bottom-right" data-bs-toggle="modal" data-bs-target="#AgregarActividad" data-bs-whatever="@mdo">Agregar Actividad</button>
+                                        </div>
+                                    </div>
+            
+                                    <!-- Modal para agregar nueva actividad -->
+                                    <div class="modal fade" id="AgregarActividad" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar nueva actividad</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <!-- Formulario dentro del modal -->
+                                                    <form th:action="@{/Actividades/add}" th:object="${actividad}" method="post">
+                                                        <div class="mb-3">
+                                                            <label for="nombreActividadModal" class="col-form-label">Nombre de la Actividad:</label>
+                                                            <input type="text" class="form-control" id="nombreActividadModal" th:field="*{nombreActividad}" />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="col-form-label" for="descripcionActividadModal">Descripción:</label>
+                                                            <textarea class="form-control" id="descripcionActividadModal" th:field="*{descripcionActividad}"></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="fechaActividadModal" class="col-form-label">Fecha de la Actividad:</label>
+                                                            <input type="date" class="form-control" id="fechaActividadModal" th:field="*{fechaActividad}" />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="ponderacionActividadModal" class="col-form-label">Ponderación:</label>
+                                                            <input type="number" class="form-control" id="ponderacionActividadModal" th:field="*{ponderacionActividad}" />
+                                                        </div>
+                                                        <!-- Botones del modal -->
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                            <button type="submit" class="btn btn-primary">Agregar</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Fin del Modal para agregar nueva actividad -->
                                 </form>
-                             </fieldset>
-                        </div>
-                        
-                        <button type="button" class="btn btn-success btn-fixed-bottom-right">Exportar Datos</button>
+                            </fieldset>
+
+                            <!-- Tabla para mostrar las actividades -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Ponderación</th>
+                                    <th scope="col">Materia</th>
+                                    <th scope="col">Periodo</th>
+                                    <th scope="col">Acciones</th> <!-- Nueva columna para acciones -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                 <!-- Aquí debes iterar sobre las actividades y mostrar cada una -->
+                                 <tr th:each="actividad : ${actividades}">
+                                    <td th:text="${actividad.nombreActividad}"></td>
+                                    <td th:text="${actividad.descripcionActividad}"></td>
+                                    <td th:text="${actividad.fechaActividad}"></td>
+                                    <td th:text="${actividad.ponderacionActividad}"></td>
+                                    <td th:text="${actividad.materia?.nomMateria}"></td>
+                                    <td th:text="${actividad.periodo?.numeroPeriodo == 1 ? 'Primer periodo' : actividad.periodo?.numeroPeriodo == 2 ? 'Segundo periodo' : actividad.periodo?.numeroPeriodo == 3 ? 'Tercer periodo' : actividad.periodo?.numeroPeriodo == 4 ? 'Cuarto Periodo' : actividad.periodo?.numeroPeriodo == 5 ? 'Periodo Extraordinario' : actividad.periodo?.numeroPeriodo}"></td>
+                                    <td>
+                                        <!-- Botón para editar -->
+                                        <a th:href="@{'/Actividades/edit/' + ${actividad.idActividad}}" class="btn btn-primary btn-sm"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                                          </svg></a>
+                                        
+                                        <!-- Botón para eliminar -->
+                                        <form th:action="@{'/Actividades/delete/' + ${actividad.idActividad}}" method="post" style="display: inline;">
+                                            <input type="hidden" name="_method" value="DELETE" />
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                                  </svg>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
-                
+                <!-- Fin de la tabla de actividades -->
+                        </div>
+                    </div>
+                </div>
             </main>
+            
         </div>
     </div>
 
@@ -146,4 +238,80 @@
 
 </body>
 
+
+<script th:inline="javascript">
+    /* Función para filtrar las actividades por materia */
+    function filtrarPorMateria(codMateria) {
+        // Realizar una solicitud AJAX para obtener las actividades filtradas
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/Actividades/filtrarPorMateria?codMateria=' + codMateria, true);
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                var actividades = JSON.parse(xhr.responseText);
+                mostrarActividades(actividades);
+            } else {
+                console.log('Error al obtener las actividades: ' + xhr.status);
+            }
+        };
+
+        xhr.send();
+    }
+
+    /* Función para mostrar las actividades filtradas en la tabla */
+    function mostrarActividades(actividades) {
+        var tabla = document.getElementById('tablaActividades');
+        var tbody = tabla.getElementsByTagName('tbody')[0];
+        tbody.innerHTML = ''; // Limpiar el contenido actual de la tabla
+
+        actividades.forEach(function (actividad) {
+            var row = tbody.insertRow();
+            row.insertCell().textContent = actividad.nombreActividad;
+            row.insertCell().textContent = actividad.descripcionActividad;
+            row.insertCell().textContent = actividad.fechaActividad;
+            row.insertCell().textContent = actividad.ponderacionActividad;
+            row.insertCell().textContent = actividad.materia.nomMateria;
+            row.insertCell().textContent = obtenerNombrePeriodo(actividad.periodo.numeroPeriodo);
+            
+            // Celda para acciones (editar y eliminar)
+            var cellAcciones = row.insertCell();
+            var linkEditar = document.createElement('a');
+            linkEditar.href = '/Actividades/edit/' + actividad.idActividad;
+            linkEditar.classList.add('btn', 'btn-primary', 'btn-sm');
+            linkEditar.textContent = 'Editar';
+            cellAcciones.appendChild(linkEditar);
+
+            var formEliminar = document.createElement('form');
+            formEliminar.action = '/Actividades/delete/' + actividad.idActividad;
+            formEliminar.method = 'post';
+            formEliminar.style.display = 'inline';
+
+            var inputHidden = document.createElement('input');
+            inputHidden.type = 'hidden';
+            inputHidden.name = '_method';
+            inputHidden.value = 'DELETE';
+
+            var buttonEliminar = document.createElement('button');
+            buttonEliminar.type = 'submit';
+            buttonEliminar.classList.add('btn', 'btn-danger', 'btn-sm');
+            buttonEliminar.textContent = 'Eliminar';
+
+            formEliminar.appendChild(inputHidden);
+            formEliminar.appendChild(buttonEliminar);
+            cellAcciones.appendChild(formEliminar);
+        });
+    }
+
+    /* Función para obtener el nombre del periodo */
+    function obtenerNombrePeriodo(numeroPeriodo) {
+        switch (numeroPeriodo) {
+            case 1: return 'Primer periodo';
+            case 2: return 'Segundo periodo';
+            case 3: return 'Tercer periodo';
+            case 4: return 'Cuarto periodo';
+            case 5: return 'Periodo Extraordinario';
+            default: return 'Desconocido';
+        }
+    }
+</script>
 </html>
