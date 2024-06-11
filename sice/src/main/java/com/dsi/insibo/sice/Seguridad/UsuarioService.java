@@ -2,8 +2,9 @@ package com.dsi.insibo.sice.Seguridad;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Pageable;
 import com.dsi.insibo.sice.Seguridad.UsuarioRepository;
 import com.dsi.insibo.sice.entity.Usuario;
 
@@ -13,12 +14,18 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public List<Usuario> listaUsuarios(){
-        return (List<Usuario>) usuarioRepository.findAll();
+    public List<Usuario> listaUsuariosActivosIntervalos(int offset){
+        Pageable pageable = PageRequest.of(offset, 7);
+        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Activo", pageable);
     }
 
-    public Usuario buscarPorId(int id){
-        return usuarioRepository.findById(id).orElse(null);
+    public List<Usuario> listaUsuariosActivos(){
+        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Activo");
+    }
+
+    public List<Usuario> listaUsuariosDesactivado(int offset){
+        Pageable pageable = PageRequest.of(offset,7);
+        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Desactivado", pageable);
     }
 
     public Usuario buscarPorCorreoYContrasena(String correoUsuario, String contrasenaUsuario) {
