@@ -14,4 +14,8 @@ public class MateriaService {
     public List<Materia> listaMaterias(){
         return (List<Materia>) materiaRepository.findAll();
     }
+
+    public List<Materia> listaMateriasPorCodMateriaYIdPeriodo(String codMateria, Integer idPeriodo) {
+        return materiaRepository.findByCodMateriaAndIdPeriodo(codMateria, idPeriodo);
+    }
 }

@@ -81,7 +81,8 @@
                                                     <label for="inputPassword6" class="col-form-label">Seleccione Grado:</label>
                                                 </div>
                                                 <div class="col-9">
-                                                    <select class="form-select" aria-label="Default select example" required>
+                                                    <select id="grado" class="form-select" aria-label="Default select example" required onchange="actualizarMaterias()">
+                                                        <option value="">Seleccione Carrera</option>
                                                         <option th:each="bachillerato : ${grados}"
                                                                 th:value="${bachillerato.codigoBachillerato}"
                                                                 th:text="${bachillerato.grado +'° '+ bachillerato.nombreCarrera  + ' - Sección ' + bachillerato.seccion}">
@@ -96,7 +97,7 @@
                                                     <label for="materia" class="col-form-label">Seleccione Materia:</label>
                                                 </div>
                                                 <div class="col-9">
-                                                    <select id="materia" th:field="*{materia.codMateria}" class="form-select" aria-label="Default select example" onchange="filtrarPorMateria(this.value)" required>
+                                                    <select id="materia" th:field="*{materia.codMateria}" class="form-select" aria-label="Default select example" required>
                                                         <option value="">Todas las Materias</option>
                                                         <option th:each="materia : ${materias}"
                                                                 th:value="${materia.codMateria}"
@@ -142,7 +143,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <!-- Formulario dentro del modal -->
-                                                    <form th:action="@{/Actividades/add}" th:object="${actividad}" method="post">
+                                                    <form th:action="@{/Actividades/add}" th:object="${actividad}" method="post" onsubmit="handleFormSubmit(event)">
                                                         <div class="mb-3">
                                                             <label for="nombreActividadModal" class="col-form-label">Nombre de la Actividad:</label>
                                                             <input type="text" class="form-control" id="nombreActividadModal" th:field="*{nombreActividad}" />
@@ -199,18 +200,19 @@
                                     <td th:text="${actividad.periodo?.numeroPeriodo == 1 ? 'Primer periodo' : actividad.periodo?.numeroPeriodo == 2 ? 'Segundo periodo' : actividad.periodo?.numeroPeriodo == 3 ? 'Tercer periodo' : actividad.periodo?.numeroPeriodo == 4 ? 'Cuarto Periodo' : actividad.periodo?.numeroPeriodo == 5 ? 'Periodo Extraordinario' : actividad.periodo?.numeroPeriodo}"></td>
                                     <td>
                                         <!-- Botón para editar -->
-                                        <a th:href="@{'/Actividades/edit/' + ${actividad.idActividad}}" class="btn btn-primary btn-sm"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
-                                          </svg></a>
+                                        <button type="button" class="btn btn-primary btn-sm" th:onclick="'showEditModal(' + ${actividad.idActividad} + ')'">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                                <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                                              </svg>
+                                        </button>
                                         
                                         <!-- Botón para eliminar -->
-                                        <form th:action="@{'/Actividades/delete/' + ${actividad.idActividad}}" method="post" style="display: inline;">
-                                            <input type="hidden" name="_method" value="DELETE" />
-                                            <button type="submit" class="btn btn-danger btn-sm">
+                                        <form th:action="@{/Actividades/delete/{idActividad}(idActividad=${actividad.idActividad})}" method="get" style="display: inline;">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro que desea eliminar esta actividad?')">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
                                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                                                  </svg>
+                                                </svg>
                                             </button>
                                         </form>
                                     </td>
@@ -228,90 +230,95 @@
         </div>
     </div>
 
+    <div class="modal fade" id="EditarActividadModal" tabindex="-1" aria-labelledby="EditarActividadLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="EditarActividadLabel">Editar actividad</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario dentro del modal -->
+                    <form th:action="@{/Actividades/edit}" th:object="${actividad}" method="post">
+                        <input type="hidden" id="idActividadEdit" th:field="*{idActividad}" />                             
+                        <div class="mb-3">
+                            <label for="nombreActividadEditModal" class="col-form-label">Nombre de la Actividad:</label>
+                            <input type="text" class="form-control" id="nombreActividadEditModal" th:field="*{nombreActividad}" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="col-form-label" for="descripcionActividadEditModal">Descripción:</label>
+                            <textarea class="form-control" id="descripcionActividadEditModal" th:field="*{descripcionActividad}"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaActividadEditModal" class="col-form-label">Fecha de la Actividad:</label>
+                            <input type="date" class="form-control" id="fechaActividadEditModal" th:field="*{fechaActividad}" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="ponderacionActividadEditModal" class="col-form-label">Ponderación:</label>
+                            <input type="number" class="form-control" id="ponderacionActividadEditModal" th:field="*{ponderacionActividad}" />
+                        </div>
+                        <!-- Aquí agregamos los campos ocultos para materia y periodo -->
+                        <input type="hidden" id="materiaEdit" th:field="*{materia.codMateria}" />
+                        <input type="hidden" id="periodoEdit" th:field="*{periodo.idPeriodo}" />
+                        <!-- Botones del modal -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--Aca Termina-->
-    
-
 
     <footer th:fragment="footer">
         <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
     </footer>
 
+
+    <script th:inline="javascript">
+        function actualizarMaterias() {
+            var codigoBachillerato = document.getElementById("grado").value;
+            fetch(`/materiasPorBachillerato?codigoBachillerato=${codigoBachillerato}`)
+                .then(response => response.json())
+                .then(data => {
+                    var materiaSelect = document.getElementById("materia");
+                    materiaSelect.innerHTML = '<option value="">Todas las Materias</option>';
+                    data.forEach(materia => {
+                        var option = document.createElement("option");
+                        option.value = materia.codMateria;
+                        option.text = materia.nomMateria;
+                        materiaSelect.appendChild(option);
+                    });
+                });
+        }
+
+        function showEditModal(idActividad) {
+            fetch('/Actividades/edit/' + idActividad)
+                .then(response => response.json())
+                .then(data => {
+                    // Asigna los datos recibidos a los campos del modal de edición
+                    document.getElementById('idActividadEdit').value = data.idActividad;
+                    document.getElementById('nombreActividadEditModal').value = data.nombreActividad;
+                    document.getElementById('descripcionActividadEditModal').value = data.descripcionActividad;
+                    document.getElementById('fechaActividadEditModal').value = data.fechaActividad;
+                    document.getElementById('ponderacionActividadEditModal').value = data.ponderacionActividad;
+            
+                    // Aquí asignamos los valores de materia y periodo
+                    document.getElementById('materiaEdit').value = data.materia.codMateria;
+                    document.getElementById('periodoEdit').value = data.periodo.idPeriodo;
+
+                    // Muestra el modal de edición
+                    var myModal = new bootstrap.Modal(document.getElementById('EditarActividadModal'));
+                    myModal.show();
+                })
+                .catch(error => {
+                    console.error('Error al obtener los datos de la actividad:', error);
+            // Maneja el error de manera adecuada según tu aplicación
+                });
+        }
+    </script>
 </body>
 
-
-<script th:inline="javascript">
-    /* Función para filtrar las actividades por materia */
-    function filtrarPorMateria(codMateria) {
-        // Realizar una solicitud AJAX para obtener las actividades filtradas
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/Actividades/filtrarPorMateria?codMateria=' + codMateria, true);
-
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                var actividades = JSON.parse(xhr.responseText);
-                mostrarActividades(actividades);
-            } else {
-                console.log('Error al obtener las actividades: ' + xhr.status);
-            }
-        };
-
-        xhr.send();
-    }
-
-    /* Función para mostrar las actividades filtradas en la tabla */
-    function mostrarActividades(actividades) {
-        var tabla = document.getElementById('tablaActividades');
-        var tbody = tabla.getElementsByTagName('tbody')[0];
-        tbody.innerHTML = ''; // Limpiar el contenido actual de la tabla
-
-        actividades.forEach(function (actividad) {
-            var row = tbody.insertRow();
-            row.insertCell().textContent = actividad.nombreActividad;
-            row.insertCell().textContent = actividad.descripcionActividad;
-            row.insertCell().textContent = actividad.fechaActividad;
-            row.insertCell().textContent = actividad.ponderacionActividad;
-            row.insertCell().textContent = actividad.materia.nomMateria;
-            row.insertCell().textContent = obtenerNombrePeriodo(actividad.periodo.numeroPeriodo);
-            
-            // Celda para acciones (editar y eliminar)
-            var cellAcciones = row.insertCell();
-            var linkEditar = document.createElement('a');
-            linkEditar.href = '/Actividades/edit/' + actividad.idActividad;
-            linkEditar.classList.add('btn', 'btn-primary', 'btn-sm');
-            linkEditar.textContent = 'Editar';
-            cellAcciones.appendChild(linkEditar);
-
-            var formEliminar = document.createElement('form');
-            formEliminar.action = '/Actividades/delete/' + actividad.idActividad;
-            formEliminar.method = 'post';
-            formEliminar.style.display = 'inline';
-
-            var inputHidden = document.createElement('input');
-            inputHidden.type = 'hidden';
-            inputHidden.name = '_method';
-            inputHidden.value = 'DELETE';
-
-            var buttonEliminar = document.createElement('button');
-            buttonEliminar.type = 'submit';
-            buttonEliminar.classList.add('btn', 'btn-danger', 'btn-sm');
-            buttonEliminar.textContent = 'Eliminar';
-
-            formEliminar.appendChild(inputHidden);
-            formEliminar.appendChild(buttonEliminar);
-            cellAcciones.appendChild(formEliminar);
-        });
-    }
-
-    /* Función para obtener el nombre del periodo */
-    function obtenerNombrePeriodo(numeroPeriodo) {
-        switch (numeroPeriodo) {
-            case 1: return 'Primer periodo';
-            case 2: return 'Segundo periodo';
-            case 3: return 'Tercer periodo';
-            case 4: return 'Cuarto periodo';
-            case 5: return 'Periodo Extraordinario';
-            default: return 'Desconocido';
-        }
-    }
-</script>
 </html>
