@@ -8,5 +8,4 @@ import com.dsi.insibo.sice.entity.Materia;
 
 @Repository
 public interface MateriaRepository extends JpaRepository<Materia, String> {
-    
 }
