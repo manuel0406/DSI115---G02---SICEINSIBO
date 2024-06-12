@@ -29,8 +29,14 @@
     </div>
 
     <div class="container my-4">
+        
         <div class="text-end mb-3">
-            <a th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-secondary" th:text="'Agregar Alumno'"></a>
+            <a class="btn btn-secondary" th:href="@{/ExpedienteAlumno/ver(format='pdf')}"
+                data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual" target="_blank"
+                onclick="openInPopup(this.href); return false;">
+                <i class="bi bi-printer"></i> Imprimir listado
+            </a>
+            <a th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-success" th:text="'Agregar Alumno'"></a>
         </div>
 
         <div class="row my-2">
@@ -106,6 +112,12 @@
                                 <a class="btn btn-danger delete-btn" th:href="@{/ExpedienteAlumno/delete/} + ${alumno.nie}" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
                                     <i class="bi bi-trash"></i>
                                 </a>
+                              
+                                <a th:href="@{/ExpedienteAlumno/editar/{id}(id=${alumno.nie}, format='pdf')} "
+                                class="btn btn-secondary btn-sm mx-1" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Imprimir" target="_blank" onclick="openInPopup(this.href); return false;">
+                                <i class="bi bi-printer"></i>
+                            </a>
                             </td>
                         </tr>
                     </tbody>
