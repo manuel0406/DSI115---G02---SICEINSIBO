@@ -1,6 +1,5 @@
 package com.dsi.insibo.sice.Expediente_alumno;
 
-
 import java.awt.Color;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -8,7 +7,6 @@ import java.util.Date;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
-
 import com.dsi.insibo.sice.entity.Alumno;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
@@ -25,24 +23,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component("/Expediente_alumno/registro")
-public class FichaAlumnoPdf  extends AbstractPdfView {
+public class FichaAlumnoPdf extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
         // TODO Auto-generated method stub
 
-        Alumno alumno=(Alumno) model.get("alumno");
+        Alumno alumno = (Alumno) model.get("alumno");
         document.setPageSize(PageSize.LETTER);
         document.setMargins(85, 85, 36, 72); // Margen de 3 cm a los lados y 2.5 cm abajo
         document.open();
 
         // Fuentes
-        Font titleFont2 = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, Color.BLACK);
-        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA, 12, Color.BLACK);
-        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.BLACK);
-        Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 11, Color.BLACK);
-        Font footerFont = FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 10, Color.GRAY);
+        Font titleFont2 = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.BLACK);
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.BLACK);
+        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.BLACK);
+        Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.BLACK);
+        Font footerFont = FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 9, Color.GRAY);
 
         // Crear una tabla para alinear la imagen y los títulos
         PdfPTable headerTable = new PdfPTable(2);
@@ -83,7 +81,7 @@ public class FichaAlumnoPdf  extends AbstractPdfView {
 
         // Añadir títulos
         Paragraph title = new Paragraph("INSTITUTO NACIONAL SIMON BOLIVAR\nCODIGO 11694 SANTO TOMAS", titleFont);
-        Paragraph title2 = new Paragraph("FICHA PERSONAL Alumno: DATOS PERSONALES\n\n", titleFont2);
+        Paragraph title2 = new Paragraph("FICHA PERSONAL ALUMNO: DATOS PERSONALES\n\n", titleFont2);
         title.setAlignment(Element.ALIGN_LEFT);
         title2.setAlignment(Element.ALIGN_LEFT);
 
@@ -111,32 +109,62 @@ public class FichaAlumnoPdf  extends AbstractPdfView {
         table.addCell(cell);
 
         addTableCell(table, "NIE:", String.valueOf(alumno.getNie()), headerFont, bodyFont);
-        addTableCell(table, "Año:",String.valueOf( alumno.getBachillerato().getGrado()), headerFont, bodyFont);
-        addTableCell(table, "Especialidad en Estudio:", alumno.getBachillerato().getNombreCarrera(), headerFont, bodyFont);
-        addTableCell(table, "Sección:",String.valueOf( alumno.getBachillerato().getSeccion()), headerFont, bodyFont);
+        addTableCell(table, "Año:", String.valueOf(alumno.getBachillerato().getGrado()), headerFont, bodyFont);
+        addTableCell(table, "Especialidad en Estudio:", alumno.getBachillerato().getNombreCarrera(), headerFont,
+                bodyFont);
+        addTableCell(table, "Sección:", String.valueOf(alumno.getBachillerato().getSeccion()), headerFont, bodyFont);
         addTableCell(table, "Nombres:", alumno.getNombreAlumno(), headerFont, bodyFont);
-        addTableCell(table, "Apellidos:", alumno.getApellidoAlumno(), headerFont, bodyFont);      
+        addTableCell(table, "Apellidos:", alumno.getApellidoAlumno(), headerFont, bodyFont);
         addTableCell(table, "Fecha de Nacimiento:", alumno.getFechaNacimientoAlumno().toString(), headerFont, bodyFont);
-        addTableCell(table, "Dirección:", alumno.getDireccionAlumno(), headerFont, bodyFont);           
-        addTableCell(table, "DUI:", alumno.getDuiAlumno(), headerFont, bodyFont);      
+        addTableCell(table, "Dirección:", alumno.getDireccionAlumno(), headerFont, bodyFont);
+        addTableCell(table, "DUI:", alumno.getDuiAlumno(), headerFont, bodyFont);
         addTableCell(table, "Correo Electrónico:", alumno.getCorreoAlumno(), headerFont, bodyFont);
         addTableCell(table, "Teléfono:", alumno.getTelefonoAlumno(), headerFont, bodyFont);
-        
-        
-        
 
+        cell = new PdfPCell(new Phrase("Padecimientos", headerFont));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setPadding(10);
+        cell.setBackgroundColor(new Color(230, 230, 230));
+        table.addCell(cell);        
+        
+        addTableCell(table, "Enfermedad:", alumno.getPadecimientos(), headerFont, bodyFont);
+        addTableCell(table, "Medicamento:", alumno.getMedicamento(), headerFont, bodyFont);
+        addTableCell(table, "Forma de medicación:", alumno.getFormaMedicacion(), headerFont, bodyFont);
+        
+        
+        cell = new PdfPCell(new Phrase("Datos del encargado", headerFont));
+        cell.setColspan(2);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setPadding(10);
+        cell.setBackgroundColor(new Color(230, 230, 230));
+        table.addCell(cell);        
+        
+        addTableCell(table, "Nombres:", alumno.getNombreEncargado(), headerFont, bodyFont);
+        addTableCell(table, "Apellidos:", alumno.getApellidoEncargado(), headerFont, bodyFont);
+        addTableCell(table, "DUI:", alumno.getDuiEncargado(), headerFont, bodyFont);
+        addTableCell(table, "Teléfono:", alumno.getTelefonoEncargado(), headerFont, bodyFont);
+        addTableCell(table, "Correo Electrónico:", alumno.getCorreoEncargado(), headerFont, bodyFont);        
+        addTableCell(table, "Lugar de trabajo:", alumno.getLugarDeTrabajo(), headerFont, bodyFont);
+        
         document.add(table);
 
         // Firma
-/*         Paragraph firma = new Paragraph("\n\nFirma: ________________\n           Subdirección", bodyFont);
-        firma.setAlignment(Element.ALIGN_CENTER);
-        document.add(firma); */
+        /*
+         * Paragraph firma = new
+         * Paragraph("\n\nFirma: ________________\n           Subdirección", bodyFont);
+         * firma.setAlignment(Element.ALIGN_CENTER);
+         * document.add(firma);
+         */
+      
 
         // Pie de página
         String fechaImpresion = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
         Paragraph footer = new Paragraph("\n\n\nINSIBO - " + fechaImpresion, footerFont);
         footer.setAlignment(Element.ALIGN_CENTER);
         document.add(footer);
+
+        
     }
 
     private void addTableCell(PdfPTable table, String header, String body, Font headerFont, Font bodyFont) {
@@ -144,7 +172,6 @@ public class FichaAlumnoPdf  extends AbstractPdfView {
         cell = new PdfPCell(new Phrase(header, headerFont));
         cell.setPadding(5);
         table.addCell(cell);
-
         cell = new PdfPCell(new Phrase(body, bodyFont));
         cell.setPadding(5);
         table.addCell(cell);

@@ -27,9 +27,17 @@ public class AlumnoController {
 	@PostMapping("/guardar")
 	public String guardarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes) {
 
-		alumnoService.guardarAlumno(alumno);
-		attributes.addFlashAttribute("success", "¡Alumno guardado con exito!");
-		return "redirect:/ExpedienteAlumno/ver";
+		alumno = alumnoService.buscarPorIdAlumno(alumno.getNie());
+		if (alumno == null) {
+			alumnoService.guardarAlumno(alumno);			
+			attributes.addFlashAttribute("success", "¡Alumno guardado con exito!");
+			return "redirect:/ExpedienteAlumno/ver";
+		}else{
+			attributes.addFlashAttribute("error", "¡El alumno ya existe!");
+			return "redirect:/ExpedienteAlumno/ver";
+		}
+		
+		
 	}
 
 	@GetMapping("/Crear")

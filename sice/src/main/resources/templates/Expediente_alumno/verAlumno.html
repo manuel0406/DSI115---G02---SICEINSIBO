@@ -6,33 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
-    
+
 </head>
 
 <body>
     <header th:replace="home :: header"></header>
-     <!--Mensajes-->
-     
-     <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${success != null}">
+    <!--Mensajes-->
+
+    <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${success != null}">
         <label th:text="${success}"></label>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    
+
     <div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${error != null}">
         <label th:text="${error}"></label>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    
+
     <div class="alert alert-warning alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${warning != null}">
         <label th:text="${warning}"></label>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
     <div class="container my-4">
-        
+
         <div class="text-end mb-3">
-            <a class="btn btn-secondary" th:href="@{/ExpedienteAlumno/ver(format='pdf')}"
-                data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual" target="_blank"
+            <a class="btn btn-secondary" th:href="@{/ExpedienteAlumno/ver(format='pdf')}" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Imprimir listado actual" target="_blank"
                 onclick="openInPopup(this.href); return false;">
                 <i class="bi bi-printer"></i> Imprimir listado
             </a>
@@ -109,15 +109,18 @@
                                 <a class="btn btn-primary" th:href="@{/ExpedienteAlumno/editar/} + ${alumno.nie}">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <a class="btn btn-danger delete-btn" th:href="@{/ExpedienteAlumno/delete/} + ${alumno.nie}" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                <a class="btn btn-danger delete-btn"
+                                    th:href="@{/ExpedienteAlumno/delete/} + ${alumno.nie}" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" title="Eliminar">
                                     <i class="bi bi-trash"></i>
                                 </a>
-                              
+
                                 <a th:href="@{/ExpedienteAlumno/editar/{id}(id=${alumno.nie}, format='pdf')} "
-                                class="btn btn-secondary btn-sm mx-1" data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="Imprimir" target="_blank" onclick="openInPopup(this.href); return false;">
-                                <i class="bi bi-printer"></i>
-                            </a>
+                                    class="btn btn-secondary " data-bs-toggle="tooltip"
+                                    data-bs-placement="top" title="Imprimir" target="_blank"
+                                    onclick="openInPopup(this.href); return false;">
+                                    <i class="bi bi-printer"></i>
+                                </a>
                             </td>
                         </tr>
                     </tbody>
@@ -127,7 +130,8 @@
     </div>
 
     <!-- Modal de Confirmación -->
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -148,7 +152,7 @@
     <footer th:replace="home :: footer"></footer>
 
     <!-- Incluye Bootstrap JS y Popper.js -->
-   
+
     <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
 </body>
 
