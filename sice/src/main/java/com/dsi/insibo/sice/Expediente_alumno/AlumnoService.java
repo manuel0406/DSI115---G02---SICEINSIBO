@@ -17,10 +17,27 @@ public class AlumnoService {
 
 
     public List<Alumno> listarAlumnos(String carrera, String grado, String seccion){
-        if(carrera !=null){
+
+        if(carrera !=null && grado!=null && seccion!=null){
             return (List<Alumno>)alumnoRepository.findAll(carrera, grado, seccion);
 
+        }else if (carrera !=null &&  grado==null && seccion==null) {
+
+            return (List<Alumno>)alumnoRepository.findAllPorCarrera(carrera);
+
+        }else if (carrera ==null &&  grado !=null && seccion==null) {
+             return (List<Alumno>)alumnoRepository.findAllPorGrado(grado);
+             
+        }else if (carrera ==null &&  grado==null && seccion != null) {
+            
+        }else if (carrera !=null &&  grado !=null && seccion==null) {
+            return (List<Alumno>)alumnoRepository.findAll(carrera, grado);
+        }else if (carrera !=null &&  grado ==null && seccion !=null) {
+            
+        }else if (carrera ==null &&  grado !=null && seccion !=null) {
+            
         }
+
         return alumnoRepository.findAll();
     }
 

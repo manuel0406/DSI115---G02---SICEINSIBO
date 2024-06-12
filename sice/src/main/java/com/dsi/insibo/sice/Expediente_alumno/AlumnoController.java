@@ -78,6 +78,7 @@ public class AlumnoController {
 		model.addAttribute("titulo", "Editar");
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachilleratos", listaBachilleratos);
+		model.addAttribute("editar", true); // Indica que se está editando un docente
 		return "/Expediente_alumno/registro";
 	}
 

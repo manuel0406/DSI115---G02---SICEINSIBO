@@ -37,7 +37,8 @@
 
                 <div class="col-12 col-md-4">
                     <label for="exampleInputEmail1" class="form-label fs-6">NIE:</label>
-                    <input type="text" th:field="*{nie}" class="form-control restricted-input" id="nie" required
+                    <input type="text" th:field="*{nie}" class="form-control restricted-input" id="nie"  
+                    th:readonly="${editar}" th:classappend="${editar} ? 'bg-light text-dark' : ''" required
                         minlength="7" maxlength="7" />
                 </div>
 
