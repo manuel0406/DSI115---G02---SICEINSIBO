@@ -26,19 +26,20 @@ public class AlumnoController {
 
 	@PostMapping("/guardar")
 	public String guardarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes) {
+		// Busca el alumno existente en la base de datos utilizando el NIE proporcionado
+		Alumno alumnoExistente = alumnoService.buscarPorIdAlumno(alumno.getNie());
 
-		alumno = alumnoService.buscarPorIdAlumno(alumno.getNie());
-		if (alumno == null) {
-			alumnoService.guardarAlumno(alumno);			
-			attributes.addFlashAttribute("success", "¡Alumno guardado con exito!");
-			return "redirect:/ExpedienteAlumno/ver";
-		}else{
-			attributes.addFlashAttribute("error", "¡El alumno ya existe!");
+		if (alumnoExistente != null) {
+			attributes.addFlashAttribute("error", "Error: El NIE ya está registrado.");
 			return "redirect:/ExpedienteAlumno/ver";
 		}
-		
-		
+
+		// Guarda o actualiza el alumno
+		alumnoService.guardarAlumno(alumno);
+		attributes.addFlashAttribute("success", "¡Alumno guardado con éxito!");
+		return "redirect:/ExpedienteAlumno/ver";
 	}
+	
 
 	@GetMapping("/Crear")
 	public String crear(Model model) {
@@ -56,49 +57,56 @@ public class AlumnoController {
 	@GetMapping("/editar/{nie}")
 	public String editar(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
-		Alumno alumno= null;
-		if (nie>0) {
-			 alumno = alumnoService.buscarPorIdAlumno(nie);
+		Alumno alumno = null;
+		if (nie > 0) {
+			alumno = alumnoService.buscarPorIdAlumno(nie);
 
-			 if (alumno == null) {
+			if (alumno == null) {
 				System.out.println("Error: ¡El NIE ingresado no existe!");
 				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
 				return "redirect:/ExpedienteAlumno/ver";
-			 }
+			}
 
-		}else{
+		} else {
 			System.out.println("Error: ¡El NIE ingresado no es valido!");
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es valido!");
-				return "redirect:/ExpedienteAlumno/ver";
+			return "redirect:/ExpedienteAlumno/ver";
 
 		}
-		
 
 		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
 		model.addAttribute("titulo", "Editar");
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachilleratos", listaBachilleratos);
 		model.addAttribute("editar", true); // Indica que se está editando un docente
-		return "/Expediente_alumno/registro";
+		return "/Expediente_alumno/editar";
+	}
+	@PostMapping("/actualizar")
+	public String actualizarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes) {
+		// Busca el alumno existente en la base de datos utilizando el NIE proporcionado
+				
+		alumnoService.guardarAlumno(alumno);
+		attributes.addFlashAttribute("success", "¡Alumno actualizado con éxito!");
+		return "redirect:/ExpedienteAlumno/ver";
 	}
 
 	@GetMapping("/delete/{nie}")
 	public String eliminar(@PathVariable("nie") int nie, RedirectAttributes attributes) {
 
-		Alumno alumno= null;
-		if (nie>0) {
-			 alumno = alumnoService.buscarPorIdAlumno(nie);
+		Alumno alumno = null;
+		if (nie > 0) {
+			alumno = alumnoService.buscarPorIdAlumno(nie);
 
-			 if (alumno == null) {
+			if (alumno == null) {
 				System.out.println("Error: ¡El NIE ingresado no existe!");
-				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");				
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
 				return "redirect:/ExpedienteAlumno/ver";
-			 }
+			}
 
-		}else{
+		} else {
 			System.out.println("Error: ¡El NIE ingresado no es valido!");
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es valido!");
-				return "redirect:/ExpedienteAlumno/ver";
+			return "redirect:/ExpedienteAlumno/ver";
 
 		}
 
@@ -111,7 +119,6 @@ public class AlumnoController {
 	public String verAlumno(Model model, @Param("carrera") String carrera, @Param("grado") String grado,
 			@Param("seccion") String seccion) {
 
-		
 		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion);
 		model.addAttribute("titulo", "Ver");
 		model.addAttribute("alumnos", listaAlumnos);
@@ -135,7 +142,7 @@ public class AlumnoController {
 
 	@GetMapping("/Enfermedades/{nie}")
 	public String enfermedadAlumno(@PathVariable("nie") int nie, Model model) {
-		
+
 		Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
 		Bachillerato bachillerato = alumno.getBachillerato();
 		model.addAttribute("titulo", "Padecimientos");
@@ -143,6 +150,7 @@ public class AlumnoController {
 		model.addAttribute("bachillerato", bachillerato);
 		return "/Expediente_alumno/AlumnoEnfermedad";
 	}
+
 	@GetMapping("/Responsable/{nie}")
 	public String responsableAlumno(@PathVariable("nie") int nie, Model model) {
 
