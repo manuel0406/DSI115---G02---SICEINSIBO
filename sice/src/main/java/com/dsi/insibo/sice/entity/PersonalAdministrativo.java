@@ -17,7 +17,7 @@ public class PersonalAdministrativo {
     private String apellidoPersonal;
     private String telefonoPersonal;
     private String profesionPersonal;
-    private LocalDate fechaNacimientoP;
+    private Date fechaNacimientoP;
     private String gradoAcademicoP;
     private String correoPersonal;
     private String departamentoPersonal;
@@ -79,10 +79,10 @@ public class PersonalAdministrativo {
     public void setProfesionPersonal(String profesionPersonal) {
         this.profesionPersonal = profesionPersonal;
     }
-    public LocalDate getFechaNacimientoP() {
+    public Date getFechaNacimientoP() {
         return fechaNacimientoP;
     }
-    public void setFechaNacimientoP(LocalDate fechaNacimientoP) {
+    public void setFechaNacimientoP(Date fechaNacimientoP) {
         this.fechaNacimientoP = fechaNacimientoP;
     }
     public String getGradoAcademicoP() {
