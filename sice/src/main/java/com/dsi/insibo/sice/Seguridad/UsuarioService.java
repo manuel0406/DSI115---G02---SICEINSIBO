@@ -26,7 +26,7 @@ public class UsuarioService {
         return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Activo");
     }
 
-    // USUARIOS INACTIVOS - CON CREDENCIALES
+    // USUARIOS INACTIVOS - SIN CREDENCIALES
 
     public List<Usuario> listaUsuariosDesactivados(){
         return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Desactivado");
@@ -37,7 +37,28 @@ public class UsuarioService {
         return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Desactivado", pageable);
     }
 
-    // USUARIOS BLOQUEADOS
+    // USUARIOS RECHAZADOS - SIN PERMISOS
+
+    public List<Usuario> listaUsuariosRechazados(){
+        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Rechazado");
+    }
+
+    public List<Usuario> listaUsuariosRechazadosIntervalos(int offset){
+        Pageable pageable = PageRequest.of(offset, 7);
+        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Rechazado", pageable);
+    }
+
+    // USUARIOS BLOQUEADOS - DENEGADOS
+    public List<Usuario> listaUsuariosBloqueados(){
+        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Bloqueado");
+    }
+
+    public List<Usuario> listaUsuariosBloqueadosIntervalos(int offset){
+        Pageable pageable = PageRequest.of(offset, 7);
+        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Bloqueado", pageable);
+    }
+
+
 
     public Usuario buscarPorCorreoYContrasena(String correoUsuario, String contrasenaUsuario) {
         return usuarioRepository.findByCorreoUsuarioAndContrasenaUsuario(correoUsuario, contrasenaUsuario);

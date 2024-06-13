@@ -16,8 +16,6 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
-
-
 function irHacia(boton) {
     // Obtener el ID del botón y mostrarlo en la consola
     var idDelBoton = boton.textContent;
