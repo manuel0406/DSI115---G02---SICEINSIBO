@@ -42,6 +42,16 @@ public class gestionarCredencialesController {
                 nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getDocente().getApellidoDocente();
             }
 
+            //OCULTAMIENTO DE CONTRASEÑA
+            Integer tamanyoContra = usuario.getContrasenaUsuario().length();
+            String codificacion="";
+
+            for(int i = 0; i < tamanyoContra ;i++){
+                codificacion = codificacion + "*";
+            }
+            usuario.setContrasenaUsuario(codificacion);
+
+            
             listadoCompleto.add(new UsuarioConNombre(usuario, nombre));
         }
 
