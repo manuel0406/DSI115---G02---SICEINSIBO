@@ -120,6 +120,7 @@ public class DocenteController {
     // Eliminar ficha
     @GetMapping("/eliminarexpediente/{id}")
     public String eliminarDocente(@PathVariable("id") String idDocente, RedirectAttributes attribute) {
+        usuarioService.eliminarUsuarioPorDocenteId(idDocente);
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
 
 

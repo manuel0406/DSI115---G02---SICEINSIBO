@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import com.dsi.insibo.sice.Seguridad.UsuarioRepository;
 import com.dsi.insibo.sice.entity.Usuario;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UsuarioService {
@@ -74,6 +75,16 @@ public class UsuarioService {
 
     public void guardarUsuario(Usuario usuario) {
         usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public void eliminarUsuarioPorDocenteId(String idDocente) {
+        usuarioRepository.deleteByDocente_DuiDocente(idDocente);
+    }
+    
+    @Transactional
+    public void eliminarUsuarioPorPersonalId(String idPersonal) {
+        usuarioRepository.deleteByPersonalAdministrativo_DuiPersonal(idPersonal);
     }
 
 }
