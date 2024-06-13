@@ -87,4 +87,8 @@ public class UsuarioService {
         usuarioRepository.deleteByPersonalAdministrativo_DuiPersonal(idPersonal);
     }
 
+    public Usuario buscarPorIdDocente(String idUsuario) {
+        return usuarioRepository.findByDocente_DuiDocente(idUsuario);
+    }
+
 }

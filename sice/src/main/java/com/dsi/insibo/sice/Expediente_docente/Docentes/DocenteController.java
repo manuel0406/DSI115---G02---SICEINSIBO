@@ -54,23 +54,33 @@ public class DocenteController {
 
     //guardando formulario
     @PostMapping("/guardar")
-    public String guardar(@Validated @ModelAttribute Docente docente, BindingResult result, Model model, RedirectAttributes attribute) {
-    
-        //Obtenemos informacion relevante del usuario
-        String correo = docente.getCorreoDocente() ;
-        String rol = "Docente";
-        String estado = "Desactivado";
-        boolean inicio = true;
-        String contrasena = "";
+    public String guardar(@Validated @ModelAttribute Docente docente, BindingResult result, Model model, RedirectAttributes attribute) {  
+        //Verificamos existencia del usuario
+        Usuario usuario = usuarioService.buscarPorIdDocente(docente.getDuiDocente());
+        System.out.println(usuario.getIdUsuario());
+        String correo = docente.getCorreoDocente();
 
-        //Asignaciones al objeto usuario
-        Usuario usuario = new Usuario();
-        usuario.setCorreoUsuario(correo);
-        usuario.setDocente(docente);
-        usuario.setRolUsuario(rol);
-        usuario.setEstadoUsuario(estado);
-        usuario.setPrimerIngreso(inicio);
-        usuario.setContrasenaUsuario(contrasena);
+        //Caso de Cracion de usuario
+        if(usuario.getContrasenaUsuario().equals("")){
+            //Obtenemos informacion relevante del usuario
+            String rol = "Docente";
+            String estado = "Desactivado";
+            boolean inicio = true;
+            String contrasena = "";
+            //Asignaciones al nuevo usuario
+            usuario.setDocente(docente);
+            usuario.setRolUsuario(rol);
+            usuario.setEstadoUsuario(estado);
+            usuario.setPrimerIngreso(inicio);
+            usuario.setContrasenaUsuario(contrasena);
+            usuario.setCorreoUsuario(correo);
+        }
+        // Caso de edicion de usuario
+        else {
+            usuario.setCorreoUsuario(correo);
+        }
+        
+        
 
         if(result.hasErrors()){
             model.addAttribute("profesor", docente);
@@ -105,6 +115,7 @@ public class DocenteController {
     // Editando docente /expedientedocente/editarformulario/{id}
     @GetMapping("/editarexpediente/{id}")
     public String editarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
+        
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
         if (profesor == null) {
             System.out.println("El docente no existe");
