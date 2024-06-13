@@ -4,7 +4,7 @@
 <head th:fragment="head">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+    <title>Gestión de Actividades</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
@@ -76,47 +76,47 @@
                                         <div class="col-6">
                                             <div class="row">
                                                 <div class="col-3">
-                                                    <label for="inputPassword6" class="col-form-label">Seleccione Grado: </label>
+                                                    <label for="inputPassword6" class="col-form-label">Seleccione Grado:</label>
                                                 </div>
                                                 <div class="col-9">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>Desplegar Opciones</option>
-                                                        <option value="1">One</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option>
-                                                      </select>
+                                                    <select id="grado" class="form-select" aria-label="Default select example" required onchange="actualizarMaterias()">
+                                                        <option value="">Seleccione Carrera</option>
+                                                        <option th:each="bachillerato : ${grados}"
+                                                                th:value="${bachillerato.codigoBachillerato}"
+                                                                th:text="${bachillerato.grado +'° '+ bachillerato.nombreCarrera  + ' - Sección ' + bachillerato.seccion}">
+                                                        </option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="row">
                                                 <div class="col-3">
-                                                    <label for="inputPassword6" class="col-form-label">Seleccione Materia: </label>
+                                                    <label for="materia" class="col-form-label">Seleccione Materia:</label>
                                                 </div>
                                                 <div class="col-9">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>Desplegar Opciones</option>
-                                                        <option value="1">One</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option>
-                                                      </select>
-                                                </div> 
+                                                    <select id="materia" class="form-select" aria-label="Default select example" required>
+                                                        <option value="">Todas las Materias</option>
+                                                        <option th:each="materia : ${materias}"
+                                                                th:value="${materia.codMateria}"
+                                                                th:text="${materia.nomMateria}">
+                                                        </option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-3">
                                                     <br>
-                                                    <label for="inputPassword6" class="col-form-label">Seleccione Periodo: </label>
+                                                    <label for="periodo" class="col-form-label">Seleccione Periodo:</label>
                                                 </div>
                                                 <div class="col-9">
                                                     <br>
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>Desplegar Opciones</option>
-                                                        <option value="1">Primer Periodo</option>
-                                                        <option value="2">Segundo Periodo</option>
-                                                        <option value="3">Tercer Periodo</option>
-                                                        <option value="2">Cuarto Periodo</option>
-                                                        <option value="3">Periodo Extraordinario</option>
-                                                      </select>
+                                                    <select id="periodo" class="form-select" aria-label="Default select example" required>
+                                                        <option th:each="periodo : ${periodos}"
+                                                                th:value="${periodo.idPeriodo}"
+                                                                th:text="${periodo.numeroPeriodo == 1 ? 'Primer periodo' : periodo.numeroPeriodo == 2 ? 'Segundo periodo' : periodo.numeroPeriodo == 3 ? 'Tercer periodo' : periodo.numeroPeriodo == 4 ? 'Cuarto Periodo' : periodo.numeroPeriodo == 5 ? 'Periodo Extraordinario' : periodo.numeroPeriodo}">
+                                                        </option>
+                                                    </select>
                                                 </div> 
                                             </div>
                                         </div>
@@ -185,7 +185,23 @@
         <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
     </footer>
 
-    
+    <script th:inline="javascript">
+        function actualizarMaterias() {
+            var codigoBachillerato = document.getElementById("grado").value;
+            fetch(`/calificaciones/materiasPorBachillerato?codigoBachillerato=${codigoBachillerato}`)
+                .then(response => response.json())
+                .then(data => {
+                    var materiaSelect = document.getElementById("materia");
+                    materiaSelect.innerHTML = '<option value="">Todas las Materias</option>';
+                    data.forEach(materia => {
+                        var option = document.createElement("option");
+                        option.value = materia.codMateria;
+                        option.text = materia.nomMateria;
+                        materiaSelect.appendChild(option);
+                    });
+                });
+        }
+    </script>
 </body>
 
 </html>

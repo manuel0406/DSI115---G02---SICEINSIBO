@@ -101,8 +101,7 @@
                                                         <option value="">Todas las Materias</option>
                                                         <option th:each="materia : ${materias}"
                                                                 th:value="${materia.codMateria}"
-                                                                th:text="${materia.nomMateria}"
-                                                                th:selected="${materia.codMateria == actividad.materia?.codMateria}">
+                                                                th:text="${materia.nomMateria}">
                                                         </option>
                                                     </select>
                                                 </div>
@@ -280,7 +279,7 @@
     <script th:inline="javascript">
         function actualizarMaterias() {
             var codigoBachillerato = document.getElementById("grado").value;
-            fetch(`/materiasPorBachillerato?codigoBachillerato=${codigoBachillerato}`)
+            fetch(`/Actividades/materiasPorBachillerato?codigoBachillerato=${codigoBachillerato}`)
                 .then(response => response.json())
                 .then(data => {
                     var materiaSelect = document.getElementById("materia");

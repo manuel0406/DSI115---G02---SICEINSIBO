@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
 import com.dsi.insibo.sice.entity.Actividad;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Periodo;
@@ -58,8 +59,8 @@ public class actividadesController {
 		List<Periodo> listaPeriodos = periodoService.listaPeriodos();
 		model.addAttribute("periodos", listaPeriodos);
 
-		List<Materia> listaMaterias = materiaService.listaMaterias();
-		model.addAttribute("materias", listaMaterias);
+		//List<Materia> listaMaterias = materiaService.listaMaterias();
+		//model.addAttribute("materias", listaMaterias);
 
 		List<Actividad> listaActividads = actividadService.listaActividades();
 		model.addAttribute("actividades", listaActividads);
@@ -95,7 +96,7 @@ public class actividadesController {
 		return "redirect:/Actividades";
 	}
 
-	@GetMapping("/materiasPorBachillerato")
+	@GetMapping("Actividades/materiasPorBachillerato")
     @ResponseBody
     public List<Materia> getMateriasPorBachillerato(@RequestParam String codigoBachillerato) {
         List<MateriaBachillerato> materiaBachilleratoList = materiaBachilleratoRepository.findByBachilleratoCodigoBachillerato(codigoBachillerato);
