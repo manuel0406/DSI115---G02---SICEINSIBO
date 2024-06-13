@@ -6,20 +6,22 @@ import java.sql.Date;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotEmpty;
 
 
 @Entity 
 public class Alumno implements Serializable{
     
-    @Id
-    private int nie;
+    @Id    
     
-    private String nombreAlumno;
+    private int nie;
+   
+    private String nombreAlumno;    
     private String apellidoAlumno;
     private String sexoAlumno;
     private Date fechaNacimientoAlumno;
     private String duiAlumno;
-    private int telefonoAlumno;
+    private String telefonoAlumno;
     private String direccionAlumno;
     private String correoAlumno;
     private String viveCon;
@@ -83,12 +85,7 @@ public class Alumno implements Serializable{
     public void setDuiAlumno(String duiAlumno) {
         this.duiAlumno = duiAlumno;
     }
-    public int getTelefonoAlumno() {
-        return telefonoAlumno;
-    }
-    public void setTelefonoAlumno(int telefonoAlumno) {
-        this.telefonoAlumno = telefonoAlumno;
-    }
+    
     public String getDireccionAlumno() {
         return direccionAlumno;
     }
@@ -169,11 +166,13 @@ public class Alumno implements Serializable{
     public void setSexoAlumno(String sexoAlumno) {
         this.sexoAlumno = sexoAlumno;
     }
-
-
-   
-   
-   
+    public String getTelefonoAlumno() {
+        return telefonoAlumno;
+    }
+    public void setTelefonoAlumno(String telefonoAlumno) {
+        this.telefonoAlumno = telefonoAlumno;
+    }
+ 
 
     
 
