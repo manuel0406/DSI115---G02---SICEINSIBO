@@ -12,10 +12,13 @@ public interface  AlumnoRepository extends JpaRepository<Alumno, Integer> {
    public List<Alumno> findAll(String carrera, String grado, String seccion );
 
    @Query("SELECT a FROM Alumno a JOIN a.bachillerato b WHERE b.nombreCarrera = :carrera AND b.grado = :grado")
-   public List<Alumno> findAll(String carrera, String grado);
+   public List<Alumno> findAllCarreraGrado(String carrera, String grado);
 
    @Query("SELECT a FROM Alumno a JOIN a.bachillerato b WHERE b.nombreCarrera = :carrera AND b.seccion = :seccion")
    public List<Alumno> findAllCarreraSeccion(String carrera, String seccion);
+
+   @Query("SELECT a FROM Alumno a JOIN a.bachillerato b WHERE b.grado = :grado AND b.seccion = :seccion")
+   public List<Alumno> findAllGradoSeccion(String grado, String seccion);
 
    @Query("SELECT a FROM Alumno a JOIN a.bachillerato b WHERE b.nombreCarrera = :carrera")
    public List<Alumno> findAllPorCarrera(String carrera);   

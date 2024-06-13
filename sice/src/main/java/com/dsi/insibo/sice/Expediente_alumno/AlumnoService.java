@@ -22,20 +22,22 @@ public class AlumnoService {
             return (List<Alumno>)alumnoRepository.findAll(carrera, grado, seccion);
 
         }else if (carrera !=null &&  grado==null && seccion==null) {
-
             return (List<Alumno>)alumnoRepository.findAllPorCarrera(carrera);
 
         }else if (carrera ==null &&  grado !=null && seccion==null) {
              return (List<Alumno>)alumnoRepository.findAllPorGrado(grado);
              
         }else if (carrera ==null &&  grado==null && seccion != null) {
-            
+             return (List<Alumno>)alumnoRepository.findAllPorSeccion(seccion);
+
         }else if (carrera !=null &&  grado !=null && seccion==null) {
-            return (List<Alumno>)alumnoRepository.findAll(carrera, grado);
+            return (List<Alumno>)alumnoRepository.findAllCarreraGrado(carrera, grado);
+            
         }else if (carrera !=null &&  grado ==null && seccion !=null) {
-            
+            return (List<Alumno>)alumnoRepository.findAllCarreraSeccion(carrera, seccion);
+
         }else if (carrera ==null &&  grado !=null && seccion !=null) {
-            
+             return (List<Alumno>)alumnoRepository.findAllGradoSeccion(grado, seccion);
         }
 
         return alumnoRepository.findAll();

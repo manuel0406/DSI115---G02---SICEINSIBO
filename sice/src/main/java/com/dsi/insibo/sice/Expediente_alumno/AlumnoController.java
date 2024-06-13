@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.entity.Alumno;
@@ -116,9 +117,20 @@ public class AlumnoController {
 	}
 
 	@GetMapping("/ver")
-	public String verAlumno(Model model, @Param("carrera") String carrera, @Param("grado") String grado,
-			@Param("seccion") String seccion) {
+	public String verAlumno(Model model, @RequestParam(value = "carrera", required = false) String carrera, 
+                        @RequestParam(value = "grado", required = false) String grado,
+                        @RequestParam(value = "seccion", required = false) String seccion) {
 
+							// Convertir cadenas vacías a null
+    if (carrera != null && carrera.isEmpty()) {
+        carrera = null;
+    }
+    if (grado != null && grado.isEmpty()) {
+        grado = null;
+    }
+    if (seccion != null && seccion.isEmpty()) {
+        seccion = null;
+    }
 		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion);
 		model.addAttribute("titulo", "Ver");
 		model.addAttribute("alumnos", listaAlumnos);
