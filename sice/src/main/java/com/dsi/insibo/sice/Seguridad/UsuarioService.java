@@ -14,6 +14,9 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+
+    //USUARIOS ACTIVOS - CON CREDENCIALES
+
     public List<Usuario> listaUsuariosActivosIntervalos(int offset){
         Pageable pageable = PageRequest.of(offset, 7);
         return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Activo", pageable);
@@ -23,10 +26,39 @@ public class UsuarioService {
         return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Activo");
     }
 
-    public List<Usuario> listaUsuariosDesactivado(int offset){
-        Pageable pageable = PageRequest.of(offset,7);
+    // USUARIOS INACTIVOS - SIN CREDENCIALES
+
+    public List<Usuario> listaUsuariosDesactivados(){
+        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Desactivado");
+    }
+
+    public List<Usuario> listaUsuariosDesactivadosIntervalos(int offset){
+        Pageable pageable = PageRequest.of(offset, 7);
         return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Desactivado", pageable);
     }
+
+    // USUARIOS RECHAZADOS - SIN PERMISOS
+
+    public List<Usuario> listaUsuariosRechazados(){
+        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Rechazado");
+    }
+
+    public List<Usuario> listaUsuariosRechazadosIntervalos(int offset){
+        Pageable pageable = PageRequest.of(offset, 7);
+        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Rechazado", pageable);
+    }
+
+    // USUARIOS BLOQUEADOS - DENEGADOS
+    public List<Usuario> listaUsuariosBloqueados(){
+        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Bloqueado");
+    }
+
+    public List<Usuario> listaUsuariosBloqueadosIntervalos(int offset){
+        Pageable pageable = PageRequest.of(offset, 7);
+        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Bloqueado", pageable);
+    }
+
+
 
     public Usuario buscarPorCorreoYContrasena(String correoUsuario, String contrasenaUsuario) {
         return usuarioRepository.findByCorreoUsuarioAndContrasenaUsuario(correoUsuario, contrasenaUsuario);
@@ -34,6 +66,14 @@ public class UsuarioService {
 
     public Usuario buscarPorCorreo(String correoUsuario) {
         return usuarioRepository.findByCorreoUsuario(correoUsuario);
+    }
+
+    public Usuario buscarPorIdUsuario(int idUsuario) {
+        return usuarioRepository.findByIdUsuario(idUsuario);
+    }
+
+    public void guardarUsuario(Usuario usuario) {
+        usuarioRepository.save(usuario);
     }
 
 }

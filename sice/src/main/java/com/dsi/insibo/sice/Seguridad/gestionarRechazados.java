@@ -1,8 +1,8 @@
 package com.dsi.insibo.sice.Seguridad;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.security.SecureRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,15 +14,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.dsi.insibo.sice.entity.Usuario;
 
 @Controller
-public class gestionarSinCredencialesController {
-    
+public class gestionarRechazados {
+
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping("/gestionarSinCredenciales")
-    public String cargarSinCredenciales(Model model, @RequestParam(required = false, defaultValue = "1") int pagina) {
+    @GetMapping("/gestionarRechazados")
+    public String cargarRechazados(Model model, @RequestParam(required = false, defaultValue = "1") int pagina) {
         pagina=(pagina-1);
-        List<Usuario> listadoUsuarios = usuarioService.listaUsuariosDesactivadosIntervalos(pagina);
+        List<Usuario> listadoUsuarios = usuarioService.listaUsuariosRechazadosIntervalos(pagina);
 
         List<UsuarioConNombre> listadoCompleto =new ArrayList<>();
         //Obtenemos los nombres
@@ -47,31 +47,21 @@ public class gestionarSinCredencialesController {
         model.addAttribute("Usuarios", listadoCompleto);
 
        // Obtenemos la cantidad de usuarios que tenemos
-        List<Usuario> totalUsuario = usuarioService.listaUsuariosDesactivados();
+        List<Usuario> totalUsuario = usuarioService.listaUsuariosRechazados();
         int cantidad = (int) Math.ceil((double) totalUsuario.size() / 7);
         model.addAttribute("Cantidad", cantidad);
     
-        return "/seguridad/gestionarSinCredenciales";
+        return "/seguridad/gestionarRechazados";
     }
 
-    @GetMapping("/rechazarUsuario/{id}")
-    public String bloquearUsuario(@PathVariable("id") int idUsuario, RedirectAttributes attribute) {
-        
-        Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
-        usuario.setEstadoUsuario("Rechazado");
-        usuarioService.guardarUsuario(usuario);
-        return "redirect:/gestionarSinCredenciales";
-    }
-
-    @GetMapping("/aceptarUsuario/{id}")
-    public String aceptarUsuario(@PathVariable("id") int idUsuario, RedirectAttributes attribute) {
-        
+    @GetMapping("/aceptarUsuarioRechazado/{id}")
+    public String aceptarUsuarioRechazado(@PathVariable("id") int idUsuario, RedirectAttributes attribute) {
         Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
         String contrasena = generateRandomPassword(8);
         usuario.setEstadoUsuario("Activo");
         usuario.setContrasenaUsuario(contrasena);
         usuarioService.guardarUsuario(usuario);
-        return "redirect:/gestionarSinCredenciales";
+        return "redirect:/gestionarRechazados";
     }
 
 
@@ -113,6 +103,4 @@ public class gestionarSinCredencialesController {
     }
 
     //----------------------------------------------------------------
-
-
 }

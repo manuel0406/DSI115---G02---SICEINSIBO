@@ -25,6 +25,7 @@
             <div class="fadeIn first text-center my-3">
               <img th:src="@{/imagenes/LogoINSIBO.jpg}" id="icon" alt="User Icon" class="img-fluid" style="max-width: 150px;" />
             </div>
+            <div th:if="${mensaje != null and !#strings.isEmpty(mensaje)}" th:utext="${mensaje}" class="alert alert-danger"></div>
             <!-- Formulario de iniciar sesión -->
             <form id="formulario" th:object="${usuario}"  method="post" th:action="@{/validarCorreo}" oninput="validateForm()">
               <!-- Entrada de Usuario -->
