@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.entity.Usuario;
 
@@ -53,4 +55,31 @@ public class gestionarCredencialesController {
 
         return "/seguridad/gestionarCredenciales";
     }
+
+
+    @GetMapping("/bloquearUsuario/{id}")
+    public String bloquearUsuario(@PathVariable("id") int idUsuario, RedirectAttributes attribute ) {
+        
+        Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
+        usuario.setEstadoUsuario("Bloqueado");
+        usuarioService.guardarUsuario(usuario);
+        return "redirect:/gestionarCredenciales";
+    }
+
+    @GetMapping("/desbloquearUsuario/{id}")
+    public String desbloquearUsuario(@PathVariable("id") int idUsuario, RedirectAttributes attribute ) {
+        
+        Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
+        if (usuario.getContrasenaUsuario().equals("")) {
+            usuario.setEstadoUsuario("Desactivado");
+        }
+        else{
+            usuario.setEstadoUsuario("Activo");
+        }
+        
+        usuarioService.guardarUsuario(usuario);
+        System.out.println("Correo " + usuario.getCorreoUsuario());
+        return "redirect:/gestionarCredenciales";
+    }
+
 }

@@ -38,7 +38,6 @@ public class UsuarioController  {
         }
         else{
             if("Administrador".equals(usuario.getRolUsuario())){
-                System.out.println("El rol cambio: "+ usuario.getRolUsuario());
                 return "redirect:/gestionarCredenciales?pagina=1";
             }
             else{ 

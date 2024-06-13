@@ -20,34 +20,34 @@
       <button class="btnCerrarSesion" type="button" onclick="window.location.href='/iniciarSesion'">Cerrar sesión</button>
     </div>
   </nav>
+  <!-- Sidebar fijo en el lado izquierdo -->
+  <div class="col-md-2 barraLateral">
+    <p class="EncabezadoLateral">Instituto Nacional Simon Bolivar</p>
+    <img th:src="@{/imagenes/LogoINSIBO.jpg}" id="LogoINSIBOCredenciales" alt="User Icon" class="img-fluid" />
+    <p class="EncabezadoMenus"><b>Permisos</b></p>
+    <a th:href="@{/gestionarSinCredenciales?pagina=1}" class="item sinCredenciales"><i class="bi bi-shield-lock"></i> Sin Credenciales</a>
+    <a class="item conCredenciales active"><i class="bi bi-person-circle"></i> Con Credenciales</a>
+  </div>
 
-  <div class="container-fluid">
+  <div class="container-fluid col-md centro">
     <div class="row">
-      <!-- Sidebar fijo en el lado izquierdo -->
-      <div class="col-md-2 barraLateral">
-        <p class="EncabezadoLateral">Instituto Nacional Simon Bolivar</p>
-        <img th:src="@{/imagenes/LogoINSIBO.jpg}" id="LogoINSIBOCredenciales" alt="User Icon" class="img-fluid" />
-        <p class="EncabezadoMenus"><b>Permisos</b></p>
-        <a th:href="@{/gestionarSinCredenciales?pagina=1}" class="item sinCredenciales"><i class="bi bi-shield-lock"></i> Sin Credenciales</a>
-        <a class="item conCredenciales active"><i class="bi bi-person-circle"></i> Con Credenciales</a>
-      </div>
-
       <!-- Contenido central -->
-      <div class="col-md-10 offset-md-2 centro">
+      <div class="col-md-10 offset-md-2 ">
         <form class="d-flex mb-3">
-          <label for="buscar" class="me-2 align-self-center"><b>Nombre:</b></label>
-          <input class="form-control me-2" type="search" placeholder="Buscar persona..." aria-label="Buscar" id="buscar">
-          <button class="btn btn-outline-dark" type="submit">Buscar persona <i class="bi bi-search"></i></button>
+          <label for="buscar" class="me-2 align-self-center"><b>Correo:</b></label>
+          <input class="form-control form-control-sm me-2" type="search" placeholder="Buscar correo..." aria-label="Buscar" id="buscar">
+          <button class="btn btn-outline-dark btn-sm" type="submit" id="btnBuscar">Buscar persona <i class="bi bi-search"></i></button>
         </form>
-
+        
         <div class="container-fluid">
           <h2 class="tituloTabla"><b>Empleados con credenciales</b></h2>
-          <table class="table" id="Usuarios">
-            <thead>
+          <table class="table">
+            <thead class="table-dark">
               <tr>
                 <th scope="col">Nombre completo</th>
                 <th scope="col">Correo</th>
                 <th scope="col">Contraseña</th>
+                <th scope="col">Rol</th>
                 <th scope="col" id="encabezadoAcciones">Acciones</th>
               </tr>
             </thead>
@@ -58,19 +58,20 @@
                 <td class="contrasena" th:text="${user.usuario.contrasenaUsuario}"></td>
                 <td th:text="${user.usuario.rolUsuario}"></td>
                 <td>
-                  <button th:id="${user.usuario.idUsuario}" type="button" class="btn btn-outline-dark"><i class="bi bi-lock"></i></button>
+                  <a th:href = "@{bloquearUsuario/} + ${user.usuario.idUsuario}" type="button" class="btn btn-outline-dark"><i class="bi bi-lock"></i></a>
                   <button th:id="${user.usuario.idUsuario}" type="button" class="btn btn-outline-dark"><i class="bi bi-unlock-fill"></i></button>
                   <button th:id="${user.usuario.idUsuario}" type="button" class="btn btn-outline-dark"><i class="bi bi-eye"></i></button>
                 </td>
               </tr>
-              <!-- Otras filas de la tabla aquí -->
             </tbody>
           </table>
           <div style="white-space: nowrap;">
-            <div th:each="i : ${#numbers.sequence(1, Cantidad)}" style="display: inline-block;">
-              <button th:text="${i}" th:id="${i}" type="button" class="btn btn-outline-dark" onclick="irHacia(this)"></button>
+            <div th:each="i : ${#numbers.sequence(1, Cantidad)}"  style="display: inline-block;">
+                <div th:if="${i != 0}" class="btn-group">
+                    <button th:text="${i}" th:id="'pagina' + ${i}" type="button" class="btn btn-outline-dark" onclick="irHacia(this)"></button>
+                </div>
             </div>
-          </div>
+        </div>
         </div>
       </div>
     </div>
