@@ -76,10 +76,10 @@
                                         <div class="col-6">
                                             <div class="row">
                                                 <div class="col-3">
-                                                    <label for="inputPassword6" class="col-form-label">Seleccione Grado:</label>
+                                                    <label for="selectBachillerato" class="col-form-label">Seleccione Grado:</label>
                                                 </div>
                                                 <div class="col-9">
-                                                    <select id="grado" class="form-select" aria-label="Default select example" required onchange="actualizarMaterias()">
+                                                    <select id="selectBachillerato" name="codigoBachillerato" class="form-select" aria-label="Default select example" required onchange="actualizarMaterias()" >
                                                         <option value="">Seleccione Carrera</option>
                                                         <option th:each="bachillerato : ${grados}"
                                                                 th:value="${bachillerato.codigoBachillerato}"
@@ -92,10 +92,10 @@
                                         <div class="col-6">
                                             <div class="row">
                                                 <div class="col-3">
-                                                    <label for="materia" class="col-form-label">Seleccione Materia:</label>
+                                                    <label for="selectMateria" class="col-form-label">Seleccione Materia:</label>
                                                 </div>
                                                 <div class="col-9">
-                                                    <select id="materia" class="form-select" aria-label="Default select example" required>
+                                                    <select id="selectMateria" name="codMateria" class="form-select" aria-label="Default select example" required>
                                                         <option value="">Todas las Materias</option>
                                                         <option th:each="materia : ${materias}"
                                                                 th:value="${materia.codMateria}"
@@ -107,64 +107,36 @@
                                             <div class="row">
                                                 <div class="col-3">
                                                     <br>
-                                                    <label for="periodo" class="col-form-label">Seleccione Periodo:</label>
+                                                    <label for="selectPeriodo" class="col-form-label">Seleccione Periodo:</label>
                                                 </div>
                                                 <div class="col-9">
                                                     <br>
-                                                    <select id="periodo" class="form-select" aria-label="Default select example" required>
+                                                    <select id="selectPeriodo" name="idPeriodo" onchange="this.form.submit()" class="form-select" aria-label="Default select example" required>
                                                         <option th:each="periodo : ${periodos}"
                                                                 th:value="${periodo.idPeriodo}"
                                                                 th:text="${periodo.numeroPeriodo == 1 ? 'Primer periodo' : periodo.numeroPeriodo == 2 ? 'Segundo periodo' : periodo.numeroPeriodo == 3 ? 'Tercer periodo' : periodo.numeroPeriodo == 4 ? 'Cuarto Periodo' : periodo.numeroPeriodo == 5 ? 'Periodo Extraordinario' : periodo.numeroPeriodo}">
                                                         </option>
                                                     </select>
                                                 </div> 
+                                                <button type="button" id="btnCargarListado">Cargar Listado</button>
                                             </div>
                                         </div>
                                     </div>  
                                 </form>
                              </fieldset>
 
-                            
-                             <table id="example" class="table table-striped" style="width:100%">
+                             <table id="tablaCalificaciones">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
                                         <th>Nombre Completo</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>Prom</th>
-                                        <th>Administrar</th>
+                                        <!-- Este th será poblado dinámicamente con las ponderaciones de las actividades -->
+                                        <th th:each="actividad : ${actividades}" th:text="${actividad.ponderacionActividad + '%'}"></th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+                                    <!-- Aquí se agregarán dinámicamente las filas de alumnos y sus calificaciones -->
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Nombre Completo</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>0%</th>
-                                        <th>Prom</th>
-                                        <th>Administrar</th>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
                         
@@ -180,6 +152,7 @@
     <!--Aca Termina-->
     
 
+    
 
     <footer th:fragment="footer">
         <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
@@ -187,11 +160,11 @@
 
     <script th:inline="javascript">
         function actualizarMaterias() {
-            var codigoBachillerato = document.getElementById("grado").value;
+            var codigoBachillerato = document.getElementById("selectBachillerato").value;
             fetch(`/calificaciones/materiasPorBachillerato?codigoBachillerato=${codigoBachillerato}`)
                 .then(response => response.json())
                 .then(data => {
-                    var materiaSelect = document.getElementById("materia");
+                    var materiaSelect = document.getElementById("selectMateria");
                     materiaSelect.innerHTML = '<option value="">Todas las Materias</option>';
                     data.forEach(materia => {
                         var option = document.createElement("option");
@@ -201,6 +174,45 @@
                     });
                 });
         }
+
+    /*<![CDATA[*/
+    $(document).ready(function() {
+                $('#btnCargarListado').click(function() {
+                    var codigoBachillerato = $('#selectBachillerato').val();
+                    var codMateria = $('#selectMateria').val();
+                    var idPeriodo = $('#selectPeriodo').val();
+
+                    if (codigoBachillerato && codMateria && idPeriodo) {
+                        $.get('/calificaciones/alumnosPorBachillerato', { codigoBachillerato: codigoBachillerato }, function(alumnos) {
+                            $.get('/calificaciones/actividadesPorMateria', { codMateria: codMateria }, function(actividades) {
+                                var headerRow = '<tr><th>Nombre Completo</th>';
+                                actividades.forEach(function(actividad) {
+                                    headerRow += '<th>' + actividad.ponderacionActividad + '%</th>';
+                                });
+                                headerRow += '<th>Acciones</th></tr>';
+                                $('#tablaCalificaciones thead').html(headerRow);
+
+                                var bodyRows = '';
+                                alumnos.forEach(function(alumno) {
+                                    var alumnoRow = '<tr><td>' + alumno.nombreAlumno + ' ' + alumno.apellidoAlumno + '</td>';
+                                    actividades.forEach(function(actividad) {
+                                        $.get('/calificaciones/notasPorAlumno', { nie: alumno.nie, codMateria: codMateria, idPeriodo: idPeriodo }, function(notas) {
+                                            var nota = notas.find(function(n) { return n.actividad.idActividad === actividad.idActividad; });
+                                            alumnoRow += '<td>' + (nota ? nota.notaObtenida : '0.0') + '</td>';
+                                            if (actividad === actividades[actividades.length - 1]) {
+                                                alumnoRow += '<td><button>Editar</button></td></tr>';
+                                                bodyRows += alumnoRow;
+                                                $('#tablaCalificaciones tbody').html(bodyRows);
+                                            }
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    }
+                });
+            });
+            /*]]>*/
     </script>
 </body>
 

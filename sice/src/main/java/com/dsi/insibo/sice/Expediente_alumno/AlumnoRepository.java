@@ -11,4 +11,6 @@ public interface  AlumnoRepository extends JpaRepository<Alumno, Integer> {
     @Query("SELECT a FROM Alumno a JOIN a.bachillerato b WHERE b.nombreCarrera = :carrera AND b.grado = :grado AND b.seccion = :seccion")
    public List<Alumno> findAll(String carrera, String grado, String seccion );
 
+   List<Alumno> findByBachilleratoCodigoBachillerato(String codigoBachillerato);
+
 }
