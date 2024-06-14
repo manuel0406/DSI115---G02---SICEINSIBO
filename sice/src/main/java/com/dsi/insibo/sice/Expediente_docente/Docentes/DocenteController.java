@@ -58,33 +58,24 @@ public class DocenteController {
             attribute.addFlashAttribute("error", "Error: El DUI ya está registrado.");
             return "redirect:plantadocente";
         }// Fin de la modificacion
-        
         //Codigo de usuario
         else {
-            // Verificamos existencia del usuario
-            Usuario usuario = usuarioService.buscarPorIdDocente(docente.getDuiDocente());
-            System.out.println(usuario.getIdUsuario());
-            String correo = docente.getCorreoDocente();
 
-            // Caso de Cracion de usuario
-            if (usuario.getContrasenaUsuario().equals("")) {
-                // Obtenemos informacion relevante del usuario
-                String rol = "Docente";
-                String estado = "Desactivado";
-                boolean inicio = true;
-                String contrasena = "";
-                // Asignaciones al nuevo usuario
-                usuario.setDocente(docente);
-                usuario.setRolUsuario(rol);
-                usuario.setEstadoUsuario(estado);
-                usuario.setPrimerIngreso(inicio);
-                usuario.setContrasenaUsuario(contrasena);
-                usuario.setCorreoUsuario(correo);
-            }
-            // Caso de edicion de usuario
-            else {
-                usuario.setCorreoUsuario(correo);
-            }
+            Usuario usuario = new Usuario();
+            // Obtenemos informacion relevante del usuario
+            String correo = docente.getCorreoDocente();
+            String rol = "Docente";
+            String estado = "Desactivado";
+            boolean inicio = true;
+            String contrasena = "";
+
+            // Asignaciones al nuevo usuario
+            usuario.setDocente(docente);
+            usuario.setCorreoUsuario(correo);
+            usuario.setRolUsuario(rol);
+            usuario.setEstadoUsuario(estado);
+            usuario.setPrimerIngreso(inicio);
+            usuario.setContrasenaUsuario(contrasena);
 
             if (result.hasErrors()) {
                 model.addAttribute("profesor", docente);
@@ -106,6 +97,10 @@ public class DocenteController {
     @PostMapping("/actualizar")
     public String actualizar(@Validated @ModelAttribute Docente docente, BindingResult result, Model model,
             RedirectAttributes attribute) {
+        // Verificamos existencia del usuario
+        Usuario usuario = usuarioService.buscarPorIdDocente(docente.getDuiDocente());
+        usuario.setCorreoUsuario(docente.getCorreoDocente());
+        usuarioService.guardarUsuario(usuario);
         docenteService.guardarDocente(docente);
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
         return "redirect:plantadocente";
