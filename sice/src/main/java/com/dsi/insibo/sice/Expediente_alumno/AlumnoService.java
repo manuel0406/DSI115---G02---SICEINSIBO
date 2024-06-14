@@ -58,4 +58,8 @@ public class AlumnoService {
         alumnoRepository.deleteById(nie);
     }
 
+    public List<Alumno> findAlumnosByBachilleratoCodigoBachillerato(String codigoBachillerato) {
+        return alumnoRepository.findByBachilleratoCodigoBachillerato(codigoBachillerato);
+    }
+
 }

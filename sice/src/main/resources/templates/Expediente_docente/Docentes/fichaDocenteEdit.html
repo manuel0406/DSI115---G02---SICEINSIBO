@@ -144,17 +144,16 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="docente_telefono_fijo" class="form-label">Telefono Fijo:</label>
-                        <input type="text" th:field="*{telefonoFijoDocente}" class="form-control"
-                            id="docente_telefono_fijo">
-                    </div>
-
-                    <div class="col-md-6">
                         <label for="docente_celular" class="form-label">Celular:</label>
                         <input type="text" th:field="*{telefonoDocente}" class="form-control" id="docente_celular"
                             required>
                     </div>
-
+                    
+                    <div class="col-md-6">
+                        <label for="docente_telefono_fijo" class="form-label">Telefono Fijo:</label>
+                        <input type="text" th:field="*{telefonoFijoDocente}" class="form-control"
+                            id="docente_telefono_fijo">
+                    </div>
 
                     <!-- Otros Datos -->
                     <div class="col-12">
@@ -228,9 +227,15 @@
                         </div>
 
 
-                        <!-- Botón Guardar -->
-                        <div class="col-12 text-center mt-4">
-                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        <div class="row justify-content-center text-center  mt-4">
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+
+                            <div class="col-auto">
+                                <a class="btn btn-danger" th:href="@{/expedientedocente/plantadocente}"
+                                    th:text="Cancelar"></a>
+                            </div>
                         </div>
                 </form>
             </div>

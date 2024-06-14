@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Usuario implements Serializable{
@@ -19,9 +19,9 @@ public class Usuario implements Serializable{
     private String rolUsuario;
     private boolean primerIngreso;
     private String estadoUsuario;
-    @ManyToOne
+    @OneToOne
     private Docente docente;
-    @ManyToOne
+    @OneToOne
     private PersonalAdministrativo personalAdministrativo;
     
     public Docente getDocente() {

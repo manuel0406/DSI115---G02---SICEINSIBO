@@ -14,4 +14,8 @@ public class ActividadService {
     public List<Actividad> listaActividades(){
         return (List<Actividad>) actividadRepository.findAll();
     }
+
+    public List<Actividad> findActividadesByMateriaCodMateria(String codMateria) {
+        return actividadRepository.findByMateriaCodMateria(codMateria);
+    }
 }
