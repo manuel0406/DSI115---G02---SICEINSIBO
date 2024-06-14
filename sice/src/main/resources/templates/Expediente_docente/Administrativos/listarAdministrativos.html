@@ -18,9 +18,18 @@
     <header th:replace="Expediente_docente/barra :: barraExpediente"></header>
 
     <div class="container mt-2">
+       
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 th:text="${titulo}"></h1>
-            <a th:href="@{/expedienteadministrativo/formulario}" class="btn btn-primary ">Nuevo Administrativo</a>
+            <div class="d-flex gap-2">
+                <a class="btn btn-secondary" th:href="@{/expedienteadministrativo/plantaadministrativa(format='pdf')}"
+                data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual" target="_blank"
+                onclick="openInPopup(this.href); return false;">
+                <i class="bi bi-printer"></i> Imprimir listado
+            </a>
+                <a th:href="@{/expedienteadministrativo/formulario}" class="btn btn-primary ">Nuevo Administrativo</a>
+            </div>
+           
         </div>
 
 
@@ -71,11 +80,7 @@
 
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <a class="btn btn-secondary" th:href="@{/expedienteadministrativo/plantaadministrativa(format='pdf')}"
-                data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual" target="_blank"
-                onclick="openInPopup(this.href); return false;">
-                <i class="bi bi-printer"></i> Imprimir listado
-            </a>
+            
         </div>
     </div>
 
