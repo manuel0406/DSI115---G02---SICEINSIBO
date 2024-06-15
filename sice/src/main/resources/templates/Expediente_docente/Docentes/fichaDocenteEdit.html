@@ -22,7 +22,7 @@
             </div>
             <div class="card-body">
 
-                <form class="row g-3" th:object="${profesor}" th:action="@{/expedientedocente/guardar}" method="post">
+                <form class="row g-3" th:object="${profesor}" th:action="@{/expedientedocente/actualizar}" method="post">
                     <!-- Datos Personales -->
                     <div class="col-12">
                         <h4 class="text-center">Datos Personales</h4>
@@ -148,7 +148,7 @@
                         <input type="text" th:field="*{telefonoDocente}" class="form-control" id="docente_celular"
                             required>
                     </div>
-
+                    
                     <div class="col-md-6">
                         <label for="docente_telefono_fijo" class="form-label">Telefono Fijo:</label>
                         <input type="text" th:field="*{telefonoFijoDocente}" class="form-control"
@@ -225,6 +225,7 @@
                                     id="docente_fecha_entrega" name="fecha_entrega" required>
                             </div>
                         </div>
+
 
                         <div class="row justify-content-center text-center  mt-4">
                             <div class="col-auto">

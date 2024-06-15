@@ -9,7 +9,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import com.dsi.insibo.sice.Seguridad.UsuarioService;
 import com.dsi.insibo.sice.entity.Docente;
+import com.dsi.insibo.sice.entity.Usuario;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/expedientedocente")
 public class DocenteController {
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     // Direccionadores estaticos
     @GetMapping("/anexosDocente")
@@ -28,7 +33,6 @@ public class DocenteController {
     public String barra() {
         return "Expediente_docente/barra";
     }
-
 
     // Direccionadores de acción
     // Ficha general de expediente docente /expedientedocente/formulario
@@ -45,20 +49,60 @@ public class DocenteController {
     public String guardar(@Validated @ModelAttribute Docente docente, BindingResult result, Model model,
             RedirectAttributes attribute) {
 
-        if (result.hasErrors()) {
-            model.addAttribute("profesor", docente);
-            System.out.println("Se tienen errores en el formulario");
-            return "expedientedocente/formulario";
-        }
+        //Inicia cambio
+        Docente docenteExistente = docenteService.buscarPorIdDocente(docente.getDuiDocente());
 
-        boolean creado = docenteService.guardarDocente(docente);
+        // Verifica si el DUI ya esta asociado a un registro
+        if (docenteExistente != null) {
+            //Si lo esta
+            attribute.addFlashAttribute("error", "Error: El DUI ya está registrado.");
+            return "redirect:plantadocente";
+        }// Fin de la modificacion
+        //Codigo de usuario
+        else {
 
-        if (creado) {
+            Usuario usuario = new Usuario();
+            // Obtenemos informacion relevante del usuario
+            String correo = docente.getCorreoDocente();
+            String rol = "Docente";
+            String estado = "Desactivado";
+            boolean inicio = true;
+            String contrasena = "";
+
+            // Asignaciones al nuevo usuario
+            usuario.setDocente(docente);
+            usuario.setCorreoUsuario(correo);
+            usuario.setRolUsuario(rol);
+            usuario.setEstadoUsuario(estado);
+            usuario.setPrimerIngreso(inicio);
+            usuario.setContrasenaUsuario(contrasena);
+
+            if (result.hasErrors()) {
+                model.addAttribute("profesor", docente);
+                System.out.println("Se tienen errores en el formulario");
+                return "expedientedocente/formulario";
+            }
+
+            // Fin del codigo para usuario
+            // guardando el registro
+            docenteService.guardarDocente(docente);
+            usuarioService.guardarUsuario(usuario);
             attribute.addFlashAttribute("success", "Expediente creado con exito!");
-        } else {
-            attribute.addFlashAttribute("success", "Expediente actualizado con exito!");
-        }
 
+            return "redirect:plantadocente";
+        }
+    }
+
+    // editando formulario
+    @PostMapping("/actualizar")
+    public String actualizar(@Validated @ModelAttribute Docente docente, BindingResult result, Model model,
+            RedirectAttributes attribute) {
+        // Verificamos existencia del usuario
+        Usuario usuario = usuarioService.buscarPorIdDocente(docente.getDuiDocente());
+        usuario.setCorreoUsuario(docente.getCorreoDocente());
+        usuarioService.guardarUsuario(usuario);
+        docenteService.guardarDocente(docente);
+        attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
         return "redirect:plantadocente";
     }
 
@@ -77,18 +121,18 @@ public class DocenteController {
     // Editando docente
     @GetMapping("/editarexpediente/{id}")
     public String editarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
+
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
         if (profesor == null) {
             System.out.println("El docente no existe");
             attribute.addFlashAttribute("error", "El expediente no existe");
             return "redirect:/expedientedocente/plantadocente";
         }
-    
+
         model.addAttribute("profesor", profesor);
         model.addAttribute("editar", true); // Indica que se está editando un docente
-        return "Expediente_docente/Docentes/fichaDocente";
+        return "Expediente_docente/Docentes/fichaDocenteEdit";
     }
-    
 
     @GetMapping("/editarmiexpediente/{id}")
     public String editarComoDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
@@ -106,6 +150,7 @@ public class DocenteController {
     // Eliminar ficha
     @GetMapping("/eliminarexpediente/{id}")
     public String eliminarDocente(@PathVariable("id") String idDocente, RedirectAttributes attribute) {
+        usuarioService.eliminarUsuarioPorDocenteId(idDocente);
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
 
         if (profesor == null) {

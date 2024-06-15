@@ -31,6 +31,7 @@ public class ListarAdministrativosPdf extends AbstractPdfView {
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
                                     HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        @SuppressWarnings("unchecked")
         List<AdministrativoDTO> listadoAdministrativos = (List<AdministrativoDTO>) model.get("Administrativos");
         response.setHeader("Content-Disposition", "inline; filename=" + "Personal_Administrativo_INSIBO" + ".pdf");
 

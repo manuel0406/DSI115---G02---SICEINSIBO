@@ -2,8 +2,7 @@ package com.dsi.insibo.sice.Expediente_docente.Docentes;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
-import java.sql.Date; // Importar java.sql.Date
+import java.sql.Date;
 
 import com.dsi.insibo.sice.entity.Docente;
 

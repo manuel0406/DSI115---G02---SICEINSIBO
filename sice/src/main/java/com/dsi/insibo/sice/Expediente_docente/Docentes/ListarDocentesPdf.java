@@ -32,6 +32,7 @@ public class ListarDocentesPdf extends AbstractPdfView {
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
                                     HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        @SuppressWarnings("unchecked")
         List<DocenteDTO> listadoDocentes = (List<DocenteDTO>) model.get("Docentes");
         response.setHeader("Content-Disposition", "inline; filename=" + "Personal_Docente_INSIBO" + ".pdf");
 

@@ -23,7 +23,7 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component("Expediente_alumno/verAlumno")
+@Component("Expediente_alumno/verAlumnoPdf")
 public class ListaAlumnosPdf extends AbstractPdfView {
 
     @Override

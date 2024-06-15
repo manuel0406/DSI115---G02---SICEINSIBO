@@ -9,7 +9,6 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
 
-import com.dsi.insibo.sice.entity.Docente;
 import com.dsi.insibo.sice.entity.PersonalAdministrativo;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
@@ -26,7 +25,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component("Expediente_docente/Administrativos/fichaAdministrativo")
+@Component("Expediente_docente/Administrativos/fichaAdministrativoEdit")
 public class FichaAdministrativoPdf extends AbstractPdfView {
 
     @Override
