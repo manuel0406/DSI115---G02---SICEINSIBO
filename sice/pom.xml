@@ -64,7 +64,11 @@
 			<version>3.0.0</version>
 		</dependency>
 
-
+		<!-- Para hacer envio de correos-->
+		<dependency>
+      		<groupId>org.springframework.boot</groupId>
+      		<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
