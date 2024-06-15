@@ -194,7 +194,7 @@
                                     <td th:text="${actividad.nombreActividad}"></td>
                                     <td th:text="${actividad.descripcionActividad}"></td>
                                     <td th:text="${actividad.fechaActividad}"></td>
-                                    <td th:text="${actividad.ponderacionActividad}"></td>
+                                    <td th:text="${actividad.ponderacionActividad + ' %'}"></td>
                                     <td th:text="${actividad.materia?.nomMateria}"></td>
                                     <td th:text="${actividad.periodo?.numeroPeriodo == 1 ? 'Primer periodo' : actividad.periodo?.numeroPeriodo == 2 ? 'Segundo periodo' : actividad.periodo?.numeroPeriodo == 3 ? 'Tercer periodo' : actividad.periodo?.numeroPeriodo == 4 ? 'Cuarto Periodo' : actividad.periodo?.numeroPeriodo == 5 ? 'Periodo Extraordinario' : actividad.periodo?.numeroPeriodo}"></td>
                                     <td>
