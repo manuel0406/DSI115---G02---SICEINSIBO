@@ -1,18 +1,18 @@
-package com.dsi.insibo.sice.Expediente_docente.Docentes;
+package com.dsi.insibo.sice.Expediente_docente.Administrativos;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.sql.Date;
+import java.sql.Date; // Importar java.sql.Date
 
-import com.dsi.insibo.sice.entity.Docente;
+import com.dsi.insibo.sice.entity.PersonalAdministrativo;
 
-public class DocenteDTO {
-    private Docente docente;
+public class AdministrativoDTO {
+    private PersonalAdministrativo administrativo;
     private int edad;
 
-    public DocenteDTO(Docente docente) {
-        this.docente = docente;
-        Date fechaNacimiento = docente.getFechaNacimientoD();
+    public AdministrativoDTO(PersonalAdministrativo administrativo) {
+        this.administrativo = administrativo;
+        Date fechaNacimiento = administrativo.getFechaNacimientoP();
         
         // Verificar si la fecha de nacimiento es nula o incorrecta
         if (fechaNacimiento == null) {
@@ -29,12 +29,11 @@ public class DocenteDTO {
         }
     }
 
-    public Docente getDocente() {
-        return docente;
+    public PersonalAdministrativo getAdministrativo() {
+        return administrativo;
     }
 
     public int getEdad() {
         return edad;
     }
 }
-

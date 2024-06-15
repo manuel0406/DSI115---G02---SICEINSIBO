@@ -1,4 +1,4 @@
-package com.dsi.insibo.sice.Expediente_docente.Docentes;
+package com.dsi.insibo.sice.Expediente_docente.Administrativos;
 
 import java.awt.Color;
 import java.net.URL;
@@ -9,7 +9,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
 
-import com.dsi.insibo.sice.entity.Docente;
+import com.dsi.insibo.sice.entity.PersonalAdministrativo;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -25,17 +25,18 @@ import com.lowagie.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component("Expediente_docente/Docentes/fichaDocenteEdit")
-public class FichaDocentePdf extends AbstractPdfView {
+@Component("Expediente_docente/Administrativos/fichaAdministrativoEdit")
+public class FichaAdministrativoPdf extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        Docente docente = (Docente) model.get("profesor");
+        PersonalAdministrativo administrativo = (PersonalAdministrativo) model.get("administrativo");
+
         // attachment fuerza la descarga, inline lo abre en el navegador
-        String nombreArchivo = "ADMINISTRATIVO_" + docente.getDuiDocente() + "_"
-                + docente.getNombreDocente();
+        String nombreArchivo = "ADMINISTRATIVO_" + administrativo.getDuiPersonal() + "_"
+                + administrativo.getNombrePersonal();
         response.setHeader("Content-Disposition", "inline; filename=" + nombreArchivo + ".pdf");
 
         document.setPageSize(PageSize.LETTER);
@@ -88,7 +89,7 @@ public class FichaDocentePdf extends AbstractPdfView {
 
         // Añadir títulos
         Paragraph title = new Paragraph("INSTITUTO NACIONAL SIMON BOLIVAR\nCODIGO 11694 SANTO TOMAS", titleFont);
-        Paragraph title2 = new Paragraph("FICHA DOCENTE: DATOS PERSONALES\n\n", titleFont2);
+        Paragraph title2 = new Paragraph("FICHA ADMINISTRATIVO: DATOS PERSONALES\n\n", titleFont2);
         title.setAlignment(Element.ALIGN_LEFT);
         title2.setAlignment(Element.ALIGN_LEFT);
 
@@ -115,29 +116,38 @@ public class FichaDocentePdf extends AbstractPdfView {
         cell.setBackgroundColor(new Color(230, 230, 230));
         table.addCell(cell);
 
-        addTableCell(table, "Nombres:", docente.getNombreDocente(), headerFont, bodyFont);
-        addTableCell(table, "Apellidos:", docente.getApellidoDocente(), headerFont, bodyFont);
-        addTableCell(table, "Profesión:", docente.getProfesionDocente(), headerFont, bodyFont);
-        addTableCell(table, "Fecha de Nacimiento:", docente.getFechaNacimientoD().toString(), headerFont, bodyFont);
-        addTableCell(table, "Dirección:", docente.getDireccionDocente(), headerFont, bodyFont);
-        addTableCell(table, "Departamento:", docente.getDepartamentoD(), headerFont, bodyFont);
-        addTableCell(table, "Municipio:", docente.getMunicipioD(), headerFont, bodyFont);
-        addTableCell(table, "Distrito:", docente.getDistritoDocente(), headerFont, bodyFont);
-        addTableCell(table, "Zona:", docente.getZonaDocente(), headerFont, bodyFont);
-        addTableCell(table, "DUI:", docente.getDuiDocente(), headerFont, bodyFont);
-        addTableCell(table, "NIP:", docente.getNip(), headerFont, bodyFont);
-        addTableCell(table, "NIT:", docente.getNit(), headerFont, bodyFont);
-        addTableCell(table, "NUP:", docente.getNup(), headerFont, bodyFont);
-        addTableCell(table, "Correo Electrónico:", docente.getCorreoDocente(), headerFont, bodyFont);
-        addTableCell(table, "Teléfono Personal:", docente.getTelefonoDocente(), headerFont, bodyFont);
-        addTableCell(table, "Teléfono Fijo:", docente.getTelefonoFijoDocente(), headerFont, bodyFont);
-        addTableCell(table, "Especialidad en Estudio:", docente.getEspecialidadEnEstudio(), headerFont, bodyFont);
-        addTableCell(table, "Fecha de ingreso al MINEDUCYT:", docente.getFechaMineducyt().toString(), headerFont,
+        addTableCell(table, "Nombres:", administrativo.getNombrePersonal(), headerFont, bodyFont);
+        addTableCell(table, "Apellidos:", administrativo.getApellidoPersonal(), headerFont, bodyFont);
+        addTableCell(table, "Profesión:", administrativo.getProfesionPersonal(), headerFont, bodyFont);
+        addTableCell(table, "Grado Académico:", administrativo.getGradoAcademicoP(), headerFont, bodyFont);
+        addTableCell(table, "Fecha de Nacimiento:", administrativo.getFechaNacimientoP().toString(), headerFont,
                 bodyFont);
-        addTableCell(table, "Título que lo acredita como docente:", docente.getTituloDocente(), headerFont, bodyFont);
-        addTableCell(table, "¿Presenta curriculum?", docente.isCurriculumDocente() ? "Sí" : "No", headerFont, bodyFont);
-        addTableCell(table, "¿Presenta atestados?", docente.isAtestadosDocente() ? "Sí" : "No", headerFont, bodyFont);
-        addTableCell(table, "Fecha de Entrega:", docente.getFechaEntrega().toString(), headerFont, bodyFont);
+        addTableCell(table, "Dirección:", administrativo.getDireccionPersonal(), headerFont, bodyFont);
+        addTableCell(table, "Departamento:", administrativo.getDepartamentoPersonal(), headerFont, bodyFont);
+        addTableCell(table, "Municipio:", administrativo.getMunicipioPersonal(), headerFont, bodyFont);
+        addTableCell(table, "Distrito:", administrativo.getDistritoPersonal(), headerFont, bodyFont);
+        addTableCell(table, "Zona:", administrativo.getZonaPersonal(), headerFont, bodyFont);
+        addTableCell(table, "DUI:", administrativo.getDuiPersonal(), headerFont, bodyFont);
+        // addTableCell(table, "NIP:", administrativo.getNip(), headerFont, bodyFont);
+        addTableCell(table, "NIT:", administrativo.getNitPersonal(), headerFont, bodyFont);
+        addTableCell(table, "NUP:", administrativo.getNupPersonal(), headerFont, bodyFont);
+        addTableCell(table, "Correo Electrónico:", administrativo.getCorreoPersonal(), headerFont, bodyFont);
+        addTableCell(table, "Teléfono Personal:", administrativo.getTelefonoPersonal(), headerFont, bodyFont);
+        addTableCell(table, "Teléfono Fijo:", administrativo.getTelefonoFijoPersonal(), headerFont, bodyFont);
+        addTableCell(table, "Especialidad en Estudio:", administrativo.getEspecialidadEnEstudioP(), headerFont,
+                bodyFont);
+        // addTableCell(table, "Fecha de ingreso al MINEDUCYT:",
+        // administrativo.getFechaMineducyt().toString(), headerFont,bodyFont);
+        // addTableCell(table, "Título que lo acredita como docente:",
+        // docente.getTituloDocente(), headerFont, bodyFont);
+        addTableCell(table, "¿Presenta curriculum?", administrativo.isCurriculumPersonal() ? "Sí" : "No", headerFont,
+                bodyFont);
+        addTableCell(table, "¿Presenta atestados?", administrativo.isAtestadosPersonal() ? "Sí" : "No", headerFont,
+                bodyFont);
+        addTableCell(table, "Fecha de Entrega:", administrativo.getFechaEntregaPersonal().toString(), headerFont,
+                bodyFont);
+        addTableCell(table, "Fecha de Ingreso a la institución:", administrativo.getFechaIngresoPersonal().toString(),
+                headerFont, bodyFont);
 
         document.add(table);
 

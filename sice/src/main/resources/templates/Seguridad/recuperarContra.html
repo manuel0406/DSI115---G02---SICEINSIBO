@@ -29,7 +29,9 @@
                 <p class="advertencia"><b>¡Importante aviso de seguridad!</b><br>
                     Estamos comprometidos con la protección de tu cuenta. Si has solicitado restablecer tu contraseña, ten en cuenta que, por razones de seguridad, la nueva contraseña será enviada únicamente a tu correo registrado o comunicarte con el administrador. Si no encuentras el correo en tu bandeja de entrada, por favor verifica la carpeta de spam. Gracias por tu comprensión y colaboración en mantener tu cuenta segura.</p>
               </div>
-  
+
+              <div th:if="${mensaje != null and !#strings.isEmpty(mensaje)}" th:utext="${mensaje}" class="alert alert-danger"></div>
+
               <!-- Formulario de iniciar sesión -->
               <form id="formulario" th:object="${usuario}" method="post" th:action="@{/correoDeRecuperacion}" oninput="validateForm()">
                 <!-- Entrada de Usuario -->

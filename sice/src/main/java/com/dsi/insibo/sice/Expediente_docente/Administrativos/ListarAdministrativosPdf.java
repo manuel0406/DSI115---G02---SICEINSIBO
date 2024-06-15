@@ -1,5 +1,4 @@
-package com.dsi.insibo.sice.Expediente_docente.Docentes;
-
+package com.dsi.insibo.sice.Expediente_docente.Administrativos;
 import java.awt.Color;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -25,16 +24,16 @@ import com.lowagie.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component("Expediente_docente/Docentes/listarDocentes")
-public class ListarDocentesPdf extends AbstractPdfView {
+@Component("Expediente_docente/Administrativos/listarAdministrativos")
+public class ListarAdministrativosPdf extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
                                     HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         @SuppressWarnings("unchecked")
-        List<DocenteDTO> listadoDocentes = (List<DocenteDTO>) model.get("Docentes");
-        response.setHeader("Content-Disposition", "inline; filename=" + "Personal_Docente_INSIBO" + ".pdf");
+        List<AdministrativoDTO> listadoAdministrativos = (List<AdministrativoDTO>) model.get("Administrativos");
+        response.setHeader("Content-Disposition", "inline; filename=" + "Personal_Administrativo_INSIBO" + ".pdf");
 
 
         document.setPageSize(PageSize.LETTER.rotate());
@@ -50,8 +49,8 @@ public class ListarDocentesPdf extends AbstractPdfView {
 
         // Crear una tabla para alinear la imagen y los títulos
         PdfPTable headerTable = new PdfPTable(2);
-        headerTable.setWidthPercentage(50);
-        headerTable.setWidths(new float[]{0.55f, 1.75f}); // Anchos relativos de las columnas (1: imagen, 3: títulos)
+        headerTable.setWidthPercentage(65);
+        headerTable.setWidths(new float[]{0.40f, 1.75f}); // Anchos relativos de las columnas (1: imagen, 3: títulos)
 
         // Añadir logo
         URL logoUrl = getClass().getResource("/static/imagenes/LogoINSIBO.jpg");
@@ -87,7 +86,7 @@ public class ListarDocentesPdf extends AbstractPdfView {
 
         // Añadir títulos
         Paragraph title = new Paragraph("INSTITUTO NACIONAL SIMON BOLIVAR\nCODIGO 11694 SANTO TOMAS", titleFont);
-        Paragraph title2 = new Paragraph("LISTADO GENERAL DE DOCENTES\n\n", titleFont2);
+        Paragraph title2 = new Paragraph("LISTADO GENERAL DE PLANTA ADMINISTRATIVA\n\n", titleFont2);
         title.setAlignment(Element.ALIGN_LEFT);
         title2.setAlignment(Element.ALIGN_LEFT);
 
@@ -101,32 +100,32 @@ public class ListarDocentesPdf extends AbstractPdfView {
         // FIN
 
         // Tabla de docentes
-        PdfPTable tablaDocentes = new PdfPTable(7); // Añadir una columna más para el número de registro
-        tablaDocentes.setWidthPercentage(100);
-        tablaDocentes.setWidths(new float[]{1, 2, 2, 2, 2, 1, 2}); // Anchos relativos de las columnas
+        PdfPTable tablaAdministrativos = new PdfPTable(7); // Añadir una columna más para el número de registro
+        tablaAdministrativos.setWidthPercentage(100);
+        tablaAdministrativos.setWidths(new float[]{1, 2, 2, 2, 2, 1, 2}); // Anchos relativos de las columnas
 
         // Encabezados de la tabla de docentes
-        addTableHeader(tablaDocentes, "N.º", headerFont);
-        addTableHeader(tablaDocentes, "Nombres", headerFont);
-        addTableHeader(tablaDocentes, "Apellidos", headerFont);
-        addTableHeader(tablaDocentes, "Profesión", headerFont);
-        addTableHeader(tablaDocentes, "Teléfono", headerFont);
-        addTableHeader(tablaDocentes, "Edad", headerFont);
-        addTableHeader(tablaDocentes, "DUI", headerFont);
+        addTableHeader(tablaAdministrativos, "N.º", headerFont);
+        addTableHeader(tablaAdministrativos, "Nombres", headerFont);
+        addTableHeader(tablaAdministrativos, "Apellidos", headerFont);
+        addTableHeader(tablaAdministrativos, "Profesión", headerFont);
+        addTableHeader(tablaAdministrativos, "Teléfono", headerFont);
+        addTableHeader(tablaAdministrativos, "Edad", headerFont);
+        addTableHeader(tablaAdministrativos, "DUI", headerFont);
 
         // Datos de los docentes
         int registro = 1;
-        for (DocenteDTO docente : listadoDocentes) {
-            addTableCell(tablaDocentes, String.valueOf(registro++), bodyFont); // Añadir número de registro
-            addTableCell(tablaDocentes, docente.getDocente().getNombreDocente(), bodyFont);
-            addTableCell(tablaDocentes, docente.getDocente().getApellidoDocente(), bodyFont);
-            addTableCell(tablaDocentes, docente.getDocente().getProfesionDocente(), bodyFont);
-            addTableCell(tablaDocentes, docente.getDocente().getTelefonoDocente(), bodyFont);
-            addTableCell(tablaDocentes, String.valueOf(docente.getEdad()), bodyFont);
-            addTableCell(tablaDocentes, docente.getDocente().getDuiDocente(), bodyFont);
+        for (AdministrativoDTO administrativo : listadoAdministrativos) {
+            addTableCell(tablaAdministrativos, String.valueOf(registro++), bodyFont); // Añadir número de registro
+            addTableCell(tablaAdministrativos, administrativo.getAdministrativo().getNombrePersonal(), bodyFont);
+            addTableCell(tablaAdministrativos, administrativo.getAdministrativo().getApellidoPersonal(), bodyFont);
+            addTableCell(tablaAdministrativos, administrativo.getAdministrativo().getProfesionPersonal(), bodyFont);
+            addTableCell(tablaAdministrativos, administrativo.getAdministrativo().getTelefonoPersonal(), bodyFont);
+            addTableCell(tablaAdministrativos, String.valueOf(administrativo.getEdad()), bodyFont);
+            addTableCell(tablaAdministrativos, administrativo.getAdministrativo().getDuiPersonal(), bodyFont);
         }
 
-        document.add(tablaDocentes);
+        document.add(tablaAdministrativos);
 
         // Pie de página
         String fechaImpresion = new SimpleDateFormat("dd/MM/yyyy").format(new Date());

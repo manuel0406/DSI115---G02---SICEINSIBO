@@ -1,15 +1,10 @@
-package com.dsi.insibo.sice.Expediente_docente.Docentes;
+package com.dsi.insibo.sice.Expediente_alumno;
 
-import java.awt.Color;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-
+import java.awt.Color;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
-
+import com.dsi.insibo.sice.entity.Alumno;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -21,31 +16,32 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component("Expediente_docente/Docentes/listarDocentes")
-public class ListarDocentesPdf extends AbstractPdfView {
+@Component("Expediente_alumno/verAlumnoPdf")
+public class ListaAlumnosPdf extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
-                                    HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // TODO Auto-generated method stub
         @SuppressWarnings("unchecked")
-        List<DocenteDTO> listadoDocentes = (List<DocenteDTO>) model.get("Docentes");
-        response.setHeader("Content-Disposition", "inline; filename=" + "Personal_Docente_INSIBO" + ".pdf");
-
-
+        List<Alumno> listaAlumnos=(List<Alumno>) model.get("alumnos");
+    
         document.setPageSize(PageSize.LETTER.rotate());
         document.setMargins(40, 40, 36, 72); // Margen de 3 cm a los lados y 2.5 cm abajo
         document.open();
 
         // Fuentes
-        Font titleFont2 = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, Color.BLACK);
-        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA, 12, Color.BLACK);
-        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.WHITE);
-        Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 11, Color.BLACK);
+        Font titleFont2 = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.BLACK);
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA, 11, Color.BLACK);
+        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE);
+        Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.BLACK);
         Font footerFont = FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 10, Color.GRAY);
 
         // Crear una tabla para alinear la imagen y los títulos
@@ -87,7 +83,7 @@ public class ListarDocentesPdf extends AbstractPdfView {
 
         // Añadir títulos
         Paragraph title = new Paragraph("INSTITUTO NACIONAL SIMON BOLIVAR\nCODIGO 11694 SANTO TOMAS", titleFont);
-        Paragraph title2 = new Paragraph("LISTADO GENERAL DE DOCENTES\n\n", titleFont2);
+        Paragraph title2 = new Paragraph("LISTADO GENERAL DE ALUMNOS\n\n", titleFont2);
         title.setAlignment(Element.ALIGN_LEFT);
         title2.setAlignment(Element.ALIGN_LEFT);
 
@@ -101,32 +97,34 @@ public class ListarDocentesPdf extends AbstractPdfView {
         // FIN
 
         // Tabla de docentes
-        PdfPTable tablaDocentes = new PdfPTable(7); // Añadir una columna más para el número de registro
-        tablaDocentes.setWidthPercentage(100);
-        tablaDocentes.setWidths(new float[]{1, 2, 2, 2, 2, 1, 2}); // Anchos relativos de las columnas
+        PdfPTable tablaAlumnos = new PdfPTable(7); // Añadir una columna más para el número de registro
+        tablaAlumnos.setWidthPercentage(100);
+        tablaAlumnos.setWidths(new float[]{0.5f, 1f, 2f, 2f, 3f, 1f, 0.7f}); // Anchos relativos de las columnas
 
-        // Encabezados de la tabla de docentes
-        addTableHeader(tablaDocentes, "N.º", headerFont);
-        addTableHeader(tablaDocentes, "Nombres", headerFont);
-        addTableHeader(tablaDocentes, "Apellidos", headerFont);
-        addTableHeader(tablaDocentes, "Profesión", headerFont);
-        addTableHeader(tablaDocentes, "Teléfono", headerFont);
-        addTableHeader(tablaDocentes, "Edad", headerFont);
-        addTableHeader(tablaDocentes, "DUI", headerFont);
+        // Encabezados de la tabla de Alumnos
+        addTableHeader(tablaAlumnos, "N.º", headerFont);
+        addTableHeader(tablaAlumnos, "NIE", headerFont);
+        addTableHeader(tablaAlumnos, "Apellidos", headerFont);
+        addTableHeader(tablaAlumnos, "Nombres", headerFont);
+        addTableHeader(tablaAlumnos, "Especialidad", headerFont);
+        addTableHeader(tablaAlumnos, "Sección", headerFont);
+        addTableHeader(tablaAlumnos, "Año", headerFont);
 
         // Datos de los docentes
         int registro = 1;
-        for (DocenteDTO docente : listadoDocentes) {
-            addTableCell(tablaDocentes, String.valueOf(registro++), bodyFont); // Añadir número de registro
-            addTableCell(tablaDocentes, docente.getDocente().getNombreDocente(), bodyFont);
-            addTableCell(tablaDocentes, docente.getDocente().getApellidoDocente(), bodyFont);
-            addTableCell(tablaDocentes, docente.getDocente().getProfesionDocente(), bodyFont);
-            addTableCell(tablaDocentes, docente.getDocente().getTelefonoDocente(), bodyFont);
-            addTableCell(tablaDocentes, String.valueOf(docente.getEdad()), bodyFont);
-            addTableCell(tablaDocentes, docente.getDocente().getDuiDocente(), bodyFont);
+        
+        for (Alumno alumno : listaAlumnos) {
+            addTableCell(tablaAlumnos, String.valueOf(registro++), bodyFont, Element.ALIGN_CENTER, Element.ALIGN_MIDDLE); // Número de registro centrado
+            addTableCell(tablaAlumnos, String.valueOf(alumno.getNie()), bodyFont, Element.ALIGN_LEFT, Element.ALIGN_MIDDLE); // NIE alineado a la izquierda
+            addTableCell(tablaAlumnos, alumno.getApellidoAlumno(), bodyFont, Element.ALIGN_LEFT, Element.ALIGN_MIDDLE); // Apellidos alineados a la izquierda
+            addTableCell(tablaAlumnos, alumno.getNombreAlumno(), bodyFont, Element.ALIGN_LEFT, Element.ALIGN_MIDDLE); // Nombres alineados a la izquierda
+            addTableCell(tablaAlumnos, alumno.getBachillerato().getNombreCarrera(), bodyFont, Element.ALIGN_LEFT, Element.ALIGN_MIDDLE); // Especialidad alineada a la izquierda
+            addTableCell(tablaAlumnos, alumno.getBachillerato().getSeccion(), bodyFont, Element.ALIGN_CENTER, Element.ALIGN_MIDDLE); // Sección centrada
+            addTableCell(tablaAlumnos, String.valueOf(alumno.getBachillerato().getGrado()), bodyFont, Element.ALIGN_CENTER, Element.ALIGN_MIDDLE); // Año centrado
         }
+        
 
-        document.add(tablaDocentes);
+        document.add(tablaAlumnos);
 
         // Pie de página
         String fechaImpresion = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
@@ -138,15 +136,19 @@ public class ListarDocentesPdf extends AbstractPdfView {
     private void addTableHeader(PdfPTable table, String header, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(header, font));
         cell.setBackgroundColor(new Color(0, 51, 102));
-        cell.setHorizontalAlignment(Element.ALIGN_LEFT); // Alinear a la izquierda
-        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER); // Alinear a la izquierda
+        cell.setVerticalAlignment(Element.ALIGN_CENTER);
         cell.setPadding(5);
         table.addCell(cell);
     }
 
-    private void addTableCell(PdfPTable table, String text, Font font) {
+    private void addTableCell(PdfPTable table, String text, Font font, int horizontalAlignment, int verticalAlignment) {
         PdfPCell cell = new PdfPCell(new Phrase(text, font));
         cell.setPadding(5);
+        cell.setHorizontalAlignment(horizontalAlignment);
+        cell.setVerticalAlignment(verticalAlignment);
         table.addCell(cell);
     }
+    
+    
 }
