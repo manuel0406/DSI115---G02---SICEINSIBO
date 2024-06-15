@@ -22,3 +22,24 @@ document.addEventListener("DOMContentLoaded", function() {
       button.classList.add('btnPaginado');
     }
 });
+
+document.getElementById('buscarForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // Evitar el envío del formulario por defecto
+
+  // Obtener el valor del campo de entrada y quitar espacios en blanco al inicio y al final
+  var correo = document.getElementById('buscar').value.trim();
+
+  // Validar si el campo está vacío
+  if (correo === '') {
+    alert('El campo de búsqueda está vacío. Por favor, ingresa un correo.');
+    return; // Detener la ejecución si el campo está vacío
+  }
+
+  window.location.href = '/buscarUsuarioBloqueado?correoUsuario=' + correo;
+
+});
+
+function closeAlert() {
+  var alertDiv = document.getElementById('errorAlert');
+  alertDiv.style.display = 'none';
+}
