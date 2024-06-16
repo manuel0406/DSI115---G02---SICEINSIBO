@@ -120,11 +120,13 @@
                                                                 th:selected="${periodo.idPeriodo == actividad.periodo?.idPeriodo}">
                                                         </option>
                                                     </select>
+                                                    <br>
                                                 </div>
                                             </div>
                                         </div>
+                                        <button class="btn btn-primary" type="buscar">Mostrar Actividades</button>
+
                                     </div>
-            
                                     <!-- Botón para abrir modal de nueva actividad -->
                                     <div class="row mt-3">
                                         <div class="col-12">
@@ -145,19 +147,19 @@
                                                     <form th:action="@{/Actividades/add}" th:object="${actividad}" method="post" onsubmit="handleFormSubmit(event)">
                                                         <div class="mb-3">
                                                             <label for="nombreActividadModal" class="col-form-label">Nombre de la Actividad:</label>
-                                                            <input type="text" class="form-control" id="nombreActividadModal" th:field="*{nombreActividad}" />
+                                                            <input type="text" class="form-control" id="nombreActividadModal" th:field="*{nombreActividad}" required/>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="col-form-label" for="descripcionActividadModal">Descripción:</label>
-                                                            <textarea class="form-control" id="descripcionActividadModal" th:field="*{descripcionActividad}"></textarea>
+                                                            <textarea class="form-control" id="descripcionActividadModal" th:field="*{descripcionActividad}" required></textarea>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="fechaActividadModal" class="col-form-label">Fecha de la Actividad:</label>
-                                                            <input type="date" class="form-control" id="fechaActividadModal" th:field="*{fechaActividad}" />
+                                                            <input type="date" class="form-control" id="fechaActividadModal" th:field="*{fechaActividad}" required/>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="ponderacionActividadModal" class="col-form-label">Ponderación:</label>
-                                                            <input type="number" class="form-control" id="ponderacionActividadModal" th:field="*{ponderacionActividad}" />
+                                                            <input type="number" class="form-control" id="ponderacionActividadModal" th:field="*{ponderacionActividad}" required/>
                                                         </div>
                                                         <!-- Botones del modal -->
                                                         <div class="modal-footer">
