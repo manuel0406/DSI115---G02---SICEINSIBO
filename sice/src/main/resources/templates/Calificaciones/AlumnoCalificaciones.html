@@ -69,7 +69,7 @@
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
                                 <label for="codMateria">Materia:</label>
-                                <select class="form-control" id="codMateria" name="codMateria">
+                                <select class="form-control" id="codMateria" name="codMateria" onchange="filtrarTabla()">
                                     <option th:each="materia : ${materias}" th:value="${materia.codMateria}"
                                             th:text="${materia.nomMateria}"></option>
                                 </select>
@@ -85,34 +85,25 @@
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" th:if="${alumno != null}" name="nie" th:value="${alumno.nie}" />
-                    <div class="row">
-                        <div class="col-md-6">
-                            <!-- Añadir un margen superior al botón para separarlo -->
-                            <div class="container-fluid mt-3">
-                                <button type="submit" class="btn btn-primary btn-block">Cargar Calificaciones</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
 
                 <!-- Listado de actividades -->
                 <!-- Tabla de notas -->
                 <div class="container-fluid mt-3">
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="tablaNotas">
                         <thead>
                             <tr>
                                 <th>Actividad</th>
-                                <th>codMateria</th>
+                                <th>Materia</th>
+                                <th>Ponderación</th>
                                 <th>Nota Obtenida</th>
-                                
                             </tr>
                         </thead>
                         <tbody>
                             <!-- Iterar sobre las notas del alumno -->
                             <tr th:each="nota : ${notas}" class="filaNota" data-codmateria="${nota.actividad.materia.codMateria}">
                                 <td th:text="${nota.actividad.nombreActividad}"></td>
-                                <td th:text="${nota.actividad.materia.codMateria}"></td>
+                                <td th:text="${nota.actividad.materia.nomMateria}"></td>
+                                <td th:text="${nota.actividad.ponderacionActividad + ' %'}"></td>
                                 <td th:text="${nota.notaObtenida}"></td>
                             </tr>
                         </tbody>
@@ -127,42 +118,28 @@
     </footer>
 
     <script th:inline="javascript">
-
-        // Función para guardar la selección actual en localStorage
-        function guardarSeleccion(selectElement) {
-            var seleccion = selectElement.value;
-            localStorage.setItem('seleccionBachillerato', seleccion);
-        }
-
-        // Función para restaurar la selección desde localStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            var selectElement = document.getElementById('codigoBachillerato');
-            var seleccionGuardada = localStorage.getItem('seleccionBachillerato');
-            
-            if (seleccionGuardada) {
-                selectElement.value = seleccionGuardada;
-            }
-        });
-
-        $(document).ready(function() {
-        // Escuchar cambios en el select
-        $('#codMateria').change(function() {
-            var codMateriaSeleccionado = $(this).val(); // Obtener el valor seleccionado
-
-            // Mostrar todas las filas inicialmente
-            $('.filaNota').show();
-
-            // Filtrar las filas basado en el codMateria seleccionado
-            if (codMateriaSeleccionado) {
-                $('.filaNota').each(function() {
-                    var codMateriaFila = $(this).data('codmateria');
-                    if (codMateriaFila !== codMateriaSeleccionado) {
-                        $(this).hide(); // Ocultar filas que no coinciden con el codMateria seleccionado
+        function filtrarTabla() {
+            var codMateriaSeleccionado = document.getElementById('codMateria').value.toUpperCase();
+            var filtroNombreActividad = document.getElementById('txtFiltro').value.toUpperCase();
+            var filasNotas = document.getElementsByClassName('filaNota');
+    
+            for (var i = 0; i < filasNotas.length; i++) {
+                var fila = filasNotas[i];
+                var codMateriaFila = fila.getAttribute('data-codmateria').toUpperCase();
+                var nombreActividad = fila.children[0].textContent.toUpperCase(); // Columna de actividad
+    
+                // Mostrar fila si coincide con el filtro de codMateria y nombre de actividad
+                if (codMateriaSeleccionado === 'TODOS' || codMateriaFila === codMateriaSeleccionado) {
+                    if (nombreActividad.includes(filtroNombreActividad)) {
+                        fila.style.display = '';
+                    } else {
+                        fila.style.display = 'none';
                     }
-                });
+                } else {
+                    fila.style.display = 'none';
+                }
             }
-        });
-    });
+        }
     </script>
 </body>
 
