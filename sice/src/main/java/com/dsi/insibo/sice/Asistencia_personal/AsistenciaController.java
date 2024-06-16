@@ -41,6 +41,7 @@ public class AsistenciaController {
 	public String llegadaGeneral(Model model){
 		List<Object[]> asistencia = asistenciaDocenteService.getAsistenciaDocente();
         model.addAttribute("asistencia", asistencia);
+        model.addAttribute("titulo", "Asistencia");
 
 		return "Asistencia_personal/asistenciaGeneral";
 	}
@@ -49,6 +50,7 @@ public class AsistenciaController {
 	public String llegadasTardia(Model model){
 		List<Object[]> asistencia = asistenciaDocenteService.getAsistenciaDocenteByHorario();
         model.addAttribute("asistenciaHorario", asistencia);
+        model.addAttribute("titulo", "Asistencia tardia");
 		return "Asistencia_personal/asistenciaTardia";
 	}
 	
