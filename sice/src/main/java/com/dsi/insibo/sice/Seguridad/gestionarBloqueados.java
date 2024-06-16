@@ -69,13 +69,13 @@ public class gestionarBloqueados {
 
         if (usuarioBuscado == null) {
             // Usuario no encontrado, añadir mensaje de error
-            redirectAttributes.addFlashAttribute("Error", "Usuario no encontrado.");
+            redirectAttributes.addFlashAttribute("Error", "<b>¡Usuario no encontrado!</b> Verificar si ha escrito correctamente el correo.");
             return "redirect:/gestionarBloqueados"; // Redirigir a la página de gestión de credenciales
         }
 
         if (!usuarioBuscado.getEstadoUsuario().equals("Bloqueado")) {
             // Usuario no encontrado, añadir mensaje de error
-            redirectAttributes.addFlashAttribute("Error", "Su usuario no se encuentra bloqueado.");
+            redirectAttributes.addFlashAttribute("Error", "<b>¡Advertencia!</b> Su usuario no se encuentra bloqueado.");
             return "redirect:/gestionarBloqueados"; // Redirigir a la página de gestión de credenciales
         }
         

@@ -84,13 +84,13 @@ public class gestionarCredencialesController {
 
         if (usuarioBuscado == null) {
             // Usuario no encontrado, añadir mensaje de error
-            redirectAttributes.addFlashAttribute("Error", "Usuario no encontrado.");
+            redirectAttributes.addFlashAttribute("Error", "<b>¡Usuario no encontrado!</b> Verificar si ha escrito correctamente el correo.");
             return "redirect:/gestionarCredenciales"; // Redirigir a la página de gestión de credenciales
         }
 
         if (!usuarioBuscado.getEstadoUsuario().equals("Activo")) {
             // Usuario no encontrado, añadir mensaje de error
-            redirectAttributes.addFlashAttribute("Error", "Su usuario no se encuentra activo.");
+            redirectAttributes.addFlashAttribute("Error", "<b>¡Advertencia!</b> Su usuario no se encuentra activo.");
             return "redirect:/gestionarCredenciales"; // Redirigir a la página de gestión de credenciales
         }
         
