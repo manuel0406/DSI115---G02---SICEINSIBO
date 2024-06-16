@@ -70,8 +70,7 @@
                             <div class="form-group">
                                 <label for="codMateria">Materia:</label>
                                 <select class="form-control" id="codMateria" name="codMateria" onchange="filtrarTabla()">
-                                    <option th:each="materia : ${materias}" th:value="${materia.codMateria}"
-                                            th:text="${materia.nomMateria}"></option>
+                                    <option th:each="materia : ${materias}" th:value="${materia.nomMateria}" th:text="${materia.nomMateria}"></option>
                                 </select>
                             </div>
                         </div>
@@ -100,7 +99,7 @@
                         </thead>
                         <tbody>
                             <!-- Iterar sobre las notas del alumno -->
-                            <tr th:each="nota : ${notas}" class="filaNota" data-codmateria="${nota.actividad.materia.codMateria}">
+                            <tr th:each="nota : ${notas}" class="filaNota">
                                 <td th:text="${nota.actividad.nombreActividad}"></td>
                                 <td th:text="${nota.actividad.materia.nomMateria}"></td>
                                 <td th:text="${nota.actividad.ponderacionActividad + ' %'}"></td>
@@ -117,29 +116,22 @@
     <footer th:fragment="footer">
     </footer>
 
-    <script th:inline="javascript">
-        function filtrarTabla() {
-            var codMateriaSeleccionado = document.getElementById('codMateria').value.toUpperCase();
-            var filtroNombreActividad = document.getElementById('txtFiltro').value.toUpperCase();
-            var filasNotas = document.getElementsByClassName('filaNota');
-    
-            for (var i = 0; i < filasNotas.length; i++) {
-                var fila = filasNotas[i];
-                var codMateriaFila = fila.getAttribute('data-codmateria').toUpperCase();
-                var nombreActividad = fila.children[0].textContent.toUpperCase(); // Columna de actividad
-    
-                // Mostrar fila si coincide con el filtro de codMateria y nombre de actividad
-                if (codMateriaSeleccionado === 'TODOS' || codMateriaFila === codMateriaSeleccionado) {
-                    if (nombreActividad.includes(filtroNombreActividad)) {
-                        fila.style.display = '';
-                    } else {
-                        fila.style.display = 'none';
-                    }
-                } else {
-                    fila.style.display = 'none';
-                }
+    <script>
+         function filtrarTabla() {
+        var codMateriaSeleccionada = document.getElementById('codMateria').value.toUpperCase();
+        var filasNotas = document.getElementsByClassName('filaNota');
+
+        for (var i = 0; i < filasNotas.length; i++) {
+            var fila = filasNotas[i];
+            var materiaFila = fila.children[1].textContent.toUpperCase(); // Columna de materia
+
+            if (codMateriaSeleccionada === '' || materiaFila === codMateriaSeleccionada) {
+                fila.style.display = '';
+            } else {
+                fila.style.display = 'none';
             }
         }
+    }
     </script>
 </body>
 
