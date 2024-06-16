@@ -23,7 +23,7 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component("Expediente_alumno/verAlumno")
+@Component("Expediente_alumno/verAlumnoPdf")
 public class ListaAlumnosPdf extends AbstractPdfView {
 
     @Override
@@ -50,7 +50,7 @@ public class ListaAlumnosPdf extends AbstractPdfView {
         headerTable.setWidths(new float[]{0.55f, 1.75f}); // Anchos relativos de las columnas (1: imagen, 3: títulos)
 
         // Añadir logo
-        URL logoUrl = getClass().getResource("/static/imagenes/LogoINSIBO.jpg");
+        URL logoUrl = getClass().getResource("/static/Imagenes/LogoINSIBO.jpg");
         if (logoUrl != null) {
             try {
                 Image img = Image.getInstance(logoUrl);
@@ -75,7 +75,7 @@ public class ListaAlumnosPdf extends AbstractPdfView {
                 headerTable.addCell(emptyCell);
             }
         } else {
-            System.err.println("Logo image not found at path: /static/imagenes/LogoINSIBO.jpg");
+            System.err.println("Logo image not found at path: /static/Imagenes/LogoINSIBO.jpg");
             PdfPCell emptyCell = new PdfPCell();
             emptyCell.setBorder(PdfPCell.NO_BORDER);
             headerTable.addCell(emptyCell);

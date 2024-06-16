@@ -28,14 +28,14 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
-    <div class="container my-4">
+    <div class="container my-4 flex-wrap" >
 
         <div class="text-end mb-3">
-            <a class="btn btn-secondary" th:href="@{/ExpedienteAlumno/ver(format='pdf')}" data-bs-toggle="tooltip"
-                data-bs-placement="top" title="Imprimir listado actual" target="_blank"
-                onclick="openInPopup(this.href); return false;">
-                <i class="bi bi-printer"></i> Imprimir listado
-            </a>
+            <a class="btn btn-secondary" th:href="@{/ExpedienteAlumno/ver(format='pdf', carrera=${carrera}, grado=${grado}, seccion=${seccion})}" data-bs-toggle="tooltip"
+            data-bs-placement="top" title="Imprimir listado actual" target="_blank" onclick="openInPopup(this.href); return false;">
+            <i class="bi bi-printer"></i> Imprimir listado
+         </a>
+         
             <a th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-success" th:text="'Agregar Alumno'"></a>
         </div>
 
@@ -47,11 +47,13 @@
                         <form th:action="@{/ExpedienteAlumno/ver}" method="get">
                             <div class="mb-3">
                                 <label for="carrera" class="form-label fs-6">Carrera:</label>
-                                <select id="carrera" name="carrera" th:value="${carrera}" class="form-select">
+                                <select id="carrera" name="carrera" th:value="${carrera}" class="form-select"
+                                    aria-label="Default select example">
                                     <option value="" selected>Seleccione</option>
-                                    <option value="Atención Primaria en Salud">Atención Primaria en Salud</option>
-                                    <option value="Electrónica">Electrónica</option>
-                                    <option value="Sistemas Electricos">Sistemas Electricos</option>
+                                    <option th:each="bachillerato : ${bachilleratos}"
+                                        th:value="${bachillerato.nombreCarrera}"
+                                        th:text="${bachillerato.nombreCarrera}">
+                                    </option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -78,8 +80,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8 col-lg-9">
-                <table class="table table-responsive">
+            <div class="col-md-8 col-lg-9 table-responsive">
+                <table class="table ">
                     <thead class="thead table-dark text-start">
                         <tr>
                             <th scope="col">#</th>
@@ -116,9 +118,8 @@
                                 </a>
 
                                 <a th:href="@{/ExpedienteAlumno/editar/{id}(id=${alumno.nie}, format='pdf')} "
-                                    class="btn btn-secondary " data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Imprimir" target="_blank"
-                                    onclick="openInPopup(this.href); return false;">
+                                    class="btn btn-secondary " data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Imprimir" target="_blank" onclick="openInPopup(this.href); return false;">
                                     <i class="bi bi-printer"></i>
                                 </a>
                             </td>

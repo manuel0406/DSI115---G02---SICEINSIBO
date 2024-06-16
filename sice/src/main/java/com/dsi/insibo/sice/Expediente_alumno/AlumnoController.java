@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.entity.Alumno;
@@ -40,7 +41,6 @@ public class AlumnoController {
 		attributes.addFlashAttribute("success", "¡Alumno guardado con éxito!");
 		return "redirect:/ExpedienteAlumno/ver";
 	}
-	
 
 	@GetMapping("/Crear")
 	public String crear(Model model) {
@@ -52,7 +52,7 @@ public class AlumnoController {
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachilleratos", listaBachilleratos);
 
-		return "/Expediente_alumno/registro";
+		return "Expediente_alumno/registro";
 	}
 
 	@GetMapping("/editar/{nie}")
@@ -80,12 +80,13 @@ public class AlumnoController {
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachilleratos", listaBachilleratos);
 		model.addAttribute("editar", true); // Indica que se está editando un docente
-		return "/Expediente_alumno/editar";
+		return "Expediente_alumno/editar";
 	}
+
 	@PostMapping("/actualizar")
 	public String actualizarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes) {
 		// Busca el alumno existente en la base de datos utilizando el NIE proporcionado
-				
+
 		alumnoService.guardarAlumno(alumno);
 		attributes.addFlashAttribute("success", "¡Alumno actualizado con éxito!");
 		return "redirect:/ExpedienteAlumno/ver";
@@ -117,23 +118,28 @@ public class AlumnoController {
 	}
 
 	@GetMapping("/ver")
-	public String verAlumno(Model model, @RequestParam(value = "carrera", required = false) String carrera, 
-                        @RequestParam(value = "grado", required = false) String grado,
-                        @RequestParam(value = "seccion", required = false) String seccion) {
+	public String verAlumno(Model model, @RequestParam(value = "carrera", required = false) String carrera,
+			@RequestParam(value = "grado", required = false) String grado,
+			@RequestParam(value = "seccion", required = false) String seccion) {
 
-							// Convertir cadenas vacías a null
-    if (carrera != null && carrera.isEmpty()) {
-        carrera = null;
-    }
-    if (grado != null && grado.isEmpty()) {
-        grado = null;
-    }
-    if (seccion != null && seccion.isEmpty()) {
-        seccion = null;
-    }
+		// Convertir cadenas vacías a null
+		if (carrera != null && carrera.isEmpty()) {
+			carrera = null;
+		}
+		if (grado != null && grado.isEmpty()) {
+			grado = null;
+		}
+		if (seccion != null && seccion.isEmpty()) {
+			seccion = null;
+		}
 		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion);
+		// List<Bachillerato> listaBachilleratos =
+		// bachilleratoService.listaBachilleratos();
+		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+
 		model.addAttribute("titulo", "Ver");
 		model.addAttribute("alumnos", listaAlumnos);
+		model.addAttribute("bachilleratos", listaCarreras);
 		model.addAttribute("carrera", carrera);
 		model.addAttribute("grado", grado);
 		model.addAttribute("seccion", seccion);
@@ -149,7 +155,7 @@ public class AlumnoController {
 		model.addAttribute("titulo", "Información");
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachillerato", bachillerato);
-		return "/Expediente_alumno/AlumnoInformacion";
+		return "Expediente_alumno/AlumnoInformacion";
 	}
 
 	@GetMapping("/Enfermedades/{nie}")
@@ -160,7 +166,7 @@ public class AlumnoController {
 		model.addAttribute("titulo", "Padecimientos");
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachillerato", bachillerato);
-		return "/Expediente_alumno/AlumnoEnfermedad";
+		return "Expediente_alumno/AlumnoEnfermedad";
 	}
 
 	@GetMapping("/Responsable/{nie}")
@@ -171,7 +177,34 @@ public class AlumnoController {
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachillerato", bachillerato);
 		model.addAttribute("titulo", "Encargado");
-		return "/Expediente_alumno/AlumnoDatosResponsable";
+		return "Expediente_alumno/AlumnoDatosResponsable";  
+	}
+
+	@GetMapping(value = "/ver", produces = "application/pdf")
+	public ModelAndView verAlumnosPdf(Model model,
+			@RequestParam(value = "carrera", required = false) String carrera,
+			@RequestParam(value = "grado", required = false) String grado,
+			@RequestParam(value = "seccion", required = false) String seccion) {
+		if (carrera != null && carrera.isEmpty()) {
+			carrera = null;
+		}
+		if (grado != null && grado.isEmpty()) {
+			grado = null;
+		}
+		if (seccion != null && seccion.isEmpty()) {
+			seccion = null;
+		}
+		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion);
+		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+
+		ModelAndView modelAndView = new ModelAndView("Expediente_alumno/verAlumnoPdf");
+		modelAndView.addObject("alumnos", listaAlumnos);
+		modelAndView.addObject("bachilleratos", listaCarreras);
+		modelAndView.addObject("carrera", carrera);
+		modelAndView.addObject("grado", grado);
+		modelAndView.addObject("seccion", seccion);
+
+		return modelAndView;
 	}
 
 }
