@@ -102,7 +102,7 @@ public class gestionarCredencialesController {
 
             nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente() ;
         }
-        if(usuarioBuscado.getRolUsuario().equals("Personal Administrativo")){
+        else{
             nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
         }
 

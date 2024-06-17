@@ -75,7 +75,6 @@
                 <td th:text="${user.usuario.rolUsuario}"></td>
                 <td>
                   <a th:href = "@{bloquearUsuario/} + ${user.usuario.idUsuario}" type="button" class="btn btn-block btn-outline-dark"><i class="bi bi-lock"></i></a>
-                  <button th:id="${user.usuario.idUsuario}" type="button" class="btn btn-outline-dark"><i class="bi bi-eye"></i></button>
                 </td>
               </tr>
             </tbody>
