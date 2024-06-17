@@ -22,7 +22,7 @@ public class UsuarioController {
         Usuario usuario = new Usuario();
         model.addAttribute("usuario", usuario);
         model.addAttribute("mensaje", mensaje);
-        return "/seguridad/iniciarSesion";
+        return "Seguridad/iniciarSesion";
     }
 
     @PostMapping("/validarCorreo")
@@ -49,7 +49,7 @@ public class UsuarioController {
             if ("Administrador".equals(usuario.getRolUsuario())) {
                 return "redirect:/gestionarCredenciales?pagina=1";
             } else {
-                return "redirect:/recuperarContra";
+                return "redirect:/";
             }
         }
     }
