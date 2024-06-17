@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SICE: Gestionar Permisos</title>
+  <link rel="shortcut icon" type="image/x-icon" th:href="@{/Imagenes/INSIBO2.ico}">
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
   <link rel="stylesheet" th:href="@{/css/style.css}" />
   <link rel="icon" type="image/x-icon" th:href="@{/imagenes/INSIBO.ico}">
@@ -23,7 +24,7 @@
   <!-- Sidebar fijo en el lado izquierdo -->
   <div class="col-md-2 barraLateral">
     <p class="EncabezadoLateral">Instituto Nacional Simon Bolivar</p>
-    <img th:src="@{/imagenes/LogoINSIBO.jpg}" id="LogoINSIBOCredenciales" alt="User Icon" class="img-fluid" />
+    <img th:src="@{/Imagenes/LogoINSIBO.jpg}" id="LogoINSIBOCredenciales" alt="User Icon" class="img-fluid" />
     <p class="EncabezadoMenus"><b>Permisos</b></p>
     <a th:href="@{/gestionarSinCredenciales?pagina=1}" class="item sinCredenciales"><i class="bi bi-shield-lock"></i> Sin Credenciales</a>
     <a class="item conCredenciales active"><i class="bi bi-person-circle"></i> Con Credenciales</a>
