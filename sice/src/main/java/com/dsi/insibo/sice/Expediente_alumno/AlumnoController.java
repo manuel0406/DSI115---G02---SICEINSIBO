@@ -249,7 +249,7 @@ public class AlumnoController {
 			@RequestParam(value = "grado", required = false) String grado,
 			@RequestParam(value = "seccion", required = false) String seccion,
 			@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "size", defaultValue = "5") int size) {
+			@RequestParam(value = "size", defaultValue = "50") int size) {
 
 		// Convertir cadenas vacías a null para evitar problemas con las consultas
 		if (carrera != null && carrera.isEmpty()) {
@@ -296,14 +296,28 @@ public class AlumnoController {
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoInformacion".
 	 */
 	@GetMapping("/Alumno/{nie}")
-	public String informacionAlumno(@PathVariable("nie") int nie, Model model) {
+	public String informacionAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+		
+		Alumno alumno = null;
+		if (nie > 0) {
+			// Busca al alumno por su número de identificación estudiantil (NIE)
+			alumno = alumnoService.buscarPorIdAlumno(nie);
 
-		// Buscar el alumno por su número de identificación estudiantil (NIE)
-		Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
+			// Verifica que el alumno exista
+			if (alumno == null) {
+				System.out.println("Error: ¡El NIE ingresado no existe!");
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
+				return "redirect:/ExpedienteAlumno/ver";
+			}
 
+		} else {
+			// Maneja el caso donde el NIE no es válido
+			System.out.println("Error: ¡El NIE ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
+			return "redirect:/ExpedienteAlumno/ver";
+		}
 		// Obtener el bachillerato asociado al alumno
 		Bachillerato bachillerato = alumno.getBachillerato();
-
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("titulo", "Información");
 		model.addAttribute("alumno", alumno);
@@ -327,10 +341,26 @@ public class AlumnoController {
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoEnfermedad".
 	 */
 	@GetMapping("/Enfermedades/{nie}")
-	public String enfermedadAlumno(@PathVariable("nie") int nie, Model model) {
+	public String enfermedadAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
-		// Buscar el alumno por su número de identificación estudiantil (NIE)
-		Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
+		Alumno alumno = null;
+		if (nie > 0) {
+			// Busca al alumno por su número de identificación estudiantil (NIE)
+			alumno = alumnoService.buscarPorIdAlumno(nie);
+
+			// Verifica que el alumno exista
+			if (alumno == null) {
+				System.out.println("Error: ¡El NIE ingresado no existe!");
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
+				return "redirect:/ExpedienteAlumno/ver";
+			}
+
+		} else {
+			// Maneja el caso donde el NIE no es válido
+			System.out.println("Error: ¡El NIE ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
+			return "redirect:/ExpedienteAlumno/ver";
+		}
 
 		// Obtener el bachillerato asociado al alumno
 		Bachillerato bachillerato = alumno.getBachillerato();
@@ -357,11 +387,26 @@ public class AlumnoController {
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoDatosResponsable".
 	 */
 	@GetMapping("/Responsable/{nie}")
-	public String responsableAlumno(@PathVariable("nie") int nie, Model model) {
+	public String responsableAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
-		// Buscar el alumno por su número de identificación estudiantil (NIE)
-		Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
+		Alumno alumno = null;
+		if (nie > 0) {
+			// Busca al alumno por su número de identificación estudiantil (NIE)
+			alumno = alumnoService.buscarPorIdAlumno(nie);
 
+			// Verifica que el alumno exista
+			if (alumno == null) {
+				System.out.println("Error: ¡El NIE ingresado no existe!");
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
+				return "redirect:/ExpedienteAlumno/ver";
+			}
+
+		} else {
+			// Maneja el caso donde el NIE no es válido
+			System.out.println("Error: ¡El NIE ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
+			return "redirect:/ExpedienteAlumno/ver";
+		}
 		// Obtener el bachillerato asociado al alumno
 		Bachillerato bachillerato = alumno.getBachillerato();
 

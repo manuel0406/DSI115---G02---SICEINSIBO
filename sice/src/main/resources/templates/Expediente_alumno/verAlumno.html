@@ -11,8 +11,7 @@
 
 <body>
     <header th:replace="~{home :: header}"></header>
-    <!--Mensajes-->
-
+    <!--Mensajes-->    
     <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${success != null}">
         <label th:text="${success}"></label>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
