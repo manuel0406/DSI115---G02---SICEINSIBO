@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
 import com.dsi.insibo.sice.Calificaciones.NotaService;
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Bachillerato;
@@ -247,7 +249,7 @@ public class AlumnoController {
 			@RequestParam(value = "grado", required = false) String grado,
 			@RequestParam(value = "seccion", required = false) String seccion,
 			@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "size", defaultValue = "50") int size) {
+			@RequestParam(value = "size", defaultValue = "5") int size) {
 
 		// Convertir cadenas vacías a null para evitar problemas con las consultas
 		if (carrera != null && carrera.isEmpty()) {
@@ -261,7 +263,7 @@ public class AlumnoController {
 		}
 
 		// Obtener la lista de alumnos filtrada por los parámetros y paginada
-		Page<Alumno> pageAlumnos = alumnoService.listarAlumnosPaginados(carrera, grado, seccion, PageRequest.of(page - 1, size));
+		Page<Alumno> pageAlumnos = alumnoService.listarAlumnosPaginados(carrera, grado, seccion, PageRequest.of(page - 1, size, Sort.by("apellidoAlumno")));
 		List<Alumno> listaAlumnos = pageAlumnos.getContent();
 
 		// Obtener la lista de carreras (bachilleratos)
