@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import com.dsi.insibo.sice.Calificaciones.NotaService;
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Bachillerato;
-import com.dsi.insibo.sice.entity.Nota;
+
 
 /**
  * Controlador para gestionar las operaciones del expediente de alumnos.
@@ -222,11 +223,11 @@ public class AlumnoController {
 	 * Controlador para manejar la vista de los alumnos.
 	 * 
 	 * Este método maneja las solicitudes GET a la ruta "/ver" y permite ver una
-	 * lista de alumnos
-	 * filtrada por los parámetros opcionales de carrera, grado y sección. Los
-	 * parámetros se reciben
-	 * a través de la URL y, si están vacíos, se convierten a null para evitar
-	 * problemas con las consultas.
+	 * lista de alumnos filtrada por los parámetros opcionales de carrera, grado y
+	 * sección.
+	 * Los parámetros se reciben a través de la URL y, si están vacíos, se
+	 * convierten a null
+	 * para evitar problemas con las consultas.
 	 *
 	 * @param model   El modelo de Spring utilizado para pasar datos a la vista.
 	 * @param carrera El parámetro opcional de la carrera del alumno. Puede ser
@@ -234,14 +235,21 @@ public class AlumnoController {
 	 * @param grado   El parámetro opcional del grado del alumno. Puede ser null.
 	 * @param seccion El parámetro opcional de la sección del alumno. Puede ser
 	 *                null.
+	 * @param page    El número de página actual para la paginación, con valor
+	 *                predeterminado 1.
+	 * @param size    El tamaño de la página para la paginación, con valor
+	 *                predeterminado 10.
 	 * @return El nombre de la vista "Expediente_alumno/verAlumno".
 	 */
 	@GetMapping("/ver")
-	public String verAlumno(Model model, @RequestParam(value = "carrera", required = false) String carrera,
+	public String verAlumno(Model model,
+			@RequestParam(value = "carrera", required = false) String carrera,
 			@RequestParam(value = "grado", required = false) String grado,
-			@RequestParam(value = "seccion", required = false) String seccion) {
+			@RequestParam(value = "seccion", required = false) String seccion,
+			@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "size", defaultValue = "50") int size) {
 
-		// Convertir cadenas vacías a null
+		// Convertir cadenas vacías a null para evitar problemas con las consultas
 		if (carrera != null && carrera.isEmpty()) {
 			carrera = null;
 		}
@@ -251,8 +259,11 @@ public class AlumnoController {
 		if (seccion != null && seccion.isEmpty()) {
 			seccion = null;
 		}
-		// Obtener la lista de alumnos filtrada por los parámetros
-		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion);
+
+		// Obtener la lista de alumnos filtrada por los parámetros y paginada
+		Page<Alumno> pageAlumnos = alumnoService.listarAlumnosPaginados(carrera, grado, seccion, PageRequest.of(page - 1, size));
+		List<Alumno> listaAlumnos = pageAlumnos.getContent();
+
 		// Obtener la lista de carreras (bachilleratos)
 		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
 
@@ -263,6 +274,8 @@ public class AlumnoController {
 		model.addAttribute("carrera", carrera);
 		model.addAttribute("grado", grado);
 		model.addAttribute("seccion", seccion);
+		model.addAttribute("page", page);
+		model.addAttribute("totalPages", pageAlumnos.getTotalPages());
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/verAlumno";

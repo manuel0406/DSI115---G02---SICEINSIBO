@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head th:replace="home :: head">
+<head th:replace="~{home :: head}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <header th:replace="home :: header"></header>
+    <header th:replace="~{home :: header}"></header>
     <!--Mensajes-->
 
     <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${success != null}">
@@ -126,6 +126,21 @@
                         </tr>
                     </tbody>
                 </table>
+                <nav aria-label="...">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${page == 1} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/ExpedienteAlumno/ver(page=1, carrera=${carrera}, grado=${grado}, seccion=${seccion})}">Anterior</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == page} ? 'active' : ''">
+                            <a class="page-link" th:href="@{/ExpedienteAlumno/ver(page=${i}, carrera=${carrera}, grado=${grado}, seccion=${seccion})}" th:text="${i}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${page == totalPages} ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{/ExpedienteAlumno/ver(page=${totalPages}, carrera=${carrera}, grado=${grado}, seccion=${seccion})}">Siguiente</a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                
             </div>
         </div>
     </div>
@@ -150,7 +165,7 @@
         </div>
     </div>
 
-    <footer th:replace="home :: footer"></footer>
+    <footer th:replace="~{home :: footer}"></footer>
 
     <!-- Incluye Bootstrap JS y Popper.js -->
 

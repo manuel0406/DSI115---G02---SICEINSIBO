@@ -22,7 +22,9 @@
                 </h3>
                 <div class="col-12 col-md-8 mx-auto">
                     <label for="exampleInputPassword1" class="form-label fs-6">Especialidad del bachillerato:</label>
+                    
                     <select th:field="*{bachillerato}" class="form-select" aria-label="Default select example" required>
+                        <option value="" selected>Seleccione</option>
                         <option th:each="bachillerato : ${bachilleratos}" th:value="${bachillerato.codigoBachillerato}"
                             th:text="${bachillerato.grado +'° '+ bachillerato.nombreCarrera  + ' - Sección ' + bachillerato.seccion}">
                         </option>
@@ -44,7 +46,7 @@
 
                 <div class="col-12 col-md-4">
                     <label for="exampleInputEmail1" class="form-label fs-6">DUI:</label>
-                    <input type="text" th:field="*{duiAlumno}" class="form-control " id="dui" required />
+                    <input type="text" th:field="*{duiAlumno}" class="form-control " id="dui"  />
                 </div>
 
                 <div class="col-12 col-md-4">
@@ -115,19 +117,19 @@
             <div class="row my-2">
                 <div class="col-12 col-md-4">
                     <label for="padecimientos" class="form-label fs-6">Padece enfermedad:</label>
-                    <input type="text" th:field="*{padecimientos}" class="form-control" id="enfermedad" required
+                    <input type="text" th:field="*{padecimientos}" class="form-control" id="enfermedad" 
                         maxlength="50" />
                 </div>
 
                 <div class="col-12 col-md-4">
                     <label for="medicamento" class="form-label fs-6">Medicamento:</label>
-                    <input type="text" th:field="*{medicamento}" class="form-control" id="medicamento" required
+                    <input type="text" th:field="*{medicamento}" class="form-control" id="medicamento" 
                         maxlength="50" />
                 </div>
 
                 <div class="col-12 col-md-4">
                     <label for="formaMedicacion" class="form-label fs-6">Forma medicación:</label>
-                    <input type="text" th:field="*{formaMedicacion}" class="form-control" id="formaMedicacion" required
+                    <input type="text" th:field="*{formaMedicacion}" class="form-control" id="formaMedicacion" 
                         maxlength="50" />
                 </div>
             </div>
@@ -188,7 +190,7 @@
                 <div class="col-12 col-md-8">
                     <label for="correoEncargado" class="form-label fs-6">Correo electrónico:</label>
                     <input type="email" th:field="*{correoEncargado}" class="form-control" id="apellidoResponsable"
-                        required maxlength="50" />
+                         maxlength="50" />
                 </div>
             </div>
 
