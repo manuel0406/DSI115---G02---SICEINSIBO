@@ -271,8 +271,7 @@ public class AlumnoController {
 		
 		
 		// Agregar atributos al modelo para ser utilizados en la vista
-		model.addAttribute("titulo", "Alumnos");
-		
+		model.addAttribute("titulo", "Alumnos");		
 		model.addAttribute("alumnos", listaAlumnos);
 		model.addAttribute("bachilleratos", listaCarreras);
 		model.addAttribute("carrera", carrera);
