@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 
 import com.dsi.insibo.sice.Calificaciones.NotaService;
 import com.dsi.insibo.sice.entity.Alumno;
+import com.dsi.insibo.sice.entity.AnexoAlumno;
 import com.dsi.insibo.sice.entity.Bachillerato;
 
 
@@ -34,6 +35,8 @@ public class AlumnoController {
 	private BachilleratoService bachilleratoService;
 	@Autowired
 	private NotaService notaService;
+	@Autowired
+	private AnexoService anexoService;
 
 	/**
 	 * Controlador para guardar un nuevo alumno en la base de datos.
@@ -444,9 +447,13 @@ public class AlumnoController {
 		// Obtener el bachillerato asociado al alumno
 		Bachillerato bachillerato = alumno.getBachillerato();
 
+		AnexoAlumno anexos= alumnoService.obtenerAnexoPorAlumno(nie);
+
+
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachillerato", bachillerato);
+		model.addAttribute("anexos", anexos);
 		model.addAttribute("titulo", "Documentos");
 
 		return "Expediente_alumno/AlumnoDocumentos";

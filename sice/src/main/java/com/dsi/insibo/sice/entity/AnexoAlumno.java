@@ -11,20 +11,20 @@ public class AnexoAlumno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idAnexoAlumno;
-    private String nombreArchivo;
+    private String nombrePartidaNacimiento;
     @Lob
-    private byte[] datos;
-    private Date uploDate;
-    
-    public AnexoAlumno() {
-    }
+    private byte[] datosPartidaNacimiento;
+    private Date fechaPartidaNacimiento;
 
-    public AnexoAlumno(int idAnexoAlumno, String nombreArchivo, byte[] datos, Date uploDate) {
-        this.idAnexoAlumno = idAnexoAlumno;
-        this.nombreArchivo = nombreArchivo;
-        this.datos = datos;
-        this.uploDate = uploDate;
-    }
+    private String nombreDui;
+    @Lob
+    private byte[] datosDui;
+    private Date fechaDui;
+    
+
+    @ManyToOne
+    private Alumno alumno;
+
 
     public int getIdAnexoAlumno() {
         return idAnexoAlumno;
@@ -34,31 +34,65 @@ public class AnexoAlumno {
         this.idAnexoAlumno = idAnexoAlumno;
     }
 
-    public String getNombreArchivo() {
-        return nombreArchivo;
+    public String getNombrePartidaNacimiento() {
+        return nombrePartidaNacimiento;
     }
 
-    public void setNombreArchivo(String nombreArchivo) {
-        this.nombreArchivo = nombreArchivo;
+    public void setNombrePartidaNacimiento(String nombrePartidaNacimiento) {
+        this.nombrePartidaNacimiento = nombrePartidaNacimiento;
     }
 
-    public byte[] getDatos() {
-        return datos;
+    public byte[] getDatosPartidaNacimiento() {
+        return datosPartidaNacimiento;
     }
 
-    public void setDatos(byte[] datos) {
-        this.datos = datos;
+    public void setDatosPartidaNacimiento(byte[] datosPartidaNacimiento) {
+        this.datosPartidaNacimiento = datosPartidaNacimiento;
     }
 
-    public Date getUploDate() {
-        return uploDate;
+    public Date getFechaPartidaNacimiento() {
+        return fechaPartidaNacimiento;
     }
 
-    public void setUploDate(Date uploDate) {
-        this.uploDate = uploDate;
+    public void setFechaPartidaNacimiento(Date fechaPartidaNacimiento) {
+        this.fechaPartidaNacimiento = fechaPartidaNacimiento;
     }
+
+    public String getNombreDui() {
+        return nombreDui;
+    }
+
+    public void setNombreDui(String nombreDui) {
+        this.nombreDui = nombreDui;
+    }
+
+    public byte[] getDatosDui() {
+        return datosDui;
+    }
+
+    public void setDatosDui(byte[] datosDui) {
+        this.datosDui = datosDui;
+    }
+
+    public Date getFechaDui() {
+        return fechaDui;
+    }
+
+    public void setFechaDui(Date fechaDui) {
+        this.fechaDui = fechaDui;
+    }
+
+    public Alumno getAlumno() {
+        return alumno;
+    }
+
+    public void setAlumno(Alumno alumno) {
+        this.alumno = alumno;
+    }
+
 
     
-
     
+    
+        
 }

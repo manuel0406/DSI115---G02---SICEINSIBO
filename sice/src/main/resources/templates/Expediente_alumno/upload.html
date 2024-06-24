@@ -11,7 +11,7 @@
     <header th:replace="~{home :: header}"></header>
     <div class="container">
         <h2>Subir un archivo</h2>
-        <form method="POST" enctype="multipart/form-data" th:action="@{/upload}">
+        <form method="POST" enctype="multipart/form-data" th:action="@{/upload/}+${clave}+@{/}+${nie}">
             <div class="mb-3 col-4">
                 <label for="formFile" class="form-label">Seleccione el archivo a cargar</label>
                 <input class="form-control" type="file" id="formFile" name="file" accept="application/pdf">
@@ -20,6 +20,7 @@
 
 
             <button class="btn btn-primary" type="submit">Guardar</button>
+            <a class="btn btn-danger my-2" th:href="@{/ExpedienteAlumno/Documentos/}+${nie}" th:text="Cancelar"></a>
         </form>
 
 

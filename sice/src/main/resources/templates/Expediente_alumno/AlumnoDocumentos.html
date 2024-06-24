@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{home :: head}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    
+
 </head>
+
 <body>
 
     <div class="container-fluid">
@@ -15,28 +17,32 @@
                 <div class="custom-navbar py-5">
                     <ul class="nav nav-pills flex-column mt-2">
                         <li class="nav-item py-2 py-sm-0 my-2">
-                            <a class="nav-link text-white"  th:href="@{/ExpedienteAlumno/Alumno/} + ${alumno.nie}">
+                            <a class="nav-link text-white" th:href="@{/ExpedienteAlumno/Alumno/} + ${alumno.nie}">
                                 <i class="fs-6 bi bi-journal-text"></i>
                                 <span class="fs-6 ms-2 d-none d-sm-inline">Información general</span>
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 ">
-                            <a class="nav-link text-white my-2" th:href="@{/ExpedienteAlumno/Enfermedades/} + ${alumno.nie}">
+                            <a class="nav-link text-white my-2"
+                                th:href="@{/ExpedienteAlumno/Enfermedades/} + ${alumno.nie}">
                                 <i class="bi bi-journal-medical"></i>
                                 <span class="fs-6 ms-2 d-none d-sm-inline">Padecimientos</span>
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 my-2">
-                            <a class="nav-link text-white"  th:href="@{/ExpedienteAlumno/Responsable/} + ${alumno.nie}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-vcard" viewBox="0 0 16 16">
-                                    <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5"/>
-                                    <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96q.04-.245.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 1 1 12z"/>
-                                  </svg>
+                            <a class="nav-link text-white" th:href="@{/ExpedienteAlumno/Responsable/} + ${alumno.nie}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-person-vcard" viewBox="0 0 16 16">
+                                    <path
+                                        d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5" />
+                                    <path
+                                        d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96q.04-.245.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 1 1 12z" />
+                                </svg>
                                 <span class="fs-6 ms-2 d-none d-sm-inline"> Datos del responsable</span>
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 my-2">
-                            <a class="nav-link text-white"  th:href="@{/ExpedienteAlumno/Documentos/} + ${alumno.nie}">
+                            <a class="nav-link text-white" th:href="@{/ExpedienteAlumno/Documentos/} + ${alumno.nie}">
                                 <i class="bi bi-file-earmark-pdf"></i>
                                 <span class="fs-6 ms-2 d-none d-sm-inline"> Documentos</span>
                             </a>
@@ -49,8 +55,9 @@
                 <nav class="navbar navbar-expand-lg custom-navbar fixed-top">
                     <div class="container-fluid">
                         <a class="navbar-brand text-white fw-bold text-center" href="#">SICE</a>
-                        <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">                 
+                        <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
                             <i class="bi bi-list text-white"></i>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -73,51 +80,85 @@
                 <div class="container-fluid" style="padding-top: 56px;">
 
                     <h1 class="my-2  ">Documentos</h1>
-                    <div class="col-6 my-5" >
+                    <div class="col-6 my-5">
                         <table class="table  table-striped">
                             <thead class="thead table-dark text-start">
                                 <tr>
                                     <th scope="col">Tipo</th>
                                     <th scope="col">Fecha</th>
                                     <th scope="col">Archivo</th>
-                                    
+
                                 </tr>
                             </thead>
                             <tbody class="">
-                                                             
+
                                 <tr>
-                                    <th  class="text-start">DUI</th>
-                                    <td class="text-start" th:text="${alumno.apellidoAlumno}" ></td>
-                                   <td>  <a class="btn btn-success" th:href="@{/subir/dui}">
-                                    <i class="bi bi-file-earmark-text"></i>
-                                </a></td>
-                                  </tr>
-                                  <tr>
-                                    <th  class="text-start">Partida de nacimiento</th>
-                                    <td class="text-start" th:text="${alumno.nombreAlumno}"></td>
-                                    
-                                  </tr>
-                                  <tr>
-                                    <th  class="text-start">Titulo de 9° grado</th>                                    
-                                    <td class="text-start" th:text="${alumno.fechaNacimientoAlumno}"></td>
-                                  </tr>
-                                  
+                                    <th class="text-start">DUI</th>
+                                    <!-- Verifica si anexos es null -->
+                                    <td class="text-center" th:if="${anexos == null}" th:text="${' '}"></td>
+                                    <!-- Verifica si anexos no es null y fechaDui no es null -->
+                                    <td class="text-center" th:if="${anexos != null && anexos.fechaDui != null}" th:text="${#dates.format(anexos.fechaDui,'dd/MM/yyyy')}"></td>
+                                
+                                    <!-- Aquí empieza la sección de subida y visualización de documentos -->
+                                    <td th:if="${anexos == null || anexos.nombreDui == null}">
+                                        <a class="btn btn-primary" th:href="@{/Subir/dui/}+${alumno.nie}">
+                                            <i class="bi bi-upload"></i>
+                                        </a>
+                                    </td>
+                                    <td class="text-center" th:if="${anexos != null && anexos.nombreDui != null}">
+                                        <a class=" btn-primary"
+                                           th:href="@{/ExpedienteAlumno/files/dui/}+${anexos.idAnexoAlumno}">
+                                            <i class="fs-4 bi bi-file-earmark-pdf"></i>
+                                        </a>
+                                        <a class=" btn-danger mx-2" th:href="@{/subir/dui/}+${alumno.nie}">
+                                            <i class="fs-4 bi bi-x-circle"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <th class="text-start">Partida de nacimiento</th>
+                                   <!-- Verifica si anexos es null -->
+                                   <td class="text-center" th:if="${anexos == null || anexos.nombrePartidaNacimiento == null}" th:text="${' '}"></td>
+                                   <!-- Verifica si anexos no es null y fechaDui no es null -->
+                                   <td class="text-center" th:if="${anexos != null && anexos.fechaPartidaNacimiento != null}" th:text="${#dates.format(anexos.fechaDui,'dd/MM/yyyy')}"></td>
+                               
+                                   <!-- Aquí empieza la sección de subida y visualización de documentos -->
+                                   <td th:if="${anexos == null || anexos.nombrePartidaNacimiento == null}">
+                                       <a class="btn btn-primary" th:href="@{/Subir/PartidaNacimiento/}+${alumno.nie}">
+                                           <i class="bi bi-upload"></i>
+                                       </a>
+                                   </td>
+                                   <td class="text-center" th:if="${anexos != null && anexos.nombrePartidaNacimiento != null}">
+                                       <a class=" btn-primary"
+                                          th:href="@{/ExpedienteAlumno/files/PartidaNacimiento/}+${anexos.idAnexoAlumno}">
+                                           <i class="fs-4 bi bi-file-earmark-pdf"></i>
+                                       </a>
+                                       <a class=" btn-danger mx-2" th:href="@{/subir/dui/}+${alumno.nie}">
+                                           <i class="fs-4 bi bi-x-circle"></i>
+                                       </a>
+                                   </td>
+
+                                </tr>
+                                
+
                             </tbody>
                         </table>
-                       
+
                     </div>
                     <div class="text-start">
                         <a th:href="@{/ExpedienteAlumno/ver}" class="btn btn-primary " th:text="'Regresar'"> </a>
-            
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    
-    
+
+
 </body>
 
 <footer th:replace="~{home :: footer}"></footer>
+
 </html>

@@ -4,6 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dsi.insibo.sice.entity.Alumno;
+import com.dsi.insibo.sice.entity.AnexoAlumno;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,6 +18,8 @@ public class AlumnoService {
 
     @Autowired
     private AlumnoRepository alumnoRepository;
+    @Autowired
+    private AnexoRepository anexoRepository;
 
     /**
      * Devuelve una lista de alumnos según los parámetros proporcionados.
@@ -137,5 +141,20 @@ public class AlumnoService {
     public List<Alumno> findAlumnosByBachilleratoCodigoBachillerato(String codigoBachillerato) {
         return alumnoRepository.findByBachilleratoCodigoBachillerato(codigoBachillerato);
     }
+
+
+    public AnexoAlumno obtenerAnexoPorAlumno(int nie) {
+        // Busca el alumno por su N.I.E.
+        Alumno alumno = alumnoRepository.findById(nie).orElse(null);
+        
+        if (alumno != null) {
+            // Encuentra el primer anexo asociado a ese alumno
+            return anexoRepository.findFirstByAlumno(alumno);
+        } else {
+            // Maneja el caso en el que el alumno no se encuentre
+            return null;
+        }
+    }
+
 
 }
