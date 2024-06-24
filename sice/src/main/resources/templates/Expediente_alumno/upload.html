@@ -9,23 +9,23 @@
 
 <body>
     <header th:replace="~{home :: header}"></header>
-    <div class="container">
-        <h2>Subir un archivo</h2>
-        <form method="POST" enctype="multipart/form-data" th:action="@{/upload/}+${clave}+@{/}+${nie}">
-            <div class="mb-3 col-4">
-                <label for="formFile" class="form-label">Seleccione el archivo a cargar</label>
-                <input class="form-control" type="file" id="formFile" name="file" accept="application/pdf">
 
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <h2 class="text-center" th:text="${tituloB}"></h2>
+                <form method="POST" enctype="multipart/form-data" th:action="@{/upload/}+${clave}+@{/}+${nie}">
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Debe de seleccionar un archivo PDF</label>
+                        <input class="form-control" type="file" id="formFile" name="file" accept="application/pdf">
+                    </div>
+    
+                    <button class="btn btn-primary" type="submit">Guardar</button>
+                    <a class="btn btn-danger my-2" th:href="@{/ExpedienteAlumno/Documentos/}+${nie}" th:text="Cancelar"></a>
+                </form>
             </div>
-
-
-            <button class="btn btn-primary" type="submit">Guardar</button>
-            <a class="btn btn-danger my-2" th:href="@{/ExpedienteAlumno/Documentos/}+${nie}" th:text="Cancelar"></a>
-        </form>
-
-
+        </div>
     </div>
-
 
     <p th:if="${message}" th:text="${message}"></p>
 </body>

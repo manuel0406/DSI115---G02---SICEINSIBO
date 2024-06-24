@@ -19,7 +19,7 @@ public class AlumnoService {
     @Autowired
     private AlumnoRepository alumnoRepository;
     @Autowired
-    private AnexoRepository anexoRepository;
+    private AnexoAlumnoRepository anexoRepository;
 
     /**
      * Devuelve una lista de alumnos según los parámetros proporcionados.
@@ -142,11 +142,20 @@ public class AlumnoService {
         return alumnoRepository.findByBachilleratoCodigoBachillerato(codigoBachillerato);
     }
 
-
+    /**
+     * Obtiene el anexo asociado a un alumno por su N.I.E.
+     * 
+     * Este método busca al alumno por su N.I.E. y devuelve el primer anexo asociado
+     * a ese alumno. Si el alumno no se encuentra, retorna null.
+     *
+     * @param nie El número de identificación estudiantil del alumno.
+     * @return El primer anexo asociado al alumno, o null si el alumno no se
+     *         encuentra.
+     */
     public AnexoAlumno obtenerAnexoPorAlumno(int nie) {
         // Busca el alumno por su N.I.E.
         Alumno alumno = alumnoRepository.findById(nie).orElse(null);
-        
+
         if (alumno != null) {
             // Encuentra el primer anexo asociado a ese alumno
             return anexoRepository.findFirstByAlumno(alumno);
@@ -155,6 +164,5 @@ public class AlumnoService {
             return null;
         }
     }
-
 
 }

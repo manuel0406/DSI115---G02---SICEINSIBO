@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import com.dsi.insibo.sice.entity.AnexoAlumno;
 
 @Service
-public class AnexoService {
+public class AnexoAlumnoService {
 
     @Autowired
-    private AnexoRepository anexoRepository;
+    private AnexoAlumnoRepository anexoRepository;
 
     public void guardaAnexo(AnexoAlumno anexoAlumno){
 
@@ -17,7 +17,7 @@ public class AnexoService {
 
     }
 
-    public AnexoAlumno buscarPorId(int id){
+    public AnexoAlumno buscarAnexoPorId(int id){
         return anexoRepository.findById(id).orElse(null);
     }
     

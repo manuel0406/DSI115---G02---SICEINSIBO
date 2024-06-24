@@ -19,8 +19,7 @@ public class AnexoAlumno {
     private String nombreDui;
     @Lob
     private byte[] datosDui;
-    private Date fechaDui;
-    
+    private Date fechaDui;    
 
     @ManyToOne
     private Alumno alumno;

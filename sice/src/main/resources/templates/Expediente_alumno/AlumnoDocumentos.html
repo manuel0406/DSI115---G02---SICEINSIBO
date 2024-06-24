@@ -78,6 +78,17 @@
                 </nav>
 
                 <div class="container-fluid" style="padding-top: 56px;">
+                    <!--Mensajes-->
+                    <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2"
+                        th:if="${success != null}">
+                        <label th:text="${success}"></label>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div class="alert alert-warning alert-dismissible fade show mt-1 ms-2 mr-2"
+                        th:if="${warning != null}">
+                        <label th:text="${warning}"></label>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
 
                     <h1 class="my-2  ">Documentos</h1>
                     <div class="col-6 my-5">
@@ -95,10 +106,12 @@
                                 <tr>
                                     <th class="text-start">DUI</th>
                                     <!-- Verifica si anexos es null -->
-                                    <td class="text-center" th:if="${anexos == null}" th:text="${' '}"></td>
+                                    <td class="text-center" th:if="${anexos == null || anexos.fechaDui == null}"
+                                        th:text="${' '}"></td>
                                     <!-- Verifica si anexos no es null y fechaDui no es null -->
-                                    <td class="text-center" th:if="${anexos != null && anexos.fechaDui != null}" th:text="${#dates.format(anexos.fechaDui,'dd/MM/yyyy')}"></td>
-                                
+                                    <td class="text-center" th:if="${anexos != null && anexos.fechaDui != null}"
+                                        th:text="${#dates.format(anexos.fechaDui,'dd/MM/yyyy')}"></td>
+
                                     <!-- Aquí empieza la sección de subida y visualización de documentos -->
                                     <td th:if="${anexos == null || anexos.nombreDui == null}">
                                         <a class="btn btn-primary" th:href="@{/Subir/dui/}+${alumno.nie}">
@@ -106,41 +119,58 @@
                                         </a>
                                     </td>
                                     <td class="text-center" th:if="${anexos != null && anexos.nombreDui != null}">
+                                        <!-- Ver documento -->
                                         <a class=" btn-primary"
-                                           th:href="@{/ExpedienteAlumno/files/dui/}+${anexos.idAnexoAlumno}">
+                                            th:href="@{/ExpedienteAlumno/files/dui/}+${anexos.idAnexoAlumno}"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                            title="Click para ver documento" target="_blank">
                                             <i class="fs-4 bi bi-file-earmark-pdf"></i>
                                         </a>
-                                        <a class=" btn-danger mx-2" th:href="@{/subir/dui/}+${alumno.nie}">
+                                        <!-- Eliminar documento -->
+                                        <a class=" btn-danger mx-2"
+                                            th:href="@{/delete/dui/}+${anexos.idAnexoAlumno}+@{/}+${alumno.nie}"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="Click para eliminar documento">
                                             <i class="fs-4 bi bi-x-circle"></i>
                                         </a>
                                     </td>
                                 </tr>
-                                
+
                                 <tr>
                                     <th class="text-start">Partida de nacimiento</th>
-                                   <!-- Verifica si anexos es null -->
-                                   <td class="text-center" th:if="${anexos == null || anexos.nombrePartidaNacimiento == null}" th:text="${' '}"></td>
-                                   <!-- Verifica si anexos no es null y fechaDui no es null -->
-                                   <td class="text-center" th:if="${anexos != null && anexos.fechaPartidaNacimiento != null}" th:text="${#dates.format(anexos.fechaDui,'dd/MM/yyyy')}"></td>
-                               
-                                   <!-- Aquí empieza la sección de subida y visualización de documentos -->
-                                   <td th:if="${anexos == null || anexos.nombrePartidaNacimiento == null}">
-                                       <a class="btn btn-primary" th:href="@{/Subir/PartidaNacimiento/}+${alumno.nie}">
-                                           <i class="bi bi-upload"></i>
-                                       </a>
-                                   </td>
-                                   <td class="text-center" th:if="${anexos != null && anexos.nombrePartidaNacimiento != null}">
-                                       <a class=" btn-primary"
-                                          th:href="@{/ExpedienteAlumno/files/PartidaNacimiento/}+${anexos.idAnexoAlumno}">
-                                           <i class="fs-4 bi bi-file-earmark-pdf"></i>
-                                       </a>
-                                       <a class=" btn-danger mx-2" th:href="@{/subir/dui/}+${alumno.nie}">
-                                           <i class="fs-4 bi bi-x-circle"></i>
-                                       </a>
-                                   </td>
+                                    <!-- Verifica si anexos es null -->
+                                    <td class="text-center"
+                                        th:if="${anexos == null || anexos.nombrePartidaNacimiento == null}"
+                                        th:text="${' '}"></td>
+                                    <!-- Verifica si anexos no es null y fechaDui no es null -->
+                                    <td class="text-center"
+                                        th:if="${anexos != null && anexos.fechaPartidaNacimiento != null}"
+                                        th:text="${#dates.format(anexos.fechaDui,'dd/MM/yyyy')}"></td>
 
+                                    <!-- Aquí empieza la sección de subida y visualización de documentos -->
+                                    <td th:if="${anexos == null || anexos.nombrePartidaNacimiento == null}">
+                                        <a class="btn btn-primary" th:href="@{/Subir/PartidaNacimiento/}+${alumno.nie}">
+                                            <i class="bi bi-upload"></i>
+                                        </a>
+                                    </td>
+                                    <td class="text-center"
+                                        th:if="${anexos != null && anexos.nombrePartidaNacimiento != null}">
+                                        <!-- Ver documento -->
+                                        <a class="btn btn-primary"
+                                            th:href="@{/ExpedienteAlumno/files/PartidaNacimiento/}+${anexos.idAnexoAlumno}"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                            title="Click para ver documento" target="_blank">
+                                            <i class="fs-4 bi bi-file-earmark-pdf"></i>
+                                        </a>
+                                        <!-- Eliminar documento -->
+                                        <a class="btn btn-danger mx-2"
+                                            th:href="@{/delete/PartidaNacimiento/}+${anexos.idAnexoAlumno}+@{/}+${alumno.nie}"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="Click para eliminar documento">
+                                            <i class="fs-4 bi bi-x-circle"></i>
+                                        </a>
+                                    </td>
                                 </tr>
-                                
 
                             </tbody>
                         </table>
@@ -160,5 +190,6 @@
 </body>
 
 <footer th:replace="~{home :: footer}"></footer>
+
 
 </html>

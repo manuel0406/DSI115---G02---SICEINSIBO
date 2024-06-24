@@ -35,9 +35,7 @@ public class AlumnoController {
 	private BachilleratoService bachilleratoService;
 	@Autowired
 	private NotaService notaService;
-	@Autowired
-	private AnexoService anexoService;
-
+	
 	/**
 	 * Controlador para guardar un nuevo alumno en la base de datos.
 	 * 
