@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{home :: head}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,8 +20,8 @@
                                 <span class="fs-6 ms-2 d-none d-sm-inline">Información general</span>
                             </a>
                         </li>
-                        <li class="nav-item py-2 py-sm-0 my-2">
-                            <a class="nav-link text-white" th:href="@{/ExpedienteAlumno/Enfermedades/} + ${alumno.nie}">
+                        <li class="nav-item py-2 py-sm-0 ">
+                            <a class="nav-link text-white my-2" th:href="@{/ExpedienteAlumno/Enfermedades/} + ${alumno.nie}">
                                 <i class="bi bi-journal-medical"></i>
                                 <span class="fs-6 ms-2 d-none d-sm-inline">Padecimientos</span>
                             </a>
@@ -69,31 +69,42 @@
                         </div>
                     </div>
                 </nav>
+
                 <div class="container-fluid" style="padding-top: 56px;">
 
-                    <h1 class="my-2  ">Información de padecimientos</h1>
+                    <h1 class="my-2  ">Documentos</h1>
                     <div class="col-6 my-5" >
                         <table class="table  table-striped">
-                            
+                            <thead class="thead table-dark text-start">
+                                <tr>
+                                    <th scope="col">Tipo</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Archivo</th>
+                                    
+                                </tr>
+                            </thead>
                             <tbody class="">
                                                              
                                 <tr>
-                                    <th  class="text-start">Enfermedad</th>
-                                    <td class="text-start" th:text="${alumno.padecimientos}" ></td>
-                                   
+                                    <th  class="text-start">DUI</th>
+                                    <td class="text-start" th:text="${alumno.apellidoAlumno}" ></td>
+                                   <td>  <a class="btn btn-success" th:href="@{/subir/dui}">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </a></td>
                                   </tr>
                                   <tr>
-                                    <th  class="text-start">Medicamento</th>
-                                    <td class="text-start" th:text="${alumno.medicamento}"></td>
+                                    <th  class="text-start">Partida de nacimiento</th>
+                                    <td class="text-start" th:text="${alumno.nombreAlumno}"></td>
                                     
                                   </tr>
                                   <tr>
-                                    <th  class="text-start">Forma de medicación</th>                                    
-                                    <td  class="text-start" th:text="${alumno.formaMedicacion}"></td>
+                                    <th  class="text-start">Titulo de 9° grado</th>                                    
+                                    <td class="text-start" th:text="${alumno.fechaNacimientoAlumno}"></td>
                                   </tr>
                                   
                             </tbody>
                         </table>
+                       
                     </div>
                     <div class="text-start">
                         <a th:href="@{/ExpedienteAlumno/ver}" class="btn btn-primary " th:text="'Regresar'"> </a>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head th:replace="~{home :: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir archivo</title>
+</head>
+
+<body>
+    <header th:replace="~{home :: header}"></header>
+    <div class="container">
+        <h2>Subir un archivo</h2>
+        <form method="POST" enctype="multipart/form-data" th:action="@{/upload}">
+            <div class="mb-3 col-4">
+                <label for="formFile" class="form-label">Seleccione el archivo a cargar</label>
+                <input class="form-control" type="file" id="formFile" name="file" accept="application/pdf">
+
+            </div>
+
+
+            <button class="btn btn-primary" type="submit">Guardar</button>
+        </form>
+
+
+    </div>
+
+
+    <p th:if="${message}" th:text="${message}"></p>
+</body>
+<footer th:replace="~{home :: footer}"></footer>
+</html>

@@ -418,6 +418,38 @@ public class AlumnoController {
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoDatosResponsable";
 	}
+	@GetMapping("Documentos/{nie}")
+	public String alumnoDocumentos(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes){
+
+		
+		Alumno alumno = null;
+		if (nie > 0) {
+			// Busca al alumno por su número de identificación estudiantil (NIE)
+			alumno = alumnoService.buscarPorIdAlumno(nie);
+
+			// Verifica que el alumno exista
+			if (alumno == null) {
+				System.out.println("Error: ¡El NIE ingresado no existe!");
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
+				return "redirect:/ExpedienteAlumno/ver";
+			}
+
+		} else {
+			// Maneja el caso donde el NIE no es válido
+			System.out.println("Error: ¡El NIE ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
+			return "redirect:/ExpedienteAlumno/ver";
+		}
+		// Obtener el bachillerato asociado al alumno
+		Bachillerato bachillerato = alumno.getBachillerato();
+
+		// Agregar atributos al modelo para ser utilizados en la vista
+		model.addAttribute("alumno", alumno);
+		model.addAttribute("bachillerato", bachillerato);
+		model.addAttribute("titulo", "Documentos");
+
+		return "Expediente_alumno/AlumnoDocumentos";
+	}
 
 	/**
 	 * Controlador para generar un documento PDF con la lista de alumnos.
