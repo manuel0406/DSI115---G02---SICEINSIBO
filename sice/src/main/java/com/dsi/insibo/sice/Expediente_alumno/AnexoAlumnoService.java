@@ -23,6 +23,7 @@ public class AnexoAlumnoService {
     
     public AnexoAlumno buscarAlumno(int nie){
 
-        return null;
+       
+        return  anexoRepository.findByAlumnoNie(nie);
     }
 }

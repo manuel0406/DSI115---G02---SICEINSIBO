@@ -35,6 +35,8 @@ public class AlumnoController {
 	private BachilleratoService bachilleratoService;
 	@Autowired
 	private NotaService notaService;
+	@Autowired
+	private AnexoAlumnoService anexoAlumnoService;
 	
 	/**
 	 * Controlador para guardar un nuevo alumno en la base de datos.
@@ -422,7 +424,6 @@ public class AlumnoController {
 	}
 	@GetMapping("Documentos/{nie}")
 	public String alumnoDocumentos(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes){
-
 		
 		Alumno alumno = null;
 		if (nie > 0) {
@@ -445,8 +446,8 @@ public class AlumnoController {
 		// Obtener el bachillerato asociado al alumno
 		Bachillerato bachillerato = alumno.getBachillerato();
 
-		AnexoAlumno anexos= alumnoService.obtenerAnexoPorAlumno(nie);
-
+		//Obtener los anexos asociados al alumno
+		AnexoAlumno anexos= anexoAlumnoService.buscarAlumno(nie);
 
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("alumno", alumno);

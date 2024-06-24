@@ -94,7 +94,7 @@ public class AnexoAlumnoController {
         // Busca al alumno por su NIE
         Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
         // Obtiene el anexo del alumno
-        AnexoAlumno archivo = alumnoService.obtenerAnexoPorAlumno(nie);
+        AnexoAlumno archivo = anexoService.buscarAlumno(nie);
 
         // Si el anexo es nulo, crea uno nuevo
         if (archivo == null) {
