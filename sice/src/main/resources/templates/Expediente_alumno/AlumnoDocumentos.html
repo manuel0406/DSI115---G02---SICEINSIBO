@@ -113,7 +113,8 @@
 
                                     <!-- Aquí empieza la sección de subida y visualización de documentos -->
                                     <td th:if="${anexos == null || anexos.nombreDui == null}">
-                                        <a class="btn btn-primary" th:href="@{/Subir/dui/}+${alumno.nie}">
+                                        <a class="btn btn-primary" th:href="@{/Subir/dui/}+${alumno.nie}"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Adjuntar documento">
                                             <i class="bi bi-upload"></i>
                                         </a>
                                     </td>
@@ -148,7 +149,8 @@
 
                                     <!-- Aquí empieza la sección de subida y visualización de documentos -->
                                     <td th:if="${anexos == null || anexos.nombrePartidaNacimiento == null}">
-                                        <a class="btn btn-primary" th:href="@{/Subir/PartidaNacimiento/}+${alumno.nie}">
+                                        <a class="btn btn-primary" th:href="@{/Subir/PartidaNacimiento/}+${alumno.nie}"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Adjuntar documento">
                                             <i class="bi bi-upload"></i>
                                         </a>
                                     </td>
