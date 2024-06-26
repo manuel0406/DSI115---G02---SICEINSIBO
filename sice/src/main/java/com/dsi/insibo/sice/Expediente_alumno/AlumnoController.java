@@ -320,12 +320,11 @@ public class AlumnoController {
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
 			return "redirect:/ExpedienteAlumno/ver";
 		}
-		// Obtener el bachillerato asociado al alumno
-		Bachillerato bachillerato = alumno.getBachillerato();
+		
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("titulo", "Información");
 		model.addAttribute("alumno", alumno);
-		model.addAttribute("bachillerato", bachillerato);
+		//model.addAttribute("bachillerato", bachillerato);
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoInformacion";
@@ -365,14 +364,10 @@ public class AlumnoController {
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
 			return "redirect:/ExpedienteAlumno/ver";
 		}
-
-		// Obtener el bachillerato asociado al alumno
-		Bachillerato bachillerato = alumno.getBachillerato();
-
+		
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("titulo", "Padecimientos");
-		model.addAttribute("alumno", alumno);
-		model.addAttribute("bachillerato", bachillerato);
+		model.addAttribute("alumno", alumno);		
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoEnfermedad";
@@ -411,12 +406,9 @@ public class AlumnoController {
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
 			return "redirect:/ExpedienteAlumno/ver";
 		}
-		// Obtener el bachillerato asociado al alumno
-		Bachillerato bachillerato = alumno.getBachillerato();
-
+		
 		// Agregar atributos al modelo para ser utilizados en la vista
-		model.addAttribute("alumno", alumno);
-		model.addAttribute("bachillerato", bachillerato);
+		model.addAttribute("alumno", alumno);		
 		model.addAttribute("titulo", "Encargado");
 
 		// Retornar el nombre de la vista a ser renderizada
@@ -443,15 +435,12 @@ public class AlumnoController {
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
 			return "redirect:/ExpedienteAlumno/ver";
 		}
-		// Obtener el bachillerato asociado al alumno
-		Bachillerato bachillerato = alumno.getBachillerato();
-
+		
 		//Obtener los anexos asociados al alumno
 		AnexoAlumno anexos= anexoAlumnoService.buscarAlumno(nie);
 
 		// Agregar atributos al modelo para ser utilizados en la vista
-		model.addAttribute("alumno", alumno);
-		model.addAttribute("bachillerato", bachillerato);
+		model.addAttribute("alumno", alumno);		
 		model.addAttribute("anexos", anexos);
 		model.addAttribute("titulo", "Documentos");
 
@@ -502,6 +491,7 @@ public class AlumnoController {
 		ModelAndView modelAndView = new ModelAndView("Expediente_alumno/verAlumnoPdf");
 
 		// Agregar atributos al ModelAndView para ser utilizados en la vista
+		model.addAttribute("titulo", "Alumnos");
 		modelAndView.addObject("alumnos", listaAlumnos);
 		modelAndView.addObject("bachilleratos", listaCarreras);
 		modelAndView.addObject("carrera", carrera);
