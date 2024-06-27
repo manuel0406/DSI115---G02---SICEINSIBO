@@ -66,6 +66,14 @@ public class AlumnoController {
 			return "redirect:/ExpedienteAlumno/ver";
 		}
 
+		if (alumno.getPadecimientos().isEmpty()) {
+			alumno.setPadecimientos("No");
+		}if (alumno.getMedicamento().isEmpty()) {
+			alumno.setMedicamento("No");
+		}if (alumno.getFormaMedicacion().isEmpty()) {
+			alumno.setFormaMedicacion("No");
+		}
+
 		// Guarda el nuevo alumno
 		alumnoService.guardarAlumno(alumno);
 		attributes.addFlashAttribute("success", "¡Alumno guardado con éxito!");

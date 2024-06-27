@@ -31,37 +31,43 @@ restrictedInputs.forEach(function (input) {
         }, false)
     })
 })()
-
 document.getElementById('formulario').addEventListener('submit', function (event) {
+    var showError = false;
+    var errorMessage = '';
+
     var nieInput = document.getElementById('nie');
     var nieValue = nieInput.value;
     if (nieValue.length < 7) {
-        showErrorModal('El NIE debe tener al menos 7 caracteres.');
-        event.preventDefault();
+        errorMessage = 'El NIE debe tener al menos 7 caracteres.';
+        showError = true;
     }
 
     var duiInput = document.getElementById('duiEncargado');
     var duiValue = duiInput.value;
     if (duiValue.length < 10) {
-        showErrorModal('El DUI debe tener al menos 10 caracteres.');
-        event.preventDefault();
+        errorMessage = 'El DUI del responsable debe tener al menos 10 caracteres.';
+        showError = true;
     }
 
     var telefonoInput = document.getElementById('telefono');
     var telefonoValue = telefonoInput.value;
     if (telefonoValue.length < 9) {
-        showErrorModal('El Teléfono debe tener al menos 9 caracteres.');
-        event.preventDefault();
+        errorMessage = 'El Teléfono del alumno debe tener al menos 9 caracteres.';
+        showError = true;
     }
 
     var telefonoEncargadoInput = document.getElementById('telefonoEncargado');
     var telefonoEncargadoValue = telefonoEncargadoInput.value;
     if (telefonoEncargadoValue.length < 9) {
-        showErrorModal('El Teléfono del Encargado debe tener al menos 9 caracteres.');
+        errorMessage = 'El Teléfono del Encargado debe tener al menos 9 caracteres.';
+        showError = true;
+    }
+
+    if (showError) {
+        showErrorModal(errorMessage);
         event.preventDefault();
     }
 });
-
 
 function showErrorModal(message) {
     document.getElementById('errorMessage').innerText = message;
