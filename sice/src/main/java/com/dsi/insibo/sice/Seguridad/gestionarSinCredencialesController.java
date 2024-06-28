@@ -59,7 +59,7 @@ public class gestionarSinCredencialesController {
     public String bloquearUsuario(@PathVariable("id") int idUsuario, RedirectAttributes attribute) {
         
         Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
-        usuario.setEstadoUsuario("Rechazado");
+        usuario.setEnabled(true);
         usuarioService.guardarUsuario(usuario);
         return "redirect:/gestionarSinCredenciales";
     }
@@ -73,7 +73,7 @@ public class gestionarSinCredencialesController {
         
         Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
         String contrasena = generateRandomPassword(8);
-        usuario.setEstadoUsuario("Activo");
+        usuario.setEnabled(true);
         usuario.setContrasenaUsuario(passwordEncoder.encode("HOLA")); //Contraseña encriptada
         usuarioService.guardarUsuario(usuario);
         return "redirect:/gestionarSinCredenciales";
@@ -130,7 +130,7 @@ public class gestionarSinCredencialesController {
             return "redirect:/gestionarSinCredenciales"; // Redirigir a la página de gestión de credenciales
         }
 
-        if (!usuarioBuscado.getEstadoUsuario().equals("Desactivado")) {
+        if (!usuarioBuscado.isEnabled() == true) {
             // Usuario no encontrado, añadir mensaje de error
             redirectAttributes.addFlashAttribute("Error", "<b>¡Advertencia!</b> Su usuario no se encuentra desactivado.");
             return "redirect:/gestionarSinCredenciales"; // Redirigir a la página de gestión de credenciales

@@ -74,7 +74,6 @@ public class DocenteController {
             UsuarioRoles rol = new UsuarioRoles();
             rol.setRoleEnum(UsuarioRoleEnum.DOCENTE); // Suponiendo que tienes un enum para roles
             roles.add(rol);
-            String estado = "Desactivado";
             boolean inicio = true;
             String contrasena = "";
 
@@ -82,7 +81,7 @@ public class DocenteController {
             usuario.setDocente(docente);
             usuario.setCorreoUsuario(correo);
             usuario.setRolesUsuario(roles);
-            usuario.setEstadoUsuario(estado);
+            usuario.setEnabled(true);
             usuario.setPrimerIngreso(inicio);
             usuario.setContrasenaUsuario(contrasena);
 

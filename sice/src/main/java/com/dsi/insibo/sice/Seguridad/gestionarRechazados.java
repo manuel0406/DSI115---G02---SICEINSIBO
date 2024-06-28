@@ -61,7 +61,7 @@ public class gestionarRechazados {
     public String aceptarUsuarioRechazado(@PathVariable("id") int idUsuario, RedirectAttributes attribute) {
         Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
         String contrasena = generateRandomPassword(8);
-        usuario.setEstadoUsuario("Activo");
+        usuario.setEnabled(true);
         usuario.setContrasenaUsuario(passwordEncoder.encode(contrasena));
         usuarioService.guardarUsuario(usuario);
         return "redirect:/gestionarRechazados";
@@ -118,7 +118,7 @@ public class gestionarRechazados {
             return "redirect:/gestionarRechazados"; // Redirigir a la página de gestión de credenciales
         }
 
-        if (!usuarioBuscado.getEstadoUsuario().equals("Rechazado")) {
+        if (!usuarioBuscado.isEnabled() == true) {
             // Usuario no encontrado, añadir mensaje de error
             redirectAttributes.addFlashAttribute("Error", "<b>¡Advertencia!</b> Su usuario no se encuentra rechazado.");
             return "redirect:/gestionarRechazados"; // Redirigir a la página de gestión de credenciales

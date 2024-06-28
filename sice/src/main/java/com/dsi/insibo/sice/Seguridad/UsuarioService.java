@@ -20,43 +20,43 @@ public class UsuarioService {
 
     public List<Usuario> listaUsuariosActivosIntervalos(int offset){
         Pageable pageable = PageRequest.of(offset, 7);
-        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Activo", pageable);
+        return (List<Usuario>) usuarioRepository.findByAccountLocked(true, pageable);
     }
 
     public List<Usuario> listaUsuariosActivos(){
-        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Activo");
+        return (List<Usuario>) usuarioRepository.findByAccountLocked(true);
     }
 
     // USUARIOS INACTIVOS - SIN CREDENCIALES
 
     public List<Usuario> listaUsuariosDesactivados(){
-        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Desactivado");
+        return (List<Usuario>) usuarioRepository.findByAccountLocked(true);
     }
 
     public List<Usuario> listaUsuariosDesactivadosIntervalos(int offset){
         Pageable pageable = PageRequest.of(offset, 7);
-        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Desactivado", pageable);
+        return (List<Usuario>) usuarioRepository.findByAccountLocked(true, pageable);
     }
 
     // USUARIOS RECHAZADOS - SIN PERMISOS
 
     public List<Usuario> listaUsuariosRechazados(){
-        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Rechazado");
+        return (List<Usuario>) usuarioRepository.findByAccountLocked(true);
     }
 
     public List<Usuario> listaUsuariosRechazadosIntervalos(int offset){
         Pageable pageable = PageRequest.of(offset, 7);
-        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Rechazado", pageable);
+        return (List<Usuario>) usuarioRepository.findByAccountLocked(true, pageable);
     }
 
     // USUARIOS BLOQUEADOS - DENEGADOS
     public List<Usuario> listaUsuariosBloqueados(){
-        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Bloqueado");
+        return (List<Usuario>) usuarioRepository.findByAccountLocked(true);
     }
 
     public List<Usuario> listaUsuariosBloqueadosIntervalos(int offset){
         Pageable pageable = PageRequest.of(offset, 7);
-        return (List<Usuario>) usuarioRepository.findByEstadoUsuario("Bloqueado", pageable);
+        return (List<Usuario>) usuarioRepository.findByAccountLocked(true, pageable);
     }
 
 

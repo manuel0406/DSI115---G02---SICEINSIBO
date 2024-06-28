@@ -52,7 +52,7 @@ public class ConfiguracionSeguridad {
                 // NEVER = La sesión solo se crea si es requerida.
                 // IF_REQUIERED = No crea ni utiliza sesiones HTTP en absoluto.
                 .sessionManagement(session -> {
-                    session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS); // Politicas de sesiones 
+                    session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED); // Politicas de sesiones 
                     session.maximumSessions(1).sessionRegistry(sessionRegistry()); // Número maximo de sesiones
                     session.sessionFixation().migrateSession(); // Previene la fijación de sesión migrando a una nueva sesión
                     // session.invalidSessionUrl("null")

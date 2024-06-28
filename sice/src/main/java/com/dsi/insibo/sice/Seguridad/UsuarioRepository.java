@@ -14,8 +14,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>  {
     Usuario findByIdUsuario(int idUsuario);
     List<Usuario> findAll();
     //Estado: Activo | Desactivado | Bloqueado |
-    List<Usuario> findByEstadoUsuario(String estadoUsuario, Pageable pageable);
-    List<Usuario> findByEstadoUsuario(String estadoUsuario);
+    List<Usuario> findByAccountLocked(boolean accountLocked, Pageable pageable);
+    List<Usuario> findByAccountLocked(boolean accountLocked);
     @Transactional
     void deleteByDocente_DuiDocente(String duiDocente);
     @Transactional

@@ -39,8 +39,8 @@ public class recuperarContraController {
         } 
 
 		//Validamos el estado del usuario
-        if (!usuario.getEstadoUsuario().equals("Activo")){
-            redirectAttributes.addFlashAttribute("mensaje", "<b>¡Sin Acceso!</b> Su usuario esta " + usuario.getEstadoUsuario()+".");
+        if (!usuario.isEnabled() == true){
+            redirectAttributes.addFlashAttribute("mensaje", "<b>¡Sin Acceso!</b> Su usuario esta " + usuario.isEnabled()+".");
             return "redirect:/recuperarContra";
         } 
         else {

@@ -57,7 +57,7 @@ public class gestionarBloqueados {
     public String desbloquearUsuario(@PathVariable("id") int idUsuario, RedirectAttributes attribute ) {
         
         Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
-        usuario.setEstadoUsuario("Activo");
+        usuario.setEnabled(true);
         usuarioService.guardarUsuario(usuario);
         return "redirect:/gestionarBloqueados";
     }
@@ -73,7 +73,7 @@ public class gestionarBloqueados {
             return "redirect:/gestionarBloqueados"; // Redirigir a la página de gestión de credenciales
         }
 
-        if (!usuarioBuscado.getEstadoUsuario().equals("Bloqueado")) {
+        if (!usuarioBuscado.isEnabled() ==  false) {
             // Usuario no encontrado, añadir mensaje de error
             redirectAttributes.addFlashAttribute("Error", "<b>¡Advertencia!</b> Su usuario no se encuentra bloqueado.");
             return "redirect:/gestionarBloqueados"; // Redirigir a la página de gestión de credenciales

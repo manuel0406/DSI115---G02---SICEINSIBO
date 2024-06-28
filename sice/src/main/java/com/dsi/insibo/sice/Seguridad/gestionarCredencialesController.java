@@ -73,7 +73,7 @@ public class gestionarCredencialesController {
     public String bloquearUsuario(@PathVariable("id") int idUsuario, RedirectAttributes attribute ) {
         
         Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
-        usuario.setEstadoUsuario("Bloqueado");
+        usuario.setEnabled(true);
         usuarioService.guardarUsuario(usuario);
         return "redirect:/gestionarCredenciales";
     }
@@ -89,7 +89,7 @@ public class gestionarCredencialesController {
             return "redirect:/gestionarCredenciales"; // Redirigir a la página de gestión de credenciales
         }
 
-        if (!usuarioBuscado.getEstadoUsuario().equals("Activo")) {
+        if (!usuarioBuscado.isEnabled() == false ) {
             // Usuario no encontrado, añadir mensaje de error
             redirectAttributes.addFlashAttribute("Error", "<b>¡Advertencia!</b> Su usuario no se encuentra activo.");
             return "redirect:/gestionarCredenciales"; // Redirigir a la página de gestión de credenciales
