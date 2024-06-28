@@ -29,7 +29,8 @@ public class gestionarCredencialesController {
         List<UsuarioConNombre> listadoCompleto =new ArrayList<>();
         //Obtenemos los nombres
         for (Usuario usuario : listadoUsuarios) {
-            String rol = usuario.getRolUsuario();
+            
+            String rol = usuario.getRolesUsuarioNombres();
             String nombre="";
 
             if(rol.equals("Administrador")){
@@ -95,10 +96,10 @@ public class gestionarCredencialesController {
         }
         
         String nombre="";
-        if(usuarioBuscado.getRolUsuario().equals("Administrador")){
+        if(usuarioBuscado.getRolesUsuarioNombres().equals("Administrador")){
             nombre = "Administrador";
         }
-        if(usuarioBuscado.getRolUsuario().equals("Docente")){
+        if(usuarioBuscado.getRolesUsuarioNombres().equals("Docente")){
 
             nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente() ;
         }

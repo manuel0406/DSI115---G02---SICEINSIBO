@@ -62,11 +62,11 @@ public class UsuarioService {
 
 
     public Usuario buscarPorCorreoYContrasena(String correoUsuario, String contrasenaUsuario) {
-        return usuarioRepository.findByCorreoUsuarioAndContrasenaUsuario(correoUsuario, contrasenaUsuario);
+        return usuarioRepository.findByCorreoUsuarioAndContrasenaUsuario(correoUsuario, contrasenaUsuario).orElse(null);
     }
 
     public Usuario buscarPorCorreo(String correoUsuario) {
-        return usuarioRepository.findByCorreoUsuario(correoUsuario);
+        return usuarioRepository.findByCorreoUsuario(correoUsuario).orElse(null);
     }
 
     public Usuario buscarPorIdUsuario(int idUsuario) {

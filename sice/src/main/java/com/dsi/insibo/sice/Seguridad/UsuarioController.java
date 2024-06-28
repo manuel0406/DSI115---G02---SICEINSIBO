@@ -46,7 +46,7 @@ public class UsuarioController {
             return "redirect:/iniciarSesion";
         } 
         else {
-            if ("Administrador".equals(usuario.getRolUsuario())) {
+            if ("Administrador".equals(usuario.getRolesUsuarioNombres())) {
                 return "redirect:/gestionarCredenciales?pagina=1";
             } else {
                 return "redirect:/";

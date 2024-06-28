@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class gestionarSinCredencialesController {
         List<UsuarioConNombre> listadoCompleto =new ArrayList<>();
         //Obtenemos los nombres
         for (Usuario usuario : listadoUsuarios) {
-            String rol = usuario.getRolUsuario();
+            String rol = usuario.getRolesUsuarioNombres();
             String nombre="";
 
             if(rol.equals("Administrador")){
@@ -63,13 +64,17 @@ public class gestionarSinCredencialesController {
         return "redirect:/gestionarSinCredenciales";
     }
 
+    
+    //ENCRIPTAMIENTO DE CONTRASEÑA
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @GetMapping("/aceptarUsuario/{id}")
     public String aceptarUsuario(@PathVariable("id") int idUsuario, RedirectAttributes attribute) {
         
         Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
         String contrasena = generateRandomPassword(8);
         usuario.setEstadoUsuario("Activo");
-        usuario.setContrasenaUsuario(contrasena);
+        usuario.setContrasenaUsuario(passwordEncoder.encode("HOLA")); //Contraseña encriptada
         usuarioService.guardarUsuario(usuario);
         return "redirect:/gestionarSinCredenciales";
     }
@@ -132,14 +137,14 @@ public class gestionarSinCredencialesController {
         }
         
         String nombre="";
-        if(usuarioBuscado.getRolUsuario().equals("Administrador")){
+        if(usuarioBuscado.getRolesUsuarioNombres().equals("Administrador")){
             nombre = "Administrador";
         }
-        if(usuarioBuscado.getRolUsuario().equals("Docente")){
+        if(usuarioBuscado.getRolesUsuarioNombres().equals("Docente")){
 
             nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente() ;
         }
-        if(usuarioBuscado.getRolUsuario().equals("Personal Administrativo")){
+        if(usuarioBuscado.getRolesUsuarioNombres().equals("Personal Administrativo")){
             nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
         }
 

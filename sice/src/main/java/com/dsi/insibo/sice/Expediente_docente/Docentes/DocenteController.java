@@ -1,6 +1,9 @@
 package com.dsi.insibo.sice.Expediente_docente.Docentes;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.dsi.insibo.sice.Seguridad.UsuarioService;
 import com.dsi.insibo.sice.entity.Docente;
 import com.dsi.insibo.sice.entity.Usuario;
+import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
+import com.dsi.insibo.sice.entity.UsuarioRoles;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +70,10 @@ public class DocenteController {
             Usuario usuario = new Usuario();
             // Obtenemos informacion relevante del usuario
             String correo = docente.getCorreoDocente();
-            String rol = "Docente";
+            Set<UsuarioRoles> roles = new HashSet<>();
+            UsuarioRoles rol = new UsuarioRoles();
+            rol.setRoleEnum(UsuarioRoleEnum.DOCENTE); // Suponiendo que tienes un enum para roles
+            roles.add(rol);
             String estado = "Desactivado";
             boolean inicio = true;
             String contrasena = "";
@@ -72,7 +81,7 @@ public class DocenteController {
             // Asignaciones al nuevo usuario
             usuario.setDocente(docente);
             usuario.setCorreoUsuario(correo);
-            usuario.setRolUsuario(rol);
+            usuario.setRolesUsuario(roles);
             usuario.setEstadoUsuario(estado);
             usuario.setPrimerIngreso(inicio);
             usuario.setContrasenaUsuario(contrasena);

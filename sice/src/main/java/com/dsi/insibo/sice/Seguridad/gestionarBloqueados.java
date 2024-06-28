@@ -25,7 +25,7 @@ public class gestionarBloqueados {
         List<UsuarioConNombre> listadoCompleto =new ArrayList<>();
         //Obtenemos los nombres
         for (Usuario usuario : listadoUsuarios) {
-            String rol = usuario.getRolUsuario();
+            String rol = usuario.getRolesUsuarioNombres();
             String nombre="";
 
             if(rol.equals("Administrador")){
@@ -78,16 +78,15 @@ public class gestionarBloqueados {
             redirectAttributes.addFlashAttribute("Error", "<b>¡Advertencia!</b> Su usuario no se encuentra bloqueado.");
             return "redirect:/gestionarBloqueados"; // Redirigir a la página de gestión de credenciales
         }
-        
         String nombre="";
-        if(usuarioBuscado.getRolUsuario().equals("Administrador")){
+        if(usuarioBuscado.getRolesUsuarioNombres().equals("Administrador")){
             nombre = "Administrador";
         }
-        if(usuarioBuscado.getRolUsuario().equals("Docente")){
+        if(usuarioBuscado.getRolesUsuarioNombres().equals("Docente")){
 
             nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente() ;
         }
-        if(usuarioBuscado.getRolUsuario().equals("Personal Administrativo")){
+        if(usuarioBuscado.getRolesUsuarioNombres().equals("Personal Administrativo")){
             nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
         }
 
