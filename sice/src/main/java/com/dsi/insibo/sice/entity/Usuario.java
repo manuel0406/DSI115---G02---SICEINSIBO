@@ -38,10 +38,10 @@ public class Usuario implements Serializable{
     private String correoUsuario;
     private String contrasenaUsuario;
     private boolean primerIngreso;
-    private String estadoUsuario;
-    private boolean accountNoExpired;
-    private boolean accountLocked;
-    private boolean credentialNoExpired;
+    private boolean enabled;                // Si esta activo
+    private boolean accountNoExpired;       // Si ha expirado
+    private boolean accountLocked;          // Si esta bloqueado
+    private boolean credentialNoExpired;    // Si credenciales no han expirado
 
     @OneToOne
     private Docente docente;
@@ -82,11 +82,11 @@ public class Usuario implements Serializable{
     public void setPrimerIngreso(boolean primerIngreso) {
         this.primerIngreso = primerIngreso;
     }
-    public String getEstadoUsuario() {
-        return estadoUsuario;
+    public boolean isEnabled() {
+        return enabled;
     }
-    public void setEstadoUsuario(String estadoUsuario) {
-        this.estadoUsuario = estadoUsuario;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
     public PersonalAdministrativo getPersonalAdministrativo() {
         return personalAdministrativo;
