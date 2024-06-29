@@ -26,6 +26,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableWebSecurity
@@ -64,7 +65,7 @@ public class ConfiguracionSeguridad {
                     http.requestMatchers(HttpMethod.POST, "/correoDeRecuperacion/**").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/expedientedocente/plantadocente/**").permitAll();
                     http.requestMatchers(HttpMethod.POST, "/validarCorreo/**").permitAll();
-
+                    http.requestMatchers(HttpMethod.GET, "/logout-success").permitAll();
                     http.anyRequest().authenticated(); // AUTENTIFICACIÓN A TODOS
                })
                 .formLogin(form -> form
@@ -74,9 +75,9 @@ public class ConfiguracionSeguridad {
                 .formLogin(form -> form
                     .permitAll()
                 )
-                .logout(logout -> logout
-                    .logoutUrl("/logout")  // URL para el logout
-                    .logoutSuccessUrl("/login")  // URL a la que redirigir después del logout
+               .logout(logout -> logout
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/logout-success")
                     .invalidateHttpSession(true)  // Invalidar la sesión
                     .deleteCookies("JSESSIONID")  // Borrar las cookies
                 )
@@ -117,6 +118,17 @@ public class ConfiguracionSeguridad {
         return manager;
     }
 
+    //Obtener datos de la sesion
+    @Bean
+    public SessionRegistry sessionRegistry(){
+        return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
+
     /*
      * // AUTENTIFICACION DE USUARIOS
     @Bean
@@ -131,10 +143,6 @@ public class ConfiguracionSeguridad {
     }
      */
 
-    //Obtener datos de la sesion
-    @Bean
-    public SessionRegistry sessionRegistry(){
-        return new SessionRegistryImpl();
-    }
+
 
 }

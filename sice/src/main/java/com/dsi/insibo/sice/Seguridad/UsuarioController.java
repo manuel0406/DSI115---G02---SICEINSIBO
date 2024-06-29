@@ -22,7 +22,6 @@ public class UsuarioController {
         return "Seguridad/iniciarSesion";
     }
 
-
     @GetMapping("/iniciarSesion")
     public String verIniciarSesion(Model model, @ModelAttribute("mensaje") String mensaje) {
         Usuario usuario = new Usuario();

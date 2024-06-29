@@ -30,10 +30,10 @@
                             </a>
                         </li>
                     </ul>
-                    <form class="d-flex" role="search">
-                        <a class="btn btn-outline-danger text-white" type="button" th:href = "@{/logout}">
+                    <form class="d-flex"th:action="@{/logout}" method="post">
+                        <button class="btn btn-outline-danger text-white" type="submit" th:href = "@{/logout}">
                             <i class="bi bi-box-arrow-in-right"></i> Cerrar sesión
-                        </a>
+                        </button>
                     </form>
                 </div>
             </div>
