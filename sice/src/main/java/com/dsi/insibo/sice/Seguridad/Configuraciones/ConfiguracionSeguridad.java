@@ -65,7 +65,7 @@ public class ConfiguracionSeguridad {
                     http.requestMatchers(HttpMethod.GET, "/expedientedocente/plantadocente/**").permitAll();
                     http.requestMatchers(HttpMethod.POST, "/validarCorreo/**").permitAll();
 
-                    http.anyRequest().permitAll(); // AUTENTIFICACIÓN A TODOS
+                    http.anyRequest().authenticated(); // AUTENTIFICACIÓN A TODOS
                })
                 /* .formLogin(form -> form
                     .loginPage("/iniciarSesion")

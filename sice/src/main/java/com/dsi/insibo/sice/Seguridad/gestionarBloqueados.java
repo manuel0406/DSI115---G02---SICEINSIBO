@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
 import com.dsi.insibo.sice.entity.UsuarioRoles;
 
 @Controller
+@PreAuthorize("hasRole('ADMINISTRADOR')")
 public class gestionarBloqueados {
     @Autowired
     private UsuarioService usuarioService;
