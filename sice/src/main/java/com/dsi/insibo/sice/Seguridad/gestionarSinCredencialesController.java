@@ -3,6 +3,8 @@ package com.dsi.insibo.sice.Seguridad;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.entity.Usuario;
+import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
+import com.dsi.insibo.sice.entity.UsuarioRoles;
 
 @Controller
 public class gestionarSinCredencialesController {
@@ -20,6 +24,7 @@ public class gestionarSinCredencialesController {
     @Autowired
     private UsuarioService usuarioService;
 
+// -------------------------------------------------------------------------------------------------------------------------------
     @GetMapping("/gestionarSinCredenciales")
     public String cargarSinCredenciales(Model model, @RequestParam(required = false, defaultValue = "1") int pagina) {
         pagina=(pagina-1);
@@ -28,18 +33,54 @@ public class gestionarSinCredencialesController {
         List<UsuarioConNombre> listadoCompleto =new ArrayList<>();
         //Obtenemos los nombres
         for (Usuario usuario : listadoUsuarios) {
-            String rol = usuario.getRolesUsuarioNombres();
+             
+            Set<UsuarioRoles> rol = usuario.getRolesUsuario();
+            // Verificar si hay algún UsuarioRoles con role_name igual a "ADMINISTRADOR"
+            boolean isAdmin = rol.stream()
+                                 .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.ADMINISTRADOR));
+            // Verificar si hay algún UsuarioRoles con role_name igual a "DOCENTE"
+            boolean isDocente = rol.stream()
+                                 .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.DOCENTE));
+            // Verificar si hay algún UsuarioRoles con role_name igual a "PERSONAL_ADMINISTRATIVO"
+            boolean isPersonal = rol.stream()
+                                   .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.PERSONAL_ADMINISTRATIVO));
+            // Verificar si hay algún UsuarioRoles con role_name igual a "DIRECTOR"
+            boolean isDirector = rol.stream()
+                                   .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.DIRECTOR));                      
+            // Verificar si hay algún UsuarioRoles con role_name igual a "SECRETARIA"
+            boolean isSecretaria = rol.stream()
+                                   .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.SECRETARIA));
+            // Verificar si hay algún UsuarioRoles con role_name igual a "SUBDIRECTORA"
+            boolean isSubDirectora = rol.stream()
+                                   .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.SUBDIRECTORA));
             String nombre="";
 
-            if(rol.equals("Administrador")){
-                nombre = "Administrador";
+            if(isAdmin){
+                nombre = "ADMINISTRADOR";
+                if (usuario.getDocente() != null) {
+                    nombre = usuario.getDocente().getNombreDocente() + " " + usuario.getDocente().getApellidoDocente();
+                }
+                if (usuario.getPersonalAdministrativo() != null) {
+                    nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getDocente().getApellidoDocente();
+                }
             }
-            if(rol.equals("Docente")){
-
-                nombre = usuario.getDocente().getNombreDocente() + " " + usuario.getDocente().getApellidoDocente() ;
+            if(isDocente || isDirector || isSubDirectora){
+                nombre = "DOCENTE";
+                if (usuario.getDocente() != null) {
+                    nombre = usuario.getDocente().getNombreDocente() + " " + usuario.getDocente().getApellidoDocente();
+                }
+                if (usuario.getPersonalAdministrativo() != null) {
+                    nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getDocente().getApellidoDocente();
+                }
             }
-            if(rol.equals("Personal Administrativo")){
-                nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getDocente().getApellidoDocente();
+            if(isPersonal || isSecretaria){
+                nombre = "PERSONAL";
+                if (usuario.getDocente() != null) {
+                    nombre = usuario.getDocente().getNombreDocente() + " " + usuario.getDocente().getApellidoDocente();
+                }
+                if (usuario.getPersonalAdministrativo() != null) {
+                    nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getDocente().getApellidoDocente();
+                }
             }
 
             listadoCompleto.add(new UsuarioConNombre(usuario, nombre));
@@ -54,30 +95,32 @@ public class gestionarSinCredencialesController {
     
         return "Seguridad/gestionarSinCredenciales";
     }
+// -------------------------------------------------------------------------------------------------------------------------------
 
     @GetMapping("/rechazarUsuario/{id}")
     public String bloquearUsuario(@PathVariable("id") int idUsuario, RedirectAttributes attribute) {
         
         Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
-        usuario.setEnabled(true);
+        usuario.setAccountLocked(false);
         usuarioService.guardarUsuario(usuario);
         return "redirect:/gestionarSinCredenciales";
     }
 
-    
+// -------------------------------------------------------------------------------------------------------------------------------
     //ENCRIPTAMIENTO DE CONTRASEÑA
     @Autowired
     private PasswordEncoder passwordEncoder;
     @GetMapping("/aceptarUsuario/{id}")
     public String aceptarUsuario(@PathVariable("id") int idUsuario, RedirectAttributes attribute) {
-        
         Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
         String contrasena = generateRandomPassword(8);
         usuario.setEnabled(true);
-        usuario.setContrasenaUsuario(passwordEncoder.encode("HOLA")); //Contraseña encriptada
+        //usuario.setContrasenaUsuario(passwordEncoder.encode("HOLA")); //Contraseña encriptada
+        usuario.setContrasenaUsuario("admin123");
         usuarioService.guardarUsuario(usuario);
         return "redirect:/gestionarSinCredenciales";
     }
+// -------------------------------------------------------------------------------------------------------------------------------
 
 
     //----------------------------------------------------------------
@@ -119,6 +162,7 @@ public class gestionarSinCredencialesController {
 
     //----------------------------------------------------------------
 
+// -------------------------------------------------------------------------------------------------------------------------------
     @GetMapping("/buscarUsuario")
     public String buscarUsuario(@RequestParam("correoUsuario") String correoUsuario, RedirectAttributes redirectAttributes, Model model) {
         Usuario usuarioBuscado = usuarioService.buscarPorCorreo(correoUsuario);
@@ -130,22 +174,59 @@ public class gestionarSinCredencialesController {
             return "redirect:/gestionarSinCredenciales"; // Redirigir a la página de gestión de credenciales
         }
 
-        if (!usuarioBuscado.isEnabled() == true) {
+        if (usuarioBuscado.isEnabled() != false || usuarioBuscado.isAccountLocked() != true) {
             // Usuario no encontrado, añadir mensaje de error
             redirectAttributes.addFlashAttribute("Error", "<b>¡Advertencia!</b> Su usuario no se encuentra desactivado.");
             return "redirect:/gestionarSinCredenciales"; // Redirigir a la página de gestión de credenciales
         }
         
+        Set<UsuarioRoles> rol = usuarioBuscado.getRolesUsuario();
+        // Verificar si hay algún UsuarioRoles con role_name igual a "ADMINISTRADOR"
+        boolean isAdmin = rol.stream()
+                            .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.ADMINISTRADOR));
+        // Verificar si hay algún UsuarioRoles con role_name igual a "DOCENTE"
+        boolean isDocente = rol.stream()
+                            .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.DOCENTE));
+        // Verificar si hay algún UsuarioRoles con role_name igual a "PERSONAL_ADMINISTRATIVO"
+        boolean isPersonal = rol.stream()
+                            .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.PERSONAL_ADMINISTRATIVO));
+        // Verificar si hay algún UsuarioRoles con role_name igual a "DIRECTOR"
+        boolean isDirector = rol.stream()
+                            .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.DIRECTOR));                      
+        // Verificar si hay algún UsuarioRoles con role_name igual a "SECRETARIA"
+        boolean isSecretaria = rol.stream()
+                            .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.SECRETARIA));
+        // Verificar si hay algún UsuarioRoles con role_name igual a "SUBDIRECTORA"
+        boolean isSubDirectora = rol.stream()
+                            .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.SUBDIRECTORA));
         String nombre="";
-        if(usuarioBuscado.getRolesUsuarioNombres().equals("Administrador")){
-            nombre = "Administrador";
-        }
-        if(usuarioBuscado.getRolesUsuarioNombres().equals("Docente")){
 
-            nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente() ;
+        if(isAdmin){
+            nombre = "ADMINISTRADOR";
+            if (usuarioBuscado.getDocente() != null) {
+                nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente();
+            }
+            if (usuarioBuscado.getPersonalAdministrativo() != null) {
+                nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
+            }
         }
-        if(usuarioBuscado.getRolesUsuarioNombres().equals("Personal Administrativo")){
-            nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
+        if(isDocente || isDirector || isSubDirectora){
+            nombre = "DOCENTE";
+            if (usuarioBuscado.getDocente() != null) {
+                nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente();
+            }
+            if (usuarioBuscado.getPersonalAdministrativo() != null) {
+                nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
+            }
+        }
+        if(isPersonal || isSecretaria){
+            nombre = "PERSONAL";
+            if (usuarioBuscado.getDocente() != null) {
+                nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente();
+            }
+            if (usuarioBuscado.getPersonalAdministrativo() != null) {
+                nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
+            }
         }
 
         //OCULTAMIENTO DE CONTRASEÑA
@@ -163,6 +244,7 @@ public class gestionarSinCredencialesController {
         model.addAttribute("Usuarios", usuarioConNombre);
         return "Seguridad/gestionarSinCredenciales";
     }
+// -------------------------------------------------------------------------------------------------------------------------------
 
 
 }

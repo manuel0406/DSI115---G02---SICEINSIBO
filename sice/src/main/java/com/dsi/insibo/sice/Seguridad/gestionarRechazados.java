@@ -2,6 +2,7 @@ package com.dsi.insibo.sice.Seguridad;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.security.SecureRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.entity.Usuario;
+import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
+import com.dsi.insibo.sice.entity.UsuarioRoles;
 
 @Controller
 public class gestionarRechazados {
@@ -28,18 +31,53 @@ public class gestionarRechazados {
         List<UsuarioConNombre> listadoCompleto =new ArrayList<>();
         //Obtenemos los nombres
         for (Usuario usuario : listadoUsuarios) {
-            String rol = usuario.getRolesUsuarioNombres();
+            Set<UsuarioRoles> rol = usuario.getRolesUsuario();
+            // Verificar si hay algún UsuarioRoles con role_name igual a "ADMINISTRADOR"
+            boolean isAdmin = rol.stream()
+                                 .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.ADMINISTRADOR));
+            // Verificar si hay algún UsuarioRoles con role_name igual a "DOCENTE"
+            boolean isDocente = rol.stream()
+                                 .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.DOCENTE));
+            // Verificar si hay algún UsuarioRoles con role_name igual a "PERSONAL_ADMINISTRATIVO"
+            boolean isPersonal = rol.stream()
+                                   .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.PERSONAL_ADMINISTRATIVO));
+            // Verificar si hay algún UsuarioRoles con role_name igual a "DIRECTOR"
+            boolean isDirector = rol.stream()
+                                   .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.DIRECTOR));                      
+            // Verificar si hay algún UsuarioRoles con role_name igual a "SECRETARIA"
+            boolean isSecretaria = rol.stream()
+                                   .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.SECRETARIA));
+            // Verificar si hay algún UsuarioRoles con role_name igual a "SUBDIRECTORA"
+            boolean isSubDirectora = rol.stream()
+                                   .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.SUBDIRECTORA));
             String nombre="";
 
-            if(rol.equals("Administrador")){
-                nombre = "Administrador";
+            if(isAdmin){
+                nombre = "ADMINISTRADOR";
+                if (usuario.getDocente() != null) {
+                    nombre = usuario.getDocente().getNombreDocente() + " " + usuario.getDocente().getApellidoDocente();
+                }
+                if (usuario.getPersonalAdministrativo() != null) {
+                    nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getDocente().getApellidoDocente();
+                }
             }
-            if(rol.equals("Docente")){
-
-                nombre = usuario.getDocente().getNombreDocente() + " " + usuario.getDocente().getApellidoDocente() ;
+            if(isDocente || isDirector || isSubDirectora){
+                nombre = "DOCENTE";
+                if (usuario.getDocente() != null) {
+                    nombre = usuario.getDocente().getNombreDocente() + " " + usuario.getDocente().getApellidoDocente();
+                }
+                if (usuario.getPersonalAdministrativo() != null) {
+                    nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getDocente().getApellidoDocente();
+                }
             }
-            if(rol.equals("Personal Administrativo")){
-                nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getDocente().getApellidoDocente();
+            if(isPersonal || isSecretaria){
+                nombre = "PERSONAL";
+                if (usuario.getDocente() != null) {
+                    nombre = usuario.getDocente().getNombreDocente() + " " + usuario.getDocente().getApellidoDocente();
+                }
+                if (usuario.getPersonalAdministrativo() != null) {
+                    nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getDocente().getApellidoDocente();
+                }
             }
 
             listadoCompleto.add(new UsuarioConNombre(usuario, nombre));
@@ -62,7 +100,9 @@ public class gestionarRechazados {
         Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
         String contrasena = generateRandomPassword(8);
         usuario.setEnabled(true);
-        usuario.setContrasenaUsuario(passwordEncoder.encode(contrasena));
+        usuario.setAccountLocked(true);
+        //usuario.setContrasenaUsuario(passwordEncoder.encode(contrasena));
+        usuario.setContrasenaUsuario("admin123");
         usuarioService.guardarUsuario(usuario);
         return "redirect:/gestionarRechazados";
     }
@@ -118,32 +158,60 @@ public class gestionarRechazados {
             return "redirect:/gestionarRechazados"; // Redirigir a la página de gestión de credenciales
         }
 
-        if (!usuarioBuscado.isEnabled() == true) {
+        if (usuarioBuscado.isEnabled() != false || usuarioBuscado.isAccountLocked() != false) {
             // Usuario no encontrado, añadir mensaje de error
             redirectAttributes.addFlashAttribute("Error", "<b>¡Advertencia!</b> Su usuario no se encuentra rechazado.");
             return "redirect:/gestionarRechazados"; // Redirigir a la página de gestión de credenciales
         }
         
+        Set<UsuarioRoles> rol = usuarioBuscado.getRolesUsuario();
+        // Verificar si hay algún UsuarioRoles con role_name igual a "ADMINISTRADOR"
+        boolean isAdmin = rol.stream()
+                            .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.ADMINISTRADOR));
+        // Verificar si hay algún UsuarioRoles con role_name igual a "DOCENTE"
+        boolean isDocente = rol.stream()
+                            .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.DOCENTE));
+        // Verificar si hay algún UsuarioRoles con role_name igual a "PERSONAL_ADMINISTRATIVO"
+        boolean isPersonal = rol.stream()
+                            .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.PERSONAL_ADMINISTRATIVO));
+        // Verificar si hay algún UsuarioRoles con role_name igual a "DIRECTOR"
+        boolean isDirector = rol.stream()
+                            .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.DIRECTOR));                      
+        // Verificar si hay algún UsuarioRoles con role_name igual a "SECRETARIA"
+        boolean isSecretaria = rol.stream()
+                            .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.SECRETARIA));
+        // Verificar si hay algún UsuarioRoles con role_name igual a "SUBDIRECTORA"
+        boolean isSubDirectora = rol.stream()
+                            .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.SUBDIRECTORA));
         String nombre="";
-        if(usuarioBuscado.getRolesUsuarioNombres().equals("Administrador")){
-            nombre = "Administrador";
-        }
-        if(usuarioBuscado.getRolesUsuarioNombres().equals("Docente")){
 
-            nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente() ;
+        if(isAdmin){
+            nombre = "ADMINISTRADOR";
+            if (usuarioBuscado.getDocente() != null) {
+                nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente();
+            }
+            if (usuarioBuscado.getPersonalAdministrativo() != null) {
+                nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
+            }
         }
-        if(usuarioBuscado.getRolesUsuarioNombres().equals("Personal Administrativo")){
-            nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
+        if(isDocente || isDirector || isSubDirectora){
+            nombre = "DOCENTE";
+            if (usuarioBuscado.getDocente() != null) {
+                nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente();
+            }
+            if (usuarioBuscado.getPersonalAdministrativo() != null) {
+                nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
+            }
         }
-
-        //OCULTAMIENTO DE CONTRASEÑA
-        Integer tamanyoContra = usuarioBuscado.getContrasenaUsuario().length();
-        String codificacion="";
-
-        for(int i = 0; i < tamanyoContra ;i++){
-            codificacion = codificacion + "*";
+        if(isPersonal || isSecretaria){
+            nombre = "PERSONAL";
+            if (usuarioBuscado.getDocente() != null) {
+                nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente();
+            }
+            if (usuarioBuscado.getPersonalAdministrativo() != null) {
+                nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
+            }
         }
-        usuarioBuscado.setContrasenaUsuario(codificacion);
 
         UsuarioConNombre usuarioConNombre = new UsuarioConNombre(usuarioBuscado, nombre);
    

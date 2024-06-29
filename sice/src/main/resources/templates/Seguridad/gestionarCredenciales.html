@@ -73,7 +73,12 @@
                 <td th:text="${user.nombre}"></td>
                 <td th:text="${user.usuario.correoUsuario}"></td>
                 <td class="contrasena" th:text="${user.usuario.contrasenaUsuario}"></td>
-                <td th:text="${user.usuario.rolUsuario}"></td>
+                <td>
+                  <!-- Iterar sobre los roles del usuario -->
+                  <span th:each="rol : ${user.usuario.rolesUsuario}">
+                      <span th:text="${rol.roleEnum}"></span>
+                  </span>
+                </td>
                 <td>
                   <a th:href = "@{bloquearUsuario/} + ${user.usuario.idUsuario}" type="button" class="btn btn-block btn-outline-dark"><i class="bi bi-lock"></i></a>
                 </td>

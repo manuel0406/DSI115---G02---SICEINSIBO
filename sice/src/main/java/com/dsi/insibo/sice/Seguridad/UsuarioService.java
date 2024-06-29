@@ -16,48 +16,48 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
 
-    //USUARIOS ACTIVOS - CON CREDENCIALES
-
+    //USUARIOS ACTIVOS
     public List<Usuario> listaUsuariosActivosIntervalos(int offset){
         Pageable pageable = PageRequest.of(offset, 7);
-        return (List<Usuario>) usuarioRepository.findByAccountLocked(true, pageable);
+        return (List<Usuario>) usuarioRepository.findByEnabledAndAccountLocked(true, true, pageable);
     }
 
     public List<Usuario> listaUsuariosActivos(){
-        return (List<Usuario>) usuarioRepository.findByAccountLocked(true);
+        return (List<Usuario>) usuarioRepository.findByEnabledAndAccountLocked(true,true);
+    }
+
+    // USUARIOS BLOQUEADOS - DENEGADOS
+    public List<Usuario> listaUsuariosBloqueados(){
+        return (List<Usuario>) usuarioRepository.findByEnabledAndAccountLocked(true, false);
+    }
+
+    public List<Usuario> listaUsuariosBloqueadosIntervalos(int offset){
+        Pageable pageable = PageRequest.of(offset, 7);
+        return (List<Usuario>) usuarioRepository.findByEnabledAndAccountLocked(true, false,pageable);
     }
 
     // USUARIOS INACTIVOS - SIN CREDENCIALES
 
     public List<Usuario> listaUsuariosDesactivados(){
-        return (List<Usuario>) usuarioRepository.findByAccountLocked(true);
+        return (List<Usuario>) usuarioRepository.findByEnabledAndAccountLocked(false, true);
     }
 
     public List<Usuario> listaUsuariosDesactivadosIntervalos(int offset){
         Pageable pageable = PageRequest.of(offset, 7);
-        return (List<Usuario>) usuarioRepository.findByAccountLocked(true, pageable);
+        return (List<Usuario>) usuarioRepository.findByEnabledAndAccountLocked(false,true, pageable);
     }
 
     // USUARIOS RECHAZADOS - SIN PERMISOS
-
     public List<Usuario> listaUsuariosRechazados(){
-        return (List<Usuario>) usuarioRepository.findByAccountLocked(true);
+        return (List<Usuario>) usuarioRepository.findByEnabledAndAccountLocked(false, false);
     }
 
     public List<Usuario> listaUsuariosRechazadosIntervalos(int offset){
         Pageable pageable = PageRequest.of(offset, 7);
-        return (List<Usuario>) usuarioRepository.findByAccountLocked(true, pageable);
+        return (List<Usuario>) usuarioRepository.findByEnabledAndAccountLocked(false, false, pageable);
     }
 
-    // USUARIOS BLOQUEADOS - DENEGADOS
-    public List<Usuario> listaUsuariosBloqueados(){
-        return (List<Usuario>) usuarioRepository.findByAccountLocked(true);
-    }
 
-    public List<Usuario> listaUsuariosBloqueadosIntervalos(int offset){
-        Pageable pageable = PageRequest.of(offset, 7);
-        return (List<Usuario>) usuarioRepository.findByAccountLocked(true, pageable);
-    }
 
 
 
@@ -67,6 +67,10 @@ public class UsuarioService {
 
     public Usuario buscarPorCorreo(String correoUsuario) {
         return usuarioRepository.findByCorreoUsuario(correoUsuario).orElse(null);
+    }
+
+    public Usuario buscarPorCorreoActivo(String correoUsuario) {
+        return usuarioRepository.findActivoByCorreo(correoUsuario).orElse(null);
     }
 
     public Usuario buscarPorIdUsuario(int idUsuario) {

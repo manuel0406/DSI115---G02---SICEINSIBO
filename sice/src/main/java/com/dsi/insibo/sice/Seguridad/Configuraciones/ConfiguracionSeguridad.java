@@ -64,7 +64,8 @@ public class ConfiguracionSeguridad {
                     http.requestMatchers(HttpMethod.POST, "/correoDeRecuperacion/**").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/expedientedocente/plantadocente/**").permitAll();
                     http.requestMatchers(HttpMethod.POST, "/validarCorreo/**").permitAll();
-                    http.anyRequest().authenticated(); // AUTENTIFICACIÓN A TODOS
+
+                    http.anyRequest().permitAll(); // AUTENTIFICACIÓN A TODOS
                })
                 /* .formLogin(form -> form
                     .loginPage("/iniciarSesion")
@@ -94,16 +95,16 @@ public class ConfiguracionSeguridad {
     public AuthenticationProvider authenticationProvider(UserDetailsServiceImpl userDetailsServiceImpl) throws Exception {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());         // Contraseña
-        //provider.setUserDetailsService(userDetailsService());   // Información del Usuario
-        provider.setUserDetailsService(userDetailsServiceImpl);
+        provider.setUserDetailsService(userDetailsService());   // Información del Usuario
+        //provider.setUserDetailsService(userDetailsServiceImpl);
         return provider;
     }
 
     // LEYES DE ENCRIPTAMIENTO DE CONTRASEÑAS
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance(); // SOLO PARA PRUEBAS
-        //return new BCryptPasswordEncoder();
+        //return NoOpPasswordEncoder.getInstance(); // SOLO PARA PRUEBAS
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
