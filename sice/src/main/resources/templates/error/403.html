@@ -4,24 +4,20 @@
 <head th:fragment="head">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title th:text="${titulo}"></title>
+    <title>Acceso Denegado 🔒</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="stylesheet" th:href="@{/css/styleDenegado.css}" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 </head>
 
-<body>
-    <div class="container">
-        <div class="image">
-            <img th:src="@{/Imagenes/senal-de-stop-r.png}" alt="stop" />
+<body class="body403">
+    <div class="con403">
+        <div class="imgStop">
+            <img  th:src="@{/Imagenes/senal-de-stop-r.png}" alt="stop" />
         </div>
         <div class="text">
-            <h1>¡Acceso Denengado!</h1>
-            <h2>403</h2>
-            <h3>Lo sentimos, pero usted no tiene acceso a esta página o recurso.</h3>
-            <button onclick="goBack()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
-              </svg><b> Regresar</b></button>
+            <h1 class="mb-3 tituloDesp"><b>¡Acceso Denegado!</b></h1>
+            <p class="mb-4 textDeps"><b>Lo sentimos, pero usted no tiene acceso a esta página o recurso.</b></p>
+            <button class="btnVolver" onclick="goBack()">Regresar</button>
         </div>
     </div>
     <footer th:fragment="footer">
