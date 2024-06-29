@@ -52,11 +52,12 @@ public class AnexoAlumnoController {
         model.addAttribute("clave", clave);
         model.addAttribute("nie", nie);
         model.addAttribute("titulo", "Documentos");
+        model.addAttribute("enlace", "/ExpedienteAlumno/Documentos/"+nie);
         System.out.println("NIE: " + nie); // Imprime el NIE en la consola
 
 
-        // Retorna la vista "Expediente_alumno/upload"
-        return "Expediente_alumno/upload";
+        // Retorna la vista "upload"
+        return "upload";
     }
     
     /**
