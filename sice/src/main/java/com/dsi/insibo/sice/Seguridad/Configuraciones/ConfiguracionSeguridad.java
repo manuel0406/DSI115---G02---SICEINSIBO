@@ -67,10 +67,10 @@ public class ConfiguracionSeguridad {
 
                     http.anyRequest().authenticated(); // AUTENTIFICACIÓN A TODOS
                })
-                /* .formLogin(form -> form
-                    .loginPage("/iniciarSesion")
+                .formLogin(form -> form
+                    .loginPage("/login")
                     .permitAll()
-                )*/
+                )
                 .formLogin(form -> form
                     .permitAll()
                 )
@@ -95,16 +95,16 @@ public class ConfiguracionSeguridad {
     public AuthenticationProvider authenticationProvider(UserDetailsServiceImpl userDetailsServiceImpl) throws Exception {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());         // Contraseña
-        provider.setUserDetailsService(userDetailsService());   // Información del Usuario
-        //provider.setUserDetailsService(userDetailsServiceImpl);
+        //provider.setUserDetailsService(userDetailsService());   // Información del Usuario
+        provider.setUserDetailsService(userDetailsServiceImpl);
         return provider;
     }
 
     // LEYES DE ENCRIPTAMIENTO DE CONTRASEÑAS
     @Bean
     public PasswordEncoder passwordEncoder() {
-        //return NoOpPasswordEncoder.getInstance(); // SOLO PARA PRUEBAS
-        return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance(); // SOLO PARA PRUEBAS
+        //return new BCryptPasswordEncoder();
     }
 
     @Bean

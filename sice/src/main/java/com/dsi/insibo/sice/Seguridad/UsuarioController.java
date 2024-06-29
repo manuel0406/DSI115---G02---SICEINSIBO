@@ -17,6 +17,12 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @GetMapping("/login")
+    public String login(Model model, @ModelAttribute("mensaje") String mensaje) {
+        return "Seguridad/iniciarSesion";
+    }
+
+
     @GetMapping("/iniciarSesion")
     public String verIniciarSesion(Model model, @ModelAttribute("mensaje") String mensaje) {
         Usuario usuario = new Usuario();
