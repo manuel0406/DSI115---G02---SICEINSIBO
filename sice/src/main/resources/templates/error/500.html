@@ -13,13 +13,12 @@
 <body>
     <!--Esto es una barra de navegación-->
     <header th:replace="~{home :: header}"></header>
-
+    
     <div class="container text-center py-3">
         <div class="panel">
             <div class="panel-heading">
                 <h3>
                     <span th:text="${error}"></span> - <span th:text="${status}"></span>
-
                 </h3>
             </div>
             <div class="panel-body">
@@ -27,21 +26,15 @@
                 <h4>Existe un error interno</h4>
                 <p>Lo sentimos, algo salió mal. Por favor, intente nuevamente más tarde.</p>
                 <br>
-                <button class="btn btn-success" onclick="goBack()">&laquo;Regresar</button>
-
+                <button class="btn btn-success" onclick="goBack()">&laquo; Regresar</button>
             </div>
-
         </div>
-
     </div>
 
     <footer th:fragment="footer">
         <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
-
-
-
     </footer>
 
     <script>
@@ -49,8 +42,6 @@
             window.history.back();
         }
     </script>
-
-
 </body>
 
 </html>
