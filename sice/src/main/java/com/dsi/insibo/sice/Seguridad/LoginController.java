@@ -12,7 +12,7 @@ import com.dsi.insibo.sice.entity.Usuario;
 import com.dsi.insibo.sice.Seguridad.UsuarioService;
 
 @Controller
-public class UsuarioController {
+public class LoginController {
 
     @Autowired
     private UsuarioService usuarioService;

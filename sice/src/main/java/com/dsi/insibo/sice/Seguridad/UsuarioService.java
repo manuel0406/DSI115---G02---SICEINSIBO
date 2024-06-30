@@ -18,6 +18,11 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    // BUSQUEDA DE CORREO
+    @PreAuthorize("permitAll()")
+    public Usuario buscarPorCorreo(String correoUsuario) {
+        return usuarioRepository.findByCorreoUsuario(correoUsuario).orElse(null);
+    }
 
     //USUARIOS ACTIVOS
     public List<Usuario> listaUsuariosActivosIntervalos(int offset){
@@ -68,9 +73,6 @@ public class UsuarioService {
         return usuarioRepository.findByCorreoUsuarioAndContrasenaUsuario(correoUsuario, contrasenaUsuario).orElse(null);
     }
 
-    public Usuario buscarPorCorreo(String correoUsuario) {
-        return usuarioRepository.findByCorreoUsuario(correoUsuario).orElse(null);
-    }
 
     public Usuario buscarPorCorreoActivo(String correoUsuario) {
         return usuarioRepository.findActivoByCorreo(correoUsuario).orElse(null);

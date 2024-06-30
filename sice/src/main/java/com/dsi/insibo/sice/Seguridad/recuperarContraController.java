@@ -12,6 +12,10 @@ import com.dsi.insibo.sice.entity.Usuario;
 
 @Controller
 public class recuperarContraController {
+
+	@Autowired
+    private UsuarioService usuarioService;
+
     @GetMapping("/recuperarContra")
 	public String verRecuperarContra(Model model, @ModelAttribute("mensaje") String mensaje){
 		
@@ -21,8 +25,6 @@ public class recuperarContraController {
 		return "Seguridad/recuperarContra";
 	}
 
-	@Autowired
-    private UsuarioService usuarioService;
     @PostMapping("/correoDeRecuperacion")
 	public String validarCorreo(@ModelAttribute Usuario user, RedirectAttributes redirectAttributes) {
 

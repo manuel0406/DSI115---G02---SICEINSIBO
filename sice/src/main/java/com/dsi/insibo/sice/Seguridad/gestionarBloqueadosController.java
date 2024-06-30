@@ -18,7 +18,7 @@ import com.dsi.insibo.sice.entity.UsuarioRoles;
 
 @Controller
 @PreAuthorize("hasRole('ADMINISTRADOR')")
-public class gestionarBloqueados {
+public class gestionarBloqueadosController {
     @Autowired
     private UsuarioService usuarioService;
 

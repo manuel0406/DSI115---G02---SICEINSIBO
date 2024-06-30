@@ -16,6 +16,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.InMemoryUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import java.io.IOException;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.User;
@@ -23,10 +25,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.Collection;
 
 @Configuration
 @EnableWebSecurity
@@ -70,6 +80,7 @@ public class ConfiguracionSeguridad {
                })
                 .formLogin(form -> form
                     .loginPage("/login")
+                    .successHandler(successHandler()) // Manejador de éxito personalizado
                     .permitAll()
                 )
                 .formLogin(form -> form
@@ -83,6 +94,34 @@ public class ConfiguracionSeguridad {
                 )
                 //.addFilter(jwtAuthenticationFilter)
                 .build();
+    }
+
+    // CONTROLADOR DE SECCIONES INICIADAS
+    @Bean
+    public AuthenticationSuccessHandler successHandler() {
+        return new SimpleUrlAuthenticationSuccessHandler() {
+            @Override
+            protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                String targetUrl = determineTargetUrl(authentication);
+                if (response.isCommitted()) {
+                    return;
+                }
+                clearAuthenticationAttributes(request);
+                getRedirectStrategy().sendRedirect(request, response, targetUrl);
+            }
+
+            protected String determineTargetUrl(Authentication authentication) {
+                Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+                for (GrantedAuthority authority : authorities) {
+                    if (authority.getAuthority().equals("ROLE_ADMINISTRADOR")) {
+                        return "/gestionarCredenciales"; // URL para usuarios con rol ADMIN
+                    } else if (authority.getAuthority().equals("ROLE_DOCENTE")) {
+                        return "/asistenciaPersonal/asistenciaGeneral"; // URL para usuarios con rol DOCENTE
+                    }
+                }
+                return "/"; // Por defecto, si no se encuentra ningún rol específico
+            }
+        };
     }
 
     // AUTENTIFICADOR DE USUARIOS

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.security.SecureRandom;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +19,8 @@ import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
 import com.dsi.insibo.sice.entity.UsuarioRoles;
 
 @Controller
-public class gestionarRechazados {
+@PreAuthorize("hasRole('ADMINISTRADOR')")
+public class gestionarRechazadosController {
 
     @Autowired
     private UsuarioService usuarioService;
