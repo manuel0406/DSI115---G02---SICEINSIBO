@@ -45,50 +45,6 @@ public class SiceApplication {
 		return "home";
 	}
 
-	// CARGAR DATOS A BASE
-	/*CommandLineRunner init (UsuarioRepository usuarioRepository){
-		return arg ->{
-			UsuarioPermiso crearUsuarioPermiso = UsuarioPermiso.builder().tipo("CREATE").build();
-			UsuarioPermiso deleteUsuarioPermiso = UsuarioPermiso.builder().tipo("DELETE").build();
-			UsuarioPermiso updateUsuarioPermiso = UsuarioPermiso.builder().tipo("UPDATE").build();
-			UsuarioPermiso readUsuarioPermiso = UsuarioPermiso.builder().tipo("READ").build();
-			
-			UsuarioRoles roleAdmin = UsuarioRoles.builder().roleEnum(UsuarioRoleEnum.ADMINISTRADOR).usuarioPermiso(Set.of(crearUsuarioPermiso,deleteUsuarioPermiso)).build();
-			UsuarioRoles roleDocente = UsuarioRoles.builder().roleEnum(UsuarioRoleEnum.DOCENTE).usuarioPermiso(Set.of(crearUsuarioPermiso,deleteUsuarioPermiso)).build();
-			UsuarioRoles roleDirector = UsuarioRoles.builder().roleEnum(UsuarioRoleEnum.DIRECTOR).usuarioPermiso(Set.of(crearUsuarioPermiso,deleteUsuarioPermiso)).build();
-			UsuarioRoles roleSubDirector = UsuarioRoles.builder().roleEnum(UsuarioRoleEnum.SUBDIRECTORA).usuarioPermiso(Set.of(crearUsuarioPermiso,deleteUsuarioPermiso)).build();
-			UsuarioRoles rolePersonal = UsuarioRoles.builder().roleEnum(UsuarioRoleEnum.PERSONAL_ADMINISTRATIVO).usuarioPermiso(Set.of(crearUsuarioPermiso,deleteUsuarioPermiso)).build();
-			UsuarioRoles roleSecretaria = UsuarioRoles.builder().roleEnum(UsuarioRoleEnum.SECRETARIA).usuarioPermiso(Set.of(crearUsuarioPermiso,deleteUsuarioPermiso)).build();
-
-			 // Crear un usuario y asignar roles usando el builder
-			 Usuario usuario = Usuario.builder()
-			 .correoUsuario("cs21024@ues.edu.sv")
-			 .contrasenaUsuario("1234")
-			 .primerIngreso(true)
-			 .estadoUsuario("Activo")
-			 .accountNoExpired(true)
-			 .accountLocked(false)
-			 .credentialNoExpired(true)
-			 .rolesUsuario(Set.of(roleAdmin, roleDocente))
-			 .build();
-
-			 Usuario usuario2 = Usuario.builder()
-			 .correoUsuario("ivuan007@gmail.com")
-			 .contrasenaUsuario("admin")
-			 .primerIngreso(true)
-			 .estadoUsuario("Activo")
-			 .accountNoExpired(true)
-			 .accountLocked(false)
-			 .credentialNoExpired(true)
-			 .rolesUsuario(Set.of(roleAdmin, roleDocente))
-			 .build();
-			
-			usuarioRepository.saveAll(List.of(usuario,usuario2));
-		};
-	}*/
-
-
-
 	@Autowired
 	private SessionRegistry sessionRegistry;
 	@GetMapping("/session")

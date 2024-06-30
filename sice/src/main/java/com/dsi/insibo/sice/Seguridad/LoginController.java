@@ -1,61 +1,23 @@
 package com.dsi.insibo.sice.Seguridad;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.dsi.insibo.sice.entity.Usuario;
-import com.dsi.insibo.sice.Seguridad.UsuarioService;
+import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class LoginController {
 
-    @Autowired
-    private UsuarioService usuarioService;
-
     @GetMapping("/login")
-    public String login(Model model, @ModelAttribute("mensaje") String mensaje) {
-        return "Seguridad/iniciarSesion";
-    }
-
-    @GetMapping("/iniciarSesion")
-    public String verIniciarSesion(Model model, @ModelAttribute("mensaje") String mensaje) {
-        Usuario usuario = new Usuario();
-        model.addAttribute("usuario", usuario);
-        model.addAttribute("mensaje", mensaje);
-        return "Seguridad/iniciarSesion";
-    }
-
-    @PostMapping("/validarCorreo")
-    public String validarUsuario(@ModelAttribute Usuario user, RedirectAttributes redirectAttributes) {
-        // Obtenemos la informacion de los campos
-        String correo = user.getCorreoUsuario();
-        String contra = user.getContrasenaUsuario();
-
-        // Buscamos en la base el correo y la contraseña
-        Usuario usuario = usuarioService.buscarPorCorreoYContrasena(correo, contra);
-
-        // Validamos la existencia del usuario
-        if (usuario == null) {
-            redirectAttributes.addFlashAttribute("mensaje", "<b>¡Acceso inválido!</b> Sus crendenciales no existen.");
-            return "redirect:/iniciarSesion";
-        } 
-
-        //Validamos el estado del usuario
-        if (!usuario.isEnabled() == true){
-            redirectAttributes.addFlashAttribute("mensaje", "<b>¡Sin Acceso!</b> Su usuario esta " + usuario.isEnabled()+".");
-            return "redirect:/iniciarSesion";
-        } 
-        else {
-            if ("Administrador".equals(usuario.getRolesUsuarioNombres())) {
-                return "redirect:/gestionarCredenciales?pagina=1";
-            } else {
-                return "redirect:/";
-            }
+    public String login(Model model, @RequestParam(name = "error", required = false) String error, HttpServletRequest request) {
+        if (error != null) {
+            String errorMessage = (String) request.getSession().getAttribute("error");
+            model.addAttribute("error", errorMessage);
+            request.getSession().removeAttribute("error"); // Remove the error attribute from the session
         }
+        return "Seguridad/iniciarSesion";
     }
 }
+

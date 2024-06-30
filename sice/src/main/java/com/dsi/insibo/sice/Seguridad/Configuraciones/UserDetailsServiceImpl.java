@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -26,13 +26,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //Petición a BD
+        // Petición a BD
         Usuario usuario = usuarioRepository.findByCorreoUsuario(username)
                 .orElseThrow(() -> new UsernameNotFoundException("El usuario " + username + " no existe."));
-        
+                
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
         usuario.getRolesUsuario()
-                .forEach (role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
+                .forEach(role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
 
         usuario.getRolesUsuario().stream()
                 .flatMap(role -> role.getUsuarioPermiso().stream())
@@ -40,10 +40,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new User(usuario.getCorreoUsuario(),
                         usuario.getContrasenaUsuario(),
-                        true, // enabled
-                        true, // accountNonExpired
-                        true, // credentialsNonExpired
-                        true, // accountNonLocked
+                        usuario.isEnabled(), // enabled
+                        usuario.isAccountNoExpired(), // accountNonExpired
+                        usuario.isCredentialNoExpired(), // credentialsNonExpired
+                        usuario.isAccountLocked(), // accountNonLocked
                         authorityList);
     }
 }
+

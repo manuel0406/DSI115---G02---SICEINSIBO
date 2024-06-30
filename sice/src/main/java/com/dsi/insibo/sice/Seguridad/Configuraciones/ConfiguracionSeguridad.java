@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -29,10 +30,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -47,6 +50,8 @@ public class ConfiguracionSeguridad {
     UserDetailsServiceImpl userDetailsServiceImpl;
     @Autowired
     JwtUtils jwtUtils;
+    @Autowired
+    CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
     // CONFIGURACION DE FILTROS BASICOS
     @Bean
@@ -74,16 +79,16 @@ public class ConfiguracionSeguridad {
                     http.requestMatchers(HttpMethod.GET, "/recuperarContra/**", "/enviarCorreo/**").permitAll();
                     http.requestMatchers(HttpMethod.POST, "/correoDeRecuperacion/**").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/expedientedocente/plantadocente/**").permitAll();
-                    http.requestMatchers(HttpMethod.POST, "/validarCorreo/**").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/logout-success").permitAll();
+                    http.requestMatchers(HttpMethod.GET, "/login").permitAll();
+                    http.requestMatchers(HttpMethod.POST, "/login").permitAll();
+                    //http.anyRequest().permitAll();
                     http.anyRequest().authenticated(); // AUTENTIFICACIÓN A TODOS
                })
                 .formLogin(form -> form
                     .loginPage("/login")
                     .successHandler(successHandler()) // Manejador de éxito personalizado
-                    .permitAll()
-                )
-                .formLogin(form -> form
+                    .failureHandler(customAuthenticationFailureHandler)
                     .permitAll()
                 )
                .logout(logout -> logout
@@ -150,7 +155,7 @@ public class ConfiguracionSeguridad {
     @Bean
     UserDetailsService userDetailsService(){
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("carranza")
+        manager.createUser(User.withUsername("administrador")
                                .password(passwordEncoder().encode("admin123"))
                                .roles("DOCENTE")
                                .build());
@@ -167,21 +172,6 @@ public class ConfiguracionSeguridad {
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
     }
-
-    /*
-     * // AUTENTIFICACION DE USUARIOS
-    @Bean
-    AuthenticationManager authenticationManager(HttpSecurity httpSecurity, PasswordEncoder passwordEncoder) throws Exception{
-        
-        return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
-                            .userDetailsService(userDetailsService())
-                            //.userDetailsService(userDetailsServiceImpl)
-                            .passwordEncoder(passwordEncoder)
-                            .and()
-                            .build();
-    }
-     */
-
 
 
 }
