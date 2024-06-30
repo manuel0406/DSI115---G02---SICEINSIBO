@@ -224,9 +224,12 @@ public class AlumnoController {
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
 			return "redirect:/ExpedienteAlumno/ver";
 		}
-
+		
+		//Elimino primero los anexos relacionados al alumno encontrado
+		anexoAlumnoService.eliminarAnexoAlumno(nie);
+		//Se eliminar las notas relacionadas a ese alumno
+		notaService.deleteNotasByAlumnoNie(nie);		
 		// Elimina el registro del alumno y añade un mensaje de confirmación
-		notaService.deleteNotasByAlumnoNie(nie);
 		alumnoService.eliminar(nie);
 		attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");
 		return "redirect:/ExpedienteAlumno/ver"; // Redirige a la vista de listado de alumnos
