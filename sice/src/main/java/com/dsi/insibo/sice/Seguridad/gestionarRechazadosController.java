@@ -103,8 +103,8 @@ public class gestionarRechazadosController {
         String contrasena = generateRandomPassword(8);
         usuario.setEnabled(true);
         usuario.setAccountLocked(true);
-        usuario.setContrasenaUsuario(passwordEncoder.encode(contrasena));
-        usuario.setContrasenaUsuario("admin123");
+        usuario.setContrasenaUsuario(passwordEncoder.encode(contrasena)); //Contraseña encriptada
+        //usuario.setContrasenaUsuario(passwordEncoder.encode("admin123")); //SOLO PARA PRUEBAS
         usuarioService.guardarUsuario(usuario);
         return "redirect:/gestionarRechazados";
     }

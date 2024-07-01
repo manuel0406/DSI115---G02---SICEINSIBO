@@ -10,11 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.authentication.configurers.provisioning.InMemoryUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,7 +19,6 @@ import java.io.IOException;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -30,12 +26,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -78,7 +71,6 @@ public class ConfiguracionSeguridad {
                     http.requestMatchers("/", "/css/**", "/js/**", "/Imagenes/**").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/recuperarContra/**", "/enviarCorreo/**").permitAll();
                     http.requestMatchers(HttpMethod.POST, "/correoDeRecuperacion/**").permitAll();
-                    http.requestMatchers(HttpMethod.GET, "/expedientedocente/plantadocente/**").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/logout-success").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/login").permitAll();
                     http.requestMatchers(HttpMethod.POST, "/login").permitAll();
@@ -148,16 +140,17 @@ public class ConfiguracionSeguridad {
     // LEYES DE ENCRIPTAMIENTO DE CONTRASEÑAS
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance(); // SOLO PARA PRUEBAS
-        //return new BCryptPasswordEncoder();
+        //return NoOpPasswordEncoder.getInstance(); // SOLO PARA PRUEBAS
+        return new BCryptPasswordEncoder();
     }
 
+    //USUARIO EN MEMORIA SOLO PARA Restablecimiento
     @Bean
     UserDetailsService userDetailsService(){
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
         manager.createUser(User.withUsername("administrador")
                                .password(passwordEncoder().encode("admin123"))
-                               .roles("DOCENTE")
+                               .roles("ADMINISTRADOR")
                                .build());
         return manager;
     }

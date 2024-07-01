@@ -1,18 +1,12 @@
 package com.dsi.insibo.sice;
 
-import java.security.Permission;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import org.springframework.context.annotation.Bean;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.session.SessionInformation;
@@ -20,15 +14,6 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import com.dsi.insibo.sice.Seguridad.UsuarioRepository;
-import com.dsi.insibo.sice.entity.Usuario;
-import com.dsi.insibo.sice.entity.UsuarioPermiso;
-import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
-import com.dsi.insibo.sice.entity.UsuarioRoles;
-
-import jakarta.mail.Session;
-
 
 
 @Controller

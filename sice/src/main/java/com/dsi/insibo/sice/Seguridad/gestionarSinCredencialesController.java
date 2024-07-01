@@ -117,8 +117,8 @@ public class gestionarSinCredencialesController {
         Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
         String contrasena = generateRandomPassword(8);
         usuario.setEnabled(true);
-        usuario.setContrasenaUsuario(passwordEncoder.encode("HOLA")); //Contraseña encriptada
-        //usuario.setContrasenaUsuario("admin123");
+        usuario.setContrasenaUsuario(passwordEncoder.encode(contrasena)); //Contraseña encriptada
+        //usuario.setContrasenaUsuario(passwordEncoder.encode("admin123")); //SOLO PARA PRUEBAS
         usuarioService.guardarUsuario(usuario);
         return "redirect:/gestionarSinCredenciales";
     }
