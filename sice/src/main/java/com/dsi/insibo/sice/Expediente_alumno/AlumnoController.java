@@ -27,7 +27,7 @@ import com.dsi.insibo.sice.entity.Bachillerato;
  */
 @Controller
 @RequestMapping("/ExpedienteAlumno")
-@PreAuthorize("hasRole('ROLE_DOCENTE')") // SOLO PARA DOCENTES
+@PreAuthorize("hasRole('ROLE_DOCENTE','ROLE_ADMINISTRADOR')") // SOLO PARA DOCENTES
 public class AlumnoController {
 
 	@Autowired

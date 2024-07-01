@@ -16,10 +16,24 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // BUSQUEDA DE CORREO
+    /* BUSQUEDA DE CORREO - Permitido para todos
+     Usos:  
+        1. Para buscar correos de inicio de sesión.
+        2. Para validar el envio de correos de restauración de contraseña.
+    */ 
     @PreAuthorize("permitAll()")
     public Usuario buscarPorCorreo(String correoUsuario) {
         return usuarioRepository.findByCorreoUsuario(correoUsuario).orElse(null);
+    }
+
+    /* GUARDAR USUARIO - Permitido para todos
+     Usos:  
+        1. Para restaurar la contraseña.
+        2. Para guardar un nuevo usuario.
+    */
+    @PreAuthorize("permitAll()")
+    public void guardarUsuario(Usuario usuario) {
+        usuarioRepository.save(usuario);
     }
 
     //USUARIOS ACTIVOS
@@ -78,10 +92,6 @@ public class UsuarioService {
 
     public Usuario buscarPorIdUsuario(int idUsuario) {
         return usuarioRepository.findByIdUsuario(idUsuario);
-    }
-
-    public void guardarUsuario(Usuario usuario) {
-        usuarioRepository.save(usuario);
     }
 
     @Transactional

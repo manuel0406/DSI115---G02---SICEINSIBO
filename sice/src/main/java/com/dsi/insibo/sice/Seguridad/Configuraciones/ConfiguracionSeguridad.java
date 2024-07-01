@@ -68,7 +68,7 @@ public class ConfiguracionSeguridad {
                     // session.expiredUrl("/login") Tiempo de expiración
                 })
                 .authorizeHttpRequests(http -> {
-                    http.requestMatchers("/", "/css/**", "/js/**", "/Imagenes/**").permitAll();
+                    http.requestMatchers("/css/**", "/js/**", "/Imagenes/**").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/recuperarContra/**", "/enviarCorreo/**").permitAll();
                     http.requestMatchers(HttpMethod.POST, "/correoDeRecuperacion/**").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/logout-success").permitAll();
@@ -112,8 +112,6 @@ public class ConfiguracionSeguridad {
                 for (GrantedAuthority authority : authorities) {
                     if (authority.getAuthority().equals("ROLE_ADMINISTRADOR")) {
                         return "/gestionarCredenciales"; // URL para usuarios con rol ADMIN
-                    } else if (authority.getAuthority().equals("ROLE_DOCENTE")) {
-                        return "/asistenciaPersonal/asistenciaGeneral"; // URL para usuarios con rol DOCENTE
                     }
                 }
                 return "/"; // Por defecto, si no se encuentra ningún rol específico
