@@ -36,7 +36,6 @@ public class recuperarContraController {
     @PostMapping("/correoDeRecuperacion")
 	public String validarCorreo(@ModelAttribute Usuario user, RedirectAttributes redirectAttributes){
         String correo = user.getCorreoUsuario();
-		System.out.println("El correo es:" + correo);
         // Buscamos en la base el correo y la contraseña
         Usuario usuario = usuarioService.buscarPorCorreo(correo);
 
