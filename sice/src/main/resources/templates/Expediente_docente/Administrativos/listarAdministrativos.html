@@ -72,6 +72,12 @@
                                     onclick="openInPopup(this.href); return false;">
                                     <i class="bi bi-printer"></i>
                                 </a>
+
+                                <a class="btn btn-success btn-sm mx-1"
+                                th:href="@{/expedienteadministrativo/Documentos/} + ${administrativoDTO.administrativo.duiPersonal}"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Documentos">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </a>
                             </div>
                         </td>
                     </tr>

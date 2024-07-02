@@ -279,6 +279,24 @@
             </div>
           </div>
 
+          <div class="col-md-6">
+            <label for="administrativo_rol" class="form-label">Rol que desempeñara</label>
+            <select id="administrativo_rol" name="administrativoRol" class="form-select" required>
+              <option value="" selected>Seleccionar...</option>
+              <option value="Secretaria">Secretaria</option>
+              <option value="Bibliotecaria">Bibliotecaria</option>
+              <option value="Otro">Otros</option>
+            </select>
+            <div class="invalid-feedback">
+              Es necesario seleccionar un rol para la correcta asignación de credenciales.
+            </div>
+            <div id="rolHelp" class="form-text" required>Aqui debe escoger el rol que desempeñara el admnisitrativo que
+              se
+              encuentra registrando.</div>
+            <div id="rolHelp" class="form-text" required>En otros puede colocar ordenanzas, contadores, mantenimiento,
+              etc..</div>
+          </div>
+
           <div class="row justify-content-center text-center  mt-4">
             <div class="col-auto">
               <button type="submit" class="btn btn-primary">Guardar</button>

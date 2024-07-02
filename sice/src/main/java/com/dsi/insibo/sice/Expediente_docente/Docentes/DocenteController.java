@@ -102,15 +102,20 @@ public class DocenteController {
         }
     }
 
-    // editando formulario
+    // actualizando la informacion de un docente
     @PostMapping("/actualizar")
-    public String actualizar(@Validated @ModelAttribute Docente docente, BindingResult result, Model model,
+    public String actualizar(@Validated @ModelAttribute Docente docente,
+            @RequestParam("docenteRol") String rolSeleccionado, BindingResult result, Model model,
             RedirectAttributes attribute) {
         // Verificamos existencia del usuario
         Usuario usuario = usuarioService.buscarPorIdDocente(docente.getDuiDocente());
         usuario.setCorreoUsuario(docente.getCorreoDocente());
         usuarioService.guardarUsuario(usuario);
         docenteService.guardarDocente(docente);
+
+        // Imprimiendo el rol seleccionado
+        System.out.println(rolSeleccionado);
+
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
         return "redirect:plantadocente";
     }
@@ -136,7 +141,7 @@ public class DocenteController {
 
         model.addAttribute("titulo", "Planta Docente");
         model.addAttribute("Docentes", listadoDocentes);
-        //Hace el envio de la estructura con paginación a la vista
+        // Hace el envio de la estructura con paginación a la vista
         model.addAttribute("page", pageAdministrativos);
         return "Expediente_docente/Docentes/listarDocentes"; // Vista HTML
     }
@@ -157,7 +162,7 @@ public class DocenteController {
         return "Expediente_docente/Docentes/fichaDocenteConsult";
     }
 
-    // Editando docente
+    // Editando docente como director, subdirector
     @GetMapping("/editarexpediente/{id}")
     public String editarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
 
@@ -173,6 +178,7 @@ public class DocenteController {
         return "Expediente_docente/Docentes/fichaDocenteEdit";
     }
 
+    // Editando docente como docente, osea solo datos generales
     @GetMapping("/editarmiexpediente/{id}")
     public String editarComoDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
