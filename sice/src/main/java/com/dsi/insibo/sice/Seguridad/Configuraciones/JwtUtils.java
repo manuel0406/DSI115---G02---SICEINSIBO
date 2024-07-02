@@ -1,77 +1,78 @@
 package com.dsi.insibo.sice.Seguridad.Configuraciones;
 
-import java.util.Date;
-import java.util.Base64.Decoder;
-
-import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Value;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.Jwts.KEY;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
-
-import java.security.Key;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
-
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.Map;
+import java.util.UUID;
 
 @Component
-@Slf4j
 public class JwtUtils {
     
-    @Value("${jwt.secret.key}")
-    private String secretKey;          // Firma de autorización (TOKEN)
+    @Value("${security.jwt.key.private}")
+    private String privateKey;          // Firma de autorización (TOKEN)
 
     @Value("${jwt.time.expiration}")
     private String timeExpiration;     // Tiempo de expiración (1-dia)
 
-    // Método para generar el token de acceso
-    @SuppressWarnings("deprecation")
-    public String generateAccessToken(String correo, String contrasena) {
-        return Jwts.builder()
-                .setSubject(correo) // Establece el correo como sujeto del token
-                .setIssuedAt(new Date(System.currentTimeMillis())) // Establece la fecha de emisión del token
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(timeExpiration))) // Establece la fecha de expiración del token
-                .signWith(getSignaturKey(), SignatureAlgorithm.HS256) // Firma el token con la clave secreta y el algoritmo HS256
-                .compact(); // Construye y compacta el token JWT
+    @Value("${security.jwt.user.generator}")
+    private String userGenerator;
+
+    public String createToken(Authentication authentication){
+        Algorithm algorithm = Algorithm.HMAC256(privateKey); // Algoritmo de encriptamiento.
+
+        // Obtenemos el usuario autorizado
+        String username = authentication.getPrincipal().toString();
+
+        // Obtenemos permisos
+        String authorities = authentication.getAuthorities().stream()
+                                       .map(GrantedAuthority::getAuthority)
+                                       .collect(Collectors.joining(","));
+        String jwtToken = JWT.create()
+                             .withIssuer(this.userGenerator)
+                             .withSubject(username)
+                             .withClaim("authorities", authorities)
+                             .withIssuedAt(new Date())
+                             .withExpiresAt(new Date(System.currentTimeMillis() + Long.parseLong(timeExpiration)))
+                             .withJWTId(UUID.randomUUID().toString())
+                             .withNotBefore(new Date(System.currentTimeMillis()))
+                             .sign(algorithm);
+        return jwtToken;
     }
 
-    // VALIDADOR DE TOKEN DE ACCESO
-    @SuppressWarnings("deprecation")
-    public boolean isTokenValid(String token)
-    {
+    // METODO QUE VALIDA EL TOKEN
+    public DecodedJWT validateToken(String token){
         try {
-            Jwts.parser().setSigningKey(getSignaturKey()).build().parseClaimsJws(token).getBody();       
-            return true;
-        } catch (Exception e) {
-            log.error("TOKEN INVALIDO: ".concat(e.getMessage()));
-            return false;
-
+            Algorithm algorithm = Algorithm.HMAC256(privateKey); // Algoritmo de encriptamiento.
+            JWTVerifier verifier = JWT.require(algorithm)
+                                      .withIssuer(this.userGenerator)
+                                      .build();
+            DecodedJWT decodedJWT = verifier.verify(token);
+            return decodedJWT;
+        } catch (JWTVerificationException exception) {
+            throw new JWTVerificationException("TOKEN INVALID, not Authorized");
         }
     }
 
-    // OBTENER CLAIMS O INFORMACION DEL TOKE
-    public Claims extractClain(String token){
-        return Jwts.parser().setSigningKey(getSignaturKey()).build().parseClaimsJws(token).getBody();  
+    // OBTENER EL USUARIO DECODIFICADO
+    public String extractUsername(DecodedJWT decodedJWT){
+        return decodedJWT.getSubject().toString();
     }
 
-    //OBTENER EL USERNAME
-    public String getUsernameFromToken(String token){
-        return getClaim(token, Claims::getSubject);
+    public Claim getSpecificClaim(DecodedJWT decodedJWT, String claimName){
+        return decodedJWT.getClaim(claimName);
     }
 
-    // Método para obtener un claim específico del token usando Function
-    public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractClain(token);
-        return claimsResolver.apply(claims);
-    }
-
-    // FIRMA DEL TOKEN
-    public Key getSignaturKey(){
-        byte [] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+    public Map<String, Claim> returnAllClaims(DecodedJWT decodedJWT){
+        return decodedJWT.getClaims();
     }
 }

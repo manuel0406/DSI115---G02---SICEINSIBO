@@ -28,6 +28,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,7 +43,7 @@ public class ConfiguracionSeguridad {
     @Autowired
     UserDetailsServiceImpl userDetailsServiceImpl;
     @Autowired
-    JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;
     @Autowired
     CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
@@ -50,10 +51,6 @@ public class ConfiguracionSeguridad {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
         
-        //JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
-        //jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
-        //jwtAuthenticationFilter.setFilterProcessesUrl("/login");
-
         // He dejado activo el .csrf(csrf -> csrf.disable())
         return httpSecurity
                 // ALWAYS = Siempre crea una nueva sesión HTTP, incluso si ya existe una sesión.
@@ -89,7 +86,7 @@ public class ConfiguracionSeguridad {
                     .invalidateHttpSession(true)  // Invalidar la sesión
                     .deleteCookies("JSESSIONID")  // Borrar las cookies
                 )
-                //.addFilter(jwtAuthenticationFilter)
+                .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
 
