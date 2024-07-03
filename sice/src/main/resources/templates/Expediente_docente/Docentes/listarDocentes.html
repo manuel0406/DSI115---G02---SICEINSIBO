@@ -62,7 +62,7 @@
                                 <i class="bi bi-file-earmark-text"></i>
                             </a> -->
                             <div sec:authorize="hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')">
-                                <a class="btn btn-success btn-sm mx-1"
+                                <a  class="btn btn-success btn-sm mx-1"
                                     th:href="@{/expedientedocente/consultarexpediente/} + ${docenteDTO.docente.duiDocente}"
                                     data-bs-toggle="tooltip" data-bs-placement="top" title="Consultar">
                                     <i class="bi bi-file-earmark-text"></i>
