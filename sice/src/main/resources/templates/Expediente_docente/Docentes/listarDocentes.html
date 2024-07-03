@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"></html>
 
 <head th:replace="home :: head">
     <meta charset="UTF-8">
@@ -60,12 +61,14 @@
                                 title="Ver Ficha">
                                 <i class="bi bi-file-earmark-text"></i>
                             </a> -->
+                            <div sec:authorize="hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')">
                                 <a class="btn btn-success btn-sm mx-1"
                                     th:href="@{/expedientedocente/consultarexpediente/} + ${docenteDTO.docente.duiDocente}"
                                     data-bs-toggle="tooltip" data-bs-placement="top" title="Consultar">
                                     <i class="bi bi-file-earmark-text"></i>
                                 </a>
-
+                            </div>
+                                
                                 <a class="btn btn-primary btn-sm mx-1"
                                     th:href="@{/expedientedocente/editarexpediente/} + ${docenteDTO.docente.duiDocente}"
                                     data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">

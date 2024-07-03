@@ -24,7 +24,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@PreAuthorize("hasRole('ADMINISTRADOR')")
 @RequestMapping("/expedientedocente")
 public class DocenteController {
 
@@ -121,7 +120,7 @@ public class DocenteController {
         return "redirect:plantadocente";
     }
 
-    @PreAuthorize("hasAnyRole('SECRETARIA', 'DOCENTE', 'SUBDIRECTORA')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'DOCENTE', 'SUBDIRECTORA')")
     @GetMapping("/plantadocente")
     public String listarDocentes(Model model) {
         List<DocenteDTO> listadoDocentes = docenteService.listarDocentes();
@@ -131,7 +130,7 @@ public class DocenteController {
     }
 
     // Consultando docente
-    @PreAuthorize("hasAnyRole('SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/consultarexpediente/{id}")
     public String consultarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
 
@@ -148,7 +147,7 @@ public class DocenteController {
     }
 
     // Editando docente
-    @PreAuthorize("hasAnyRole('SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/editarexpediente/{id}")
     public String editarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
 
@@ -179,7 +178,7 @@ public class DocenteController {
     }
 
     // Eliminar ficha
-    @PreAuthorize("hasAnyRole('SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/eliminarexpediente/{id}")
     public String eliminarDocente(@PathVariable("id") String idDocente, RedirectAttributes attribute) {
         usuarioService.eliminarUsuarioPorDocenteId(idDocente);
