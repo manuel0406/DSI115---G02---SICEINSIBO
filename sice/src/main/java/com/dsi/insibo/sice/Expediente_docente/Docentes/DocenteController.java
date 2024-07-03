@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.dsi.insibo.sice.Expediente_docente.Docentes.Anexos.AnexoDocenteService;
 import com.dsi.insibo.sice.Seguridad.UsuarioService;
+import com.dsi.insibo.sice.entity.AnexoDocente;
 import com.dsi.insibo.sice.entity.Docente;
 import com.dsi.insibo.sice.entity.Usuario;
 import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
@@ -31,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/expedientedocente")
 public class DocenteController {
+    @Autowired
+    private AnexoDocenteService anexoDocenteService;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -145,7 +149,7 @@ public class DocenteController {
         // Hace la conversion de la estructura List a Page
         PageRequest pageRequest = PageRequest.of(page, size);
         List<DocenteDTO> listadoDocentes = docenteService.listarDocentes();
-        Page<DocenteDTO> pageAdministrativos = new PageImpl<>(listadoDocentes.subList(
+        Page<DocenteDTO> pagedocentes = new PageImpl<>(listadoDocentes.subList(
                 pageRequest.getPageNumber() * pageRequest.getPageSize(),
                 Math.min((pageRequest.getPageNumber() + 1) * pageRequest.getPageSize(), listadoDocentes.size())),
                 pageRequest, listadoDocentes.size());
@@ -153,7 +157,7 @@ public class DocenteController {
         model.addAttribute("titulo", "Planta Docente");
         model.addAttribute("Docentes", listadoDocentes);
         // Hace el envio de la estructura con paginación a la vista
-        model.addAttribute("page", pageAdministrativos);
+        model.addAttribute("page", pagedocentes);
         return "Expediente_docente/Docentes/listarDocentes"; // Vista HTML
     }
 
@@ -220,6 +224,7 @@ public class DocenteController {
             return "redirect:/expedientedocente/plantadocente";
         }
 
+        anexoDocenteService.eliminarAnexoDocente(idDocente);
         docenteService.eliminar(idDocente);
         attribute.addFlashAttribute("warning", "El expediente se elimino");
 
@@ -232,5 +237,39 @@ public class DocenteController {
         public String inicio() {
             return "Expediente_docente/inicioExpedientes";
         }
+    }
+
+    // Gestionando anexos
+    @GetMapping("Documentos/{id}")
+    public String docenteDocumentos(@PathVariable("id") String idDocente, Model model,
+            RedirectAttributes attributes) {
+
+        Docente docente = null;
+        if (idDocente != "") {
+            // Busca el docente a traves del DUI
+            docente = docenteService.buscarPorIdDocente(idDocente);
+
+            // Verifica que exista
+            if (docente == null) {
+                attributes.addFlashAttribute("error", "Error: El expediente no existe");
+                return "redirect:/expedientedocente/plantaadministrativa";
+            }
+        } else {
+            // Maneja el caso donde el iddocente no es válido
+            System.out.println("Error: ¡El idDocente ingresado no es válido!");
+            attributes.addFlashAttribute("error", "Error: ¡El iddocente ingresado no es válido!");
+            return "redirect:/expedientedocente/plantadocente";
+        }
+
+        // Obtener los anexos asociados al docente
+        AnexoDocente anexos = anexoDocenteService.buscarDocente(idDocente);
+
+        // Agregar atributos al modelo para ser utilizados en la vista
+        model.addAttribute("docente", docente);
+        model.addAttribute("anexos", anexos);
+        model.addAttribute("titulo", "Documentos");
+
+        // return "Expediente_docente/docenteDocumentos";
+        return "Expediente_docente/docentes/docenteDocumentos";
     }
 }
