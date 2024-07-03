@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @SpringBootApplication
-public class SiceApplication extends SpringBootServletInitializer {
+public class SiceApplication  {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SiceApplication.class, args);
@@ -28,13 +28,7 @@ public class SiceApplication extends SpringBootServletInitializer {
 	public String holamundo( Model model) {
 		model.addAttribute("titulo", "Inicio");
 		return "home";
-	}
-
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		// TODO Auto-generated method stub
-		return builder.sources(SiceApplication.class);
-	}
+	}	
 	
 	@Autowired
 	private SessionRegistry sessionRegistry;
