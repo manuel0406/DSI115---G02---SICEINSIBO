@@ -1,7 +1,11 @@
 package com.dsi.insibo.sice.Expediente_docente.Docentes;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.dsi.insibo.sice.Seguridad.UsuarioService;
 import com.dsi.insibo.sice.entity.Docente;
 import com.dsi.insibo.sice.entity.Usuario;
+import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
+import com.dsi.insibo.sice.entity.UsuarioRoles;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +29,9 @@ public class DocenteController {
 
     @Autowired
     private UsuarioService usuarioService;
+    // Lista docentes usando la DB /expedientedocente/plantadocente
+    @Autowired
+    private DocenteService docenteService;
 
     // Direccionadores estaticos
     @GetMapping("/anexosDocente")
@@ -36,6 +46,7 @@ public class DocenteController {
 
     // Direccionadores de acción
     // Ficha general de expediente docente /expedientedocente/formulario
+    @PreAuthorize("hasAnyRole('SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/formulario")
     public String abrirformulario(Model model) {
         Docente profesor = new Docente();
@@ -44,6 +55,7 @@ public class DocenteController {
         return "Expediente_docente/Docentes/fichaDocente";
     }
 
+    @PreAuthorize("hasAnyRole('SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     // guardando formulario
     @PostMapping("/guardar")
     public String guardar(@Validated @ModelAttribute Docente docente, BindingResult result, Model model,
@@ -64,16 +76,18 @@ public class DocenteController {
             Usuario usuario = new Usuario();
             // Obtenemos informacion relevante del usuario
             String correo = docente.getCorreoDocente();
-            String rol = "Docente";
-            String estado = "Desactivado";
+            Set<UsuarioRoles> roles = new HashSet<>();
+            UsuarioRoles rol = new UsuarioRoles();
+            rol.setRoleEnum(UsuarioRoleEnum.DOCENTE); // Suponiendo que tienes un enum para roles
+            roles.add(rol);
             boolean inicio = true;
             String contrasena = "";
 
             // Asignaciones al nuevo usuario
             usuario.setDocente(docente);
             usuario.setCorreoUsuario(correo);
-            usuario.setRolUsuario(rol);
-            usuario.setEstadoUsuario(estado);
+            usuario.setRolesUsuario(roles);
+            usuario.setEnabled(true);
             usuario.setPrimerIngreso(inicio);
             usuario.setContrasenaUsuario(contrasena);
 
@@ -106,10 +120,7 @@ public class DocenteController {
         return "redirect:plantadocente";
     }
 
-    // Lista docentes usando la DB /expedientedocente/plantadocente
-    @Autowired
-    private DocenteService docenteService;
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'DOCENTE', 'SUBDIRECTORA')")
     @GetMapping("/plantadocente")
     public String listarDocentes(Model model) {
         List<DocenteDTO> listadoDocentes = docenteService.listarDocentes();
@@ -118,23 +129,25 @@ public class DocenteController {
         return "Expediente_docente/Docentes/listarDocentes"; // Vista HTML
     }
 
-        // Consultando docente
-        @GetMapping("/consultarexpediente/{id}")
-        public String consultarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
-    
-            Docente profesor = docenteService.buscarPorIdDocente(idDocente);
-            if (profesor == null) {
-                System.out.println("El docente no existe");
-                attribute.addFlashAttribute("error", "El expediente no existe");
-                return "redirect:/expedientedocente/plantadocente";
-            }
-    
-            model.addAttribute("profesor", profesor);
-            model.addAttribute("editar", true); // Indica que se está editando un docente
-            return "Expediente_docente/Docentes/fichaDocenteConsult";
+    // Consultando docente
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
+    @GetMapping("/consultarexpediente/{id}")
+    public String consultarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
+
+        Docente profesor = docenteService.buscarPorIdDocente(idDocente);
+        if (profesor == null) {
+            System.out.println("El docente no existe");
+            attribute.addFlashAttribute("error", "El expediente no existe");
+            return "redirect:/expedientedocente/plantadocente";
         }
 
+        model.addAttribute("profesor", profesor);
+        model.addAttribute("editar", true); // Indica que se está editando un docente
+        return "Expediente_docente/Docentes/fichaDocenteConsult";
+    }
+
     // Editando docente
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/editarexpediente/{id}")
     public String editarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
 
@@ -150,6 +163,7 @@ public class DocenteController {
         return "Expediente_docente/Docentes/fichaDocenteEdit";
     }
 
+    @PreAuthorize("hasRole('DOCENTE')")
     @GetMapping("/editarmiexpediente/{id}")
     public String editarComoDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
@@ -164,6 +178,7 @@ public class DocenteController {
     }
 
     // Eliminar ficha
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/eliminarexpediente/{id}")
     public String eliminarDocente(@PathVariable("id") String idDocente, RedirectAttributes attribute) {
         usuarioService.eliminarUsuarioPorDocenteId(idDocente);

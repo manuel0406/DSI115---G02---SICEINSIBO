@@ -1,11 +1,11 @@
 package com.dsi.insibo.sice.Seguridad;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,30 +13,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dsi.insibo.sice.Seguridad.ClasesDeSeguridad.PasswordGenerator;
 import com.dsi.insibo.sice.entity.Usuario;
 import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
 import com.dsi.insibo.sice.entity.UsuarioRoles;
 
 @Controller
 @PreAuthorize("hasRole('ADMINISTRADOR')")
-public class gestionarCredencialesController {
+public class gestionarRechazadosController {
 
     @Autowired
     private UsuarioService usuarioService;
-// -----------------------------------------------------------------------------------------------------------------------------------
-    @GetMapping("/gestionarCredenciales")
-    public String cargarUsuarioCredenciales(Model model, @RequestParam(required = false, defaultValue = "1") int pagina) {
-        
-        //Cantidad de páginas
+
+    @GetMapping("/gestionarRechazados")
+    public String cargarRechazados(Model model, @RequestParam(required = false, defaultValue = "1") int pagina) {
         pagina=(pagina-1);
+        List<Usuario> listadoUsuarios = usuarioService.listaUsuariosRechazadosIntervalos(pagina);
 
-        // Obtener a usuarios: ACTIVOS
-        List<Usuario> listadoUsuarios = usuarioService.listaUsuariosActivosIntervalos(pagina);
         List<UsuarioConNombre> listadoCompleto =new ArrayList<>();
-
         //Obtenemos los nombres
         for (Usuario usuario : listadoUsuarios) {
-            
             Set<UsuarioRoles> rol = usuario.getRolesUsuario();
             // Verificar si hay algún UsuarioRoles con role_name igual a "ADMINISTRADOR"
             boolean isAdmin = rol.stream()
@@ -86,57 +82,48 @@ public class gestionarCredencialesController {
                 }
             }
 
-            //OCULTAMIENTO DE CONTRASEÑA
-            Integer tamanyoContra = usuario.getContrasenaUsuario().length();
-            String codificacion="";
-
-            for(int i = 0; i < tamanyoContra ;i++){
-                codificacion = codificacion + "*";
-            }
-            usuario.setContrasenaUsuario(codificacion);
-
-            
             listadoCompleto.add(new UsuarioConNombre(usuario, nombre));
         }
 
         model.addAttribute("Usuarios", listadoCompleto);
 
-        //Obtenemos la cantidad de usuarios que tenemos
-        List<Usuario> totalUsuario = usuarioService.listaUsuariosActivos();
+       // Obtenemos la cantidad de usuarios que tenemos
+        List<Usuario> totalUsuario = usuarioService.listaUsuariosRechazados();
         int cantidad = (int) Math.ceil((double) totalUsuario.size() / 7);
         model.addAttribute("Cantidad", cantidad);
-
-
-        return "Seguridad/gestionarCredenciales";
+    
+        return "Seguridad/gestionarRechazados";
     }
-// -----------------------------------------------------------------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------------------------------------------------------------
-    @GetMapping("/bloquearUsuario/{id}")
-    public String bloquearUsuario(@PathVariable("id") int idUsuario, RedirectAttributes attribute ) {
-        
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @GetMapping("/aceptarUsuarioRechazado/{id}")
+    public String aceptarUsuarioRechazado(@PathVariable("id") int idUsuario, RedirectAttributes attribute) {
         Usuario usuario = usuarioService.buscarPorIdUsuario(idUsuario);
-        usuario.setAccountLocked(false);
+        String contrasena = PasswordGenerator.generateRandomPassword(8);
+        usuario.setEnabled(true);
+        usuario.setAccountLocked(true);
+        usuario.setContrasenaUsuario(passwordEncoder.encode(contrasena)); //Contraseña encriptada
+        //usuario.setContrasenaUsuario(passwordEncoder.encode("admin123")); //SOLO PARA PRUEBAS
         usuarioService.guardarUsuario(usuario);
-        return "redirect:/gestionarCredenciales";
+        return "redirect:/gestionarRechazados";
     }
-// -----------------------------------------------------------------------------------------------------------------------------------
 
-    @GetMapping("/buscarUsuarioCredencial")
+    @GetMapping("/buscarUsuariosRechazados")
     public String buscarUsuario(@RequestParam("correoUsuario") String correoUsuario, RedirectAttributes redirectAttributes, Model model) {
-        Usuario usuarioBuscado = usuarioService.buscarPorCorreoActivo(correoUsuario);
+        Usuario usuarioBuscado = usuarioService.buscarPorCorreo(correoUsuario);
         
 
         if (usuarioBuscado == null) {
             // Usuario no encontrado, añadir mensaje de error
             redirectAttributes.addFlashAttribute("Error", "<b>¡Usuario no encontrado!</b> Verificar si ha escrito correctamente el correo.");
-            return "redirect:/gestionarCredenciales"; // Redirigir a la página de gestión de credenciales
+            return "redirect:/gestionarRechazados"; // Redirigir a la página de gestión de credenciales
         }
 
-        if (usuarioBuscado.isAccountLocked() != true || usuarioBuscado.isEnabled() != true) {
+        if (usuarioBuscado.isEnabled() != false || usuarioBuscado.isAccountLocked() != false) {
             // Usuario no encontrado, añadir mensaje de error
-            redirectAttributes.addFlashAttribute("Error", "<b>¡Advertencia!</b> Su usuario no se encuentra activo.");
-            return "redirect:/gestionarCredenciales"; // Redirigir a la página de gestión de credenciales
+            redirectAttributes.addFlashAttribute("Error", "<b>¡Advertencia!</b> Su usuario no se encuentra rechazado.");
+            return "redirect:/gestionarRechazados"; // Redirigir a la página de gestión de credenciales
         }
         
         Set<UsuarioRoles> rol = usuarioBuscado.getRolesUsuario();
@@ -188,21 +175,10 @@ public class gestionarCredencialesController {
             }
         }
 
-        //OCULTAMIENTO DE CONTRASEÑA
-        Integer tamanyoContra = usuarioBuscado.getContrasenaUsuario().length();
-        String codificacion="";
-
-        for(int i = 0; i < tamanyoContra ;i++){
-            codificacion = codificacion + "*";
-        }
-        usuarioBuscado.setContrasenaUsuario(codificacion);
-
         UsuarioConNombre usuarioConNombre = new UsuarioConNombre(usuarioBuscado, nombre);
    
         model.addAttribute("Cantidad", 0);
         model.addAttribute("Usuarios", usuarioConNombre);
-        return "Seguridad/gestionarCredenciales";
+        return "Seguridad/gestionarRechazados";
     }
-// -----------------------------------------------------------------------------------------------------------------------------------
-
 }
