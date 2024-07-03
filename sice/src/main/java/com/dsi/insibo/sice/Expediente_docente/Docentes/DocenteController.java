@@ -6,6 +6,9 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import com.dsi.insibo.sice.Seguridad.UsuarioService;
 import com.dsi.insibo.sice.entity.Docente;
 import com.dsi.insibo.sice.entity.Usuario;
@@ -22,6 +26,7 @@ import com.dsi.insibo.sice.entity.UsuarioRoles;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/expedientedocente")
@@ -58,19 +63,20 @@ public class DocenteController {
     @PreAuthorize("hasAnyRole('SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     // guardando formulario
     @PostMapping("/guardar")
-    public String guardar(@Validated @ModelAttribute Docente docente, BindingResult result, Model model,
+    public String guardar(@Validated @ModelAttribute Docente docente,
+            @RequestParam("docenteRol") String rolSeleccionado, BindingResult result, Model model,
             RedirectAttributes attribute) {
 
-        //Inicia cambio
+        // Inicia cambio
         Docente docenteExistente = docenteService.buscarPorIdDocente(docente.getDuiDocente());
 
         // Verifica si el DUI ya esta asociado a un registro
         if (docenteExistente != null) {
-            //Si lo esta
+            // Si lo esta
             attribute.addFlashAttribute("error", "Error: El DUI ya está registrado.");
             return "redirect:plantadocente";
-        }// Fin de la modificacion
-        //Codigo de usuario
+        } // Fin de la modificacion
+          // Codigo de usuario
         else {
 
             Usuario usuario = new Usuario();
@@ -82,6 +88,9 @@ public class DocenteController {
             roles.add(rol);
             boolean inicio = true;
             String contrasena = "";
+
+            // Imprimiendo el rol seleccionado
+            System.out.println(rolSeleccionado);
 
             // Asignaciones al nuevo usuario
             usuario.setDocente(docente);
@@ -107,25 +116,44 @@ public class DocenteController {
         }
     }
 
-    // editando formulario
+    // actualizando la informacion de un docente
     @PostMapping("/actualizar")
-    public String actualizar(@Validated @ModelAttribute Docente docente, BindingResult result, Model model,
+    public String actualizar(@Validated @ModelAttribute Docente docente,
+            @RequestParam("docenteRol") String rolSeleccionado, BindingResult result, Model model,
             RedirectAttributes attribute) {
         // Verificamos existencia del usuario
         Usuario usuario = usuarioService.buscarPorIdDocente(docente.getDuiDocente());
         usuario.setCorreoUsuario(docente.getCorreoDocente());
         usuarioService.guardarUsuario(usuario);
         docenteService.guardarDocente(docente);
+
+        // Imprimiendo el rol seleccionado
+        System.out.println(rolSeleccionado);
+
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
         return "redirect:plantadocente";
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'DOCENTE', 'SUBDIRECTORA')")
     @GetMapping("/plantadocente")
-    public String listarDocentes(Model model) {
+    public String listarDocentes(Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        // page indica el numero de pagina en el que se encontrara por defecto
+        // Size el numero de registros por pagina
+
+        // Hace la conversion de la estructura List a Page
+        PageRequest pageRequest = PageRequest.of(page, size);
         List<DocenteDTO> listadoDocentes = docenteService.listarDocentes();
+        Page<DocenteDTO> pageAdministrativos = new PageImpl<>(listadoDocentes.subList(
+                pageRequest.getPageNumber() * pageRequest.getPageSize(),
+                Math.min((pageRequest.getPageNumber() + 1) * pageRequest.getPageSize(), listadoDocentes.size())),
+                pageRequest, listadoDocentes.size());
+
         model.addAttribute("titulo", "Planta Docente");
         model.addAttribute("Docentes", listadoDocentes);
+        // Hace el envio de la estructura con paginación a la vista
+        model.addAttribute("page", pageAdministrativos);
         return "Expediente_docente/Docentes/listarDocentes"; // Vista HTML
     }
 
@@ -148,6 +176,7 @@ public class DocenteController {
 
     // Editando docente
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
+    // Editando docente como director, subdirector
     @GetMapping("/editarexpediente/{id}")
     public String editarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
 
@@ -164,6 +193,7 @@ public class DocenteController {
     }
 
     @PreAuthorize("hasRole('DOCENTE')")
+    // Editando docente como docente, osea solo datos generales
     @GetMapping("/editarmiexpediente/{id}")
     public String editarComoDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
