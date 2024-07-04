@@ -1,4 +1,4 @@
-package com.dsi.insibo.sice.Seguridad;
+package com.dsi.insibo.sice.Seguridad.SeguridadService;
 
 import java.util.List;
 import java.util.Optional;
