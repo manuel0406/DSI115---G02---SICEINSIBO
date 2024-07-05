@@ -55,7 +55,7 @@ public class DocenteController {
 
     // Direccionadores de acción
     // Ficha general de expediente docente /expedientedocente/formulario
-    @PreAuthorize("hasAnyRole('SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/formulario")
     public String abrirformulario(Model model) {
         Docente profesor = new Docente();
@@ -64,7 +64,7 @@ public class DocenteController {
         return "Expediente_docente/Docentes/fichaDocente";
     }
 
-    @PreAuthorize("hasAnyRole('SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     // guardando formulario
     @PostMapping("/guardar")
     public String guardar(@Validated @ModelAttribute Docente docente,
@@ -83,27 +83,33 @@ public class DocenteController {
           // Codigo de usuario
         else {
 
+            // CREACIÓN DEL USUARIO
             Usuario usuario = new Usuario();
-            // Obtenemos informacion relevante del usuario
-            String correo = docente.getCorreoDocente();
-            Set<UsuarioRoles> roles = new HashSet<>();
-            UsuarioRoles rol = new UsuarioRoles();
-            rol.setRoleEnum(UsuarioRoleEnum.DOCENTE); // Suponiendo que tienes un enum para roles
-            roles.add(rol);
-            boolean inicio = true;
-            String contrasena = "";
-
-            // Imprimiendo el rol seleccionado
-            System.out.println(rolSeleccionado);
-
-            // Asignaciones al nuevo usuario
-            usuario.setDocente(docente);
-            usuario.setCorreoUsuario(correo);
-            usuario.setRolesUsuario(roles);
-            usuario.setEnabled(true);
-            usuario.setPrimerIngreso(inicio);
-            usuario.setContrasenaUsuario(contrasena);
-
+            usuario.setDocente(docente);                            // DUI-DOCENTE
+            usuario.setCorreoUsuario(docente.getCorreoDocente());   // Correo
+            usuario.setEnabled(false);                      // Activo
+            usuario.setAccountLocked(true);           // Bloqueado  
+            usuario.setAccountNoExpired(true);     // Expirado
+            usuario.setCredentialNoExpired(true); // Credencial expirada
+            usuario.setPrimerIngreso(true);           // Primera vez
+            usuario.setContrasenaUsuario(" ");    // Contraseña
+            Long idRol = 0L;
+            System.out.println(rolSeleccionado);                    // Rol
+            switch (rolSeleccionado) {
+                case "Docente":
+                    idRol = 2L;
+                    break;
+                case "Subdirector":
+                    idRol = 5L;
+                    break;
+                case "Director":
+                    idRol = 6L;
+                    break;                                     
+                default:
+                    idRol = 2L;
+                    break;
+            }
+            
             if (result.hasErrors()) {
                 model.addAttribute("profesor", docente);
                 System.out.println("Se tienen errores en el formulario");
@@ -113,7 +119,7 @@ public class DocenteController {
             // Fin del codigo para usuario
             // guardando el registro
             docenteService.guardarDocente(docente);
-            usuarioService.guardarUsuario(usuario);
+            usuarioService.asignarRol(usuario, idRol); //Guardado y asignado de rol
             attribute.addFlashAttribute("success", "Expediente creado con exito!");
 
             return "redirect:plantadocente";

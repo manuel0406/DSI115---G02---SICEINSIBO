@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Seguridad.ClasesDeSeguridad.PasswordGenerator;
+import com.dsi.insibo.sice.Seguridad.ClasesDeSeguridad.UsuarioConNombre;
 import com.dsi.insibo.sice.Seguridad.SeguridadService.UsuarioService;
 import com.dsi.insibo.sice.entity.Usuario;
 import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
