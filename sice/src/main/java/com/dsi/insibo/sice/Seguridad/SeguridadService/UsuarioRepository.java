@@ -26,10 +26,16 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>  {
     //Estado: Activo | Desactivado | Bloqueado |
     List<Usuario> findByAccountLocked(boolean accountLocked, Pageable pageable);
     List<Usuario> findByAccountLocked(boolean accountLocked);
+
+    // Eliminación de usuario-docente 
     @Transactional
     void deleteByDocente_DuiDocente(String duiDocente);
+
+
     @Transactional
     void deleteByPersonalAdministrativo_DuiPersonal(String duiPersonal);
     // Nuevo método para encontrar usuario por el Docente
     Usuario findByDocente_DuiDocente(String duiDocente);
+    // Encontrar a personal docente por el duiPersonal
+    Usuario findByPersonalAdministrativo_DuiPersonal(String duiPersonal);
 }

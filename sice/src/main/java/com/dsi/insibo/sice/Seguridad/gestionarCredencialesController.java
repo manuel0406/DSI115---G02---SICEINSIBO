@@ -58,6 +58,10 @@ public class gestionarCredencialesController {
             // Verificar si hay algún UsuarioRoles con role_name igual a "SUBDIRECTORA"
             boolean isSubDirectora = rol.stream()
                                    .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.SUBDIRECTORA));
+            
+            // Verificar si hay algún UsuarioRoles con role_name igual a "BIBLIOTECARIA"
+            boolean isBibliotecaria = rol.stream()
+                                   .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.BIBLIOTECARIO));
             String nombre="";
 
             if(isAdmin){
@@ -66,7 +70,7 @@ public class gestionarCredencialesController {
                     nombre = usuario.getDocente().getNombreDocente() + " " + usuario.getDocente().getApellidoDocente();
                 }
                 if (usuario.getPersonalAdministrativo() != null) {
-                    nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getDocente().getApellidoDocente();
+                    nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getPersonalAdministrativo().getApellidoPersonal();
                 }
             }
             if(isDocente || isDirector || isSubDirectora){
@@ -75,16 +79,16 @@ public class gestionarCredencialesController {
                     nombre = usuario.getDocente().getNombreDocente() + " " + usuario.getDocente().getApellidoDocente();
                 }
                 if (usuario.getPersonalAdministrativo() != null) {
-                    nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getDocente().getApellidoDocente();
+                    nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getPersonalAdministrativo().getApellidoPersonal();
                 }
             }
-            if(isPersonal || isSecretaria){
+            if(isPersonal || isSecretaria || isBibliotecaria){
                 nombre = "PERSONAL";
                 if (usuario.getDocente() != null) {
                     nombre = usuario.getDocente().getNombreDocente() + " " + usuario.getDocente().getApellidoDocente();
                 }
                 if (usuario.getPersonalAdministrativo() != null) {
-                    nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getDocente().getApellidoDocente();
+                    nombre = usuario.getPersonalAdministrativo().getNombrePersonal()+ " " + usuario.getPersonalAdministrativo().getApellidoPersonal();
                 }
             }
 
@@ -160,6 +164,9 @@ public class gestionarCredencialesController {
         // Verificar si hay algún UsuarioRoles con role_name igual a "SUBDIRECTORA"
         boolean isSubDirectora = rol.stream()
                             .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.SUBDIRECTORA));
+        // Verificar si hay algún UsuarioRoles con role_name igual a "BIBLIOTECARIA"
+        boolean isBibliotecaria = rol.stream()
+                                .anyMatch(usuarioRoles -> usuarioRoles.getRoleEnum().equals(UsuarioRoleEnum.BIBLIOTECARIO));
         String nombre="";
 
         if(isAdmin){
@@ -168,7 +175,7 @@ public class gestionarCredencialesController {
                 nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente();
             }
             if (usuarioBuscado.getPersonalAdministrativo() != null) {
-                nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
+                nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getPersonalAdministrativo().getApellidoPersonal();
             }
         }
         if(isDocente || isDirector || isSubDirectora){
@@ -177,16 +184,16 @@ public class gestionarCredencialesController {
                 nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente();
             }
             if (usuarioBuscado.getPersonalAdministrativo() != null) {
-                nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
+                nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getPersonalAdministrativo().getApellidoPersonal();
             }
         }
-        if(isPersonal || isSecretaria){
+        if(isPersonal || isSecretaria || isBibliotecaria){
             nombre = "PERSONAL";
             if (usuarioBuscado.getDocente() != null) {
                 nombre = usuarioBuscado.getDocente().getNombreDocente() + " " + usuarioBuscado.getDocente().getApellidoDocente();
             }
             if (usuarioBuscado.getPersonalAdministrativo() != null) {
-                nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getDocente().getApellidoDocente();
+                nombre = usuarioBuscado.getPersonalAdministrativo().getNombrePersonal()+ " " + usuarioBuscado.getPersonalAdministrativo().getApellidoPersonal();
             }
         }
 

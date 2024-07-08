@@ -1,8 +1,6 @@
 package com.dsi.insibo.sice.Expediente_docente.Docentes;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,8 +20,6 @@ import com.dsi.insibo.sice.Seguridad.SeguridadService.UsuarioService;
 import com.dsi.insibo.sice.entity.AnexoDocente;
 import com.dsi.insibo.sice.entity.Docente;
 import com.dsi.insibo.sice.entity.Usuario;
-import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
-import com.dsi.insibo.sice.entity.UsuarioRoles;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -131,15 +127,29 @@ public class DocenteController {
     public String actualizar(@Validated @ModelAttribute Docente docente,
             @RequestParam("docenteRol") String rolSeleccionado, BindingResult result, Model model,
             RedirectAttributes attribute) {
-        // Verificamos existencia del usuario
+
+        // Actualizamos el usuario
         Usuario usuario = usuarioService.buscarPorIdDocente(docente.getDuiDocente());
-        usuario.setCorreoUsuario(docente.getCorreoDocente());
-        usuarioService.guardarUsuario(usuario);
+        usuario.setCorreoUsuario(docente.getCorreoDocente());   // Nuevo Correo
+        usuario.getRolesUsuario().clear();
+        Long idRol = 0L;
+        System.out.println(rolSeleccionado);                    
+        switch (rolSeleccionado) {                              // Nuevo Rol
+            case "Docente":
+                idRol = 2L;
+                break;
+            case "Subdirector":
+                idRol = 5L;
+                break;
+            case "Director":
+                idRol = 6L;
+                break;                                     
+            default:
+                idRol = 2L;
+                break;
+        }
+        usuarioService.asignarRol(usuario, idRol);          // Guardamos la actualización
         docenteService.guardarDocente(docente);
-
-        // Imprimiendo el rol seleccionado
-        System.out.println(rolSeleccionado);
-
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
         return "redirect:plantadocente";
     }
@@ -221,7 +231,6 @@ public class DocenteController {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/eliminarexpediente/{id}")
     public String eliminarDocente(@PathVariable("id") String idDocente, RedirectAttributes attribute) {
-        usuarioService.eliminarUsuarioPorDocenteId(idDocente);
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
 
         if (profesor == null) {
@@ -231,6 +240,7 @@ public class DocenteController {
         }
 
         anexoDocenteService.eliminarAnexoDocente(idDocente);
+        usuarioService.eliminarUsuarioPorDocenteId(idDocente);
         docenteService.eliminar(idDocente);
         attribute.addFlashAttribute("warning", "El expediente se elimino");
 

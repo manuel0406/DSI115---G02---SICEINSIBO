@@ -107,16 +107,32 @@ public class UsuarioService {
 
     @Transactional
     public void eliminarUsuarioPorDocenteId(String idDocente) {
+        // Encuentra el usuario basado en el idDocente
+        Usuario usuario = usuarioRepository.findByDocente_DuiDocente(idDocente);
+        // Limpia las relaciones ManyToMany
+        usuario.getRolesUsuario().clear();
+        usuarioRepository.save(usuario);
+        // Elimina el usuario
         usuarioRepository.deleteByDocente_DuiDocente(idDocente);
     }
     
     @Transactional
     public void eliminarUsuarioPorPersonalId(String idPersonal) {
+         // Encuentra el usuario basado en el idDocente
+         Usuario usuario = usuarioRepository.findByDocente_DuiDocente(idPersonal);
+         // Limpia las relaciones ManyToMany
+         usuario.getRolesUsuario().clear();
+         usuarioRepository.save(usuario);
+         // Elimina el usuario
         usuarioRepository.deleteByPersonalAdministrativo_DuiPersonal(idPersonal);
     }
 
-    public Usuario buscarPorIdDocente(String idUsuario) {
-        return usuarioRepository.findByDocente_DuiDocente(idUsuario);
+    public Usuario buscarPorIdDocente(String duiDocente) {
+        return usuarioRepository.findByDocente_DuiDocente(duiDocente);
+    }
+
+    public Usuario buscarPorIdPersonal(String duiPersonal) {
+        return usuarioRepository.findByPersonalAdministrativo_DuiPersonal(duiPersonal);
     }
 
 }
