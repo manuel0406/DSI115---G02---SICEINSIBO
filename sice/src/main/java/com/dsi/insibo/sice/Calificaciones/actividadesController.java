@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
+import com.dsi.insibo.sice.Expediente_alumno.BachilleratoService;
 import com.dsi.insibo.sice.entity.Actividad;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Periodo;
@@ -33,7 +34,7 @@ import org.springframework.ui.Model;
 public class actividadesController {
 
 	@Autowired
-	private GradoService gradoService;
+	private BachilleratoService bachilleratoService;
 	@Autowired
 	private PeriodoService periodoService;
 	@Autowired
@@ -41,11 +42,6 @@ public class actividadesController {
 	@Autowired
 	private ActividadService actividadService;
 
-
-	@Autowired
-    private MateriaRepository materiaRepository;
-    @Autowired
-    private PeriodoRepository periodoRepository;
 	@Autowired
     private ActividadRepository actividadRepository;
 	@Autowired
@@ -54,7 +50,7 @@ public class actividadesController {
     @GetMapping("/Actividades")
 	public String verActividades(Model model){
 
-		List<Bachillerato> listaBachilleratos = gradoService.listaBachilleratos();
+		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
 		model.addAttribute("grados", listaBachilleratos);
 
 		List<Periodo> listaPeriodos = periodoService.listaPeriodos();
