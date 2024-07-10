@@ -1,4 +1,4 @@
-package com.dsi.insibo.sice.Seguridad;
+package com.dsi.insibo.sice.Seguridad.SeguridadService;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,7 +6,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+
 import com.dsi.insibo.sice.entity.Usuario;
+import com.dsi.insibo.sice.entity.UsuarioRoles;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -15,6 +18,8 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private UsuarioRolesRepository usuarioRolesRepository;
 
     /* BUSQUEDA DE CORREO - Permitido para todos
      Usos:  
@@ -31,8 +36,14 @@ public class UsuarioService {
         1. Para restaurar la contraseña.
         2. Para guardar un nuevo usuario.
     */
-    @PreAuthorize("permitAll()")
     public void guardarUsuario(Usuario usuario) {
+        usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public void asignarRol(Usuario usuario, Long idRol) {
+        UsuarioRoles rol = usuarioRolesRepository.findById(idRol).orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        usuario.getRolesUsuario().add(rol);
         usuarioRepository.save(usuario);
     }
 
@@ -96,16 +107,32 @@ public class UsuarioService {
 
     @Transactional
     public void eliminarUsuarioPorDocenteId(String idDocente) {
+        // Encuentra el usuario basado en el idDocente
+        Usuario usuario = usuarioRepository.findByDocente_DuiDocente(idDocente);
+        // Limpia las relaciones ManyToMany
+        usuario.getRolesUsuario().clear();
+        usuarioRepository.save(usuario);
+        // Elimina el usuario
         usuarioRepository.deleteByDocente_DuiDocente(idDocente);
     }
     
     @Transactional
     public void eliminarUsuarioPorPersonalId(String idPersonal) {
+         // Encuentra el usuario basado en el idDocente
+         Usuario usuario = usuarioRepository.findByDocente_DuiDocente(idPersonal);
+         // Limpia las relaciones ManyToMany
+         usuario.getRolesUsuario().clear();
+         usuarioRepository.save(usuario);
+         // Elimina el usuario
         usuarioRepository.deleteByPersonalAdministrativo_DuiPersonal(idPersonal);
     }
 
-    public Usuario buscarPorIdDocente(String idUsuario) {
-        return usuarioRepository.findByDocente_DuiDocente(idUsuario);
+    public Usuario buscarPorIdDocente(String duiDocente) {
+        return usuarioRepository.findByDocente_DuiDocente(duiDocente);
+    }
+
+    public Usuario buscarPorIdPersonal(String duiPersonal) {
+        return usuarioRepository.findByPersonalAdministrativo_DuiPersonal(duiPersonal);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.dsi.insibo.sice.Seguridad;
+package com.dsi.insibo.sice.Seguridad.ClasesDeSeguridad;
 
 import com.dsi.insibo.sice.entity.Usuario;
 
