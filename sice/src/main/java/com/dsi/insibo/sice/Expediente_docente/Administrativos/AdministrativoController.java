@@ -40,6 +40,7 @@ public class AdministrativoController {
         PersonalAdministrativo administrativo = new PersonalAdministrativo();
 
         model.addAttribute("administrativo", administrativo);
+        model.addAttribute("titulo", "Nuevo usuario");
         return "Expediente_docente/Administrativos/fichaAdministrativo";
     }
 

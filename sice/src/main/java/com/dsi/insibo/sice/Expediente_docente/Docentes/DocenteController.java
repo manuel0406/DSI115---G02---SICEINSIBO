@@ -57,6 +57,8 @@ public class DocenteController {
         Docente profesor = new Docente();
 
         model.addAttribute("profesor", profesor);
+        model.addAttribute("titulo", "Nuevo usuario");
+
         return "Expediente_docente/Docentes/fichaDocente";
     }
 

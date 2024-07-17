@@ -1,7 +1,6 @@
 package com.dsi.insibo.sice.entity;
 
 import java.sql.Date;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -9,9 +8,7 @@ import jakarta.persistence.Id;
 public class PersonalAdministrativo {
     
     @Id
-    private String duiPersonal;
-
- 
+    private String duiPersonal; 
     private String nombrePersonal;
     private String apellidoPersonal;
     private String telefonoPersonal;
