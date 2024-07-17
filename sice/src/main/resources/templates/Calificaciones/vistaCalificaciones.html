@@ -43,66 +43,47 @@
                 </nav>
             </aside>
             <!--Fin Barra Lateral-->
+
             <main class="main col">
                 <div class="row">
-                    <div class="columna col-12">
-                        <div class="widget registrar">
-                            <!-- Opciones de Selección Lateral -->
-                            <fieldset class="border p-2">
-                                <legend class="float-none w-auto">Registro de Notas</legend>
-                                <form th:action="@{/calificaciones/alumnosPorBachillerato}" method="get">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <!-- Select Bachillerato -->
-                                            <div class="row">
-                                                <div class="col-3">
-                                                    <label for="selectBachillerato" class="col-form-label">Seleccione Grado:</label>
-                                                </div>
-                                                <div class="col-9">
-                                                    <select id="codigoBachillerato" name="codigoBachillerato" class="form-select" aria-label="Default select example" onchange="actualizarMaterias()">
-                                                        <option value="">Seleccione Carrera</option>
-                                                        <option th:each="bachillerato : ${grados}" th:value="${bachillerato.codigoBachillerato}" th:text="${bachillerato.grado +'° '+ bachillerato.nombreCarrera  + ' - Sección ' + bachillerato.seccion}"></option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <button class="btn btn-primary" type="submit">Cargar Listado de Alumnos</button>
-                                        </div> 
-                                    </div>
-                                </form>
-                            </fieldset>
-                        </div>
+                    <div class="widget registrar">
+                        <!-- Opciones de Selección Lateral -->
+                        <fieldset class="border p-2">
+                            <legend class="float-none w-auto">Registro de Notas</legend>
+                            <form th:action="@{/calificaciones/alumnosPorBachillerato}" method="get">
+                                <!-- Select Bachillerato -->
+                                 <div class="d-flex align-items-center gap-2">
+                                    <label for="selectBachillerato" class="col-form-label">Seleccione Grado:</label>
+                                    <select id="codigoBachillerato" name="codigoBachillerato" class="form-select" aria-label="Default select example" onchange="actualizarMaterias()">
+                                        <option value="">Seleccione Carrera</option>
+                                        <option th:each="bachillerato : ${grados}" th:value="${bachillerato.codigoBachillerato}" th:text="${bachillerato.grado +'° '+ bachillerato.nombreCarrera  + ' - Sección ' + bachillerato.seccion}"></option>
+                                        </select>
+                                    <button class="btn btn-primary" type="submit">Cargar Alumnos</button>
+                                 </div>
+                            </form>
+                        </fieldset>
                     </div>
-                </div>
-                <div class="container-fluid mt-5">
-                    <div class="row justify-content-center">
-                        <div class="col">
-                            <h3 class="text-center" id="tituloSeleccion">Listado de alumnos</h3>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Apellido</th>
-                                        <th>Ver Actividades</th>
-                                        <!-- Nueva columna para el botón -->
-                                        <!-- Más columnas si es necesario -->
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Iterar sobre la lista de alumnos -->
-                                    <tr th:each="alumno : ${alumnos}">
-                                        <td th:text="${alumno.nombreAlumno}"></td>
-                                        <td th:text="${alumno.apellidoAlumno}"></td>
-                                        <td>
-                                            <a th:href="@{/calificaciones/Alumno/{nie}(nie=${alumno.nie})}" class="btn btn-primary">Visualizar Notas</a>
-                                        </td>
-                                        <!-- Más columnas si es necesario -->
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                        
+                    <h3 class="text-center" id="tituloSeleccion">Listado de alumnos</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Ver Actividades</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Iterar sobre la lista de alumnos -->
+                            <tr th:each="alumno : ${alumnos}">
+                                <td th:text="${alumno.nombreAlumno}"></td>
+                                <td th:text="${alumno.apellidoAlumno}"></td>
+                                <td>
+                                    <a th:href="@{/calificaciones/Alumno/{nie}(nie=${alumno.nie})}" class="btn btn-primary">Visualizar Notas</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </main>
         </div>
