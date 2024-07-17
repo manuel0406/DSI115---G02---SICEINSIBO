@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
+import com.dsi.insibo.sice.Expediente_alumno.BachilleratoService;
 import com.dsi.insibo.sice.entity.Actividad;
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Bachillerato;
@@ -28,34 +29,23 @@ import org.springframework.ui.Model;
 @Controller
 public class calificacionesController {
 	@Autowired
-	private GradoService gradoService;
+	private BachilleratoService bachilleratoService;
 	@Autowired
 	private PeriodoService periodoService;
 	@Autowired
 	private MateriaService materiaService;
 	@Autowired
-	private ActividadService actividadService;
-	@Autowired
     private AlumnoService alumnoService;
 	@Autowired
     private NotaService notaService;
 
-
-	@Autowired
-    private MateriaRepository materiaRepository;
-    @Autowired
-    private PeriodoRepository periodoRepository;
-	@Autowired
-    private ActividadRepository actividadRepository;
-	@Autowired
-    private NotaRepository notaRepository;
 	@Autowired
     private MateriaBachilleratoRepository materiaBachilleratoRepository;
 
     @GetMapping("/calificaciones")
 	public String verCalificaciones(Model model){
 		
-		List<Bachillerato> listaBachilleratos = gradoService.listaBachilleratos();
+		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
 		model.addAttribute("grados", listaBachilleratos);
 
 		List<Periodo> listaPeriodos = periodoService.listaPeriodos();
@@ -85,7 +75,7 @@ public class calificacionesController {
 		model.addAttribute("alumnos", alumnos);
 
 		// Recuperar y agregar nuevamente la lista de Bachilleratos
-		List<Bachillerato> listaBachilleratos = gradoService.listaBachilleratos();
+		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
 		model.addAttribute("grados", listaBachilleratos);
 		return "Calificaciones/vistaCalificaciones";
 	}
