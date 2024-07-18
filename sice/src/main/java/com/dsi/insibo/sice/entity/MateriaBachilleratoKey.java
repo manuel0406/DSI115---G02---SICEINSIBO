@@ -10,7 +10,7 @@ import jakarta.persistence.Embeddable;
 public class MateriaBachilleratoKey implements Serializable {
 
     private String codigoBachillerato;
-    private String codMateria;
+    private int codMateria;
 
     public String getCodigoBachillerato() {
         return codigoBachillerato;
@@ -18,10 +18,10 @@ public class MateriaBachilleratoKey implements Serializable {
     public void setCodigoBachillerato(String codigoBachillerato) {
         this.codigoBachillerato = codigoBachillerato;
     }
-    public String getCodMateria() {
+    public int getCodMateria() {
         return codMateria;
     }
-    public void setCodMateria(String codMateria) {
+    public void setCodMateria(int codMateria) {
         this.codMateria = codMateria;
     }
 

@@ -8,13 +8,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.MateriasService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.BachilleratosService;
-import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Materia;
 
 @Controller
@@ -57,11 +58,32 @@ public class MateriaController {
         return "redirect:/GestionMaterias";
     }
 
+    @PostMapping("/actualizarMateria")
+    public String actualizarMateria(@RequestParam("idMateria") int id,
+                                    @RequestParam("codMateria") String codigo,
+                                    @RequestParam("nomMateria") String nombre,
+                                    @RequestParam("tipoMateria") String tipo) {
+        Materia materia = materiasService.obtenerMateriaPorId(id);
+        if (materia != null) {
+            materia.setCodMateria(codigo);
+            materia.setNomMateria(nombre);
+            materia.setTipoMateria(tipo);
+            materiasService.guardarMateria(materia);
+        }
+        return "redirect:/GestionMaterias";
+    }
+
+    @GetMapping("/EliminarMateria/{id}")
+    public String eliminarMateria(@PathVariable("id") int idMateria, RedirectAttributes attribute){
+        Materia materia = materiasService.obtenerMateriaPorId(idMateria);
+        materiasService.eliminarMateria(materia);
+        return "redirect:/GestionMaterias";
+    }
+    
 
 
 
-
-    @GetMapping("/NuevaMateria")
+  /*@GetMapping("/NuevaMateria")
     public String nuevaMateria(Model model){
         List<Bachillerato> primeros = bachilleratosService.obtenerPrimeros();
         List<Bachillerato> segundos = bachilleratosService.obtenerSegundos();
@@ -71,5 +93,6 @@ public class MateriaController {
         model.addAttribute("terceros", terceros);
         return "Administrativo/GestionMaterias/NuevaMateria";
     }
+   */  
 
 }
