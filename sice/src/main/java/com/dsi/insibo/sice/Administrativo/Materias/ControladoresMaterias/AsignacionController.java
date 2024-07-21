@@ -52,11 +52,17 @@ public class AsignacionController {
             return "redirect:/GestionMaterias";
         }
         
+        Materia materia = materiasService.obtenerMateriaPorId(idMateria);                       // Informacion de la materia
+        List<Asignacion> listadoAsignaciones = asignacionService.listarAsignaciones(idMateria); // Listado de asignaciones de la materia
+
+        // Filtrado de maximo de docentes
+        List<String> docentesMax = asignacionService.listarDocentesMaximo(idMateria);
+        List<Docente> docentes = docenteService.listarDocenteAsignacion();
+        docentes.removeIf(docente -> docentesMax.contains(docente.getDuiDocente())); // Eliminar de la lista de docentes aquellos cuyo duiDocente está en la lista de docentesMax
         
-        Materia materia = materiasService.obtenerMateriaPorId(idMateria);
-        List<Asignacion> listadoAsignaciones = asignacionService.listarAsignaciones(idMateria);
         model.addAttribute("materia", materia);
         model.addAttribute("asignaciones", listadoAsignaciones);
+        model.addAttribute("docentes", docentes);
         return "Administrativo/GestionMaterias/AsignacionMateria";
     }
 
@@ -71,37 +77,16 @@ public class AsignacionController {
         // Obtener la materia correspondiente al ID
         Materia materia = materiasService.obtenerMateriaPorId(idMateria);
     
-        // Obtener lista de docentes que tienen un máximo de tres materias asignadas
-        List<String> docentesMax = asignacionService.listarDocentesMaximo();
-        List<String> nuevaLista = new ArrayList<>();
-    
-        // Filtrado de docentes con el máximo de tres materias
-        for (String docente : docentesMax) {
-            // Buscar asignaciones del docente para la materia específica
-            List<Asignacion> materiasAsignadas = asignacionService.buscarDocenteMateria(idMateria, docente);
-            if (materiasAsignadas.isEmpty()) {
-                // Si no hay asignaciones para esta materia, agregar el docente a la nueva lista
-                nuevaLista.add(docente);
-            }
-        }
-    
-        // Actualizar la lista de docentesMax con los docentes filtrados
-        docentesMax.clear();
-        docentesMax.addAll(nuevaLista);
-    
-        // Obtener listado completo de docentes
+        // Filtrado de maximo de docentes
+        List<String> docentesMax = asignacionService.listarDocentesMaximo(idMateria);
         List<Docente> docentes = docenteService.listarDocenteAsignacion();
-    
-        // Eliminar de la lista de docentes aquellos cuyo duiDocente está en la lista de docentesMax
-        docentes.removeIf(docente -> docentesMax.contains(docente.getDuiDocente()));
+        docentes.removeIf(docente -> docentesMax.contains(docente.getDuiDocente())); // Eliminar de la lista de docentes aquellos cuyo duiDocente está en la lista de docentesMax
     
         // Obtener las asignaciones para la materia específica
         List<Asignacion> asignaciones = asignacionService.obtenerAsignacionExistente(idMateria);
-    
-        // Obtener los códigos de bachillerato de las asignaciones existentes
         Set<String> codigosBachilleratoAsignaciones = asignaciones.stream()
                     .map(asignacion -> asignacion.getBachillerato().getCodigoBachillerato())
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toSet());                                               // Codigo de las asignaciones existentes
     
         // Obtener listas de bachilleratos filtrados por los códigos no asignados
         List<Bachillerato> primeros = bachilleratosService.obtenerPrimeros().stream()
@@ -151,4 +136,73 @@ public class AsignacionController {
         asignacionService.saveAsignaciones(asignaciones);
         return "redirect:/AsignacionMateria/" + idMateria; // Redireccionar a la página deseada después de guardar
     }
+
+    @PostMapping("/actualizarAsignacion")
+    public String actualizarAsignacion(
+        @RequestParam("idAsignacion") int idAsignacion,
+        @RequestParam("materia") String nomMateria,  // Nombre actualizado para coincidir con el formulario
+        @RequestParam("bachillerato") String codigoBachillerato, // Nombre actualizado para coincidir con el formulario
+        @RequestParam("duiDocente") String duiDocente,
+        @RequestParam("idMateria") int idMateria, // Asegúrate de recibir idMateria
+        RedirectAttributes redirectAttributes) 
+    {
+        // Crear o encontrar la entidad Asignacion
+        Asignacion asignacion = asignacionService.buscarAsignacion(idAsignacion);
+        if (asignacion != null) {
+            // Actualiza los detalles de la asignación
+            Docente docenteNuevo = docenteService.buscarPorIdDocente(duiDocente);
+            if (docenteNuevo != null) {
+                asignacion.setDocente(docenteNuevo);
+            } else {
+                // Si no se encuentra el docente, redirige con un mensaje de error
+                redirectAttributes.addFlashAttribute("error", "Docente no encontrado.");
+                return "redirect:/AsignacionMateria/" + idMateria;
+            }
+    
+            // Actualiza otros detalles de la asignación
+            // Por ejemplo, actualiza la materia y el bachillerato si es necesario
+            // asignacion.setMateria(nomMateria);
+            // asignacion.setCodigoBachillerato(codigoBachillerato);
+    
+            // Guarda la asignación actualizada
+            asignacionService.saveAsignacion(asignacion);
+    
+            // Redirige con un mensaje de éxito si lo deseas
+            redirectAttributes.addFlashAttribute("success", "Asignación actualizada correctamente.");
+        } else {
+            // Si no se encuentra la asignación, redirige con un mensaje de error
+            redirectAttributes.addFlashAttribute("error", "Asignación no encontrada.");
+        }
+    
+        // Redirige a la página correcta usando idMateria
+        return "redirect:/AsignacionMateria/" + idMateria;
+    }
+    
+
+    @GetMapping("/eliminarAsignacion")
+    public String eliminarAsignacion(
+        @RequestParam("idMateria") int idMateria,
+        @RequestParam("idAsignacion") int idAsignacion,
+        RedirectAttributes redirectAttributes) {
+    
+        // Buscar la asignación por idAsignacion
+        Asignacion asignacion = asignacionService.buscarAsignacion(idAsignacion);
+        
+        if (asignacion != null) {
+            // Eliminar la asignación
+            asignacionService.eliminarAsignacion(asignacion);
+            
+            // Redirigir con mensaje de éxito
+            redirectAttributes.addFlashAttribute("mensaje", "Asignación eliminada con éxito.");
+        } else {
+            // Redirigir con mensaje de error si la asignación no se encuentra
+            redirectAttributes.addFlashAttribute("error", "Asignación no encontrada.");
+        }
+        
+        // Redirigir a la página de asignación de materia
+        return "redirect:/AsignacionMateria/" + idMateria;
+    }
+    
+       
+    
 }
