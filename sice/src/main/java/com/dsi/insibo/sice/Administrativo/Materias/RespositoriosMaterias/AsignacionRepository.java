@@ -13,10 +13,10 @@ public interface AsignacionRepository extends JpaRepository<Asignacion, Integer>
     List<Asignacion> obtenerAsignacionExistente(int idMateria);
 
     @Query("SELECT a.docente.duiDocente FROM Asignacion a " 
-         + "JOIN a.docente d " 
-         + "GROUP BY a.docente.duiDocente " 
-         + "HAVING COUNT(DISTINCT a.materia.idMateria) = 3")
-    List<String> findDocentesWithThreeDistinctMaterias();
+    + "WHERE a.materia.idMateria != :idMateria "
+    + "GROUP BY a.docente.duiDocente " 
+    + "HAVING COUNT(DISTINCT a.materia.idMateria) = 3")
+    List<String> findDocentesWithThreeDistinctMaterias(int idMateria);
 
     @Query("SELECT a FROM Asignacion a WHERE a.docente.duiDocente = :duiDocente AND a.materia.idMateria = :idMateria")
     List<Asignacion> findByDocenteAndMateria(String duiDocente, int idMateria);

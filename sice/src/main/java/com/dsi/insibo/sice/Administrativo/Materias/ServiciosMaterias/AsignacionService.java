@@ -26,8 +26,8 @@ public class AsignacionService {
         return asignacionRepository.obtenerAsignacionExistente(idMateria);
     }
 
-    public List<String> listarDocentesMaximo(){
-        return asignacionRepository.findDocentesWithThreeDistinctMaterias();
+    public List<String> listarDocentesMaximo(int idMateria){
+        return asignacionRepository.findDocentesWithThreeDistinctMaterias(idMateria);
     }
 
     public List<Asignacion> buscarDocenteMateria(int idMateria, String duiDocente){
@@ -36,6 +36,14 @@ public class AsignacionService {
 
     public List<Asignacion> listarAsignaciones(int idMateria){
         return asignacionRepository.findByMateria(idMateria);
+    }
+
+    public Asignacion buscarAsignacion(int idAsignacion){
+        return asignacionRepository.findById(idAsignacion).orElse(null);
+    }
+
+    public void eliminarAsignacion(Asignacion asignacion){
+        asignacionRepository.delete(asignacion);
     }
 
 }
