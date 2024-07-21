@@ -83,16 +83,4 @@ public class MateriaController {
 
 
 
-  /*@GetMapping("/NuevaMateria")
-    public String nuevaMateria(Model model){
-        List<Bachillerato> primeros = bachilleratosService.obtenerPrimeros();
-        List<Bachillerato> segundos = bachilleratosService.obtenerSegundos();
-        List<Bachillerato> terceros = bachilleratosService.obtenerTerceros();
-        model.addAttribute("primeros", primeros);
-        model.addAttribute("segundos", segundos);
-        model.addAttribute("terceros", terceros);
-        return "Administrativo/GestionMaterias/NuevaMateria";
-    }
-   */  
-
 }

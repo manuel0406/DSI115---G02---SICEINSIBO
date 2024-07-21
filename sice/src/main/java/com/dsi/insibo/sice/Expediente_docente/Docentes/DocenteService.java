@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dsi.insibo.sice.entity.Docente;
+import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
 
 @Service
 public class DocenteService {
@@ -38,4 +39,10 @@ public class DocenteService {
     public void eliminar(String duiDocente) {
         docenteRepository.deleteById(duiDocente);
     }
+
+    // Usado para asignación de materias - bachilleratos
+    public List<Docente> listarDocenteAsignacion(){
+        return docenteRepository.obtenerDocentesPorRol(UsuarioRoleEnum.DOCENTE);
+    }
+
 }

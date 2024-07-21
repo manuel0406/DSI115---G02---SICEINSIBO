@@ -43,5 +43,10 @@ public class BachilleratosService {
     //OBTENER TERCEROS AÑOS
     public List<Bachillerato> obtenerTerceros(){
         return (List<Bachillerato>) bachilleratosRepository.findPorSecciones(3);
-    }   
+    }
+    
+    // OBTENER POR ID
+    public Bachillerato obtenerBachilleratoPorId(String codigoBachillerato){
+        return bachilleratosRepository.findById(codigoBachillerato).orElse(null);
+    }
 }
