@@ -16,10 +16,6 @@ public class ActividadService {
     }
 
     public List<Actividad> findActividadesByMateriaCodMateria(String codMateria) {
-        return actividadRepository.findByMateriaCodMateria(codMateria);
-    }
-
-    public List<Actividad> buscarActividadesPorMateriaYPeriodo(String codMateria, int idPeriodo) {
-        return actividadRepository.findByMateriaCodMateriaAndPeriodoIdPeriodo(codMateria, idPeriodo);
+        return actividadRepository.findAll();
     }
 }

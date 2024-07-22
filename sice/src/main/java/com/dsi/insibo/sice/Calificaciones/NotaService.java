@@ -17,14 +17,9 @@ public class NotaService {
     @Autowired
     private NotaRepository notaRepository;
 
-    public List<Nota> findByNieAndCodMateriaAndIdPeriodo(int nie, String codMateria, int idPeriodo) {
+    /*public List<Nota> findByNieAndCodMateriaAndIdPeriodo(int nie, String codMateria, int idPeriodo) {
         return notaRepository.findByAlumnoNieAndActividadMateriaCodMateriaAndActividadPeriodoIdPeriodo(nie, codMateria, idPeriodo);
-    }
-
-    @Autowired
-    public NotaService(NotaRepository notaRepository) {
-        this.notaRepository = notaRepository;
-    }
+    }*/
 
     public List<Nota> findNotasByAlumno(Alumno alumno) {
         return notaRepository.findByAlumno(alumno);
