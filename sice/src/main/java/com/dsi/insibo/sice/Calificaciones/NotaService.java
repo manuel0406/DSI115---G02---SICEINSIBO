@@ -23,7 +23,7 @@ public class NotaService {
 
     public List<Nota> findNotasByAlumno(Alumno alumno) {
         return notaRepository.findByAlumno(alumno);
-    }*/
+    }
 
     @Transactional
     public void deleteNotasByAlumnoNie(int nie) {
