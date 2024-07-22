@@ -22,7 +22,9 @@ th, td{
   text-align: center;
   vertical-align: center;
 }
-
+.no-resize {
+  resize: none;
+}
 
 
 /* docente */

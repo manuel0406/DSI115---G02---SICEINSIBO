@@ -4,22 +4,26 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
-    var deleteButtons = document.querySelectorAll('.delete-btn');
-    var confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
-    var confirmDeleteButton = document.getElementById('confirmDeleteButton');
+    var agregarButton = document.querySelectorAll('.Agregar-btn');
+    var confirmAgregarModal = new bootstrap.Modal(document.getElementById('agregarModal'));
+    var confirmAgregarButton = document.getElementById('agregarModalButton');
     var currentHref = '';
 
-    deleteButtons.forEach(function(button) {
+    agregarButton.forEach(function(button) {
         button.addEventListener('click', function(event) {
             event.preventDefault();
-            currentHref = button.getAttribute('href');
-            confirmDeleteModal.show();
+            //currentHref = button.getAttribute('href');
+            confirmAgregarModal.show();
         });
-    });
-
-    confirmDeleteButton.addEventListener('click', function() {
-        window.location.href = currentHref;
-    });
+    });  
+    confirmAgregarButton.addEventListener('click', function() {
+        var form = document.getElementById('formSancion');
+        if (!form.checkValidity()) {
+            form.classList.add('was-validated');
+        } else {
+            form.submit();
+        }
+    });  
 });
 
 (() => {
@@ -51,3 +55,9 @@ document.addEventListener("DOMContentLoaded", function() {
         }, false)
     })
 })()
+
+document.getElementById('cancelarSancion').addEventListener('click', function () {
+    var form = document.getElementById('formSancion');
+    form.reset();
+    form.classList.remove('was-validated');  // Eliminar la clase de validación
+});

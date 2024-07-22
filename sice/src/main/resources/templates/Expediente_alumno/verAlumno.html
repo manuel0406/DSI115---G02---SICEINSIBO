@@ -11,23 +11,23 @@
 
 <body>
     <header th:replace="~{home :: header}"></header>
-    
+
     <div class="container my-4 py-5 flex-wrap">
-<!--Mensajes-->
-<div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${success != null}">
-    <label th:text="${success}"></label>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+        <!--Mensajes-->
+        <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${success != null}">
+            <label th:text="${success}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-<div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${error != null}">
-    <label th:text="${error}"></label>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+        <div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${error != null}">
+            <label th:text="${error}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-<div class="alert alert-warning alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${warning != null}">
-    <label th:text="${warning}"></label>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+        <div class="alert alert-warning alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${warning != null}">
+            <label th:text="${warning}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
             <h3 class="text-start col-lg-9" th:text="${carrera != null || grado != null || seccion != null ?
@@ -36,7 +36,8 @@
                 (carrera != null ? carrera : '') +
                 (carrera != null && seccion != null ? ', ' : '') +
                 (seccion != null ? 'sección: ' + seccion : '') : 
-                'Listado de alumnos'}"><!-- Si todas las variables son null, establece el texto como 'Listado de alumnos' -->
+                'Listado de alumnos'}">
+                <!-- Si todas las variables son null, establece el texto como 'Listado de alumnos' -->
             </h3>
 
 
@@ -48,8 +49,8 @@
                     <i class="bi bi-printer"></i> Imprimir listado
                 </a>
 
-                <a th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-success"
-                data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar alumno" th:text="'Agregar alumno'"></a>
+                <a th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-success" data-bs-toggle="tooltip"
+                    data-bs-placement="top" title="Agregar alumno" th:text="'Agregar alumno'"></a>
             </div>
         </div>
         <div class="row my-2">
@@ -119,11 +120,11 @@
                             <td class="text-center fs-6" th:text="${alumno.bachillerato.grado}"></td>
                             <td class="text-center">
                                 <a class="btn btn-success" th:href="@{/ExpedienteAlumno/Alumno/} + ${alumno.nie}"
-                                data-bs-toggle="tooltip" data-bs-placement="top" title="Consultar">
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Consultar">
                                     <i class="bi bi-file-earmark-text"></i>
                                 </a>
                                 <a class="btn btn-primary" th:href="@{/ExpedienteAlumno/editar/} + ${alumno.nie}"
-                                data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                                 <a class="btn btn-danger delete-btn"
