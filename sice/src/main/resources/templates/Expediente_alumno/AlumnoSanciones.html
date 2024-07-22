@@ -51,45 +51,46 @@
     </div>
 
     <!-- Modal de agregar sancion -->
-<div class="modal fade" id="agregarModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirAgregarModalLabel">Agregar sanción</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal fade" id="agregarModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirAgregarModalLabel">Agregar sanción</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form class="needs-validation" id="formSancion" novalidate action="" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="tipoFalta" class="form-label">Tipo de falta</label>
+                            <select class="form-select" id="tipoFalta" required>
+                                <option value="" selected>Selecciona el tipo de falta</option>
+                                <option value="Leve">Leve</option>
+                                <option value="Grave">Grave</option>
+                                <option value="Muy grave">Muy grave</option>
+                            </select>
+                            <div class="invalid-feedback">Es necesario seleccionar el tipo de falta</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcionFalta" class="form-label">Descripción</label>
+                            <textarea class="form-control no-resize" id="descripcionFalta" rows="3" required></textarea>
+                            <div class="invalid-feedback">Es necesario que describa lo que sucedió</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="accionCorrectiva" class="form-label">Acción correctiva</label>
+                            <textarea class="form-control no-resize" id="accionCorrectiva" rows="2" required></textarea>
+                            <div class="invalid-feedback">Es necesario que complete este campo</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            id="cancelarSancion">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="agregarModalButton">Guardar</button>
+                    </div>
+                </form>
             </div>
-            <form class="needs-validation" id="formSancion" novalidate action="" method="post">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="tipoFalta" class="form-label">Tipo de falta</label>
-                        <select class="form-select" id="tipoFalta" required>
-                            <option value="" selected>Selecciona el tipo de falta</option>
-                            <option value="Leve">Leve</option>
-                            <option value="Grave">Grave</option>
-                            <option value="Muy grave">Muy grave</option>
-                        </select>
-                        <div class="invalid-feedback">Es necesario seleccionar el tipo de falta</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="descripcionFalta" class="form-label">Descripción</label>
-                        <textarea class="form-control no-resize" id="descripcionFalta" rows="3" required></textarea>
-                        <div class="invalid-feedback">Es necesario que describa lo que sucedió</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="accionCorrectiva" class="form-label">Acción correctiva</label>
-                        <textarea class="form-control no-resize" id="accionCorrectiva" rows="2" required></textarea>
-                        <div class="invalid-feedback">Es necesario que complete este campo</div>
-                    </div>
-                </div>
-                <div class="modal-footer text-center">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelarSancion">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" id="agregarModalButton">Guardar</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
-
 
     <!-- Incluye Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
