@@ -9,9 +9,9 @@ import com.dsi.insibo.sice.entity.Actividad;
 
 @Repository
 public interface ActividadRepository extends JpaRepository<Actividad, Integer> {
-    List<Actividad> findByMateriaCodMateria(String codMateria);
+   // List<Actividad> findByMateriaCodMateria(int idMateria);
 
-    List<Actividad> findByMateriaCodMateriaAndPeriodoIdPeriodo(String codMateria, int idPeriodo);
+    //List<Actividad> findByMateriaCodMateriaAndPeriodoIdPeriodo(int idMateria, int idPeriodo);
 }
 
 

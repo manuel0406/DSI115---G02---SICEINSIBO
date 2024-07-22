@@ -16,8 +16,8 @@ public class NotaService {
 
     @Autowired
     private NotaRepository notaRepository;
-
-    public List<Nota> findByNieAndCodMateriaAndIdPeriodo(int nie, String codMateria, int idPeriodo) {
+/*
+    public List<Nota> findByNieAndCodMateriaAndIdPeriodo(int nie, int codMateria, int idPeriodo) {
         return notaRepository.findByAlumnoNieAndActividadMateriaCodMateriaAndActividadPeriodoIdPeriodo(nie, codMateria, idPeriodo);
     }
 
@@ -28,10 +28,11 @@ public class NotaService {
 
     public List<Nota> findNotasByAlumno(Alumno alumno) {
         return notaRepository.findByAlumno(alumno);
-    }
+    }*/
 
     @Transactional
     public void deleteNotasByAlumnoNie(int nie) {
         notaRepository.deleteByAlumnoNie(nie);
     }
+    
 }

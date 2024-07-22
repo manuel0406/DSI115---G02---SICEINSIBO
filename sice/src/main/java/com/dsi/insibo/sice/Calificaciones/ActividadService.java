@@ -8,6 +8,7 @@ import com.dsi.insibo.sice.entity.Actividad;
 
 @Service
 public class ActividadService {
+   /*
     @Autowired
     private ActividadRepository actividadRepository;
 
@@ -15,11 +16,12 @@ public class ActividadService {
         return (List<Actividad>) actividadRepository.findAll();
     }
 
-    public List<Actividad> findActividadesByMateriaCodMateria(String codMateria) {
-        return actividadRepository.findByMateriaCodMateria(codMateria);
+    public List<Actividad> findActividadesByMateriaCodMateria(int idMateria) {
+        return actividadRepository.findByMateriaCodMateria(idMateria);
     }
 
-    public List<Actividad> buscarActividadesPorMateriaYPeriodo(String codMateria, int idPeriodo) {
-        return actividadRepository.findByMateriaCodMateriaAndPeriodoIdPeriodo(codMateria, idPeriodo);
+    public List<Actividad> buscarActividadesPorMateriaYPeriodo(int idMateria , int idPeriodo) {
+        return actividadRepository.findByMateriaCodMateriaAndPeriodoIdPeriodo(idMateria, idPeriodo);
     }
+         */
 }

@@ -32,7 +32,7 @@ import org.springframework.ui.Model;
 
 @Controller
 public class actividadesController {
-
+/* 
 	@Autowired
 	private BachilleratoService bachilleratoService;
 	@Autowired
@@ -42,8 +42,8 @@ public class actividadesController {
 	@Autowired
 	private ActividadService actividadService;
 
-	@Autowired
-    private ActividadRepository actividadRepository;
+	//@Autowired
+   // private ActividadRepository actividadRepository;
 	@Autowired
     private MateriaBachilleratoRepository materiaBachilleratoRepository;
 
@@ -59,8 +59,8 @@ public class actividadesController {
 		List<Materia> listaMaterias = materiaService.listaMaterias();
 		model.addAttribute("materias", listaMaterias);
 
-		List<Actividad> listaActividads = actividadService.listaActividades();
-		model.addAttribute("actividades", listaActividads);
+		//List<Actividad> listaActividads = actividadService.listaActividades();
+		//model.addAttribute("actividades", listaActividads);
 
 		model.addAttribute("actividad", new Actividad());
 		
@@ -79,8 +79,8 @@ public class actividadesController {
 	@GetMapping("/Actividades/delete/{idActividad}")
 	public String deleteActividad(@PathVariable Integer idActividad,RedirectAttributes redirectAttributes) {
 		try {
-			actividadRepository.deleteById(idActividad);
-			redirectAttributes.addFlashAttribute("successMessage", "Actividad eliminada exitosamente.");
+			//actividadRepository.deleteById(idActividad);
+			//redirectAttributes.addFlashAttribute("successMessage", "Actividad eliminada exitosamente.");
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("errorMessage", "La actividad ya cuenta con calificaciones registradas, asegurese de eliminar las calificaciones para poder eliminar esta actividad.");
 		}
@@ -89,14 +89,14 @@ public class actividadesController {
 
 	@GetMapping("/Actividades/edit/{idActividad}")
 	@ResponseBody
-	public Actividad getActividad(@PathVariable Integer idActividad) {
-		return actividadRepository.findById(idActividad).orElse(null);
-	}
+	//public Actividad getActividad(@PathVariable Integer idActividad) {
+		//return actividadRepository.findById(idActividad).orElse(null);
+	//}
 
 	@PostMapping("/Actividades/edit")
-	public String editActividad(@ModelAttribute Actividad actividad) {
-		actividadRepository.save(actividad);
-		return "redirect:/Actividades";
+	//public String editActividad(@ModelAttribute Actividad actividad) {
+		//actividadRepository.save(actividad);
+	////	return "redirect:/Actividades";
 	}
 
 	@GetMapping("Actividades/materiasPorBachillerato")
@@ -105,4 +105,6 @@ public class actividadesController {
         List<MateriaBachillerato> materiaBachilleratoList = materiaBachilleratoRepository.findByBachilleratoCodigoBachillerato(codigoBachillerato);
         return materiaBachilleratoList.stream().map(MateriaBachillerato::getMateria).collect(Collectors.toList());
     }
+
+	*/
 }
