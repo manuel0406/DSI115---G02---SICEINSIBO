@@ -229,7 +229,7 @@ public class AlumnoController {
 		
 		//Elimino primero los anexos relacionados al alumno encontrado
 		anexoAlumnoService.eliminarAnexoAlumno(nie);
-		//Se eliminar las notas relacionadas a ese alumno
+		//Se eliminan las notas relacionadas a ese alumno
 		notaService.deleteNotasByAlumnoNie(nie);		
 		// Elimina el registro del alumno y añade un mensaje de confirmación
 		alumnoService.eliminar(nie);

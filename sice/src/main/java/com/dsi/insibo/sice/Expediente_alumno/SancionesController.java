@@ -66,7 +66,15 @@ public class SancionesController {
         sancion.setAlumno(alumno);
         sancion.setFechaSancion(new Date());
         sancionesService.guardarSancion(sancion);
+        attributes.addFlashAttribute("success", "¡Sanción guardada o actalizada con éxito!");
         return "redirect:/ExpedienteAlumno/Sanciones/{nie}";
     }
 
+    @GetMapping("/eliminarSancion/{nie}/{id}")
+    public String eliminarSancion(@PathVariable("id") int id,@PathVariable("id") int nie, RedirectAttributes attributes)
+    {
+        sancionesService.EliminarSancion(id);
+        attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");
+        return "redirect:/ExpedienteAlumno/Sanciones/{nie}";
+    }
 }

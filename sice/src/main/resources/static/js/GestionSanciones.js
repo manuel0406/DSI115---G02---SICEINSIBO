@@ -74,3 +74,17 @@ document
         form.reset();
         form.classList.remove("was-validated"); // Eliminar la clase de validación
     });
+
+    $(document).ready(function() {
+        $('.editar-btn').on('click', function() {
+            var idSancion = $(this).data('id');
+            var descripcion = $(this).data('des');
+            var tipo = $(this).data('tip');
+            var accionCorrectiva = $(this).data('aco');
+    
+            $('#idSancion').val(idSancion);
+            $('#editDescripcion').val(descripcion);
+            $('#editTipo').val(tipo);
+            $('#editAccionCorrectiva').val(accionCorrectiva);
+        });
+    });
