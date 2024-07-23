@@ -11,22 +11,21 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div th:replace="~{Expediente_alumno\AlumnoInformacion :: barraLateral}"></div>
-            <div class="col-md-10 offset-md-2">
+            <div class="col-12 col-md-2 d-none d-md-block" th:replace="~{Expediente_alumno\AlumnoInformacion :: barraLateral}"></div>
+            <div class="col-12 col-md-10 offset-md-2">
                 <header th:replace="~{home :: header}"></header>
 
                 <div class="container-fluid py-5">
                     <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
 
-                        <h2 class="text-start col-lg-9">Listado de sanciones</h2>
+                        <h3 class="text-start col-lg-9" th:text="${'Listado de sanciones de: '+ alumno.nombreAlumno}"></h3>
 
                         <div class="d-flex gap-2">
-
                             <a class="btn btn-success Agregar-btn" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Agregar Sancion" th:text="'Agregar Sancion'"></a>
                         </div>
                     </div>
-                    <div class="col-md-8 col-lg-12 table-responsive">
+                    <div class="col-12 table-responsive">
                         <table class="table ">
                             <thead class="thead table-dark text-start">
                                 <tr>
@@ -38,8 +37,26 @@
                             </thead>
                             <tbody class="table-group-divider fs-6">
                                 <!-- Iterar sobre la lista de alumnos -->
-                                <tr>
-
+                                <tr th:each="sanciones, stat : ${listaSanciones}">
+                                    <th scope="row" th:text="${stat.index + 1}"></th>
+                                    <td class="text-center fs-6" th:text="${sanciones.tipoSancion}"></td>
+                                    <td class="text-center fs-6" th:text="${#dates.format(sanciones.fechaSancion,'dd/MM/yyyy')}"></td>
+                                    <td class="text-center">
+                                        <a class="btn btn-primary" th:href="@{/}"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a class="btn btn-danger delete-btn"
+                                            th:href="@{/}" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <a th:href="@{/} "
+                                            class="btn btn-secondary " data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="Imprimir" target="_blank" onclick="openInPopup(this.href); return false;">
+                                            <i class="bi bi-printer"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -59,11 +76,11 @@
                     <h5 class="modal-title" id="confirAgregarModalLabel">Agregar sanción</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form class="needs-validation" id="formSancion" novalidate action="" method="post">
+                <form th:object="${sancion}" class="needs-validation" id="formSancion" novalidate th:action="@{/ExpedienteAlumno/GuardarSancion/} + ${alumno.nie}" method="post">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="tipoFalta" class="form-label">Tipo de falta</label>
-                            <select class="form-select" id="tipoFalta" required>
+                            <select th:field="*{tipoSancion}" class="form-select" id="tipoFalta" required>
                                 <option value="" selected>Selecciona el tipo de falta</option>
                                 <option value="Leve">Leve</option>
                                 <option value="Grave">Grave</option>
@@ -73,12 +90,12 @@
                         </div>
                         <div class="mb-3">
                             <label for="descripcionFalta" class="form-label">Descripción</label>
-                            <textarea class="form-control no-resize" id="descripcionFalta" rows="3" required></textarea>
+                            <textarea th:field="*{descripcionSancion}" class="form-control no-resize" id="descripcionFalta" rows="3" required></textarea>
                             <div class="invalid-feedback">Es necesario que describa lo que sucedió</div>
                         </div>
                         <div class="mb-3">
                             <label for="accionCorrectiva" class="form-label">Acción correctiva</label>
-                            <textarea class="form-control no-resize" id="accionCorrectiva" rows="2" required></textarea>
+                            <textarea th:field="*{accionCorrectiva}" class="form-control no-resize" id="accionCorrectiva" rows="2" required></textarea>
                             <div class="invalid-feedback">Es necesario que complete este campo</div>
                         </div>
                     </div>
