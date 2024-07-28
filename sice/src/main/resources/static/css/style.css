@@ -662,3 +662,36 @@ th, td{
 #seccionSpan {
   color: grey;
 }
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-container .form-control {
+  padding-right: 2.5rem; /* Asegura espacio para el icono */
+}
+
+.input-container .error-icon {
+  position: absolute;
+  right: 0.5rem;
+  color: #dc3545;
+  display: none; /* Ocultar el icono por defecto */
+  font-size: 1.25rem; /* Tamaño del icono */
+}
+
+.input-container .form-control.border-danger {
+  border-color: #dc3545;
+}
+
+.input-container .form-control.border-danger + .error-icon {
+  display: inline; /* Mostrar el icono cuando hay un error */
+}
+
+#saveButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+

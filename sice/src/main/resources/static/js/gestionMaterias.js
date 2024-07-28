@@ -1,33 +1,18 @@
-$(document).ready(function() {
-    function updateSecciones() {
-        var grado = $('#selectGrado').val();
-        var tecnico = $('#selectTecnico').val();
-        var selectSeccion = $('#selectSeccion');
+// BOTON CANCELAR DEL MODAL
+document.getElementById('cancelarNuevaMateria').addEventListener('click', function () {
+    var form = document.getElementById('formNuevaMateria');
+    form.reset();
+    form.classList.remove('was-validated');  // Eliminar la clase de validación
 
-        if (grado && tecnico) {
-            $.ajax({
-                url: '/getSecciones',
-                type: 'GET',
-                data: { grado: grado, tecnico: tecnico },
-                success: function(data) {
-                    selectSeccion.empty();
-                    selectSeccion.append('<option value="">Seleccionar sección...</option>');
-                    $.each(data, function(index, value) {
-                        selectSeccion.append('<option value="' + value + '">' + value + '</option>');
-                    });
-                }
-            });
-        } else {
-            selectSeccion.empty();
-            selectSeccion.append('<option value="">Seleccionar sección...</option>');
-        }
-    }
-
-    $('#selectGrado').change(updateSecciones);
-    $('#selectTecnico').change(updateSecciones);
+    // Limpieza de errores de unicidad
+    var divNombreMateria = document.getElementById('errorNomMateria');
+    var divCodigoMateria = document.getElementById('errorCodMateria');
+    divCodigoMateria.innerHTML="";
+    divNombreMateria.innerHTML="";
 });
 
-(function () {
+// VALIDACION DE CAMPOS VACIOS
+/*(function () {
     'use strict'
     var forms = document.querySelectorAll('.needs-validation')
     Array.prototype.slice.call(forms).forEach(function (form) {
@@ -39,14 +24,9 @@ $(document).ready(function() {
             form.classList.add('was-validated')
         }, false)
     })
-})()
+})()*/
 
-document.getElementById('cancelarNuevaMateria').addEventListener('click', function () {
-    var form = document.getElementById('formNuevaMateria');
-    form.reset();
-    form.classList.remove('was-validated');  // Eliminar la clase de validación
-});
-
+// LLENADO DE MODAL DE ACTUALIZAR/EDITAS
 $(document).ready(function() {
     $('.editar-btn').on('click', function() {
         var idMateria = $(this).data('id');
@@ -61,15 +41,7 @@ $(document).ready(function() {
     });
 });
 
-$(document).ready(function() {
-    // Evento de clic en el botón de eliminar
-    $('.delete-btn').on('click', function() {
-        var idMateria = $(this).closest('tr').find('.editar-btn').data('id'); // Obtener el ID de la materia desde el botón de editar del mismo row
-        $('#eliminarMateriaModal').modal('show'); // Mostrar el modal de confirmación
-    });
-});
-
-
+// MOSTRAR MODAL DE ELIMINAR / MENSAJE DE CONFIRMACION
 document.addEventListener("DOMContentLoaded", function() {
     var deleteButton = document.querySelectorAll('.delete-btn');
     var modalDelete = new bootstrap.Modal(document.getElementById('eliminarMateriaModal'));
@@ -102,4 +74,90 @@ document.addEventListener("DOMContentLoaded", function() {
         window.location.href = currentHref;
     });
 });
-  
+
+
+// Obtener Materias en BD
+var materias = JSON.parse(materiasJson);
+console.log(materias);
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtener campos de entrada
+    var inputCodN = document.getElementById('codMateria');
+    var inputNomN = document.getElementById('nomMateria');
+
+    // Obtener mensajes de texto
+    var errorMessageContainerC = document.getElementById('errorCodMateria');
+    var errorMessageContainerN = document.getElementById('errorNomMateria');
+    var errorIconCod = document.getElementById('errorIconCodMateria');
+    var errorIconNom = document.getElementById('errorIconNomMateria');
+    var saveButton = document.getElementById('saveButton'); // Botón de guardar
+
+    function validateCodMateria() {
+        var query = inputCodN.value.trim().toLowerCase();
+
+        if (query !== "") {
+            var results = materias.filter(function(materia) {
+                return materia.codMateria.toLowerCase() === query;
+            });
+
+            if (results.length !== 0) {
+                errorMessageContainerC.textContent = "El código de la materia ya existe.";
+                // Eliminar todas las clases y luego añadir las necesarias
+                inputCodN.className = 'form-control border-danger';
+                errorIconCod.classList.add('show');
+            } else {
+                errorMessageContainerC.textContent = "";
+                inputCodN.classList.remove("border-danger");
+                inputCodN.classList.add("is-valid");
+                errorIconCod.classList.remove('show');
+            }
+        } else {
+            errorMessageContainerC.textContent = "Por favor, ingrese el codigo de la materia.";
+            // Eliminar todas las clases y luego añadir las necesarias
+            inputCodN.className = 'form-control border-danger';
+            errorIconCod.classList.add('show');
+        }
+    }
+
+    function validateNomMateria() {
+        var query = inputNomN.value.trim().toLowerCase();
+
+        if (query !== "") {
+            var results = materias.filter(function(materia) {
+                return materia.nomMateria.toLowerCase() === query;
+            });
+
+            if (results.length !== 0) {
+                errorMessageContainerN.textContent = "El nombre de la materia ya existe.";
+                // Eliminar todas las clases y luego añadir las necesarias
+                inputNomN.className = 'form-control border-danger';
+                errorIconNom.classList.add('show');
+            } else {
+                errorMessageContainerN.textContent = "";
+                inputNomN.classList.remove("border-danger");
+                inputNomN.classList.add("is-valid");
+                errorIconNom.classList.remove('show');
+            }
+        } else {
+            errorMessageContainerN.textContent = "Por favor, ingrese el nombre de la materia.";
+            // Eliminar todas las clases y luego añadir las necesarias
+            inputNomN.className = 'form-control border-danger';
+            errorIconNom.classList.add('show');
+        }
+    }
+
+    function updateSaveButtonState() {
+        var hasErrors = errorMessageContainerC.textContent !== "" || errorMessageContainerN.textContent !== "";
+        saveButton.disabled = hasErrors;
+    }
+
+    inputCodN.addEventListener('input', function() {
+        validateCodMateria();
+        updateSaveButtonState(); // Actualizar el estado del botón de guardar
+    });
+
+    inputNomN.addEventListener('input', function() {
+        validateNomMateria();
+        updateSaveButtonState(); // Actualizar el estado del botón de guardar
+    });
+
+});

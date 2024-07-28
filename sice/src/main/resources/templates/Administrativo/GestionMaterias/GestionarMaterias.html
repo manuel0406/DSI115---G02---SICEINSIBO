@@ -19,40 +19,6 @@
             <h3 class="text-center mt-5"><b>Materias impartidas en INSIBO</b></h3>
         </div>
 
-        <div class="container mt-4 d-flex justify-content-center flex-wrap">
-            <div class="d-flex">
-                <!-- Select Grado -->
-                <div class="form-group me-3">
-                    <label for="selectGrado" class="form-label">Grado</label>
-                    <select class="form-select" id="selectGrado" name="grado">
-                        <option value="">Seleccionar grado...</option>
-                        <option th:each="grado : ${grados}" th:value="${grado}" th:text="${grado}"></option>
-                    </select>
-                </div>
-
-                <!-- Select Técnico -->
-                <div class="form-group me-3">
-                    <label for="selectTecnico" class="form-label">Técnico</label>
-                    <select class="form-select" id="selectTecnico" name="tecnico">
-                        <option value="">Seleccionar técnico...</option>
-                        <option th:each="tecnico : ${tecnicos}" th:value="${tecnico}" th:text="${tecnico}"></option>
-                    </select>
-                </div>
-
-                <!-- Select Sección -->
-                <div class="form-group me-3">
-                    <label for="selectSeccion" class="form-label">Sección</label>
-                    <select class="form-select" id="selectSeccion" name="seccion">
-                        <option value="">Seleccionar sección...</option>
-                    </select>
-                </div>
-            </div>
-            <div class="container d-flex justify-content-center flex-wrap mt-2">
-                <!-- Botón Filtrar -->
-                <button type="button" class="btn btn-primary">Filtrar</button>
-            </div>    
-        </div>
-
         <div class="container col-8">
             <div class="container mt-0 d-flex justify-content-end mb-2 flex-wrap">
                 <!-- Botón Nueva Materia -->
@@ -99,20 +65,26 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="nuevaMateriaModalLabel">Nueva Materia</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="cancelarNuevaMateria" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!-- Formulario para guardar nueva materia -->
                     <form id="formNuevaMateria" class="needs-validation" novalidate th:action="@{/guardarMateria}" method="post">
                         <div class="mb-3">
                             <label for="codMateria" class="form-label">Código de la Materia</label>
-                            <input type="text" class="form-control" id="codMateria" name="codMateria" required>
-                            <div class="invalid-feedback">Por favor, ingrese el código de la materia.</div>
+                            <div class="input-container">
+                                <input type="text" class="form-control" id="codMateria" name="codMateria" required>
+                                <i class="bi bi-exclamation-circle error-icon" id="errorIconCodMateria"></i>
+                            </div>
+                            <div class="error-message text-danger" id="errorCodMateria"></div>
                         </div>
                         <div class="mb-3">
                             <label for="nomMateria" class="form-label">Nombre de la Materia</label>
-                            <input type="text" class="form-control" id="nomMateria" name="nomMateria" required>
-                            <div class="invalid-feedback">Por favor, ingrese el nombre de la materia.</div>
+                            <div class="input-container">
+                                <input type="text" class="form-control" id="nomMateria" name="nomMateria" required>
+                                <i class="bi bi-exclamation-circle error-icon" id="errorIconNomMateria"></i>
+                            </div>
+                            <div class="error-message text-danger" id="errorNomMateria"></div>
                         </div>
                         <div class="mb-3">
                             <label for="tipoMateria" class="form-label">Tipo de Materia</label>
@@ -125,7 +97,7 @@
                         </div>
                         <div class="d-flex justify-content-end">
                             <button type="button" class="btn btn-danger me-2" id="cancelarNuevaMateria" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="submit" id="saveButton" class="btn btn-primary" disabled >Guardar</button>
                         </div>
                     </form>
                 </div>
@@ -199,6 +171,13 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Variable que contiene todas las materias -->
+    <script th:inline="javascript">
+        var materiasJson = /*[[${materiasJson}]]*/ '[]';
+    </script>
+
     <script type="text/javascript" th:src="@{/js/gestionMaterias.js}"></script>
+
 </body>
 </html>
