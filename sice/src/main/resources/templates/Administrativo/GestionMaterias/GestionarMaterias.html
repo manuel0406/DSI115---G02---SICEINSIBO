@@ -65,25 +65,19 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="nuevaMateriaModalLabel">Nueva Materia</h5>
-                    <button type="button" class="btn-close" id="cancelarNuevaMateria" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="cancelarNuevaMateriaIco" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!-- Formulario para guardar nueva materia -->
                     <form id="formNuevaMateria" class="needs-validation" novalidate th:action="@{/guardarMateria}" method="post">
                         <div class="mb-3">
                             <label for="codMateria" class="form-label">Código de la Materia</label>
-                            <div class="input-container">
-                                <input type="text" class="form-control" id="codMateria" name="codMateria" required>
-                                <i class="bi bi-exclamation-circle error-icon" id="errorIconCodMateria"></i>
-                            </div>
+                            <input type="text" class="form-control" id="codMateria" name="codMateria" required>
                             <div class="error-message text-danger" id="errorCodMateria"></div>
                         </div>
                         <div class="mb-3">
                             <label for="nomMateria" class="form-label">Nombre de la Materia</label>
-                            <div class="input-container">
-                                <input type="text" class="form-control" id="nomMateria" name="nomMateria" required>
-                                <i class="bi bi-exclamation-circle error-icon" id="errorIconNomMateria"></i>
-                            </div>
+                            <input type="text" class="form-control" id="nomMateria" name="nomMateria" required>
                             <div class="error-message text-danger" id="errorNomMateria"></div>
                         </div>
                         <div class="mb-3">
@@ -93,7 +87,7 @@
                                 <option value="Básica">Básica</option>
                                 <option value="Módulo">Módulo</option>
                             </select>
-                            <div class="invalid-feedback">Por favor, seleccione el tipo de materia.</div>
+                            <div class="error-message text-danger" id="errorTipoMateria"></div>
                         </div>
                         <div class="d-flex justify-content-end">
                             <button type="button" class="btn btn-danger me-2" id="cancelarNuevaMateria" data-bs-dismiss="modal">Cancelar</button>
