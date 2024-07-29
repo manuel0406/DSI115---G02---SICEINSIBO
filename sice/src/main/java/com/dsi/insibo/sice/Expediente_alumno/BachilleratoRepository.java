@@ -7,4 +7,6 @@ import com.dsi.insibo.sice.entity.Bachillerato;
 @Repository
 public interface BachilleratoRepository extends JpaRepository<Bachillerato, String> {
 
+    
+
 }

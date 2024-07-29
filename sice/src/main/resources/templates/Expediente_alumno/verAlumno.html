@@ -104,8 +104,8 @@
                 </div>
             </div>
             <div class="col-md-8 col-lg-9 table-responsive">
-                <table class="table ">
-                    <thead class="thead table-dark text-start">
+                <table class="table table-hover">
+                    <thead class="thead  text-start">
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Nie</th>
@@ -118,7 +118,7 @@
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody class="table-group-divider fs-6">
+                    <tbody class=" fs-6">
                         <!-- Iterar sobre la lista de alumnos -->
                         <tr th:each="alumno, stat : ${alumnos}">
                             <th scope="row" th:text="${stat.index + 1}"></th>
