@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{home :: head}">
     <meta charset="UTF-8">
@@ -89,6 +89,15 @@
                                     <option value="D">D</option>
                                 </select>
                             </div>
+                            <div class="mb-3">
+                                <label for="genero" class="form-label fs-6">Genero:</label>
+                                <select id="genero" name="genero" th:value="${genero}" class="form-select">
+                                    <option value="" selected>Seleccione</option>
+                                    <option value="M">M</option>
+                                    <option value="F">F</option>
+                                    
+                                </select>
+                            </div>
                             <input type="submit" class="btn btn-primary" value="Filtrar">
                         </form>
                     </div>
@@ -105,6 +114,7 @@
                             <th scope="col">Carrera</th>
                             <th scope="col">Sección</th>
                             <th scope="col">Año</th>
+                            <th scope="col">Genero</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
@@ -112,12 +122,13 @@
                         <!-- Iterar sobre la lista de alumnos -->
                         <tr th:each="alumno, stat : ${alumnos}">
                             <th scope="row" th:text="${stat.index + 1}"></th>
-                            <td class="text-start fs-6" th:text="${alumno.nie}"></td>
-                            <td class="text-start fs-6" th:text="${alumno.apellidoAlumno}"></td>
-                            <td class="text-start fs-6" th:text="${alumno.nombreAlumno}"></td>
-                            <td class="text-start fs-6" th:text="${alumno.bachillerato.nombreCarrera}"></td>
-                            <td class="text-center fs-6" th:text="${alumno.bachillerato.seccion}"></td>
-                            <td class="text-center fs-6" th:text="${alumno.bachillerato.grado}"></td>
+                            <td class="text-start " th:text="${alumno.nie}"></td>
+                            <td class="text-start " th:text="${alumno.apellidoAlumno}"></td>
+                            <td class="text-start " th:text="${alumno.nombreAlumno}"></td>
+                            <td class="text-start " th:text="${alumno.bachillerato.nombreCarrera}"></td>
+                            <td class="text-center " th:text="${alumno.bachillerato.seccion}"></td>
+                            <td class="text-center" th:text="${alumno.bachillerato.grado}"></td>
+                            <td class="text-center" th:text="${alumno.sexoAlumno}"></td>
                             <td class="text-center">
                                 <a class="btn btn-success" th:href="@{/ExpedienteAlumno/Alumno/} + ${alumno.nie}"
                                     data-bs-toggle="tooltip" data-bs-placement="top" title="Consultar">
@@ -172,6 +183,7 @@
                         </li>
                     </ul>
                 </nav>
+
 
 
             </div>

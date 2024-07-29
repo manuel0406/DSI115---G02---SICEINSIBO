@@ -51,7 +51,7 @@ public class SancionesController {
         Sancion sancion= new Sancion();
 
         // Agregar atributos al modelo para ser utilizados en la vista
-        model.addAttribute("titulo", "Información");
+        model.addAttribute("titulo", "Sanciones");
         model.addAttribute("alumno", alumno);
         model.addAttribute("sancion", sancion);
         model.addAttribute("listaSanciones", listaSanciones);

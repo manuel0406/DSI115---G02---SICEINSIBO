@@ -29,6 +29,28 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+document.addEventListener("DOMContentLoaded", function () {
+    var consultarButton = document.querySelectorAll(".consultar-btn");
+    var confirmConsultarModal = new bootstrap.Modal(document.getElementById("consultarModal"));
+    var confirmConsultarModalButton = document.getElementById("consultarModalButton");    
+
+    consultarButton.forEach(function (button) {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();
+            //currentHref = button.getAttribute('href');
+            confirmConsultarModal.show();
+        });
+    });
+
+    confirmAgregarButton.addEventListener("click", function () {
+        var form = document.getElementById("formSancion");
+        if (!form.checkValidity()) {
+            form.classList.add("was-validated");
+        } else {
+            form.submit();
+        }
+    });
+});
 
 (() => {
     "use strict";
@@ -81,10 +103,36 @@ document
             var descripcion = $(this).data('des');
             var tipo = $(this).data('tip');
             var accionCorrectiva = $(this).data('aco');
+            var fechaCreacion = $(this).data('fec'); // Asumiendo que tienes la fecha de creación también
     
             $('#idSancion').val(idSancion);
-            $('#editDescripcion').val(descripcion);
+            $('#editDescripcion').text(descripcion);
             $('#editTipo').val(tipo);
-            $('#editAccionCorrectiva').val(accionCorrectiva);
+            $('#editAccionCorrectiva').text(accionCorrectiva);
+            $('#editFechaCreacion').text(fechaCreacion);
         });
     });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Obtener todos los botones de consulta
+        const consultarButtons = document.querySelectorAll('.btn-success.editar-btn');
+    
+        consultarButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // Obtener los datos del atributo data
+                const tipo = this.getAttribute('data-tip');
+                const descripcion = this.getAttribute('data-des');
+                const accionCorrectiva = this.getAttribute('data-aco');
+                const fecha = this.getAttribute('data-fec');
+    
+                // Asignar los datos al modal
+                document.getElementById('consultaTipo').textContent = tipo;
+                document.getElementById('consultaDescripcion').textContent = descripcion;
+                document.getElementById('consultaAccionCorrectiva').textContent = accionCorrectiva;
+                document.getElementById('consultaFechaCreacion').textContent = fecha;
+            });
+        });
+    });
+    
+    
