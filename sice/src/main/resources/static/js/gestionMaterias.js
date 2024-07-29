@@ -1,10 +1,15 @@
+// Se actualizan la variables
+var codMateria;
+var nomMateria;
+var tipoMateria;
+
 // LLENADO DE MODAL DE ACTUALIZAR/EDITAS
 $(document).ready(function() {
     $('.editar-btn').on('click', function() {
         var idMateria = $(this).data('id');
-        var codMateria = $(this).data('cod');
-        var nomMateria = $(this).data('nom');
-        var tipoMateria = $(this).data('tipo');
+        codMateria = $(this).data('cod');
+        nomMateria = $(this).data('nom');
+        tipoMateria = $(this).data('tipo');
 
         $('#idMateria').val(idMateria);
         $('#editCodMateria').val(codMateria);
@@ -50,131 +55,190 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Obtener Materias en BD
 var materias = JSON.parse(materiasJson);
-document.addEventListener('DOMContentLoaded', function() {
-    // Obtener campos de entrada
-    var inputCodN = document.getElementById('codMateria');
-    var inputNomN = document.getElementById('nomMateria');
-    var inputTipoN = document.getElementById('tipoMateria');
 
-    // Obtener mensajes de texto
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtener campos de entrada "Nueva Materia"
+    var inputCod = document.getElementById('codMateria');
+    var inputNom = document.getElementById('nomMateria');
+    var inputTipo = document.getElementById('tipoMateria');
+
+    // Obtener campos de entrada "Actualizar Materia"
+    var editInputCod = document.getElementById('editCodMateria');
+    var editInputNom = document.getElementById('editNomMateria');
+    var editInputTipo = document.getElementById('editTipoMateria');
+
+    // Obtener mensajes de texto "Nueva Materia"
     var errorMessageContainerC = document.getElementById('errorCodMateria');
     var errorMessageContainerN = document.getElementById('errorNomMateria');
     var errorMessageContainerT = document.getElementById('errorTipoMateria');
 
+    // Obtener mensajes de texto "Actualizar Materia"
+    var editErrorMessageContainerC = document.getElementById('editErrorCodMateria');
+    var editErrorMessageContainerN = document.getElementById('editErrorNomMateria');
+    var editErrorMessageContainerT = document.getElementById('editErrorTipoMateria');
+
     var saveButton = document.getElementById('saveButton'); // Botón de guardar
+    var updateButton = document.getElementById('upadateButton'); // Botón de actualizar
 
-    function validateCodMateria() {
-        var query = inputCodN.value.trim().toLowerCase();
-
+    function validateCodMateria(input, errorMessageContainer) {
+        var query = input.value.trim().toLowerCase();
         if (query !== "") {
             var results = materias.filter(function(materia) {
                 return materia.codMateria.toLowerCase() === query;
             });
-
             if (results.length !== 0) {
-                errorMessageContainerC.textContent = "El código de la materia ya existe.";
-                // Eliminar todas las clases y luego añadir las necesarias
-                inputCodN.className = 'form-control';
-                inputCodN.classList.add("is-invalid");
+                errorMessageContainer.textContent = "El código de la materia ya existe.";
+                input.className = 'form-control is-invalid';
             } else {
-                errorMessageContainerC.textContent = "";
-                inputCodN.className = 'form-control';
-                inputCodN.classList.add("is-valid");
+                errorMessageContainer.textContent = "";
+                input.className = 'form-control is-valid';
             }
         } else {
-            errorMessageContainerC.textContent = "Por favor, ingrese el codigo de la materia.";
-            // Eliminar todas las clases y luego añadir las necesarias
-            inputCodN.className = 'form-control';
-            inputCodN.classList.add("is-invalid");
+            errorMessageContainer.textContent = "Por favor, ingrese el código de la materia.";
+            input.className = 'form-control is-invalid';
         }
     }
 
-    function validateNomMateria() {
-        var query = inputNomN.value.trim().toLowerCase();
-
+    function validateNomMateria(input, errorMessageContainer) {
+        var query = input.value.trim().toLowerCase();
         if (query !== "") {
             var results = materias.filter(function(materia) {
                 return materia.nomMateria.toLowerCase() === query;
             });
-
             if (results.length !== 0) {
-                errorMessageContainerN.textContent = "El nombre de la materia ya existe.";
-                // Eliminar todas las clases y luego añadir las necesarias
-                inputNomN.className = 'form-control';
-                inputNomN.classList.add("is-invalid");
+                errorMessageContainer.textContent = "El nombre de la materia ya existe.";
+                input.className = 'form-control is-invalid';
             } else {
-                errorMessageContainerN.textContent = "";
-                inputNomN.className = 'form-control';
-                inputNomN.classList.add("is-valid");
+                errorMessageContainer.textContent = "";
+                input.className = 'form-control is-valid';
             }
         } else {
-            errorMessageContainerN.textContent = "Por favor, ingrese el nombre de la materia.";
-            // Eliminar todas las clases y luego añadir las necesarias
-            inputNomN.className = 'form-control';
-            inputNomN.classList.add("is-invalid");
+            errorMessageContainer.textContent = "Por favor, ingrese el nombre de la materia.";
+            input.className = 'form-control is-invalid';
         }
     }
 
-    function validateTipoMateria() {
-        var selectedValue = inputTipoN.value;
-    
+    function validateTipoMateria(input, errorMessageContainer) {
+        var selectedValue = input.value;
         if (selectedValue === "") {
-            // Mostrar mensaje de error si no se selecciona ninguna opción
-            errorMessageContainerT.textContent = "Por favor, seleccione un tipo de materia.";
-            inputTipoN.className = 'form-select';
-            inputTipoN.classList.add("is-invalid")
+            errorMessageContainer.textContent = "Por favor, seleccione un tipo de materia.";
+            input.className = 'form-select is-invalid';
         } else {
-            // Limpiar mensaje de error si se selecciona una opción válida
-            errorMessageContainerT.textContent = "";
-            inputTipoN.className = 'form-select';
-            inputTipoN.classList.add("is-valid");
+            errorMessageContainer.textContent = "";
+            input.className = 'form-select is-valid';
         }
     }
 
     function updateSaveButtonState() {
-        var isTipoValid = inputTipoN.value !== "";
-        var isCodValid = inputCodN.value.trim().toLowerCase() !== "";
-        var isNomValid = inputNomN.value.trim().toLowerCase() !== "";
+        var isTipoValid = inputTipo.value !== "";
+        var isCodValid = inputCod.value.trim().toLowerCase() !== "";
+        var isNomValid = inputNom.value.trim().toLowerCase() !== "";
         var hasNoErrors = errorMessageContainerC.textContent === "" && errorMessageContainerN.textContent === "" && errorMessageContainerT.textContent === "";
-        var shouldEnableSaveButton = isTipoValid && isCodValid && isNomValid && hasNoErrors;
-        saveButton.disabled = !shouldEnableSaveButton;
+        saveButton.disabled = !(isTipoValid && isCodValid && isNomValid && hasNoErrors);
     }
 
-    inputCodN.addEventListener('input', function() {
-        validateCodMateria();
-        updateSaveButtonState(); // Actualizar el estado del botón de guardar
+    function updateUpdateButtonState() {
+        var isTipoValid = editInputTipo.value !== "";
+        var isCodValid = editInputCod.value.trim().toLowerCase() !== "";
+        var isNomValid = editInputNom.value.trim().toLowerCase() !== "";
+        var isValidNom = editInputNom.classList.contains("is-valid");
+        var isValidCod = editInputCod.classList.contains("is-valid");
+        var hasNoErrors = (isValidNom || isValidCod) && editErrorMessageContainerC.textContent === "" && editErrorMessageContainerN.textContent === "" && editErrorMessageContainerT.textContent === "";
+        updateButton.disabled = !(isTipoValid && isCodValid && isNomValid && hasNoErrors);
+    }
+
+    // NUEVA MATERIA
+    inputCod.addEventListener('input', function() {
+        validateCodMateria(inputCod, errorMessageContainerC);
+        updateSaveButtonState();
     });
 
-    inputNomN.addEventListener('input', function() {
-        validateNomMateria();
-        updateSaveButtonState(); // Actualizar el estado del botón de guardar
+    inputNom.addEventListener('input', function() {
+        validateNomMateria(inputNom, errorMessageContainerN);
+        updateSaveButtonState();
     });
 
-    inputTipoN.addEventListener('change', function() {
-        validateTipoMateria();
-        updateSaveButtonState(); // Actualizar el estado del botón de guardar
+    inputTipo.addEventListener('change', function() {
+        validateTipoMateria(inputTipo, errorMessageContainerT);
+        updateSaveButtonState();
     });
 
+    // ACTUALIZAR MATERIA
+    editInputCod.addEventListener('input', function() {
+        var query = editInputCod.value.trim().toLowerCase();
+        if(query !== codMateria.toLowerCase()) {
+            validateCodMateria(editInputCod, editErrorMessageContainerC);
+        }
+        else{
+            editInputCod.className = 'form-control';
+            editErrorMessageContainerC.textContent = "";
+        }
+        updateUpdateButtonState();
+    });
 
-    var iconoCerrar = document.getElementById('cancelarNuevaMateriaIco');
-    var btnCerrarModal = document.getElementById('cancelarNuevaMateria');
+    editInputNom.addEventListener('input', function() {
+        var query = editInputNom.value.trim().toLowerCase();
+        if(query !== nomMateria.toLowerCase()) {
+            validateNomMateria(editInputNom, editErrorMessageContainerN);
+        }
+        else{
+            editInputNom.className = 'form-control';
+            editErrorMessageContainerN.textContent = "";
+        }
+        updateUpdateButtonState();
+    });
 
-    function cerrarModal() {
+    editInputTipo.addEventListener('change', function() {
+        var selectedValue = editInputTipo.value;
+        if(selectedValue !== tipoMateria) {
+            validateTipoMateria(editInputTipo, editErrorMessageContainerT);
+        }
+        else{
+            editInputTipo.className = 'form-select';
+            editErrorMessageContainerT.textContent = "";
+        }
+        updateUpdateButtonState();
+    });
+
+    function cerrarModalN() {
         var form = document.getElementById('formNuevaMateria');
         form.reset();
         form.classList.remove('was-validated');  // Eliminar la clase de validación
-    
+
         // Limpieza de campos
-        inputCodN.className = 'form-control';
-        inputNomN.className = 'form-control';
-        inputTipoN.className = 'form-select';
-    
+        inputCod.className = 'form-control';
+        inputNom.className = 'form-control';
+        inputTipo.className = 'form-select';
+
         // Obtener mensajes de texto
         errorMessageContainerC.textContent = "";
         errorMessageContainerN.textContent = "";
         errorMessageContainerT.textContent = "";
     }
 
-    iconoCerrar.addEventListener('click', cerrarModal);
-    btnCerrarModal.addEventListener('click', cerrarModal);
+    function cerrarModalA() {
+        var form = document.getElementById('formActualizarMateria');
+        form.reset();
+        form.classList.remove('was-validated');  // Eliminar la clase de validación
+
+        // Limpieza de campos
+        editInputCod.className = 'form-control';
+        editInputNom.className = 'form-control';
+        editInputTipo.className = 'form-select';
+
+        // Obtener mensajes de texto
+        editErrorMessageContainerC.textContent = "";
+        editErrorMessageContainerN.textContent = "";
+        editErrorMessageContainerT.textContent = "";
+    }
+
+    var iconoCerrarN = document.getElementById('cancelarNuevaMateriaIco');
+    var btnCerrarModalN = document.getElementById('cancelarNuevaMateria');
+    var iconoCerrarA = document.getElementById('cancelarActualizarMateriaIco');
+    var btnCerrarModalA = document.getElementById('cancelarActualizarMateria');
+
+    iconoCerrarN.addEventListener('click', cerrarModalN);
+    btnCerrarModalN.addEventListener('click', cerrarModalN);
+    iconoCerrarA.addEventListener('click', cerrarModalA);
+    btnCerrarModalA.addEventListener('click', cerrarModalA);
 });
