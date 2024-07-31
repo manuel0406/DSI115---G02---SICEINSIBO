@@ -35,8 +35,6 @@ public class MateriaController {
     @GetMapping("/GestionMaterias")
     public String gestionarMaterias(Model model){
         List<Materia> materias = materiasService.obtenerMaterias();
-        Set<Integer> grados = bachilleratosService.obtenerGrados();
-        Set<String> tecnicos = bachilleratosService.obtenerTecnicos();
 
         // Convertir la lista de materias a JSON
         ObjectMapper objectMapper = new ObjectMapper();
@@ -48,18 +46,9 @@ public class MateriaController {
         }
 
         model.addAttribute("materias", materias);
-        model.addAttribute("grados", grados);
-        model.addAttribute("tecnicos", tecnicos);
         return "Administrativo/GestionMaterias/GestionarMaterias";
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/getSecciones")
-    @ResponseBody
-    public Set<String> getSecciones(@RequestParam Integer grado, @RequestParam String tecnico) {
-        return bachilleratosService.obtenerSecciones(tecnico, grado);
-    }
-    
     //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/guardarMateria")
     public String guardarMateria(@RequestParam("nomMateria") String nombre, 
