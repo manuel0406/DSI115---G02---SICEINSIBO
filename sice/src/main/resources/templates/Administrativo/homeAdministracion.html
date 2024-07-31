@@ -36,7 +36,17 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Materias</h5>
                         <p class="card-text">Administre las materias actuales.</p>
-                        <a class="btn btn-primary mt-auto">Ir a Sección</a>
+                        <a th:href="@{/}" class="btn btn-primary mt-auto">Ir a Sección</a>
+                    </div>
+                </div>
+            </div>
+            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
+                <div class="card h-100">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-bibliofilo_114360-923.jpg?t=st=1722374842~exp=1722378442~hmac=f8f08a353eb18302aa2521506e75a5556358d565ad1bd4dbd6ce369bc74add6d&w=826" class="card-img-top" alt="Administrativos">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Asignacion Materias</h5>
+                        <p class="card-text">Asigne las materias a los docentes.</p>
+                        <a th:href="@{/}" class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
                 </div>
             </div>

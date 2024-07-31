@@ -3,9 +3,11 @@ package com.dsi.insibo.sice.Administrativo.Bachilleratos;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.dsi.insibo.sice.entity.AnioAcademico;
 
+@Service
 public class AnioService {
 
     @Autowired

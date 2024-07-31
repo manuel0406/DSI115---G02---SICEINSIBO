@@ -34,7 +34,7 @@
                 <h3 class="text-start col-lg-9"></h3>
                 <div class="d-flex gap-2">
                     <a class="btn btn-success Agregar-btn" data-bs-toggle="tooltip" data-bs-placement="top"
-                        title="Agregar Asignación" th:text="'Crear año'"></a>
+                        title="Crear año" th:text="'Crear año'"></a>
                 </div>
             </div>
 
@@ -98,51 +98,39 @@
         </div>
     </div>
 
-    <!-- Modal de agregar sancion -->
-  <div class="modal fade" id="agregarModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="confirmAgregarModalLabel">Agregar sanción</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form th:object="${orientador}" class="needs-validation" id="formOrientador" novalidate method="post"
-          th:action="@{/AsignacionOrientador/guardarOrientacion}">
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="docente" class="form-label fw-bold">Docente:</label>
-              <select th:field="*{docente}" class="form-select border-secondary border-opacity-75" id="docente"
-                required>
-                <option value="" selected>Seleccione</option>
-                <option th:each="docente : ${Docentes}" th:value="${docente.duiDocente}"
-                  th:text="${docente.nombreDocente+ ' '+ docente.apellidoDocente}"></option>
-              </select>
-              <div class="invalid-feedback">Es necesario seleccionar el docente</div>
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label fs-6">Especialidad del bachillerato:</label>
-              <select th:field="*{bachillerato}" class="form-select border-secondary border-opacity-75"
-                aria-label="Default select example" id="bachillerato" required>
-                <option value="" selected>Seleccione</option>
-                <option th:each="bachillerato : ${bachilleratos}" th:value="${bachillerato.codigoBachillerato}"
-                  th:text="${bachillerato.grado +'° '+ bachillerato.nombreCarrera  + ' - Sección ' + bachillerato.seccion}">
-                </option>
-              </select>
-              <div class="invalid-feedback">Es necesario seleccionar una especialidad</div>
-            </div>
-          </div>
-          <div class="modal-footer text-center">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-              id="cancelarSancion">Cancelar</button>
-            <button type="submit" class="btn btn-primary" id="agregarModalButton">Guardar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+    <!-- Modal de creacion de año -->
+    <div class="modal fade" id="agregarModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmAgregarModalLabel">Crear año</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:object="${anio}" class="needs-validation" id="formAnio" novalidate method="post"
+                    th:action="@{/Bachillerato/guardarAnio}">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="anioLabel" class="form-label fw-bold">Año:</label>
+                            <input type="text" th:field="*{anio}" class="form-control restricted-input" id="anio" placeholder="0000" required minlength="4" maxlength="4"/>
+                            <div class="invalid-feedback">
+                                Este campo no puede queda vacio
+                            </div>
+                        </div>
 
-  <!-- Modal de editar sancion -->
-  <div class="modal fade" id="actualizarOrientadorModal" tabindex="-1" aria-labelledby="actualizarOrientadorLabel"
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            id="cancelarAnio">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="agregarModalButton">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de editar sancion -->
+    <!-- <div class="modal fade" id="actualizarOrientadorModal" tabindex="-1" aria-labelledby="actualizarOrientadorLabel"
     aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -184,15 +172,12 @@
         </form>
       </div>
     </div>
-  </div>
+  </div> -->
 
 
 
 </body>
-<footer th:fragment="footer">
-    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
-</footer>
+<footer th:replace="~{home :: footer}"></footer>
+  <script type="text/javascript" th:src="@{/js/GestionAnio.js}"></script>
 
 </html>
