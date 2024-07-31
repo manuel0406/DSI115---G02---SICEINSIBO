@@ -1,3 +1,18 @@
+// BOTON DE FILTRACION
+document.getElementById('filtrarBtn').addEventListener('click', function() {
+    // Obtener el valor seleccionado en el <select>
+    var tipo = document.getElementById('filtroTipoMateria').value;
+
+    // Construir la URL con el parámetro tipo
+    if (tipo == "") {
+        var url = '/GestionMaterias'
+    } else {
+        var url = '/GestionMaterias?tipo=' + encodeURIComponent(tipo);
+    }
+    // Redirigir a la nueva URL
+    window.location.href = url;
+});
+
 // Se actualizan la variables
 var codMateria;
 var nomMateria;

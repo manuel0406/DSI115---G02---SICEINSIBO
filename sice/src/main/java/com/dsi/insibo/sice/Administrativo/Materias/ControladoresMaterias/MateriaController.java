@@ -27,6 +27,8 @@ public class MateriaController {
     @GetMapping("/GestionMaterias")
     public String gestionarMaterias(@RequestParam(value = "tipo", defaultValue = "") String tipo, Model model){
         
+        String titulo = "Materias impartidas en INSIBO";
+        String seleccion ="";
         List<Materia> materias = materiasService.obtenerMaterias();
 
         // Convertir la lista de materias a JSON
@@ -42,9 +44,13 @@ public class MateriaController {
         if (!tipo.isEmpty()) {
             // Obtener todas las materias si el tipo está vacío
             materias = materiasService.obtenerMateriaPorTipo(tipo);
+            titulo = "Materias en INSIBO: "+ tipo;
+            seleccion = tipo;
         }
 
         model.addAttribute("materias", materias);
+        model.addAttribute("titulo", titulo);
+        model.addAttribute("seleccion", seleccion);
         return "Administrativo/GestionMaterias/GestionarMaterias";
     }
 
