@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface AsignacionRepository extends JpaRepository<Asignacion, Integer>{
     
-    @Query("SELECT a FROM Asignacion a WHERE a.materia.idMateria = :idMateria")
+    @Query("SELECT a FROM Asignacion a WHERE a.materia.idMateria = :idMateria ORDER BY a.docente.nombreDocente ASC, a.docente.apellidoDocente")
     List<Asignacion> obtenerAsignacionExistente(int idMateria);
 
     @Query("SELECT a.docente.duiDocente FROM Asignacion a " 
