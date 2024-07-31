@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{home :: head}">
     <meta charset="UTF-8">
@@ -11,23 +11,23 @@
 
 <body>
     <header th:replace="~{home :: header}"></header>
-    
+
     <div class="container my-4 py-5 flex-wrap">
-<!--Mensajes-->
-<div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${success != null}">
-    <label th:text="${success}"></label>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+        <!--Mensajes-->
+        <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${success != null}">
+            <label th:text="${success}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-<div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${error != null}">
-    <label th:text="${error}"></label>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+        <div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${error != null}">
+            <label th:text="${error}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-<div class="alert alert-warning alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${warning != null}">
-    <label th:text="${warning}"></label>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+        <div class="alert alert-warning alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${warning != null}">
+            <label th:text="${warning}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
             <h3 class="text-start col-lg-9" th:text="${carrera != null || grado != null || seccion != null ?
@@ -36,7 +36,8 @@
                 (carrera != null ? carrera : '') +
                 (carrera != null && seccion != null ? ', ' : '') +
                 (seccion != null ? 'sección: ' + seccion : '') : 
-                'Listado de alumnos'}"><!-- Si todas las variables son null, establece el texto como 'Listado de alumnos' -->
+                'Listado de alumnos'}">
+                <!-- Si todas las variables son null, establece el texto como 'Listado de alumnos' -->
             </h3>
 
 
@@ -48,8 +49,8 @@
                     <i class="bi bi-printer"></i> Imprimir listado
                 </a>
 
-                <a th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-success"
-                data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar alumno" th:text="'Agregar alumno'"></a>
+                <a th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-success" data-bs-toggle="tooltip"
+                    data-bs-placement="top" title="Agregar alumno" th:text="'Agregar alumno'"></a>
             </div>
         </div>
         <div class="row my-2">
@@ -88,14 +89,23 @@
                                     <option value="D">D</option>
                                 </select>
                             </div>
+                            <div class="mb-3">
+                                <label for="genero" class="form-label fs-6">Genero:</label>
+                                <select id="genero" name="genero" th:value="${genero}" class="form-select">
+                                    <option value="" selected>Seleccione</option>
+                                    <option value="M">M</option>
+                                    <option value="F">F</option>
+                                    
+                                </select>
+                            </div>
                             <input type="submit" class="btn btn-primary" value="Filtrar">
                         </form>
                     </div>
                 </div>
             </div>
             <div class="col-md-8 col-lg-9 table-responsive">
-                <table class="table ">
-                    <thead class="thead table-dark text-start">
+                <table class="table table-hover">
+                    <thead class="thead  text-start">
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Nie</th>
@@ -104,26 +114,28 @@
                             <th scope="col">Carrera</th>
                             <th scope="col">Sección</th>
                             <th scope="col">Año</th>
+                            <th scope="col">Genero</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody class="table-group-divider fs-6">
+                    <tbody class=" fs-6">
                         <!-- Iterar sobre la lista de alumnos -->
                         <tr th:each="alumno, stat : ${alumnos}">
                             <th scope="row" th:text="${stat.index + 1}"></th>
-                            <td class="text-start fs-6" th:text="${alumno.nie}"></td>
-                            <td class="text-start fs-6" th:text="${alumno.apellidoAlumno}"></td>
-                            <td class="text-start fs-6" th:text="${alumno.nombreAlumno}"></td>
-                            <td class="text-start fs-6" th:text="${alumno.bachillerato.nombreCarrera}"></td>
-                            <td class="text-center fs-6" th:text="${alumno.bachillerato.seccion}"></td>
-                            <td class="text-center fs-6" th:text="${alumno.bachillerato.grado}"></td>
+                            <td class="text-start " th:text="${alumno.nie}"></td>
+                            <td class="text-start " th:text="${alumno.apellidoAlumno}"></td>
+                            <td class="text-start " th:text="${alumno.nombreAlumno}"></td>
+                            <td class="text-start " th:text="${alumno.bachillerato.nombreCarrera}"></td>
+                            <td class="text-center " th:text="${alumno.bachillerato.seccion}"></td>
+                            <td class="text-center" th:text="${alumno.bachillerato.grado}"></td>
+                            <td class="text-center" th:text="${alumno.sexoAlumno}"></td>
                             <td class="text-center">
                                 <a class="btn btn-success" th:href="@{/ExpedienteAlumno/Alumno/} + ${alumno.nie}"
-                                data-bs-toggle="tooltip" data-bs-placement="top" title="Consultar">
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Consultar">
                                     <i class="bi bi-file-earmark-text"></i>
                                 </a>
                                 <a class="btn btn-primary" th:href="@{/ExpedienteAlumno/editar/} + ${alumno.nie}"
-                                data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                                 <a class="btn btn-danger delete-btn"
@@ -171,6 +183,7 @@
                         </li>
                     </ul>
                 </nav>
+
 
 
             </div>
