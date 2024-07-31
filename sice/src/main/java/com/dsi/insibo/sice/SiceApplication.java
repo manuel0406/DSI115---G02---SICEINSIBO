@@ -31,7 +31,7 @@ public class SiceApplication  {
 	}	
 	@GetMapping("/administracion")
 	public String homeAdministracion(Model model){
-		model.addAttribute("titulo", "Inicio");
+		model.addAttribute("titulo", "Administración");
 		return "Administrativo/homeAdministracion.html";
 	}
 	

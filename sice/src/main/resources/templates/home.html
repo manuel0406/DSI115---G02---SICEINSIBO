@@ -77,7 +77,7 @@
             </div>
             <div sec:authorize="hasAnyRole('ADMINISTRADOR','DOCENTE','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
                 <div class="card h-100">
-                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-tesis_114360-7956.jpg?t=st=1718484239~exp=1718487839~hmac=df7ec944e5dd6797a6831e127890cd343e73ad2ace3d93537a30a80515c45d5c&w=826" class="card-img-top" alt="Alumnos">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-archivos-personales_114360-4049.jpg?t=st=1722374310~exp=1722377910~hmac=28f3f73f499870dd52c82c04ee3762c4749ce27c188c71cd05fc05a57b87fa79&w=826" class="card-img-top" alt="Alumnos">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Alumnos</h5>
                         <p class="card-text">Accede a los expedientes de los alumnos de la institución.</p>
@@ -87,7 +87,7 @@
             </div>
             <div sec:authorize="hasAnyRole('ADMINISTRADOR','DOCENTE','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
                 <div class="card h-100">
-                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-examenes_114360-2173.jpg?t=st=1718574185~exp=1718577785~hmac=049cb730aee063197beff285bb065585076bc850a704f6ed837583c8d7f2104a&w=740" class="card-img-top" alt="Notas">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-examen-ingreso-universidad_114360-13742.jpg?t=st=1722374179~exp=1722377779~hmac=27f5c770003a8752d510c755a49280b24b2f4f542e6ca91c982b4baa748beb35&w=826" class="card-img-top" alt="Notas">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Notas</h5>
                         <p class="card-text">Accede a las calificaciones de los alumnos de la institución.</p>
@@ -107,11 +107,11 @@
             </div>
             <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
                 <div class="card h-100">
-                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-desarrollo-aplicaciones_114360-5164.jpg?t=st=1721951217~exp=1721954817~hmac=c72bc0b03a44fc53322c7d9d71ca156e5fd3bc236a32fbd35acb0b3b7575fc6d&w=826" class="card-img-top" alt="Administración">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-mujer-jefe_114360-19849.jpg?t=st=1722374626~exp=1722378226~hmac=67366b642f34bfd06247ab9b3c2fc59905783fb4e71fcf26c31705331866e877&w=826" class="card-img-top" alt="Administración">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Administración</h5>
                         <p class="card-text">Gestiona la administración de la institución.</p>
-                        <a class="btn btn-primary mt-auto">Ir a Sección</a>
+                        <a th:href="@{/administracion}" class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
                 </div>
             </div>

@@ -2,85 +2,103 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{home :: head}">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
 
 <body>
-  <header th:replace="~{home :: header}"></header>
-  <div class="py-5"></div>
-  <div class="container">
+    <header th:replace="~{home :: header}"></header>
+    <div class="py-5"></div>
+    <div class="container">
 
-    <!--Mensajes-->
-    <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
-      <label th:text="${success}"></label>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
-      <label th:text="${error}"></label>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
-      <label th:text="${warning}"></label>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <div class="py-4 bg-light">
-      <h1 class="text-center">Asignaciones de orientador</h1>
-    </div>
-    <div class="py-2"></div>
-
-    <div class="card card-body py-1">
-      <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
-        <h3 class="text-start col-lg-9">Listado de orientadores</h3>
-        <div class="d-flex gap-2">
-          <a class="btn btn-success Agregar-btn" data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Agregar Asignación" th:text="'Agregar asignación'"></a>
+        <!--Mensajes-->
+        <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
+            <label th:text="${success}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-      </div>
 
+        <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
+            <label th:text="${error}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-      <div class="table-responsive py-2">
-        <table class="table table-hover">
-          <thead class="tabla-c">
-            <tr>
-              <th scope="col">N°</th>
-              <th scope="col">Docente</th>
-              <th scope="col">Año</th>
-              <th scope="col">Especialidad</th>
-              <th scope="col">Sección</th>
-              <th scope="col">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="orientador, stat : ${listaOrientadores}">
-              <th scope="row" th:text="${stat.index + 1}"></th>
-              <td th:text="${orientador.docente.nombreDocente+ ' '+orientador.docente.apellidoDocente}"></td>
-              <td th:text="${orientador.bachillerato.grado}"></td>
-              <td th:text="${orientador.bachillerato.nombreCarrera}"></td>
-              <td th:text="${orientador.bachillerato.seccion}"></td>
-              <td>
-                <a class="btn btn-primary editar-btn" data-bs-toggle="modal" data-bs-target="#actualizarOrientadorModal"
-                  data-bs-placement="top" title="Editar" th:data-id="${orientador.idOrientador}"
-                  th:data-doc="${orientador.docente.duiDocente}"
-                  th:data-bac="${orientador.bachillerato.codigoBachillerato}">
-                  <i class="bi bi-pencil-square"></i>
-                </a>
-                <a class="btn btn-danger delete-btn"
-                  th:href="@{/AsignacionOrientador/eliminar/}+${orientador.idOrientador}" data-bs-placement="top"
-                  title="Eliminar">
-                  <i class="bi bi-trash"></i>
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
+            <label th:text="${warning}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="py-4 bg-light">
+            <h1 class="text-center">Creacion de años</h1>
+        </div>
+        <div class="py-2"></div>
+
+        <div class=" py-1">
+            <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
+                <h3 class="text-start col-lg-9"></h3>
+                <div class="d-flex gap-2">
+                    <a class="btn btn-success Agregar-btn" data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="Agregar Asignación" th:text="'Crear año'"></a>
+                </div>
+            </div>
+
+            <div class="table-responsive py-2">
+                <table class="table table-hover">
+                    <thead class="tabla-c">
+                        <tr>
+                            <th scope="col">N°</th>
+                            <th scope="col">Año</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>2022</td>
+                            <td>inactivo</td>
+                            <td>
+                                <a class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Consultar">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </a>
+                                <a class="btn btn-primary editar-btn">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <!-- <a class="btn btn-danger delete-btn" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </a> -->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>2023</td>
+                            <td>Activo</td>
+                            <td>
+                                <a class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Consultar">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </a>
+                                <a class="btn btn-primary editar-btn">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <!-- <a class="btn btn-danger delete-btn" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </a> -->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>2024</td>
+                            <td>inactivo</td>
+                            <td>
+                                <a class="btn btn-warning editar-btn"> Crear oferta</a>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Modal de agregar sancion -->
+    <!-- Modal de agregar sancion -->
   <div class="modal fade" id="agregarModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -168,29 +186,13 @@
     </div>
   </div>
 
-  <!-- Modal de Confirmación -->
-  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          ¿Estás seguro de eliminar el registro? Esta acción no puede deshacerse.
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <footer th:replace="~{home :: footer}"></footer>
-  <script type="text/javascript" th:src="@{/js/GestionOrientador.js}"></script>
-  <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+
 </body>
+<footer th:fragment="footer">
+    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
+</footer>
 
 </html>
