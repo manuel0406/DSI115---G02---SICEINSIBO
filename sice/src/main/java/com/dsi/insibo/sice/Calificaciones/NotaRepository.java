@@ -14,13 +14,13 @@ import com.dsi.insibo.sice.entity.Nota;
 
 @Repository
 public interface NotaRepository extends JpaRepository<Nota, Integer> {
-    List<Nota> findByAlumnoAndActividad(Alumno alumno, Actividad actividad);
+    //List<Nota> findByAlumnoAndActividad(Alumno alumno, Actividad actividad);
 
-    List<Nota> findByAlumno_Bachillerato_CodigoBachillerato(String codigoBachillerato);
+    //List<Nota> findByAlumno_Bachillerato_CodigoBachillerato(String codigoBachillerato);
 
-    //List<Nota> findByAlumnoNieAndActividadMateriaCodMateriaAndActividadPeriodoIdPeriodo(int nie, String codMateria, int idPeriodo);
+    //List<Nota> findByAlumnoNieAndActividadMateriaCodMateriaAndActividadPeriodoIdPeriodo(int nie, int idMateria, int idPeriodo);
 
-    List<Nota> findByAlumno(Alumno alumno);
+    //List<Nota> findByAlumno(Alumno alumno);
     
     
     @Modifying

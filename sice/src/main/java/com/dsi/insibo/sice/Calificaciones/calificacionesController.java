@@ -28,7 +28,7 @@ import org.springframework.ui.Model;
 
 @Controller
 public class calificacionesController {
-	@Autowired
+	/*@Autowired
 	private BachilleratoService bachilleratoService;
 	@Autowired
 	private PeriodoService periodoService;
@@ -106,5 +106,5 @@ public class calificacionesController {
 		
 		
 		return "Calificaciones/AlumnoCalificaciones";
-	}
+	}*/
 }

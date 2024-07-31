@@ -21,12 +21,13 @@ public class NotaService {
         return notaRepository.findByAlumnoNieAndActividadMateriaCodMateriaAndActividadPeriodoIdPeriodo(nie, codMateria, idPeriodo);
     }*/
 
-    public List<Nota> findNotasByAlumno(Alumno alumno) {
+   /* public List<Nota> findNotasByAlumno(Alumno alumno) {
         return notaRepository.findByAlumno(alumno);
-    }
+    }*/
 
     @Transactional
     public void deleteNotasByAlumnoNie(int nie) {
         notaRepository.deleteByAlumnoNie(nie);
     }
+    
 }
