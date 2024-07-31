@@ -1,9 +1,6 @@
 package com.dsi.insibo.sice.Administrativo.Materias.ControladoresMaterias;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,11 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.MateriasService;
-import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.BachilleratosService;
 import com.dsi.insibo.sice.entity.Materia;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,13 +22,11 @@ public class MateriaController {
     
     @Autowired
     private MateriasService materiasService;
-    
-    @Autowired
-    private BachilleratosService bachilleratosService;
 
     //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/GestionMaterias")
-    public String gestionarMaterias(Model model){
+    public String gestionarMaterias(@RequestParam(value = "tipo", defaultValue = "") String tipo, Model model){
+        
         List<Materia> materias = materiasService.obtenerMaterias();
 
         // Convertir la lista de materias a JSON
@@ -42,7 +35,13 @@ public class MateriaController {
             String materiasJson = objectMapper.writeValueAsString(materias);
             model.addAttribute("materiasJson", materiasJson); // Para JS
         } catch (JsonProcessingException e) {
-            System.out.println("El error es" + e);
+            System.out.println("El error es: " + e);
+        }
+
+        // FILTRADO POR TIPO DE MATERIA
+        if (!tipo.isEmpty()) {
+            // Obtener todas las materias si el tipo está vacío
+            materias = materiasService.obtenerMateriaPorTipo(tipo);
         }
 
         model.addAttribute("materias", materias);
