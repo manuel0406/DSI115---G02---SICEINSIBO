@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface AsignacionRepository extends JpaRepository<Asignacion, Integer>{
     
-    @Query("SELECT a FROM Asignacion a WHERE a.materia.idMateria = :idMateria ORDER BY a.docente.nombreDocente ASC, a.docente.apellidoDocente")
+    @Query("SELECT a FROM Asignacion a WHERE a.materia.idMateria = :idMateria ORDER BY a.docente.nombreDocente ASC, a.docente.apellidoDocente ASC")
     List<Asignacion> obtenerAsignacionExistente(int idMateria);
 
     @Query("SELECT a.docente.duiDocente FROM Asignacion a " 
@@ -21,6 +21,16 @@ public interface AsignacionRepository extends JpaRepository<Asignacion, Integer>
     @Query("SELECT a FROM Asignacion a WHERE a.docente.duiDocente = :duiDocente AND a.materia.idMateria = :idMateria")
     List<Asignacion> findByDocenteAndMateria(String duiDocente, int idMateria);
 
-    @Query("SELECT a FROM Asignacion a WHERE a.materia.idMateria = :idMateria")
+    @Query("SELECT a FROM Asignacion a WHERE a.materia.idMateria = :idMateria "
+         + "ORDER BY a.docente.nombreDocente ASC, " 
+         + "a.docente.apellidoDocente ASC, a.bachillerato.grado ASC, "
+         + "a.bachillerato.seccion ASC")
     List<Asignacion> findByMateria(int idMateria);
+
+    // OBTENER TODAS LAS ASIGNACIONES
+    @Query("SELECT a FROM Asignacion a "
+          + "ORDER BY a.docente.nombreDocente ASC, a.materia.nomMateria ASC, " 
+          + "a.docente.apellidoDocente ASC, a.bachillerato.grado ASC, "
+          + "a.bachillerato.seccion ASC")
+    List<Asignacion> findAllAsignaciones();
 }
