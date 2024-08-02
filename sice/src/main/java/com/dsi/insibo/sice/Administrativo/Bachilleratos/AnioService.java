@@ -20,4 +20,8 @@ public class AnioService {
     public void guardarAnio(AnioAcademico anioAcademico){
         anioRepository.save(anioAcademico);
     }
+
+    public AnioAcademico buscarPoridAnioAcademico(int id){
+        return anioRepository.findById(id).orElse(null);
+    }
 }

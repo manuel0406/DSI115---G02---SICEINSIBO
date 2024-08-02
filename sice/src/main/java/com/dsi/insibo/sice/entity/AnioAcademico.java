@@ -12,10 +12,10 @@ public class AnioAcademico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idAnioAcademico;
-    @Column(unique = true)
+    
     private int anio;
     private boolean activoAnio;
-    
+     
     public AnioAcademico() {
     }
 
