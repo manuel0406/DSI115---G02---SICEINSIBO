@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.dsi.insibo.sice.Expediente_docente.Docentes.Anexos.AnexoDocenteService;
+import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
 import com.dsi.insibo.sice.Seguridad.SeguridadService.UsuarioService;
 import com.dsi.insibo.sice.entity.AnexoDocente;
 import com.dsi.insibo.sice.entity.Docente;
@@ -37,6 +38,9 @@ public class DocenteController {
     // Lista docentes usando la DB /expedientedocente/plantadocente
     @Autowired
     private DocenteService docenteService;
+
+    @Autowired
+    private SessionService sessionService;
 
     // Direccionadores estaticos
     @GetMapping("/anexosDocente")
@@ -157,6 +161,8 @@ public class DocenteController {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'DOCENTE', 'SUBDIRECTORA')")
+
+
     @GetMapping("/plantadocente")
     public String listarDocentes(Model model,
             @RequestParam(defaultValue = "0") int page,
@@ -171,6 +177,10 @@ public class DocenteController {
                 pageRequest.getPageNumber() * pageRequest.getPageSize(),
                 Math.min((pageRequest.getPageNumber() + 1) * pageRequest.getPageSize(), listadoDocentes.size())),
                 pageRequest, listadoDocentes.size());
+
+
+                String dui = sessionService.duiSession();
+                System.out.println(dui);
 
         model.addAttribute("titulo", "Planta Docente");
         model.addAttribute("Docentes", listadoDocentes);
