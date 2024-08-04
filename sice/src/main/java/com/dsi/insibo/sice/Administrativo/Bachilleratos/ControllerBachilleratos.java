@@ -35,7 +35,7 @@ public class ControllerBachilleratos {
     @PostMapping("/guardarAnio")
     public String guardarAnio(@ModelAttribute AnioAcademico anio, RedirectAttributes attributes) {
 
-        AnioAcademico anioExistente= anioService.buscarPoridAnioAcademico(anio.getIdAnioAcademico());
+        AnioAcademico anioExistente= anioService.buscandoAnio(anio.getAnio());
         if (anioExistente != null) {
 			attributes.addFlashAttribute("error", "Error: El año ya existe.");
             return "redirect:/Bachillerato/anio";

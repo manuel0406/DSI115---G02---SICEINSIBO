@@ -24,4 +24,8 @@ public class AnioService {
     public AnioAcademico buscarPoridAnioAcademico(int id){
         return anioRepository.findById(id).orElse(null);
     }
+
+    public AnioAcademico buscandoAnio(int anio){
+        return anioRepository.buscarAnio(anio);
+    }
 }
