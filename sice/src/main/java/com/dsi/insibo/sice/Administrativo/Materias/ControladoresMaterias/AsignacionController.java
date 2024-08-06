@@ -22,6 +22,8 @@ import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Docente;
 import com.dsi.insibo.sice.entity.Materia;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Controller
@@ -97,14 +99,31 @@ public class AsignacionController {
         // Obtenemos las asignaciones
         List<Asignacion> asignaciones = asignacionService.obtenerTodaAsignaciones();
 
+
+        // Convertir la listas  a JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String materiasJson = objectMapper.writeValueAsString(materias);
+            String docentesJson = objectMapper.writeValueAsString(docentes);
+            String asignacionesJson = objectMapper.writeValueAsString(asignaciones);
+            String primerosJson = objectMapper.writeValueAsString(primeros);
+            String segundosJson = objectMapper.writeValueAsString(segundos);
+            String tercerosJson = objectMapper.writeValueAsString(terceros);
+
+            model.addAttribute("materiasJson", materiasJson);
+            model.addAttribute("docentesJson", docentesJson);
+            model.addAttribute("asignacionesJson", asignacionesJson);
+            model.addAttribute("primerosJson", primerosJson);
+            model.addAttribute("segundosJson", segundosJson);
+            model.addAttribute("tercerosJson", tercerosJson);
+        } catch (JsonProcessingException e) {
+            System.out.println("El error es: " + e);
+        }
+
         // Crear la vista
         model.addAttribute("materias", materias);
-        model.addAttribute("primeros", primeros);
-        model.addAttribute("segundos", segundos);
-        model.addAttribute("terceros", terceros);
-        model.addAttribute("docentes", docentes);
-        model.addAttribute("asignaciones", asignaciones);
-        
+
+
         return "Administrativo/GestionMaterias/NuevaAsignacionGeneral";
         
     }
