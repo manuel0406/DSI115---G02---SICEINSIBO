@@ -1,11 +1,13 @@
 package com.dsi.insibo.sice.Administrativo.Bachilleratos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dsi.insibo.sice.entity.AnioAcademico;
+import com.dsi.insibo.sice.entity.Bachillerato;
 
 @Service
 public class AnioService {
@@ -27,5 +29,21 @@ public class AnioService {
 
     public AnioAcademico buscandoAnio(int anio){
         return anioRepository.buscarAnio(anio);
+    }
+
+    public List<Bachillerato> listaNullos(List<AnioAcademico> listaAnios){
+
+        List<Bachillerato> lista= new ArrayList<Bachillerato>();
+        
+        for (AnioAcademico anioAcademico : listaAnios) {
+            lista= anioRepository.listaBuscarAnio(anioAcademico.getIdAnioAcademico());
+            
+            
+        }
+        return lista;
+    }
+    public boolean tieneBachilleratos(int idAnioAcademico) {
+        List<Bachillerato> bachilleratos = anioRepository.listaBuscarAnio(idAnioAcademico);
+        return bachilleratos != null && !bachilleratos.isEmpty();
     }
 }
