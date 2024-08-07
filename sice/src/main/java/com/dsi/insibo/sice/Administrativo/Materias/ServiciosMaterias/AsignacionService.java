@@ -46,4 +46,8 @@ public class AsignacionService {
         asignacionRepository.delete(asignacion);
     }
 
+    public List<Asignacion> obtenerTodaAsignaciones(){
+        return asignacionRepository.findAllAsignaciones();
+    }
+
 }

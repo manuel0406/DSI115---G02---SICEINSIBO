@@ -797,3 +797,10 @@ td {
 #seccionSpan {
   color: grey;
 }
+
+#saveButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
