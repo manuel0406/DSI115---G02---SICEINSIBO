@@ -11,23 +11,26 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class BachilleratoService  {
+public class BachilleratoService {
 
     @Autowired
     private BachilleratoRepository bachilleratoRepository;
 
-    public List<Bachillerato> listaBachilleratos(){
+    public List<Bachillerato> listaBachilleratos() {
         return (List<Bachillerato>) bachilleratoRepository.findAll();
     }
 
-   
-
     public List<Bachillerato> listaCarrera() {
-    List<Bachillerato> bachilleratos =bachilleratoRepository.findAll(); // tu lógica para obtener los bachilleratos;
-    Set<String> nombresUnicos    = new HashSet<>();
-    
-    return bachilleratos.stream()
-            .filter(bachillerato -> nombresUnicos.add(bachillerato.getNombreCarrera()))
-            .collect(Collectors.toList());
-}
+        List<Bachillerato> bachilleratos = bachilleratoRepository.findAll(); // tu lógica para obtener los
+                                                                             // bachilleratos;
+        Set<String> nombresUnicos = new HashSet<>();
+
+        return bachilleratos.stream()
+                .filter(bachillerato -> nombresUnicos.add(bachillerato.getNombreCarrera()))
+                .collect(Collectors.toList());
+    }
+
+    public void guardarBachillerato(List<Bachillerato> listabachillerato){
+        bachilleratoRepository.saveAll(listabachillerato);
+    }
 }
