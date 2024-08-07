@@ -61,6 +61,9 @@
                             <div class="tab-content" id="menuTabsContent">
                                 <!-- Primeros años -->
                                 <div class="tab-pane fade show active" id="primeros-anos" role="tabpanel" aria-labelledby="primeros-anos-tab">
+                                    <div class="mb-3 form-check form-switch" th:if="${#lists.isEmpty(primeros)}">
+                                        No se encuentran primeros años por asignar.
+                                    </div>
                                     <div class="mb-3 form-check form-switch" th:if="${not #lists.isEmpty(primeros)}">
                                         <input class="form-check-input marcar-todos checkbox-group" type="checkbox" id="marcarTodosPrimerosAnos" data-group="primeros-anos" />
                                         <label class="form-check-label label-checkbox-group" for="marcarTodosPrimerosAnos">Todos los primeros años</label>
@@ -78,6 +81,9 @@
 
                                 <!-- Segundos años -->
                                 <div class="tab-pane fade" id="segundos-anos" role="tabpanel" aria-labelledby="segundos-anos-tab">
+                                    <div class="mb-3 form-check form-switch" th:if="${#lists.isEmpty(segundos)}">
+                                        No se encuentran segundos años por asignar.
+                                    </div>
                                     <div class="mb-3 form-check form-switch" th:if="${not #lists.isEmpty(segundos)}">
                                         <input class="form-check-input marcar-todos checkbox-group" type="checkbox" id="marcarTodosSegundosAnos" data-group="segundos-anos" />
                                         <label class="form-check-label label-checkbox-group" for="marcarTodosSegundosAnos">Todos los segundos años</label>
@@ -95,6 +101,9 @@
 
                                 <!-- Terceros años -->
                                 <div class="tab-pane fade" id="terceros-anos" role="tabpanel" aria-labelledby="terceros-anos-tab" th:if="${materia.tipoMateria != 'Básica'}">
+                                    <div class="mb-3 form-check form-switch" th:if="${#lists.isEmpty(terceros)}">
+                                        No se encuentran terceros años por asignar.
+                                    </div>
                                     <div class="mb-3 form-check form-switch" th:if="${not #lists.isEmpty(terceros)}">
                                         <input class="form-check-input marcar-todos checkbox-group" type="checkbox" id="marcarTodosTercerosAnos" data-group="terceros-anos" />
                                         <label class="form-check-label label-checkbox-group" for="marcarTodosTercerosAnos">Todos los terceros años</label>

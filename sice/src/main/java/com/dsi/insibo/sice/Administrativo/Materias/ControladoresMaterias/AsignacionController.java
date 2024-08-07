@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dsi.insibo.sice.Administrativo.Materias.Clases.DocenteAsignacionDTO;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.BachilleratosService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.MateriasService;
+import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteDTO;
 import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteService;
 import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.Bachillerato;
@@ -93,9 +96,6 @@ public class AsignacionController {
         List<Bachillerato> segundos = bachilleratosService.obtenerSegundos();
         List<Bachillerato> terceros = bachilleratosService.obtenerTerceros();
 
-        // Obtenemos los docentes
-        List<Docente> docentes = docenteService.listarDocenteAsignacion();
-
         // Obtenemos las asignaciones
         List<Asignacion> asignaciones = asignacionService.obtenerTodaAsignaciones();
 
@@ -104,14 +104,12 @@ public class AsignacionController {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String materiasJson = objectMapper.writeValueAsString(materias);
-            String docentesJson = objectMapper.writeValueAsString(docentes);
             String asignacionesJson = objectMapper.writeValueAsString(asignaciones);
             String primerosJson = objectMapper.writeValueAsString(primeros);
             String segundosJson = objectMapper.writeValueAsString(segundos);
             String tercerosJson = objectMapper.writeValueAsString(terceros);
 
             model.addAttribute("materiasJson", materiasJson);
-            model.addAttribute("docentesJson", docentesJson);
             model.addAttribute("asignacionesJson", asignacionesJson);
             model.addAttribute("primerosJson", primerosJson);
             model.addAttribute("segundosJson", segundosJson);
@@ -127,6 +125,25 @@ public class AsignacionController {
         return "Administrativo/GestionMaterias/NuevaAsignacionGeneral";
         
     }
+
+    // PETICION AJAX A TIEMPO REAL
+    @GetMapping("/DocentesMax")
+    @ResponseBody
+    public List<DocenteAsignacionDTO> getDocentesByMateria(@RequestParam int idMateria) {
+        // Obtener la lista de docentes máximos
+        List<String> docentesMax = asignacionService.listarDocentesMaximo(idMateria);
+        
+        // Obtener todos los docentes y filtrar los que están en la lista de docentesMax
+        List<Docente> docentes = docenteService.listarDocenteAsignacion();
+        
+        // Filtrar los docentes cuyo duiDocente no está en la lista de docentesMax
+        List<DocenteAsignacionDTO> docentesDTO = docentes.stream()
+            .filter(docente -> !docentesMax.contains(docente.getDuiDocente()))
+            .map(docente -> new DocenteAsignacionDTO(docente.getDuiDocente(), docente.getNombreDocente(), docente.getApellidoDocente()))
+            .collect(Collectors.toList());
+    
+        return docentesDTO;
+    }    
 
     @GetMapping("/NuevaAsignacion/{id}")
     public String nuevaAsignacion(Model model, @PathVariable("id") int idMateria, RedirectAttributes attribute) {
