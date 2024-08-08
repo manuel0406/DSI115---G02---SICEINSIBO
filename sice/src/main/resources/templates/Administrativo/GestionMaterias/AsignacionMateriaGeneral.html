@@ -64,6 +64,24 @@
                     </tr>
                 </tbody>
             </table>
+            <nav aria-label="Paginación" th:if="${asignaciones.totalPages > 1}">
+                <ul class="pagination justify-content-center">
+                    <!-- Botón para anterior -->
+                    <li th:classappend="${asignaciones.hasPrevious()} ? 'page-item' : 'page-item disabled'">
+                        <a class="page-link" th:href="@{'/AsignacionMateria?pagina=' + ${asignaciones.number}}">Anterior</a>
+                    </li>
+
+                    <!-- Páginas intermedias -->
+                    <li th:each="i : ${#numbers.sequence(1, asignaciones.totalPages)}" th:classappend="${asignaciones.number + 1 == i} ? 'page-item active' : 'page-item'">
+                        <a class="page-link" th:href="@{'/AsignacionMateria?pagina=' + ${i}}" th:text="${i}"></a>
+                    </li>
+
+                    <!-- Botón para siguiente -->
+                    <li th:classappend="${asignaciones.hasNext()} ? 'page-item' : 'page-item disabled'">
+                        <a class="page-link" th:href="@{'/AsignacionMateria?pagina=' + ${asignaciones.number+2}}">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 

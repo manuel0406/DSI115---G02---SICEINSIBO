@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,21 +46,34 @@ public class AsignacionController {
     private AsignacionService asignacionService;
 
     @GetMapping("/AsignacionMateria")
-    public String asignacionMateriasGeneral(Model model){
+    public String asignacionMateriasGeneral(Model model,  @RequestParam(required = false, defaultValue = "1") int pagina){
+
+        int tamanyo = 10; // Tamaño de la página
+        pagina = pagina - 1; // Convertir a base 0 para PageRequest
+
 
         String titulo = "Asignaciones de Materias";                                         // Asignar titulo
-        List<Asignacion> listadoAsignaciones = asignacionService.obtenerTodaAsignaciones(); // Obtener todas las asignaciones
+        List<Asignacion> totalAsignacions = asignacionService.obtenerTodaAsignaciones(); // Obtener todas las asignaciones
+        Page<Asignacion> listadoAsignaciones = asignacionService.obtenerTodaAsignaciones(pagina, tamanyo);
         List<Docente> docentes = docenteService.listarDocenteAsignacion();                  // Obtener maestros
+
+        // Calcular la cantidad de páginas
+        int cantidad = (int) Math.ceil((double) totalAsignacions.size() / tamanyo);
 
         // Construccion de infromacion a front-end
         model.addAttribute("asignaciones", listadoAsignaciones);
+        model.addAttribute("cantidad", cantidad);
         model.addAttribute("docentes", docentes);
         model.addAttribute("titulo", titulo);
         return "Administrativo/GestionMaterias/AsignacionMateriaGeneral";
     }
 
     @GetMapping("/AsignacionMateria/{id}")
-    public String asignacionMateria(Model model,  @PathVariable("id") int idMateria, RedirectAttributes attribute){
+    public String asignacionMateria(Model model,  @PathVariable("id") int idMateria, 
+                                    @RequestParam(required = false, defaultValue = "1") int pagina){
+
+        int tamanyo = 10; // Tamaño de la página
+        pagina = pagina - 1; // Convertir a base 0 para PageRequest
         
         // ID INVALIDA
         if (idMateria == 0) {
@@ -71,17 +85,24 @@ public class AsignacionController {
         String titulo = "Asignaciones a: " + materia.getNomMateria();
 
         // Para obtener todas las asignaciones
-        List<Asignacion> listadoAsignaciones = asignacionService.listarAsignaciones(idMateria); // Listado de asignaciones de la materia
+        List<Asignacion> listadoTotal = asignacionService.listarAsignaciones(idMateria); // Listado de asignaciones de la materia
+        Page<Asignacion> listadoAsignaciones = asignacionService.listarAsignaciones(idMateria, pagina, tamanyo);
 
         // Filtrado de maximo de docentes - obtener docentes sin repetir
         List<String> docentesMax = asignacionService.listarDocentesMaximo(idMateria);
         List<Docente> docentes = docenteService.listarDocenteAsignacion();
         docentes.removeIf(docente -> docentesMax.contains(docente.getDuiDocente())); // Eliminar de la lista de docentes aquellos cuyo duiDocente está en la lista de docentesMax
         
+
+        // Calcular la cantidad de páginas
+        int cantidad = (int) Math.ceil((double) listadoTotal.size() / tamanyo);
+
         model.addAttribute("titulo", titulo);
         model.addAttribute("asignaciones", listadoAsignaciones);
+        model.addAttribute("cantidad", cantidad);
         model.addAttribute("idMateria", idMateria);
         model.addAttribute("docentes", docentes);
+
         return "Administrativo/GestionMaterias/AsignacionMateria";
     }
 

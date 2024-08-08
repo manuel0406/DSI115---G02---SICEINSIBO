@@ -68,20 +68,21 @@
                 </tbody>
             </table>
             <!-- Contenedor de navegación para la paginación -->
-            <nav aria-label="...">
-                <!-- Lista de elementos de paginación centrada -->
+            <nav aria-label="Paginación" th:if="${cantidad > 1}">
                 <ul class="pagination justify-content-center">
-                    <!-- Boton para anterior -->
-                    <li class="page-item">
-                        <!-- Enlace que lleva a la página anterior -->
-                        <a class="page-link">Anterior</a>
+                    <!-- Botón para anterior -->
+                    <li th:classappend="${materias.hasPrevious()} ? 'page-item' : 'page-item disabled'">
+                        <a class="page-link" th:href="@{'/GestionMaterias?tipo=' + ${seleccion} + '&pagina=' + ${materias.number}}">Anterior</a>
                     </li>
 
-                    
-                    <!-- Boton para siguiente -->
-                    <li class="page-item">
-                        <!-- Enlace que lleva a la página siguiente -->
-                        <a class="page-link">Siguiente</a>
+                    <!-- Páginas intermedias -->
+                    <li th:each="i : ${#numbers.sequence(1, materias.totalPages)}" th:classappend="${materias.number + 1 == i} ? 'page-item active' : 'page-item'">
+                        <a class="page-link" th:href="@{'/GestionMaterias?tipo=' + ${seleccion} + '&pagina=' + ${i}}" th:text="${i}">1</a>
+                    </li>
+
+                    <!-- Botón para siguiente -->
+                    <li th:classappend="${materias.hasNext()} ? 'page-item' : 'page-item disabled'">
+                        <a class="page-link" th:href="@{'/GestionMaterias?tipo=' + ${seleccion} + '&pagina=' + ${materias.number + 2}}">Siguiente</a>
                     </li>
                 </ul>
             </nav>
