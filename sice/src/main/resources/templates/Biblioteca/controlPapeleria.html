@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://wwww.thymelead.org">
+<head th:replace="/home :: head">
+</head>
+<body>
+    <header th:replace="home :: header"></header>
+
+    
+    <!--Indicación de la ubicación de la página actual-->
+    <div class="container mt-5 py-4 ">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a th:href="@{/Biblioteca/}">Biblioteca</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Control de Papelería</li>
+            </ol>
+          </nav>
+    </div>
+
+    <div class="container">
+        <div class="jumbotron  mb-3 bg-light rounded-3">
+            <div class="container py-5 text-center">
+                <h1 class="display-5 fw-bold "> Control de entrega de papelería</h1>
+            </div>
+        </div>
+    </div>
+
+        <!--Botones y Barra de busqueda de alumnos-->
+        <div class="navbar">
+            <div class="container ">
+              <div class="d-grid gap-2 d-md-block">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#NuevaEntregaModal">Nueva entrega</button>
+                <a th:href="@{/Biblioteca/Papeleria/InventarioPapeleria}" class="btn btn-danger field" >Gestionar Inventario</a>
+              </div>
+                
+              <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Buscar " aria-label="Buscar">
+                <button class="btn btn-primary" type="submit">Buscar</button>
+              </form>
+            </div>
+        </div>
+    
+        <!--Tabla de datos-->
+        <div class="container">
+            <table class="table">
+                <thead class="table-dark">
+                  <tr>
+                    <th scope="col">Fecha Entrega</th>
+                    <th scope="col">Persona que recibe</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm" >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                            </svg>
+                        </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+
+    <!-- Modal Nueva Entrega -->
+    <div class="modal fade" id="NuevaEntregaModal" tabindex="-1" aria-labelledby="NuevaEntregaModal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Registrar Nueva Entrega</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary">Registrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer th:replace="home :: footer"></footer>
+</body>
+</html>
