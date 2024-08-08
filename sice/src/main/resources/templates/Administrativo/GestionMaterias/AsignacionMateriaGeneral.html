@@ -91,15 +91,11 @@
                             <label for="profesor" class="form-label">Profesor</label>
                             <select class="form-select" id="profesor" name="duiDocente" required>
                                 <option value="">Seleccionar docente...</option>
-                                <option th:each="docente : ${docentes}"
-                                    th:value="${docente.duiDocente}"
-                                    th:text="${docente.nombreDocente} + ' ' + ${docente.apellidoDocente}">
-                                </option>
                             </select>
                             <div class="invalid-feedback">Por favor, seleccione el docente.</div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Actualizar</button>
+                            <button type="submit" class="btn btn-primary" id="submit-button">Actualizar</button>
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
                         </div>
                     </form>
@@ -112,6 +108,6 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" th:src="@{/js/gestionAsignacion.js}"></script>
+    <script type="text/javascript" th:src="@{/js/GestionAsignacionGeneral.js}"></script>
 </body>
 </html>
