@@ -107,14 +107,12 @@
                     <!-- Contiene la sección elegida, si el filtro no encuentra un codigo relacionado con la 
                      busqueda pedira que seleccione una seccion valida, ademas al entrar por primera vez simplemente no se mostrara-->
                     <h5 class="text-start col-lg-9 mt-2" th:text="${formSubmitted ? 
-                                (codigoBachillerato == null || codigoBachillerato.isEmpty() ? 
+                                (codigoBachillerato == null || codigoBachillerato == 0 ? 
                                     'Selecciona una sección válida' : 
                                     'Asignando horas de clase a ' + 
                                     (grado != null ? grado + '° ' : '') +
                                     (carrera != null ? carrera + ' ' : '') +
-                                    (seccion != null ? seccion + ' - ' : '') + 
-                                    codigoBachillerato) : 
-                                ''}">
+                                    (seccion != null ? seccion: '')) : ''}">
                     </h5>
 
                     <!-- Contiene el codigo del bachillerato por si acaso se necesito-->
@@ -124,7 +122,7 @@
                     </div> -->
 
                     <!-- Contiene las tarjetas con las horas de clase y es mostrado unicamente cuando una sección realmente existe-->
-                    <div class="row" th:if="${codigoBachillerato != null and !codigoBachillerato.isEmpty()}">
+                    <div class="row" th:if="${codigoBachillerato != null and codigoBachillerato != 0}">
 
                         <!-- Lunes -->
                         <div class="col-md-6 mb-3 mr-3">
@@ -841,8 +839,7 @@
                             <div class="mb-3">
                                 <label for="seccionSeleccionada" class="form-label">Sección</label>
                                 <input type="text" class="form-control" id="seccionSeleccionada"
-                                    name="seccionSeleccionada"
-                                    th:value="${grado + 'º ' + carrera + ' ' + seccion + ' - ' + codigoBachillerato}"
+                                    name="seccionSeleccionada" th:value="${grado + 'º ' + carrera + ' ' + seccion}"
                                     required readonly>
 
                                 <div class="invalid-feedback">Ha ocurrido un error, por favor refresca la pestaña</div>

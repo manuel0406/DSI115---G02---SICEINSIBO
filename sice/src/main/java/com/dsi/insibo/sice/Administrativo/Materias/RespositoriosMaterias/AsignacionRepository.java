@@ -33,4 +33,8 @@ public interface AsignacionRepository extends JpaRepository<Asignacion, Integer>
           + "a.docente.apellidoDocente ASC, a.bachillerato.grado ASC, "
           + "a.bachillerato.seccion ASC")
     List<Asignacion> findAllAsignaciones();
+
+    // OBTENER TODAS LAS ASIGNACIONES DADA UNA SECCIÓN
+    @Query("SELECT a FROM Asignacion a WHERE a.bachillerato.codigoBachillerato = :codigoBachillerato")
+    List<Asignacion> findByCodigoBachillerato(Integer codigoBachillerato);
 }

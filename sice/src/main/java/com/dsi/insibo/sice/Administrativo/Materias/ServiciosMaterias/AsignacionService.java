@@ -50,4 +50,7 @@ public class AsignacionService {
         return asignacionRepository.findAllAsignaciones();
     }
 
+    public List<Asignacion> listarAsignacionesCodigoBachillerato(Integer codigoBachillerato){
+        return asignacionRepository.findByCodigoBachillerato(codigoBachillerato);
+    }
 }

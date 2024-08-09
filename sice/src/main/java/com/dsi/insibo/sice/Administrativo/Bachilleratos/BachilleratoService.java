@@ -33,4 +33,10 @@ public class BachilleratoService {
     public void guardarBachillerato(Bachillerato bachillerato){
         bachilleratoRepository.save(bachillerato);
     }
+
+    public Integer obtenerCodigoBachillerato(String carrera, int grado, String seccion) {
+        return bachilleratoRepository.findByNombreCarreraAndGradoAndSeccion(carrera, grado, seccion)
+                .map(Bachillerato::getCodigoBachillerato)
+                .orElse(null);
+    }
 }

@@ -59,20 +59,17 @@ public class HorarioController {
         // Obtener la lista de carreras (bachilleratos)
         List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
 
-        // Obtener el código del bachillerato si se proporcionan todos los parámetros
-        // necesarios
-        String codigoBachillerato = null;
+        // Obtener el código del bachillerato si se proporcionan los parámetros necesarios
+        Integer codigoBachillerato = null;
         if (carrera != null && grado != null && seccion != null) {
-            codigoBachillerato = bachilleratoService.obtenerCodigoBachillerato(carrera, Integer.parseInt(grado),
-                    seccion);
+            codigoBachillerato = bachilleratoService.obtenerCodigoBachillerato(carrera, Integer.parseInt(grado), seccion);
         }
 
+        // Obtener las asignaciones de una seccion dada su llave primaria
         List<Asignacion> listaAsignaciones = null;
-        if (codigoBachillerato != null) {
+        if (codigoBachillerato != null && codigoBachillerato != 0) {
             listaAsignaciones = asignacionService.listarAsignacionesCodigoBachillerato(codigoBachillerato);
         }
-        // listaAsignaciones =
-        // asignacionService.listarAsignacionesCodigoBachillerato("1ACA");
 
         // Agregar atributos al modelo
         model.addAttribute("bachilleratos", listaCarreras);
@@ -81,12 +78,7 @@ public class HorarioController {
         model.addAttribute("seccion", seccion);
         model.addAttribute("codigoBachillerato", codigoBachillerato);
         model.addAttribute("formSubmitted", formSubmitted);
-        //model.addAttribute("asignaciones", listaAsignaciones);
-        model.addAttribute("asignaciones", listaAsignaciones != null ?
-        listaAsignaciones : List.of());
-
-        // Añadir un objeto Asignacion vacío para el formulario
-        model.addAttribute("asignacion", new Asignacion());
+        model.addAttribute("asignaciones", listaAsignaciones != null ? listaAsignaciones : List.of());
 
         // Cargar la vista
         return "Horario/asignarHoras";
@@ -113,7 +105,6 @@ public class HorarioController {
         horarioService.guardarHoraAsignacion(hora);
         redirectAttributes.addFlashAttribute("success", "Hora correctamente asignada");
 
-    
         // Añadir parámetros a los atributos de redirección
         redirectAttributes.addAttribute("carrera", carrera != null ? carrera : "");
         redirectAttributes.addAttribute("grado", grado != null ? grado : "");
