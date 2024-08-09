@@ -46,7 +46,8 @@ public class AsignacionService {
         asignacionRepository.delete(asignacion);
     }
 
-    public List<Asignacion> listarAsignacionesCodigoBachillerato(String codigoBachillerato){
-        return asignacionRepository.findByCodigoBachillerato(codigoBachillerato);
+    public List<Asignacion> obtenerTodaAsignaciones(){
+        return asignacionRepository.findAllAsignaciones();
     }
+
 }

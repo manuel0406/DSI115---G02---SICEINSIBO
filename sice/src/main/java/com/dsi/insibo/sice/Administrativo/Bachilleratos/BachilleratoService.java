@@ -11,17 +11,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class BachilleratoService  {
+public class BachilleratoService {
 
     @Autowired
     private BachilleratoRepository bachilleratoRepository;
 
-    public List<Bachillerato> listaBachilleratos(){
+    public List<Bachillerato> listaBachilleratos() {
         return (List<Bachillerato>) bachilleratoRepository.findAll();
     }
 
     public List<Bachillerato> listaCarrera() {
-        List<Bachillerato> bachilleratos = bachilleratoRepository.findAll();
+        List<Bachillerato> bachilleratos = bachilleratoRepository.findAll(); // tu lógica para obtener los
+                                                                             // bachilleratos;
         Set<String> nombresUnicos = new HashSet<>();
 
         return bachilleratos.stream()
@@ -29,9 +30,7 @@ public class BachilleratoService  {
                 .collect(Collectors.toList());
     }
 
-    public String obtenerCodigoBachillerato(String carrera, int grado, String seccion) {
-        return bachilleratoRepository.findByNombreCarreraAndGradoAndSeccion(carrera, grado, seccion)
-                .map(Bachillerato::getCodigoBachillerato)
-                .orElse(null);
+    public void guardarBachillerato(Bachillerato bachillerato){
+        bachilleratoRepository.save(bachillerato);
     }
 }

@@ -22,6 +22,8 @@ import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Docente;
 import com.dsi.insibo.sice.entity.Materia;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Controller
@@ -39,9 +41,18 @@ public class AsignacionController {
     @Autowired
     private AsignacionService asignacionService;
 
-    @GetMapping("/AsignacionMateria/")
-    public String fallaEnlace(){
-        return "redirect:/GestionMaterias";
+    @GetMapping("/AsignacionMateria")
+    public String asignacionMateriasGeneral(Model model){
+
+        String titulo = "Asignaciones de Materias";                                         // Asignar titulo
+        List<Asignacion> listadoAsignaciones = asignacionService.obtenerTodaAsignaciones(); // Obtener todas las asignaciones
+        List<Docente> docentes = docenteService.listarDocenteAsignacion();                  // Obtener maestros
+
+        // Construccion de infromacion a front-end
+        model.addAttribute("asignaciones", listadoAsignaciones);
+        model.addAttribute("docentes", docentes);
+        model.addAttribute("titulo", titulo);
+        return "Administrativo/GestionMaterias/AsignacionMateriaGeneral";
     }
 
     @GetMapping("/AsignacionMateria/{id}")
@@ -52,18 +63,69 @@ public class AsignacionController {
             return "redirect:/GestionMaterias";
         }
         
+        // Para obtener el titulo
         Materia materia = materiasService.obtenerMateriaPorId(idMateria);                       // Informacion de la materia
+        String titulo = "Asignaciones a: " + materia.getNomMateria();
+
+        // Para obtener todas las asignaciones
         List<Asignacion> listadoAsignaciones = asignacionService.listarAsignaciones(idMateria); // Listado de asignaciones de la materia
 
-        // Filtrado de maximo de docentes
+        // Filtrado de maximo de docentes - obtener docentes sin repetir
         List<String> docentesMax = asignacionService.listarDocentesMaximo(idMateria);
         List<Docente> docentes = docenteService.listarDocenteAsignacion();
         docentes.removeIf(docente -> docentesMax.contains(docente.getDuiDocente())); // Eliminar de la lista de docentes aquellos cuyo duiDocente está en la lista de docentesMax
         
-        model.addAttribute("materia", materia);
+        model.addAttribute("titulo", titulo);
         model.addAttribute("asignaciones", listadoAsignaciones);
+        model.addAttribute("idMateria", idMateria);
         model.addAttribute("docentes", docentes);
         return "Administrativo/GestionMaterias/AsignacionMateria";
+    }
+
+    @GetMapping("/NuevaAsignacion")
+    public String nuevaAsignacionGeneral(Model model){
+
+        // Obtenemos las materias
+        List<Materia> materias = materiasService.obtenerMaterias();
+
+        // Obtenemos los bachilleratos
+        List<Bachillerato> primeros = bachilleratosService.obtenerPrimeros();
+        List<Bachillerato> segundos = bachilleratosService.obtenerSegundos();
+        List<Bachillerato> terceros = bachilleratosService.obtenerTerceros();
+
+        // Obtenemos los docentes
+        List<Docente> docentes = docenteService.listarDocenteAsignacion();
+
+        // Obtenemos las asignaciones
+        List<Asignacion> asignaciones = asignacionService.obtenerTodaAsignaciones();
+
+
+        // Convertir la listas  a JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String materiasJson = objectMapper.writeValueAsString(materias);
+            String docentesJson = objectMapper.writeValueAsString(docentes);
+            String asignacionesJson = objectMapper.writeValueAsString(asignaciones);
+            String primerosJson = objectMapper.writeValueAsString(primeros);
+            String segundosJson = objectMapper.writeValueAsString(segundos);
+            String tercerosJson = objectMapper.writeValueAsString(terceros);
+
+            model.addAttribute("materiasJson", materiasJson);
+            model.addAttribute("docentesJson", docentesJson);
+            model.addAttribute("asignacionesJson", asignacionesJson);
+            model.addAttribute("primerosJson", primerosJson);
+            model.addAttribute("segundosJson", segundosJson);
+            model.addAttribute("tercerosJson", tercerosJson);
+        } catch (JsonProcessingException e) {
+            System.out.println("El error es: " + e);
+        }
+
+        // Crear la vista
+        model.addAttribute("materias", materias);
+
+
+        return "Administrativo/GestionMaterias/NuevaAsignacionGeneral";
+        
     }
 
     @GetMapping("/NuevaAsignacion/{id}")
@@ -84,7 +146,7 @@ public class AsignacionController {
     
         // Obtener las asignaciones para la materia específica
         List<Asignacion> asignaciones = asignacionService.obtenerAsignacionExistente(idMateria);
-        Set<String> codigosBachilleratoAsignaciones = asignaciones.stream()
+        Set<Integer> codigosBachilleratoAsignaciones = asignaciones.stream()
                     .map(asignacion -> asignacion.getBachillerato().getCodigoBachillerato())
                     .collect(Collectors.toSet());                                               // Codigo de las asignaciones existentes
     
@@ -116,14 +178,14 @@ public class AsignacionController {
     public String crearAsignacionMateria(
             @RequestParam("idMateria") int idMateria,
             @RequestParam("duiDocente") String duiDocente,
-            @RequestParam("codigoBachillerato") List<String> codigosBachillerato,
+            @RequestParam("codigoBachillerato") List<Integer> codigosBachillerato,
             RedirectAttributes redirectAttributes) {
         
         Docente docente = docenteService.buscarPorIdDocente(duiDocente);
         Materia materia = materiasService.obtenerMateriaPorId(idMateria);
 
         List<Asignacion> asignaciones = new ArrayList<>();
-        for (String codigo : codigosBachillerato) {
+        for (int codigo : codigosBachillerato) {
             Bachillerato bachillerato = bachilleratosService.obtenerBachilleratoPorId(codigo);
             
             Asignacion asignacion = new Asignacion();

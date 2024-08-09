@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.dsi.insibo.sice.entity.Bachillerato;
 @Repository
-public interface BachilleratoRepository extends JpaRepository<Bachillerato, String> {
+public interface BachilleratoRepository extends JpaRepository<Bachillerato, Integer> {    
 
-    Optional<Bachillerato> findByNombreCarreraAndGradoAndSeccion(String nombreCarrera, int grado, String seccion);
 }

@@ -11,4 +11,7 @@ public interface MateriasRepository extends JpaRepository<Materia, Integer> {
     // Obtener todas las materias.
     @Query("SELECT m FROM Materia m ORDER BY m.codMateria ASC")
     List<Materia> obtenerMaterias();
+
+    @Query("SELECT m FROM Materia m WHERE m.tipoMateria = :tipo ORDER BY m.codMateria ASC")
+    List<Materia> findMateriasByType(String tipo);
 }

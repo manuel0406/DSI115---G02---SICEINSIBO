@@ -32,4 +32,9 @@ public class MateriasService {
     public void eliminarMateria(Materia materia) {
         materiasRepository.delete(materia);
     }
+
+    // OBTENER MATERIA POR TIPO
+    public List<Materia> obtenerMateriaPorTipo(String tipo) {
+       return materiasRepository.findMateriasByType(tipo);
+    }
 }

@@ -2,6 +2,7 @@ package com.dsi.insibo.sice.entity;
 
 import java.io.Serializable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,7 +14,9 @@ public class Materia implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idMateria;
+    @Column(unique = true)
     private String codMateria;
+    @Column(unique = true)
     private String nomMateria;
     private String tipoMateria;
 

@@ -99,37 +99,18 @@ document
 
     $(document).ready(function() {
         $('.editar-btn').on('click', function() {
-            var idOrientador = $(this).data('id');
-            var docente = $(this).data('doc');
-            var bachillerato = $(this).data('bac');           
+            var idAnio = $(this).data('id');
+            var estado = $(this).data('est');
+            var anio = $(this).data('an');
+                 
     
-            $('#idOrientador').val(idOrientador);
-            $('#EditDocente').val(docente);
-            $('#EditBachillerato').val(bachillerato);
+            $('#editIdAnio').val(idAnio);
+            $('#editEstado').prop('checked', estado);
+            $('#editAnio').val(anio);
+            
            
         });
     });
 
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Obtener todos los botones de consulta
-        const consultarButtons = document.querySelectorAll('.btn-success.editar-btn');
-    
-        consultarButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                // Obtener los datos del atributo data
-                const tipo = this.getAttribute('data-tip');
-                const descripcion = this.getAttribute('data-des');
-                const accionCorrectiva = this.getAttribute('data-aco');
-                const fecha = this.getAttribute('data-fec');
-    
-                // Asignar los datos al modal
-                document.getElementById('consultaTipo').textContent = tipo;
-                document.getElementById('consultaDescripcion').textContent = descripcion;
-                document.getElementById('consultaAccionCorrectiva').textContent = accionCorrectiva;
-                document.getElementById('consultaFechaCreacion').textContent = fecha;
-            });
-        });
-    });
-    
-    
+   
