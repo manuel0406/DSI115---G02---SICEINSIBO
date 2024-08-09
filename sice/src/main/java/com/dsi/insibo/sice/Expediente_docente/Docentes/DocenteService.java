@@ -45,4 +45,8 @@ public class DocenteService {
         return docenteRepository.obtenerDocentesPorRol(UsuarioRoleEnum.DOCENTE);
     }
 
+    public List<Docente> docentes(){
+        return (List<Docente>) docenteRepository.findAll();
+    }
+
 }

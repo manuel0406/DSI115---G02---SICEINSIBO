@@ -15,32 +15,20 @@ public class BachilleratosService {
     @Autowired
     private BachilleratosRespository bachilleratosRepository;
 
-    //OBTENER GRADOS
-    public Set<Integer> obtenerGrados(){
-        return (Set<Integer>) bachilleratosRepository.findGrados();
-    }
-
-    //OBTENER TECNICOS
-    public Set<String> obtenerTecnicos(){
-        return (Set<String>) bachilleratosRepository.findTecnicos();
-    }    
-
-    //OBTENER SECCIONES
-    public Set<String> obtenerSecciones(String tecnico, Integer grado){
-        return (Set<String>) bachilleratosRepository.findSecciones(tecnico,grado);
-    }    
-
     //OBTENER PRIMEROS AÑOS
+    // 1. Usado en nuevas asignaciones.
     public List<Bachillerato> obtenerPrimeros(){
         return (List<Bachillerato>) bachilleratosRepository.findPorSecciones(1);
     } 
 
     //OBTENER SEGUNDOS AÑOS
+    // 1. Usado en nuevas asignaciones.
     public List<Bachillerato> obtenerSegundos(){
         return (List<Bachillerato>) bachilleratosRepository.findPorSecciones(2);
     }  
 
     //OBTENER TERCEROS AÑOS
+    // 1. Usado en nuevas asignaciones.
     public List<Bachillerato> obtenerTerceros(){
         return (List<Bachillerato>) bachilleratosRepository.findPorSecciones(3);
     }

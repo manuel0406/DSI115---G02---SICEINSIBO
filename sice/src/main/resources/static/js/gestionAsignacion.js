@@ -2,12 +2,14 @@ $(document).ready(function() {
     $('#actualizarMateriaModal').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget); // Botón que disparó el modal
         var idAsignacion = button.data('id');
+        var idMateria = button.data('id-materia'); // Asegúrate de que este es el atributo correcto
         var nomMateria = button.data('materia'); // Asegúrate de que este es el atributo correcto
         var duiDocente = button.data('profesor'); // Asegúrate de que este es el atributo correcto
         var codBachillerato = button.data('cod-bachillerato'); // Asegúrate de que este es el atributo correcto
 
         var modal = $(this);
         modal.find('#idAsignacion').val(idAsignacion);
+        modal.find('#editarIdMateria').val(idMateria);
         modal.find('#editarMateria').val(nomMateria); // Asegúrate de que este es el ID correcto
         modal.find('#editarBachillerato').val(codBachillerato); // Asegúrate de que este es el ID correcto
         modal.find('#profesor').val(duiDocente); // Asegúrate de que este es el ID correcto

@@ -16,51 +16,28 @@
     <div class="container mb-2 justify-content-center">
         <!-- TITULO PRINCIPAL -->
         <div class="container mt-4 d-flex justify-content-center mb-3 flex-wrap">
-            <h3 class="text-center mt-5"><b>Materias impartidas en INSIBO</b></h3>
-        </div>
-
-        <div class="container mt-4 d-flex justify-content-center flex-wrap">
-            <div class="d-flex">
-                <!-- Select Grado -->
-                <div class="form-group me-3">
-                    <label for="selectGrado" class="form-label">Grado</label>
-                    <select class="form-select" id="selectGrado" name="grado">
-                        <option value="">Seleccionar grado...</option>
-                        <option th:each="grado : ${grados}" th:value="${grado}" th:text="${grado}"></option>
-                    </select>
-                </div>
-
-                <!-- Select Técnico -->
-                <div class="form-group me-3">
-                    <label for="selectTecnico" class="form-label">Técnico</label>
-                    <select class="form-select" id="selectTecnico" name="tecnico">
-                        <option value="">Seleccionar técnico...</option>
-                        <option th:each="tecnico : ${tecnicos}" th:value="${tecnico}" th:text="${tecnico}"></option>
-                    </select>
-                </div>
-
-                <!-- Select Sección -->
-                <div class="form-group me-3">
-                    <label for="selectSeccion" class="form-label">Sección</label>
-                    <select class="form-select" id="selectSeccion" name="seccion">
-                        <option value="">Seleccionar sección...</option>
-                    </select>
-                </div>
-            </div>
-            <div class="container d-flex justify-content-center flex-wrap mt-2">
-                <!-- Botón Filtrar -->
-                <button type="button" class="btn btn-primary">Filtrar</button>
-            </div>    
+            <h3 class="text-center mt-5"><b th:text="${titulo}"></b></h3>
         </div>
 
         <div class="container col-8">
+            <!-- Filtro de Tipo de Materia -->
+            <label for="filtroTipoMateria" class="form-label me-3 flex-grow-1">Seleccione el tipo</label>
+            <div class="mb-3 d-flex align-items-center">
+                <select id="filtroTipoMateria" class="form-select me-2" aria-label="Filtrar por Tipo">
+                    <option value="">Todos</option>
+                    <option value="Básica" th:selected="${seleccion == 'Básica'}">Básica</option>
+                    <option value="Módulo" th:selected="${seleccion == 'Módulo'}">Módulo</option>
+                </select>
+                <a type="button" class="btn btn-outline-dark" id="filtrarBtn">Filtrar</a>
+            </div>
+
+            <!-- Botón Nueva Materia -->
             <div class="container mt-0 d-flex justify-content-end mb-2 flex-wrap">
-                <!-- Botón Nueva Materia -->
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevaMateriaModal">Nueva Materia</button>
             </div>
             
-            <table class="table-responsive table table-striped table-hover">
-                <thead class="table-dark">
+            <table class="table table-responsive table-hover">
+                <thead>
                     <tr>
                         <th class="text-center">Código</th>
                         <th class="text-center">Nombre</th>
@@ -90,6 +67,24 @@
                     </tr>
                 </tbody>
             </table>
+            <!-- Contenedor de navegación para la paginación -->
+            <nav aria-label="...">
+                <!-- Lista de elementos de paginación centrada -->
+                <ul class="pagination justify-content-center">
+                    <!-- Boton para anterior -->
+                    <li class="page-item">
+                        <!-- Enlace que lleva a la página anterior -->
+                        <a class="page-link">Anterior</a>
+                    </li>
+
+                    
+                    <!-- Boton para siguiente -->
+                    <li class="page-item">
+                        <!-- Enlace que lleva a la página siguiente -->
+                        <a class="page-link">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 
@@ -99,7 +94,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="nuevaMateriaModalLabel">Nueva Materia</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="cancelarNuevaMateriaIco" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!-- Formulario para guardar nueva materia -->
@@ -107,12 +102,12 @@
                         <div class="mb-3">
                             <label for="codMateria" class="form-label">Código de la Materia</label>
                             <input type="text" class="form-control" id="codMateria" name="codMateria" required>
-                            <div class="invalid-feedback">Por favor, ingrese el código de la materia.</div>
+                            <div class="error-message text-danger" id="errorCodMateria"></div>
                         </div>
                         <div class="mb-3">
                             <label for="nomMateria" class="form-label">Nombre de la Materia</label>
                             <input type="text" class="form-control" id="nomMateria" name="nomMateria" required>
-                            <div class="invalid-feedback">Por favor, ingrese el nombre de la materia.</div>
+                            <div class="error-message text-danger" id="errorNomMateria"></div>
                         </div>
                         <div class="mb-3">
                             <label for="tipoMateria" class="form-label">Tipo de Materia</label>
@@ -121,11 +116,11 @@
                                 <option value="Básica">Básica</option>
                                 <option value="Módulo">Módulo</option>
                             </select>
-                            <div class="invalid-feedback">Por favor, seleccione el tipo de materia.</div>
+                            <div class="error-message text-danger" id="errorTipoMateria"></div>
                         </div>
                         <div class="d-flex justify-content-end">
                             <button type="button" class="btn btn-danger me-2" id="cancelarNuevaMateria" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="submit" id="saveButton" class="btn btn-primary" disabled >Guardar</button>
                         </div>
                     </form>
                 </div>
@@ -139,21 +134,21 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="actualizarMateriaModalLabel">Actualizar Materia</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" id="cancelarActualizarMateriaIco" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body">                   
                     <!-- Formulario para actualizar materia -->
                     <form id="formActualizarMateria" class="needs-validation" novalidate th:action="@{/actualizarMateria}" method="post">
                         <input type="hidden" id="idMateria" name="idMateria">
                         <div class="mb-3">
                             <label for="editCodMateria" class="form-label">Código de la Materia</label>
                             <input type="text" class="form-control" id="editCodMateria" name="codMateria" required>
-                            <div class="invalid-feedback">Por favor, ingrese el código de la materia.</div>
+                            <div class="error-message text-danger" id="editErrorCodMateria"></div>
                         </div>
                         <div class="mb-3">
                             <label for="editNomMateria" class="form-label">Nombre de la Materia</label>
                             <input type="text" class="form-control" id="editNomMateria" name="nomMateria" required>
-                            <div class="invalid-feedback">Por favor, ingrese el nombre de la materia.</div>
+                            <div class="error-message text-danger" id="editErrorNomMateria"></div>
                         </div>
                         <div class="mb-3">
                             <label for="editTipoMateria" class="form-label">Tipo de Materia</label>
@@ -162,11 +157,11 @@
                                 <option value="Básica">Básica</option>
                                 <option value="Módulo">Módulo</option>
                             </select>
-                            <div class="invalid-feedback">Por favor, seleccione el tipo de materia.</div>
+                            <div class="error-message text-danger" id="editErrorTipoMateria"></div>
                         </div>
                         <div class="d-flex justify-content-end">
                             <button type="button" class="btn btn-danger me-2" id="cancelarActualizarMateria" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Actualizar</button>
+                            <button type="submit" id="upadateButton" class="btn btn-primary" disabled>Actualizar</button>
                         </div>
                     </form>
                 </div>
@@ -199,6 +194,13 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Variable que contiene todas las materias -->
+    <script th:inline="javascript">
+        var materiasJson = /*[[${materiasJson}]]*/ '[]';
+    </script>
+
     <script type="text/javascript" th:src="@{/js/gestionMaterias.js}"></script>
+
 </body>
 </html>

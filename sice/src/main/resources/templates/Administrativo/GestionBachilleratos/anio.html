@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{home :: head}"></head>
+
+<body>
+    <header th:replace="~{home :: header}"></header>
+    <div class="py-5"></div>
+    <div class="container">
+
+        <!--Mensajes-->
+        <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
+            <label th:text="${success}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
+            <label th:text="${error}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
+            <label th:text="${warning}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="py-4 bg-light">
+            <h1 class="text-center">Creacion de años</h1>
+        </div>
+        <div class="py-2"></div>
+
+        <div class="py-1">
+            <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
+                <h3 class="text-start col-lg-9"></h3>
+                <div class="d-flex gap-2">
+                    <a class="btn btn-success Agregar-btn"  data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="Crear oferta" th:text="'Crear año'"></a>
+                </div>
+            </div>
+
+            <div class="table-responsive py-2">
+                <table class="table table-hover">
+                    <thead class="tabla-c">
+                        <tr>
+                            <th scope="col">N°</th>
+                            <th scope="col">Año</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="anios, stat: ${lista}">
+                            <th scope="row" th:text="${stat.index + 1}"></th>
+                            <td th:text="${anios.anio}"></td>
+                            <td th:if="${anios.activoAnio != true}" th:text="${'Inactivo'}"></td>
+                            <td th:if="${anios.activoAnio == true}" th:text="${'Activo'}"></td>
+                            <td>
+                                <a class="btn btn-warning" th:if="${!anioBachilleratoMap[anios.idAnioAcademico]}" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    th:href="@{/Bachillerato/Oferta/}+${anios.idAnioAcademico}" title="Crear oferta">
+                                    <i class="bi bi-plus-circle"></i> Crear oferta
+                                </a>
+                                <a class="btn btn-success" th:if="${anioBachilleratoMap[anios.idAnioAcademico]}" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Consultar">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </a>
+                                <a class="btn btn-primary editar-btn" th:if="${anioBachilleratoMap[anios.idAnioAcademico]}" data-bs-toggle="modal"
+                                    data-bs-target="#actualizarAnioModal" data-bs-placement="top" title="Editar"
+                                    th:data-id="${anios.idAnioAcademico}" th:data-est="${anios.activoAnio}"
+                                    th:data-an="${anios.anio}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de creacion de año -->
+    <div class="modal fade" id="agregarModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmAgregarModalLabel">Crear año</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:object="${anio}" class="needs-validation" id="formAnio" novalidate method="post"
+                    th:action="@{/Bachillerato/guardarAnio}">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="anioLabel" class="form-label fw-bold">Año:</label>
+                            <input type="text" th:field="*{anio}" class="form-control restricted-input" id="anio"
+                                placeholder="0000" required minlength="4" maxlength="4" />
+                            <div class="invalid-feedback">
+                                Este campo no puede quedar vacio
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            id="cancelarAnio">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="agregarModalButton">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+   <!-- Modal de editar sancion -->
+    <div class="modal fade" id="actualizarAnioModal" tabindex="-1" aria-labelledby="actualizarAnioModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="actualizarAnioModalLabel">Cambiar estado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:object="${anio}" class="needs-validation" id="formActualizarAnio" novalidate method="post" th:action="@{/Bachillerato/editarAnio}">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input type="hidden" th:field="*{idAnioAcademico}" id="editIdAnio" name="idAnioAcademico">
+                            <input type="hidden" th:field="*{anio}" id="editAnio" name="AnioAcademico">
+                            <label class="form-check-label" for="editEstado">Estado:</label>
+                            <input class="form-check-input" type="checkbox" id="editEstado" name="activoAnio" th:field="*{activoAnio}">
+                            <div class="invalid-feedback">
+                                Este campo no puede quedar vacío
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelarActualizarAnio">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="guardarActualizarAnioButton">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</body>
+<footer th:replace="~{home :: footer}"></footer>
+<script type="text/javascript" th:src="@{/js/GestionAnio.js}"></script>
+
+</html>

@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dsi.insibo.sice.Administrativo.Bachilleratos.BachilleratoService;
 import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
-import com.dsi.insibo.sice.Expediente_alumno.BachilleratoService;
 import com.dsi.insibo.sice.entity.Actividad;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Periodo;
 import com.dsi.insibo.sice.entity.Materia;
 import com.dsi.insibo.sice.entity.Actividad;
-import com.dsi.insibo.sice.entity.MateriaBachillerato;
+
 
 import org.springframework.ui.Model;
 
