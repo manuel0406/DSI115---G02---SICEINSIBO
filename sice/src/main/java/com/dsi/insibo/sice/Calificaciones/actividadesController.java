@@ -26,7 +26,7 @@ import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Periodo;
 import com.dsi.insibo.sice.entity.Materia;
 import com.dsi.insibo.sice.entity.Actividad;
-import com.dsi.insibo.sice.entity.MateriaBachillerato;
+
 
 import org.springframework.ui.Model;
 
