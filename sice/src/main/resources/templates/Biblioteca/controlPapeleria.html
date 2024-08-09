@@ -52,11 +52,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                  <tr th:each="entrega : ${entregas}">
+                    <td th:text="${entrega.entregaFecha}"></td>
+                    <td th:text="${entrega.entregaPersona}"></td>
+                    <td th:text="${entrega.inventarioPapeleria.nombreArticulo}"></td>
+                    <td th:text="${entrega.entregaCantidad}"></td>
                     <td>
                         <button type="button" class="btn btn-primary btn-sm" >
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -67,27 +67,122 @@
                   </tr>
                 </tbody>
               </table>
+
+              <!-- Maneja la paginacion  -->
+              <nav aria-label="...">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
+                        <a class="page-link"
+                            th:href="@{'/Biblioteca/Papeleria/Control?page=' + ${page.number - 1}}">Anterior</a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                        th:classappend="${page.number == i} ? 'active'">
+                        <a class="page-link" th:href="@{'/Biblioteca/Papeleria/Control?page=' + ${i}}"
+                            th:text="${i + 1}">1</a>
+                    </li>
+                    <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
+                        <a class="page-link"
+                            th:href="@{'/Biblioteca/Papeleria/Control?page=' + ${page.number + 1}}">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
-    <!-- Modal Nueva Entrega -->
-    <div class="modal fade" id="NuevaEntregaModal" tabindex="-1" aria-labelledby="NuevaEntregaModal" aria-hidden="true">
+
+    <!-- Modal de Nueva Entrega -->
+    <div class="modal fade" id="NuevaEntregaModal" tabindex="-1" aria-labelledby="NuevaEntregaModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Registrar Nueva Entrega</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="NuevaEntregaModalLabel">Registrar Nueva Entrega</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form id="formNuevaEntrega">
+                      <div class="row mb-3">
+                          <div class="col-md-6">
+                              <label for="entregaFecha" class="form-label">Fecha de Entrega</label>
+                              <input type="date" class="form-control" id="entregaFecha" name="entregaFecha" disabled>
+                          </div>
+                          <div class="col-md-6">
+                              <label for="entregaPersona" class="form-label">Persona que Recibe</label>
+                              <input type="text" class="form-control" id="entregaPersona" name="entregaPersona" required>
+                          </div>
+                      </div>
+
+                      <div id="productosContainer">
+                          <!-- Aquí se agregarán los selects para productos y cantidades -->
+                          <div class="row mb-3 producto-group">
+                              <div class="col-md-6">
+                                  <label for="producto" class="form-label">Producto</label>
+                                  <select class="form-control producto-select" name="producto[]" required>
+                                      <option value="">Seleccione un producto</option>
+                                      <!-- Opciones de producto aquí -->
+                                      <tr th:each="producto : ${productos}">
+                                          <option th:value="${producto.idArticulo}" th:text="${producto.nombreArticulo}"></option>
+                                      </tr>
+                                  </select>
+                              </div>
+                              <div class="col-md-6">
+                                  <label for="entregaCantidad" class="form-label">Cantidad</label>
+                                  <input type="number" class="form-control" name="entregaCantidad[]" required>
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Botón para agregar un nuevo producto -->
+                      <div class="mb-3">
+                          <button type="button" class="btn btn-secondary" id="agregarProductoButton">
+                              <i class="bi bi-plus"></i> Agregar Producto
+                          </button>
+                      </div>
+                  </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-primary" form="formNuevaEntrega">Registrar</button>
+              </div>
           </div>
-          <div class="modal-body">
-            ...
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary">Registrar</button>
-          </div>
-        </div>
       </div>
     </div>
 
     <footer th:replace="home :: footer"></footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          // Establecer la fecha actual
+          var today = new Date().toISOString().split('T')[0];
+          document.getElementById('entregaFecha').value = today;
+      
+          // Obtener el botón de agregar producto y el contenedor de productos
+          var agregarProductoButton = document.getElementById('agregarProductoButton');
+          var productosContainer = document.getElementById('productosContainer');
+      
+          // Evento de clic en el botón para agregar un nuevo producto
+          agregarProductoButton.addEventListener('click', function() {
+              // Crear un nuevo grupo de campos
+              var newProductGroup = document.createElement('div');
+              newProductGroup.className = 'row mb-3 producto-group';
+              newProductGroup.innerHTML = `
+                  <div class="col-md-6">
+                      <label class="form-label">Producto</label>
+                      <select class="form-control producto-select" name="producto[]" required>
+                          <option value="">Seleccione un producto</option>
+                          <!-- Opciones de producto aquí -->
+                          <option value="1"></option>
+                          <option value="2"></option>
+                      </select>
+                  </div>
+                  <div class="col-md-6">
+                      <label class="form-label">Cantidad</label>
+                      <input type="number" class="form-control" name="entregaCantidad[]" required>
+                  </div>
+              `;
+      
+              // Agregar el nuevo grupo de campos al contenedor
+              productosContainer.appendChild(newProductGroup);
+          });
+      });
+      </script>
 </body>
 </html>

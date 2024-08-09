@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dsi.insibo.sice.Biblioteca.Service.EntregaPapeleriaService;
 import com.dsi.insibo.sice.Biblioteca.Service.InventarioPapeleriaService;
+import com.dsi.insibo.sice.entity.EntregaPapeleria;
 import com.dsi.insibo.sice.entity.InventarioPapeleria;
 
 
@@ -30,6 +32,8 @@ import com.dsi.insibo.sice.entity.InventarioPapeleria;
 public class PapeleriaController {
     @Autowired
     private InventarioPapeleriaService inventarioPapeleriaService;
+    @Autowired
+    private EntregaPapeleriaService entregaPapeleriaService;
 
     // @GetMapping("/InventarioPapeleria")
     // public String inventarioPapeleria(Model model){
@@ -114,8 +118,43 @@ public class PapeleriaController {
     }
 
     @GetMapping("/Control")
-    public String ControlPapeleria(Model model){
-        model.addAttribute("titulo","Entrega de Papelería");
+    public String ControlPapeleria(Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size) {
+
+        // Obtener la lista completa de entregas
+        List<EntregaPapeleria> listadoEntregas = entregaPapeleriaService.listarEntregas();
+
+        // Calcular el rango para la página actual
+        int start = page * size;
+        int end = Math.min((start + size), listadoEntregas.size());
+
+        if (start > listadoEntregas.size()) {
+            start = listadoEntregas.size() - size;
+            if (start < 0) {
+                start = 0;
+            }
+        }
+
+        // Crear una sublista para la página actual
+        List<EntregaPapeleria> pagedEntregas = listadoEntregas.subList(start, end);
+
+        // Crear el objeto Page para pasar a la vista
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<EntregaPapeleria> pageEntregas = new PageImpl<>(
+                pagedEntregas,
+                pageRequest,
+                listadoEntregas.size()
+        );
+
+        // Obtener la lista de productos sin paginación
+        List<InventarioPapeleria> listadoProductos = inventarioPapeleriaService.listarProductos();
+
+        model.addAttribute("titulo", "Entrega de Papelería");
+        model.addAttribute("entregas", pageEntregas.getContent());
+        model.addAttribute("productos", listadoProductos);
+        model.addAttribute("nuevaEntrega", new EntregaPapeleria());
+        model.addAttribute("page", pageEntregas);
 
         return "/Biblioteca/controlPapeleria.html";
     }
