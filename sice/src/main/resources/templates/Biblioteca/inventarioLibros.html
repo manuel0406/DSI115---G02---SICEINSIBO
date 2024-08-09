@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://wwww.thymelead.org">
+<head th:replace="/home :: head">
+</head>
+<body>
+    <header th:replace="home :: header"></header>
+
+    <div class="container mt-5 py-4 ">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a th:href="@{/Biblioteca/}">Biblioteca</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Inventario Libros</li>
+            </ol>
+          </nav>
+    </div>
+
+    <div class="container">
+      <div class="jumbotron  mb-3 bg-light rounded-3">
+          <div class="container py-5 text-center">
+              <h1 class="display-5 fw-bold "> Inventario Bibliografico Institucional</h1>
+          </div>
+      </div>
+  </div>
+    
+    <!--Botones y Barra de busqueda de alumnos-->
+    <div class="navbar">
+        <div class="container">
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarLibro">Registrar Nuevo Libro</button>
+          <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Buscar Alumno" aria-label="Buscar Alumno">
+            <button class="btn btn-primary" type="submit">Buscar</button>
+          </form>
+        </div>
+    </div>
+    
+        <!--Tabla de datos-->
+    <div class="container">
+        <table class="table">
+            <thead class="table-dark">
+              <tr>
+                <th scope="col">Titulo</th>
+                <th scope="col">Autor</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Precio U</th>
+                <th scope="col">Existencia</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Mal estado</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="inventario:${libros}">
+                <td th:text="${inventario.tituloLibro}"></td>
+                <td th:text="${inventario.autorLibro}"></td>
+                <td th:text="${inventario.tipoLibro}"></td>
+                <td th:text="'$ ' + ${inventario.precioUnitario}"></td>
+                <td th:text="${inventario.existenciaLibro}"></td>
+                <td th:text="${inventario.fechaIngreso}"></td>
+                <td th:text="${inventario.cantidadMalEstado}"></td>
+                <td>
+                    <button class="btn btn-primary" th:attr="onclick='showEditModal(' + ${inventario.idInventarioLibros} + ')'" >
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                  <a href="" th:href="@{/Biblioteca/InventarioLibros/delete/{idInventarioLibros}(idInventarioLibros=${inventario.idInventarioLibros})}" class="btn btn-danger " data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="return confirm('Esta seguro de eliminar el registro')">
+                                    <i class="bi bi-trash"></i>
+                    </a>
+                </td>
+              </tr>
+            </tbody>
+        </table>
+
+        <!-- Maneja la paginacion  -->
+        <nav aria-label="...">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
+                    <a class="page-link"
+                        th:href="@{'/Biblioteca/InventarioLibros?page=' + ${page.number - 1}}">Anterior</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                    th:classappend="${page.number == i} ? 'active'">
+                    <a class="page-link" th:href="@{'/Biblioteca/InventarioLibros?page=' + ${i}}"
+                        th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
+                    <a class="page-link"
+                        th:href="@{'/Biblioteca/InventarioLibros?page=' + ${page.number + 1}}">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+
+    <!-- Modal Agregar Producto -->
+    <div class="modal fade" id="modalAgregarLibro" tabindex="-1" aria-labelledby="modalAgregarLibro" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Registrar Nuevo Libro | Biblioteca</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <!-- Formulario para agregar un nuevo artículo -->
+                  <form th:action="@{/Biblioteca/InventarioLibros}" th:object="${nuevoLibro}" method="post">
+                      <!-- Campo oculto para idArticulo (deja que Spring Boot lo maneje automáticamente) -->
+                      <input type="hidden" th:field="*{idInventarioLibros}" />
+  
+                      <!-- Campo nombreArticulo -->
+                      <div class="mb-3">
+                          <label for="tituloLibro" class="form-label">Titulo del Libro:</label>
+                          <input type="text" th:field="*{tituloLibro}" class="form-control" required />
+                      </div>
+  
+                      <!-- Campo descripcionArticulo -->
+                      <div class="mb-3">
+                          <label for="autorLibro" class="form-label">Autor:</label>
+                          <input type="text" th:field="*{autorLibro}" class="form-control" required />
+                      </div>
+
+                      <div class="mb-3">
+                          <label for="tipoLibro" class="form-label">Tipo:</label>
+                          <input type="text" th:field="*{tipoLibro}" class="form-control" required />
+                      </div>
+
+                      <div class="mb-3">
+                          <label for="precioLibro" class="form-label">Precio:</label>
+                          <input type="number" th:field="*{precioUnitario}" class="form-control" required />
+                      </div>
+  
+                      <!-- Campo existenciaArticulo -->
+                      <div class="mb-3">
+                          <label for="existenciaLibro" class="form-label">Cantidad:</label>
+                          <input type="number" th:field="*{existenciaLibro}" class="form-control" required/>
+                      </div>
+
+                      <div class="mb-3">
+                          <label for="fechaIngreso" class="form-label">Fecha:</label>
+                          <input type="date" th:field="*{fechaIngreso}" class="form-control" required />
+                      </div>
+
+                      <div class="mb-3">
+                          <label for="cantidadMalEstado" class="form-label">Cantidad en Mal Estado:</label>
+                          <input type="number" th:field="*{cantidadMalEstado}" class="form-control" required />
+                      </div>
+  
+                      <!-- Botones del modal -->
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                          <button type="submit" class="btn btn-primary">Guardar</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- Modal de edición de libro -->
+    <div class="modal fade" id="editarLibroModal" tabindex="-1" aria-labelledby="editarLibroModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formEditarLibro" th:action="@{/Biblioteca/InventarioLibros/update}" method="post">
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editarLibroModalLabel">Editar Libro</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="idInventarioLibrosEdit" name="idInventarioLibros">
+                        <div class="mb-3">
+                            <label for="tituloLibroEdit" class="form-label">Título del Libro</label>
+                            <input type="text" class="form-control" id="tituloLibroEdit" name="tituloLibro">
+                        </div>
+                        <div class="mb-3">
+                            <label for="autorLibroEdit" class="form-label">Autor del Libro</label>
+                            <input type="text" class="form-control" id="autorLibroEdit" name="autorLibro">
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipoLibroEdit" class="form-label">Tipo de Libro</label>
+                            <input type="text" class="form-control" id="tipoLibroEdit" name="tipoLibro">
+                        </div>
+                        <div class="mb-3">
+                            <label for="precioUnitarioEdit" class="form-label">Precio Unitario</label>
+                            <input type="text" class="form-control" id="precioUnitarioEdit" name="precioUnitario">
+                        </div>
+                        <div class="mb-3">
+                            <label for="existenciaLibroEdit" class="form-label">Existencia</label>
+                            <input type="number" class="form-control" id="existenciaLibroEdit" name="existenciaLibro">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaIngresoEdit" class="form-label">Fecha de Ingreso</label>
+                            <input type="date" class="form-control" id="fechaIngresoEdit" name="fechaIngreso">
+                        </div>
+                        <div class="mb-3">
+                            <label for="cantidadMalEstadoEdit" class="form-label">Cantidad en Mal Estado</label>
+                            <input type="number" class="form-control" id="cantidadMalEstadoEdit" name="cantidadMalEstado">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="home :: footer"></footer>
+
+    <script>
+        function showEditModal(idInventarioLibros) {
+            fetch('/Biblioteca/InventarioLibros/edit/' + idInventarioLibros)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('idInventarioLibrosEdit').value = data.idInventarioLibros;
+                    document.getElementById('tituloLibroEdit').value = data.tituloLibro;
+                    document.getElementById('autorLibroEdit').value = data.autorLibro;
+                    document.getElementById('tipoLibroEdit').value = data.tipoLibro;
+                    document.getElementById('precioUnitarioEdit').value = data.precioUnitario;
+                    document.getElementById('existenciaLibroEdit').value = data.existenciaLibro;
+                    document.getElementById('fechaIngresoEdit').value = data.fechaIngreso;
+                    document.getElementById('cantidadMalEstadoEdit').value = data.cantidadMalEstado;
+    
+                    $('#editarLibroModal').modal('show');
+                })
+                .catch(error => {
+                    console.error('Error al obtener los datos del libro:', error);
+                });
+        }
+    </script>
+</body>
+</html>
