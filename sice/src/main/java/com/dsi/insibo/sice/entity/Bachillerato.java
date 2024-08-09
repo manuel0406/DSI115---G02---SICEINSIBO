@@ -3,6 +3,8 @@ package com.dsi.insibo.sice.entity;
 import java.io.Serializable;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
@@ -10,7 +12,8 @@ import jakarta.persistence.ManyToOne;
 public class Bachillerato implements Serializable {
 
     @Id
-    private String codigoBachillerato;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int codigoBachillerato;
     private String nombreCarrera;
     private String seccion;
     private int grado;
@@ -20,20 +23,20 @@ public class Bachillerato implements Serializable {
     public Bachillerato() {
     }
 
-    public Bachillerato(String codigoBachillerato, String nombreCarrera, String seccion, int grado,
+    public Bachillerato( String nombreCarrera, String seccion, int grado,
             AnioAcademico anioAcademico) {
-        this.codigoBachillerato = codigoBachillerato;
+        
         this.nombreCarrera = nombreCarrera;
         this.seccion = seccion;
         this.grado = grado;
         this.anioAcademico = anioAcademico;
     }
 
-    public String getCodigoBachillerato() {
+    public int getCodigoBachillerato() { 
         return codigoBachillerato;
     }
 
-    public void setCodigoBachillerato(String codigoBachillerato) {
+    public void setCodigoBachillerato(int codigoBachillerato) {
         this.codigoBachillerato = codigoBachillerato;
     }
 

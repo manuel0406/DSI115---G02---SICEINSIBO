@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.entity.AnioAcademico;
@@ -25,6 +26,9 @@ public class ControllerBachilleratos {
 
     @Autowired
     AnioService anioService;
+
+    @Autowired
+    BachilleratoService bachilleratoService;
 
     @GetMapping("/anio")
     public String prueba(Model model) {
@@ -102,11 +106,39 @@ public class ControllerBachilleratos {
     }
 
     @GetMapping("/Oferta/{idAnio}")
-    public String oferta(Model model, @PathVariable("idAnio") int idAnio){
-
+    public String oferta(Model model, @PathVariable("idAnio") int idAnio) {
         AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnio);
-        
         model.addAttribute("titulo", "Crear Oferta");
+        model.addAttribute("anioAcademico", anioAcademico);
+        model.addAttribute("bachillerato", new Bachillerato());
+        model.addAttribute("carreras", List.of("Atención Primaria en Salud", "Administrativo Contable","Desarrollo de Software","Electrónica","Sistemas Eléctricos")); // Lista de carreras
+        model.addAttribute("secciones", List.of("A", "B", "C", "D")); // Lista de secciones disponibles
         return "Administrativo/GestionBachilleratos/crearOferta";
     }
+
+    @PostMapping("/Oferta/guardar/{idAnio}")
+public String crearOferta(@PathVariable("idAnio") int idAnio, 
+                          @RequestParam("secciones") List<String> secciones, 
+                          Model model) {
+
+    AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnio);
+
+    for (String seccion : secciones) {
+        String[] parts = seccion.split("\\|");  // Separar por el símbolo "|"
+        String carrera = parts[0];
+        int grado = Integer.parseInt(parts[1]); 
+        String seccionName = parts[2];
+
+        Bachillerato bachillerato = new Bachillerato();
+        bachillerato.setNombreCarrera(carrera);
+        bachillerato.setGrado(grado);
+        bachillerato.setSeccion(seccionName);
+        bachillerato.setAnioAcademico(anioAcademico);
+
+        bachilleratoService.guardarBachillerato(bachillerato); 
+    }
+
+    return "redirect:/Bachillerato/anio"; 
+}
+
 }

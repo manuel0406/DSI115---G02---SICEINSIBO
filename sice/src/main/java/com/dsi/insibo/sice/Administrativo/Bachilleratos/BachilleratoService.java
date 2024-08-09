@@ -30,7 +30,7 @@ public class BachilleratoService {
                 .collect(Collectors.toList());
     }
 
-    public void guardarBachillerato(List<Bachillerato> listabachillerato){
-        bachilleratoRepository.saveAll(listabachillerato);
+    public void guardarBachillerato(Bachillerato bachillerato){
+        bachilleratoRepository.save(bachillerato);
     }
 }

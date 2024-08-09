@@ -56,7 +56,7 @@
                             <td th:if="${anios.activoAnio == true}" th:text="${'Activo'}"></td>
                             <td>
                                 <a class="btn btn-warning" th:if="${!anioBachilleratoMap[anios.idAnioAcademico]}" data-bs-toggle="tooltip" data-bs-placement="top"
-                                    title="Crear oferta">
+                                    th:href="@{/Bachillerato/Oferta/}+${anios.idAnioAcademico}" title="Crear oferta">
                                     <i class="bi bi-plus-circle"></i> Crear oferta
                                 </a>
                                 <a class="btn btn-success" th:if="${anioBachilleratoMap[anios.idAnioAcademico]}" data-bs-toggle="tooltip" data-bs-placement="top"

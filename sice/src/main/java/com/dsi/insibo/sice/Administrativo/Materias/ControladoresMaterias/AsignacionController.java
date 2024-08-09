@@ -146,7 +146,7 @@ public class AsignacionController {
     
         // Obtener las asignaciones para la materia específica
         List<Asignacion> asignaciones = asignacionService.obtenerAsignacionExistente(idMateria);
-        Set<String> codigosBachilleratoAsignaciones = asignaciones.stream()
+        Set<Integer> codigosBachilleratoAsignaciones = asignaciones.stream()
                     .map(asignacion -> asignacion.getBachillerato().getCodigoBachillerato())
                     .collect(Collectors.toSet());                                               // Codigo de las asignaciones existentes
     
