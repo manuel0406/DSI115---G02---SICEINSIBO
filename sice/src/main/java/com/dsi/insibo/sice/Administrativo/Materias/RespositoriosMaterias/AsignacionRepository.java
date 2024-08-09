@@ -23,4 +23,7 @@ public interface AsignacionRepository extends JpaRepository<Asignacion, Integer>
 
     @Query("SELECT a FROM Asignacion a WHERE a.materia.idMateria = :idMateria")
     List<Asignacion> findByMateria(int idMateria);
+
+    @Query("SELECT a FROM Asignacion a WHERE a.bachillerato.codigoBachillerato = :codigoBachillerato")
+    List<Asignacion> findByCodigoBachillerato(String codigoBachillerato);
 }
