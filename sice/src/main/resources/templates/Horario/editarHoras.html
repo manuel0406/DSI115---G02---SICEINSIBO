@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{home :: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Incluye Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/css/bootstrap.min.css">
+    
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block custom-navbar min-vh-100 navbar navbar-expand-lg fixed-top">
+            <!-- Contenido del menú lateral -->
+            <div class="custom-navbar py-5">
+                <ul class="nav nav-pills flex-column mt-2">
+                    <li class="nav-item py-2 py-sm-0 my-2">
+                        <a class="nav-link text-white">
+                            <i class="bi bi-journal-plus"></i>
+                            <span class="fs-6 ms-2 d-none d-sm-inline">Asignar horas de clase</span>
+                        </a>
+                    </li>
+                    <li class="nav-item py-2 py-sm-0 my-2">
+                        <a class="nav-link text-white">
+                            <i class="bi bi-journal-minus"></i>
+                            <span class="fs-6 ms-2 d-none d-sm-inline">Cambiar horas de clase</span>
+                        </a>
+                    </li>
+                    <li class="nav-item py-2 py-sm-0 my-2">
+                        <a class="nav-link text-white">
+                            <i class="bi bi-journal-check"></i>
+                            <span class="fs-6 ms-2 d-none d-sm-inline">Generar horario - sección</span>
+                        </a>
+                    </li>
+                    <li class="nav-item py-2 py-sm-0 my-2">
+                        <a class="nav-link text-white">
+                            <i class="bi bi-journal-check"></i>
+                            <span class="fs-6 ms-2 d-none d-sm-inline">Generar horario - docente</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="col-md-10 offset-md-2">
+            <header th:replace="~{home :: header}"></header>
+
+            <div class="container-fluid py-5">
+                <h3 class="text-start col-12 mb-3 mt-4">Seleccione una sección para asignar horas de clase</h3>
+                <form class="needs-validation" novalidate th:object="${profesor}" th:action="@{/expedientedocente/guardar}"
+                    method="post">
+        
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="docente" class="form-label">Sección</label>
+                            <select id="docente" class="form-select" required>
+                                <option value="" selected>Seleccionar...</option>
+                                <option value="Bryan Samuel Pérez Majano">Contador</option>
+                                <option value="Otro Docente">Otro Docente</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Por favor seleccione un docente.
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-md-6 mb-3 mr-3">
+                            <div class="card day-card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Lunes</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6 class="period-title">Turno Matutino</h6>
+                                            <div class="row mb-3">
+                                                <!-- Horas de lunes en la mañana -->
+                                                <div class="col-md-12">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="lunes_1"
+                                                            name="horas[]" value="lunes_1">
+                                                        <label class="form-check-label" for="lunes_1">07:00 - 07:45 AM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="lunes_2"
+                                                            name="horas[]" value="lunes_2">
+                                                        <label class="form-check-label" for="lunes_2">07:45 - 08:30 AM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="lunes_3"
+                                                            name="horas[]" value="lunes_3">
+                                                        <label class="form-check-label" for="lunes_3">08:50 - 09:35 AM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="lunes_4"
+                                                            name="horas[]" value="lunes_4">
+                                                        <label class="form-check-label" for="lunes_4">09:35 - 10:20 AM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="lunes_5"
+                                                            name="horas[]" value="lunes_5">
+                                                        <label class="form-check-label" for="lunes_5">10:30 - 11:15 AM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="lunes_6"
+                                                            name="horas[]" value="lunes_6">
+                                                        <label class="form-check-label" for="lunes_6">11:15 - 12:00 PM</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="period-title">Turno Vespertino</h6>
+                                            <div class="row mb-3">
+                                                <!-- Horas de lunes en la tarde -->
+                                                <div class="col-md-12">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="lunes_7"
+                                                            name="horas[]" value="lunes_7">
+                                                        <label class="form-check-label" for="lunes_7">01:00 - 01:45 PM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="lunes_8"
+                                                            name="horas[]" value="lunes_8">
+                                                        <label class="form-check-label" for="lunes_8">01:45 - 02:30 PM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="lunes_9"
+                                                            name="horas[]" value="lunes_9">
+                                                        <label class="form-check-label" for="lunes_9">02:50 - 03:35 PM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="lunes_10"
+                                                            name="horas[]" value="lunes_10">
+                                                        <label class="form-check-label" for="lunes_10">03:35 - 04:20 PM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="lunes_11"
+                                                            name="horas[]" value="lunes_11">
+                                                        <label class="form-check-label" for="lunes_11">04:30 - 05:15 PM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="lunes_12"
+                                                            name="horas[]" value="lunes_12">
+                                                        <label class="form-check-label" for="lunes_12">05:15 - 06:00 PM</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="col-md-6 mb-2">
+                            <div class="card day-card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Martes</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6 class="period-title">Turno Matutino</h6>
+                                            <div class="row mb-3">
+                                                <!-- Horas de martes en la mañana -->
+                                                <div class="col-md-12">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="martes_1"
+                                                            name="horas[]" value="martes_1">
+                                                        <label class="form-check-label" for="martes_1">07:00 - 07:45 AM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="martes_2"
+                                                            name="horas[]" value="martes_2">
+                                                        <label class="form-check-label" for="martes_2">07:45 - 08:30 AM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="martes_3"
+                                                            name="horas[]" value="martes_3">
+                                                        <label class="form-check-label" for="martes_3">08:50 - 09:35 AM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="martes_4"
+                                                            name="horas[]" value="martes_4">
+                                                        <label class="form-check-label" for="martes_4">09:35 - 10:20 AM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="martes_5"
+                                                            name="horas[]" value="martes_5">
+                                                        <label class="form-check-label" for="martes_5">10:30 - 11:15 AM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="martes_6"
+                                                            name="horas[]" value="martes_6">
+                                                        <label class="form-check-label" for="martes_6">11:15 - 12:00 PM</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="period-title">Turno Vespertino</h6>
+                                            <div class="row mb-3">
+                                                <!-- Horas de martes en la tarde -->
+                                                <div class="col-md-12">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="martes_7"
+                                                            name="horas[]" value="martes_7">
+                                                        <label class="form-check-label" for="martes_7">01:00 - 01:45 PM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="martes_8"
+                                                            name="horas[]" value="martes_8">
+                                                        <label class="form-check-label" for="martes_8">01:45 - 02:30 PM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="martes_9"
+                                                            name="horas[]" value="martes_9">
+                                                        <label class="form-check-label" for="martes_9">02:50 - 03:35 PM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="martes_10"
+                                                            name="horas[]" value="martes_10">
+                                                        <label class="form-check-label" for="martes_10">03:35 - 04:20 PM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="martes_11"
+                                                            name="horas[]" value="martes_11">
+                                                        <label class="form-check-label" for="martes_11">04:30 - 05:15 PM</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="martes_12"
+                                                            name="horas[]" value="martes_12">
+                                                        <label class="form-check-label" for="martes_12">05:15 - 06:00 PM</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Botón de guardar -->
+                    <div class="row justify-content-end text-center">
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-danger w-100">Borrar todos</button>
+                        </div>
+        
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Incluye Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+
+<footer th:replace="~{home :: footer}"></footer>
+</body>
+</html>
