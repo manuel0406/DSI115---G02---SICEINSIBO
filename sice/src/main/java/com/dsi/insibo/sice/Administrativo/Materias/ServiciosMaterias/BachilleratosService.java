@@ -34,7 +34,7 @@ public class BachilleratosService {
     }
     
     // OBTENER POR ID
-    public Bachillerato obtenerBachilleratoPorId(String codigoBachillerato){
+    public Bachillerato obtenerBachilleratoPorId(Integer codigoBachillerato){
         return bachilleratosRepository.findById(codigoBachillerato).orElse(null);
     }
 }

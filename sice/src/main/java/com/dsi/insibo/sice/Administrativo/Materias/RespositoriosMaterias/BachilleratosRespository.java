@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.dsi.insibo.sice.entity.Bachillerato;
 
-public interface BachilleratosRespository extends JpaRepository<Bachillerato, String>{
+public interface BachilleratosRespository extends JpaRepository<Bachillerato, Integer>{
     // OBTIENE DE MANERA APARTE LOS PRIMEROS, SEGUNDOS Y TERCERO AÑOS CONSIDERANDO QUE ESTEN ACTIVOS
     @Query("SELECT b FROM Bachillerato b "
         + "JOIN b.anioAcademico a "   

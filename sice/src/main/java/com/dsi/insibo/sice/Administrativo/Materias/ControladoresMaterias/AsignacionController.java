@@ -178,14 +178,14 @@ public class AsignacionController {
     public String crearAsignacionMateria(
             @RequestParam("idMateria") int idMateria,
             @RequestParam("duiDocente") String duiDocente,
-            @RequestParam("codigoBachillerato") List<String> codigosBachillerato,
+            @RequestParam("codigoBachillerato") List<Integer> codigosBachillerato,
             RedirectAttributes redirectAttributes) {
         
         Docente docente = docenteService.buscarPorIdDocente(duiDocente);
         Materia materia = materiasService.obtenerMateriaPorId(idMateria);
 
         List<Asignacion> asignaciones = new ArrayList<>();
-        for (String codigo : codigosBachillerato) {
+        for (int codigo : codigosBachillerato) {
             Bachillerato bachillerato = bachilleratosService.obtenerBachilleratoPorId(codigo);
             
             Asignacion asignacion = new Asignacion();
