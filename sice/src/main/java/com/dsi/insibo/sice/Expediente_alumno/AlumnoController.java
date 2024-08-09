@@ -1,5 +1,6 @@
 package com.dsi.insibo.sice.Expediente_alumno;
 
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,15 +14,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import com.dsi.insibo.sice.Administrativo.Bachilleratos.BachilleratoService;
 import com.dsi.insibo.sice.Calificaciones.NotaService;
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.AnexoAlumno;
 import com.dsi.insibo.sice.entity.Bachillerato;
-
 
 /**
  * Controlador para gestionar las operaciones del expediente de alumnos.
@@ -39,7 +40,7 @@ public class AlumnoController {
 	private NotaService notaService;
 	@Autowired
 	private AnexoAlumnoService anexoAlumnoService;
-	
+
 	/**
 	 * Controlador para guardar un nuevo alumno en la base de datos.
 	 * 
@@ -70,9 +71,11 @@ public class AlumnoController {
 
 		if (alumno.getPadecimientos().isEmpty()) {
 			alumno.setPadecimientos("No");
-		}if (alumno.getMedicamento().isEmpty()) {
+		}
+		if (alumno.getMedicamento().isEmpty()) {
 			alumno.setMedicamento("No");
-		}if (alumno.getFormaMedicacion().isEmpty()) {
+		}
+		if (alumno.getFormaMedicacion().isEmpty()) {
 			alumno.setFormaMedicacion("No");
 		}
 
@@ -226,11 +229,11 @@ public class AlumnoController {
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
 			return "redirect:/ExpedienteAlumno/ver";
 		}
-		
-		//Elimino primero los anexos relacionados al alumno encontrado
+
+		// Elimino primero los anexos relacionados al alumno encontrado
 		anexoAlumnoService.eliminarAnexoAlumno(nie);
-		//Se eliminar las notas relacionadas a ese alumno
-		notaService.deleteNotasByAlumnoNie(nie);		
+		// Se eliminan las notas relacionadas a ese alumno
+		notaService.deleteNotasByAlumnoNie(nie);
 		// Elimina el registro del alumno y añade un mensaje de confirmación
 		alumnoService.eliminar(nie);
 		attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");
@@ -264,6 +267,7 @@ public class AlumnoController {
 			@RequestParam(value = "carrera", required = false) String carrera,
 			@RequestParam(value = "grado", required = false) String grado,
 			@RequestParam(value = "seccion", required = false) String seccion,
+			@RequestParam(value = "genero", required = false) String genero,
 			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "size", defaultValue = "50") int size) {
 
@@ -277,18 +281,27 @@ public class AlumnoController {
 		if (seccion != null && seccion.isEmpty()) {
 			seccion = null;
 		}
+		if (genero != null && genero.isEmpty()) {
+			genero = null;
+		}
 
-		// Obtener la lista de alumnos filtrada por los parámetros y paginada
-		Page<Alumno> pageAlumnos = alumnoService.listarAlumnosPaginados(carrera, grado, seccion, PageRequest.of(page - 1, size, Sort.by("apellidoAlumno")));
-		List<Alumno> listaAlumnos = pageAlumnos.getContent();
+		// Obtener la lista completa de alumnos filtrada por los parámetros
+		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion, genero);
+		// Ordenar la lista por "apellidoAlumno"
+		listaAlumnos.sort(Comparator.comparing(Alumno::getApellidoAlumno));
+
+		// Crear una estructura paginada manualmente
+		PageRequest pageRequest = PageRequest.of(page - 1, size);
+		int start = (int) pageRequest.getOffset();
+		int end = Math.min((start + pageRequest.getPageSize()), listaAlumnos.size());
+		Page<Alumno> pageAlumnos = new PageImpl<>(listaAlumnos.subList(start, end), pageRequest, listaAlumnos.size());
 
 		// Obtener la lista de carreras (bachilleratos)
 		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
-		
-		
+
 		// Agregar atributos al modelo para ser utilizados en la vista
-		model.addAttribute("titulo", "Alumnos");		
-		model.addAttribute("alumnos", listaAlumnos);
+		model.addAttribute("titulo", "Alumnos");
+		model.addAttribute("alumnos", pageAlumnos.getContent());
 		model.addAttribute("bachilleratos", listaCarreras);
 		model.addAttribute("carrera", carrera);
 		model.addAttribute("grado", grado);
@@ -314,7 +327,7 @@ public class AlumnoController {
 	 */
 	@GetMapping("/Alumno/{nie}")
 	public String informacionAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
-		
+
 		Alumno alumno = null;
 		if (nie > 0) {
 			// Busca al alumno por su número de identificación estudiantil (NIE)
@@ -333,11 +346,11 @@ public class AlumnoController {
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
 			return "redirect:/ExpedienteAlumno/ver";
 		}
-		
+
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("titulo", "Información");
 		model.addAttribute("alumno", alumno);
-		//model.addAttribute("bachillerato", bachillerato);
+		// model.addAttribute("bachillerato", bachillerato);
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoInformacion";
@@ -377,10 +390,10 @@ public class AlumnoController {
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
 			return "redirect:/ExpedienteAlumno/ver";
 		}
-		
+
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("titulo", "Padecimientos");
-		model.addAttribute("alumno", alumno);		
+		model.addAttribute("alumno", alumno);
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoEnfermedad";
@@ -419,17 +432,18 @@ public class AlumnoController {
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
 			return "redirect:/ExpedienteAlumno/ver";
 		}
-		
+
 		// Agregar atributos al modelo para ser utilizados en la vista
-		model.addAttribute("alumno", alumno);		
+		model.addAttribute("alumno", alumno);
 		model.addAttribute("titulo", "Encargado");
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoDatosResponsable";
 	}
-	@GetMapping("Documentos/{nie}")
-	public String alumnoDocumentos(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes){
-		
+
+	@GetMapping("/Documentos/{nie}")
+	public String alumnoDocumentos(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+
 		Alumno alumno = null;
 		if (nie > 0) {
 			// Busca al alumno por su número de identificación estudiantil (NIE)
@@ -448,12 +462,12 @@ public class AlumnoController {
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
 			return "redirect:/ExpedienteAlumno/ver";
 		}
-		
-		//Obtener los anexos asociados al alumno
-		AnexoAlumno anexos= anexoAlumnoService.buscarAlumno(nie);
+
+		// Obtener los anexos asociados al alumno
+		AnexoAlumno anexos = anexoAlumnoService.buscarAlumno(nie);
 
 		// Agregar atributos al modelo para ser utilizados en la vista
-		model.addAttribute("alumno", alumno);		
+		model.addAttribute("alumno", alumno);
 		model.addAttribute("anexos", anexos);
 		model.addAttribute("titulo", "Documentos");
 
@@ -483,7 +497,8 @@ public class AlumnoController {
 	public ModelAndView verAlumnosPdf(Model model,
 			@RequestParam(value = "carrera", required = false) String carrera,
 			@RequestParam(value = "grado", required = false) String grado,
-			@RequestParam(value = "seccion", required = false) String seccion) {
+			@RequestParam(value = "seccion", required = false) String seccion,
+			@RequestParam(value = "seccion", required = false) String genero) {
 		// Convertir cadenas vacías a null para los parámetros opcionales
 		if (carrera != null && carrera.isEmpty()) {
 			carrera = null;
@@ -494,9 +509,12 @@ public class AlumnoController {
 		if (seccion != null && seccion.isEmpty()) {
 			seccion = null;
 		}
+		if (genero != null && genero.isEmpty()) {
+			genero = null;
+		}
 
 		// Obtener la lista de alumnos filtrada por los parámetros
-		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion);
+		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion, genero);
 		// Obtener la lista de carreras (bachilleratos)
 		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
 

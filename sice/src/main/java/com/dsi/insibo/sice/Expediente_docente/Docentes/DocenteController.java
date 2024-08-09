@@ -170,11 +170,11 @@ public class DocenteController {
         // page indica el numero de pagina en el que se encontrara por defecto
         // Size el numero de registros por pagina
 
+        
         // Hace la conversion de la estructura List a Page
         PageRequest pageRequest = PageRequest.of(page, size);
         List<DocenteDTO> listadoDocentes = docenteService.listarDocentes();
-        Page<DocenteDTO> pagedocentes = new PageImpl<>(listadoDocentes.subList(
-                pageRequest.getPageNumber() * pageRequest.getPageSize(),
+        Page<DocenteDTO> pagedocentes = new PageImpl<>(listadoDocentes.subList(pageRequest.getPageNumber() * pageRequest.getPageSize(),
                 Math.min((pageRequest.getPageNumber() + 1) * pageRequest.getPageSize(), listadoDocentes.size())),
                 pageRequest, listadoDocentes.size());
 

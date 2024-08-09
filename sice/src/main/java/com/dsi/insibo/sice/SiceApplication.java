@@ -29,6 +29,11 @@ public class SiceApplication  {
 		model.addAttribute("titulo", "Inicio");
 		return "home";
 	}	
+	@GetMapping("/administracion")
+	public String homeAdministracion(Model model){
+		model.addAttribute("titulo", "Administración");
+		return "Administrativo/homeAdministracion.html";
+	}
 	
 	@Autowired
 	private SessionRegistry sessionRegistry;
