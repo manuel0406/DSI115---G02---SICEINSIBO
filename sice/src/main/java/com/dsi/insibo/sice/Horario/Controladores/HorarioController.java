@@ -17,6 +17,7 @@ import com.dsi.insibo.sice.entity.AsignacionHorario;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.HorarioBase;
 
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,16 +60,17 @@ public class HorarioController {
         // Obtener la lista de carreras (bachilleratos)
         List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
 
-        // Obtener el código del bachillerato si se proporcionan los parámetros necesarios
-        Integer codigoBachillerato = null;
+        // Obtener el objeto Bachillerato si se proporcionan los parámetros necesarios
+        Bachillerato bachillerato = null;
         if (carrera != null && grado != null && seccion != null) {
-            codigoBachillerato = bachilleratoService.obtenerCodigoBachillerato(carrera, Integer.parseInt(grado), seccion);
+            bachillerato = bachilleratoService.obtenerBachillerato(carrera, Integer.parseInt(grado), seccion);
         }
 
         // Obtener las asignaciones de una seccion dada su llave primaria
         List<Asignacion> listaAsignaciones = null;
-        if (codigoBachillerato != null && codigoBachillerato != 0) {
-            listaAsignaciones = asignacionService.listarAsignacionesCodigoBachillerato(codigoBachillerato);
+        if (bachillerato != null) {
+            listaAsignaciones = asignacionService
+                    .listarAsignacionesCodigoBachillerato(bachillerato.getCodigoBachillerato());
         }
 
         // Agregar atributos al modelo
@@ -76,7 +78,7 @@ public class HorarioController {
         model.addAttribute("carrera", carrera);
         model.addAttribute("grado", grado);
         model.addAttribute("seccion", seccion);
-        model.addAttribute("codigoBachillerato", codigoBachillerato);
+        model.addAttribute("bachillerato", bachillerato);
         model.addAttribute("formSubmitted", formSubmitted);
         model.addAttribute("asignaciones", listaAsignaciones != null ? listaAsignaciones : List.of());
 
@@ -86,31 +88,39 @@ public class HorarioController {
 
     @PostMapping("/guardarHora")
     public String guardarhora(@RequestParam("asignacionSeleccionada") int asignacionID,
-                              @RequestParam("horaSeleccionada") int horarioBaseID,
-                              @RequestParam(value = "carrera", required = false) String carrera,
-                              @RequestParam(value = "grado", required = false) String grado,
-                              @RequestParam(value = "seccion", required = false) String seccion,
-                              RedirectAttributes redirectAttributes) {
-    
+            @RequestParam("horaSeleccionada") int horarioBaseID,
+            @RequestParam(value = "carrera", required = false) String carrera,
+            @RequestParam(value = "grado", required = false) String grado,
+            @RequestParam(value = "seccion", required = false) String seccion,
+            RedirectAttributes redirectAttributes) {
+
+        // Extraer el primer valor antes de la coma
+        if (carrera != null && carrera.contains(",")) {
+            carrera = carrera.split(",")[0];
+        }
+        if (grado != null && grado.contains(",")) {
+            grado = grado.split(",")[0];
+        }
+        if (seccion != null && seccion.contains(",")) {
+            seccion = seccion.split(",")[0];
+        }
+
         AsignacionHorario hora = new AsignacionHorario();
         Asignacion asignacion = new Asignacion();
         HorarioBase horarioBase = new HorarioBase();
-    
+
         asignacion.setIdAsignacion(asignacionID);
         hora.setAsignacion(asignacion);
-    
+
         horarioBase.setIdHorarioBase(horarioBaseID);
         hora.setHorarioBase(horarioBase);
-    
-        horarioService.guardarHoraAsignacion(hora);
-        redirectAttributes.addFlashAttribute("success", "Hora correctamente asignada");
 
-        // Añadir parámetros a los atributos de redirección
-        redirectAttributes.addAttribute("carrera", carrera != null ? carrera : "");
-        redirectAttributes.addAttribute("grado", grado != null ? grado : "");
-        redirectAttributes.addAttribute("seccion", seccion != null ? seccion : "");
-    
+        horarioService.guardarHoraAsignacion(hora);
+
+        redirectAttributes.addAttribute("carrera", carrera);
+        redirectAttributes.addAttribute("grado", grado);
+        redirectAttributes.addAttribute("seccion", seccion);
+
         return "redirect:/horarios/asignarHoras";
     }
-    
 }

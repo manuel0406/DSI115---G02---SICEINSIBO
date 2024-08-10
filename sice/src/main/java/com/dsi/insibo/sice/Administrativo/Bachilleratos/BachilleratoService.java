@@ -34,9 +34,9 @@ public class BachilleratoService {
         bachilleratoRepository.save(bachillerato);
     }
 
-    public Integer obtenerCodigoBachillerato(String carrera, int grado, String seccion) {
+    public Bachillerato obtenerBachillerato(String carrera, int grado, String seccion) {
         return bachilleratoRepository.findByNombreCarreraAndGradoAndSeccion(carrera, grado, seccion)
-                .map(Bachillerato::getCodigoBachillerato)
                 .orElse(null);
     }
+    
 }

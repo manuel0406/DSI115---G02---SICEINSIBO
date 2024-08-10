@@ -106,13 +106,13 @@
 
                     <!-- Contiene la sección elegida, si el filtro no encuentra un codigo relacionado con la 
                      busqueda pedira que seleccione una seccion valida, ademas al entrar por primera vez simplemente no se mostrara-->
-                    <h5 class="text-start col-lg-9 mt-2" th:text="${formSubmitted ? 
-                                (codigoBachillerato == null || codigoBachillerato == 0 ? 
-                                    'Selecciona una sección válida' : 
-                                    'Asignando horas de clase a ' + 
-                                    (grado != null ? grado + '° ' : '') +
-                                    (carrera != null ? carrera + ' ' : '') +
-                                    (seccion != null ? seccion: '')) : ''}">
+                     <h5 class="text-start col-lg-9 mt-2" th:text="${formSubmitted ? 
+                        (bachillerato == null || bachillerato.getCodigoBachillerato() == 0 ? 
+                            'Selecciona una sección válida' : 
+                            'Asignando horas de clase a ' + 
+                            (grado != null ? grado + '° ' : '') +
+                            (carrera != null ? carrera + ' ' : '') +
+                            (seccion != null ? seccion: '')) : ''}">
                     </h5>
 
                     <!-- Contiene el codigo del bachillerato por si acaso se necesito-->
@@ -122,7 +122,7 @@
                     </div> -->
 
                     <!-- Contiene las tarjetas con las horas de clase y es mostrado unicamente cuando una sección realmente existe-->
-                    <div class="row" th:if="${codigoBachillerato != null and codigoBachillerato != 0}">
+                    <div class="row" th:if="${bachillerato != null and bachillerato.getCodigoBachillerato() != 0}">
 
                         <!-- Lunes -->
                         <div class="col-md-6 mb-3 mr-3">
@@ -853,7 +853,7 @@
                                     <option value="" selected>Seleccione</option>
                                     <option th:each="asignaciones : ${asignaciones}"
                                         th:value="${asignaciones.idAsignacion}"
-                                        th:text="${asignaciones.idAsignacion + ' - ' + asignaciones.materia.nomMateria + ' - ' +  asignaciones.docente.nombreDocente + '  ' + asignaciones.docente.apellidoDocente}">
+                                        th:text="${asignaciones.materia.nomMateria + ' - ' +  asignaciones.docente.nombreDocente + '  ' + asignaciones.docente.apellidoDocente}">
                                     </option>
                                 </select>
                                 <div class="invalid-feedback">Por favor, selecciona la materia y el docente.</div>
