@@ -1,4 +1,4 @@
-package com.dsi.insibo.sice.Administrativo.Bachilleratos;
+package com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios;
 
 import java.util.HashSet;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dsi.insibo.sice.Administrativo.Bachilleratos.Repositorys.BachilleratoRepository;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import java.util.Set;
 import java.util.stream.Collectors;

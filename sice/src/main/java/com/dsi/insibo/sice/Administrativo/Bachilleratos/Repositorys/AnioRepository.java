@@ -1,4 +1,4 @@
-package com.dsi.insibo.sice.Administrativo.Bachilleratos;
+package com.dsi.insibo.sice.Administrativo.Bachilleratos.Repositorys;
 
 import java.util.List;
 
