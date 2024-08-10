@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.MateriasService;
 import com.dsi.insibo.sice.entity.Materia;
+import org.springframework.data.domain.Page;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,29 +26,46 @@ public class MateriaController {
 
     //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/GestionMaterias")
-    public String gestionarMaterias(@RequestParam(value = "tipo", defaultValue = "") String tipo, Model model){
-        
-        String titulo = "Materias impartidas en INSIBO";
-        String seleccion ="";
-        List<Materia> materias = materiasService.obtenerMaterias();
+    public String gestionarMaterias(
+            @RequestParam(value = "tipo", defaultValue = "") String tipo,
+            @RequestParam(required = false, defaultValue = "1") int pagina,
+            Model model) {
+
+        int tamanyo = 10; // Tamaño de la página
+        pagina = pagina - 1; // Convertir a base 0 para PageRequest
+
+        String titulo;
+        String seleccion = "";
+        Page<Materia> materias;
+        List<Materia> materiasTotal;
+
+        if (!tipo.isEmpty()) {
+            // Filtrar según el tipo
+            materias = materiasService.obtenerMateriasPorTipoConPaginado(tipo, pagina, tamanyo);
+            materiasTotal = materiasService.obtenerMateriaPorTipo(tipo);
+            seleccion = tipo;
+            titulo = "Materias en INSIBO: " + tipo;
+        } else {
+            // Obtener todas las materias
+            materias = materiasService.obtenerMateriasConPaginado(pagina, tamanyo);
+            materiasTotal = materiasService.obtenerMaterias();
+            titulo = "Materias impartidas en INSIBO";
+        }
 
         // Convertir la lista de materias a JSON
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            String materiasJson = objectMapper.writeValueAsString(materias);
+            String materiasJson = objectMapper.writeValueAsString(materiasTotal);
             model.addAttribute("materiasJson", materiasJson); // Para JS
         } catch (JsonProcessingException e) {
             System.out.println("El error es: " + e);
         }
 
-        // FILTRADO POR TIPO DE MATERIA
-        if (!tipo.isEmpty()) {
-            // Obtener todas las materias si el tipo está vacío
-            materias = materiasService.obtenerMateriaPorTipo(tipo);
-            titulo = "Materias en INSIBO: "+ tipo;
-            seleccion = tipo;
-        }
+        // Calcular la cantidad de páginas
+        int cantidad = (int) Math.ceil((double) materiasTotal.size() / tamanyo);
+        model.addAttribute("cantidad", cantidad);
 
+        // Añadir atributos al modelo
         model.addAttribute("materias", materias);
         model.addAttribute("titulo", titulo);
         model.addAttribute("seleccion", seleccion);
