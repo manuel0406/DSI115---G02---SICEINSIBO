@@ -184,7 +184,7 @@ public class AsignacionController {
     
         // Obtener las asignaciones para la materia específica
         List<Asignacion> asignaciones = asignacionService.obtenerAsignacionExistente(idMateria);
-        Set<String> codigosBachilleratoAsignaciones = asignaciones.stream()
+        Set<Integer> codigosBachilleratoAsignaciones = asignaciones.stream()
                     .map(asignacion -> asignacion.getBachillerato().getCodigoBachillerato())
                     .collect(Collectors.toSet());                                               // Codigo de las asignaciones existentes
     
@@ -216,14 +216,14 @@ public class AsignacionController {
     public String crearAsignacionMateria(
             @RequestParam("idMateria") int idMateria,
             @RequestParam("duiDocente") String duiDocente,
-            @RequestParam("codigoBachillerato") List<String> codigosBachillerato,
+            @RequestParam("codigoBachillerato") List<Integer> codigosBachillerato,
             RedirectAttributes redirectAttributes) {
         
         Docente docente = docenteService.buscarPorIdDocente(duiDocente);
         Materia materia = materiasService.obtenerMateriaPorId(idMateria);
 
         List<Asignacion> asignaciones = new ArrayList<>();
-        for (String codigo : codigosBachillerato) {
+        for (int codigo : codigosBachillerato) {
             Bachillerato bachillerato = bachilleratosService.obtenerBachilleratoPorId(codigo);
             
             Asignacion asignacion = new Asignacion();

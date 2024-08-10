@@ -20,7 +20,7 @@ import com.dsi.insibo.sice.entity.Actividad;
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Materia;
-import com.dsi.insibo.sice.entity.MateriaBachillerato;
+
 import com.dsi.insibo.sice.entity.Nota;
 import com.dsi.insibo.sice.entity.Periodo;
 

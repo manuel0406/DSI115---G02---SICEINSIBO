@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="~{home :: head}">
+<head th:replace="~{home :: head}"></head>
 
 <body>
     <header th:replace="~{home :: header}"></header>
@@ -29,12 +29,12 @@
         </div>
         <div class="py-2"></div>
 
-        <div class=" py-1">
+        <div class="py-1">
             <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
                 <h3 class="text-start col-lg-9"></h3>
                 <div class="d-flex gap-2">
-                    <a class="btn btn-success Agregar-btn" data-bs-toggle="tooltip" data-bs-placement="top"
-                        title="Crear año" th:text="'Crear año'"></a>
+                    <a class="btn btn-success Agregar-btn"  data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="Crear oferta" th:text="'Crear año'"></a>
                 </div>
             </div>
 
@@ -49,49 +49,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>2022</td>
-                            <td>inactivo</td>
+                        <tr th:each="anios, stat: ${lista}">
+                            <th scope="row" th:text="${stat.index + 1}"></th>
+                            <td th:text="${anios.anio}"></td>
+                            <td th:if="${anios.activoAnio != true}" th:text="${'Inactivo'}"></td>
+                            <td th:if="${anios.activoAnio == true}" th:text="${'Activo'}"></td>
                             <td>
-                                <a class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top"
+                                <a class="btn btn-warning" th:if="${!anioBachilleratoMap[anios.idAnioAcademico]}" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    th:href="@{/Bachillerato/Oferta/}+${anios.idAnioAcademico}" title="Crear oferta">
+                                    <i class="bi bi-plus-circle"></i> Crear oferta
+                                </a>
+                                <a class="btn btn-success" th:if="${anioBachilleratoMap[anios.idAnioAcademico]}" data-bs-toggle="tooltip" data-bs-placement="top"
                                     title="Consultar">
                                     <i class="bi bi-file-earmark-text"></i>
                                 </a>
-                                <a class="btn btn-primary editar-btn">
+                                <a class="btn btn-primary editar-btn" th:if="${anioBachilleratoMap[anios.idAnioAcademico]}" data-bs-toggle="modal"
+                                    data-bs-target="#actualizarAnioModal" data-bs-placement="top" title="Editar"
+                                    th:data-id="${anios.idAnioAcademico}" th:data-est="${anios.activoAnio}"
+                                    th:data-an="${anios.anio}">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <!-- <a class="btn btn-danger delete-btn" title="Eliminar">
-                                    <i class="bi bi-trash"></i>
-                                </a> -->
                             </td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>2023</td>
-                            <td>Activo</td>
-                            <td>
-                                <a class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top"
-                                    title="Consultar">
-                                    <i class="bi bi-file-earmark-text"></i>
-                                </a>
-                                <a class="btn btn-primary editar-btn">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <!-- <a class="btn btn-danger delete-btn" title="Eliminar">
-                                    <i class="bi bi-trash"></i>
-                                </a> -->
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>2024</td>
-                            <td>inactivo</td>
-                            <td>
-                                <a class="btn btn-warning editar-btn"> Crear oferta</a>
-
-                            </td>
-                        </tr>
+                        
                     </tbody>
                 </table>
             </div>
@@ -112,9 +92,10 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="anioLabel" class="form-label fw-bold">Año:</label>
-                            <input type="text" th:field="*{anio}" class="form-control restricted-input" id="anio" placeholder="0000" required minlength="4" maxlength="4"/>
+                            <input type="text" th:field="*{anio}" class="form-control restricted-input" id="anio"
+                                placeholder="0000" required minlength="4" maxlength="4" />
                             <div class="invalid-feedback">
-                                Este campo no puede queda vacio
+                                Este campo no puede quedar vacio
                             </div>
                         </div>
 
@@ -129,55 +110,37 @@
         </div>
     </div>
 
-    <!-- Modal de editar sancion -->
-    <!-- <div class="modal fade" id="actualizarOrientadorModal" tabindex="-1" aria-labelledby="actualizarOrientadorLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="actualizarOrientadorLabel">Agregar sanción</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+   <!-- Modal de editar sancion -->
+    <div class="modal fade" id="actualizarAnioModal" tabindex="-1" aria-labelledby="actualizarAnioModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="actualizarAnioModalLabel">Cambiar estado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:object="${anio}" class="needs-validation" id="formActualizarAnio" novalidate method="post" th:action="@{/Bachillerato/editarAnio}">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input type="hidden" th:field="*{idAnioAcademico}" id="editIdAnio" name="idAnioAcademico">
+                            <input type="hidden" th:field="*{anio}" id="editAnio" name="AnioAcademico">
+                            <label class="form-check-label" for="editEstado">Estado:</label>
+                            <input class="form-check-input" type="checkbox" id="editEstado" name="activoAnio" th:field="*{activoAnio}">
+                            <div class="invalid-feedback">
+                                Este campo no puede quedar vacío
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelarActualizarAnio">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="guardarActualizarAnioButton">Guardar</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <form th:object="${orientador}" class="needs-validation" id="formOrientador" novalidate method="post"
-          th:action="@{/AsignacionOrientador/guardarOrientacion}">
-          <div class="modal-body">
-            <div class="mb-3">
-              <input type="hidden" id="idOrientador" name="idOrientador">
-              <label for="docente" class="form-label fw-bold">Docente:</label>
-              <select th:field="*{docente}" class="form-select border-secondary border-opacity-75" id="EditDocente"
-                required>
-                <option value="" selected>Seleccione</option>
-                <option th:each="docente : ${Docentes}" th:value="${docente.duiDocente}"
-                  th:text="${docente.nombreDocente+ ' '+ docente.apellidoDocente}"></option>
-              </select>
-              <div class="invalid-feedback">Es necesario seleccionar el docente</div>
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label fs-6">Especialidad del bachillerato:</label>
-              <select th:field="*{bachillerato}" class="form-select border-secondary border-opacity-75"
-                aria-label="Default select example" id="EditBachillerato" required>
-                <option value="" selected>Seleccione</option>
-                <option th:each="bachillerato : ${bachilleratos}" th:value="${bachillerato.codigoBachillerato}"
-                  th:text="${bachillerato.grado +'° '+ bachillerato.nombreCarrera  + ' - Sección ' + bachillerato.seccion}">
-                </option>
-              </select>
-              <div class="invalid-feedback">Es necesario seleccionar una especialidad</div>
-            </div>
-          </div>
-          <div class="modal-footer text-center">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-              id="cancelarSancion">Cancelar</button>
-            <button type="submit" class="btn btn-primary" id="agregarModalButton">Guardar</button>
-          </div>
-        </form>
-      </div>
     </div>
-  </div> -->
-
-
-
+    
 </body>
 <footer th:replace="~{home :: footer}"></footer>
-  <script type="text/javascript" th:src="@{/js/GestionAnio.js}"></script>
+<script type="text/javascript" th:src="@{/js/GestionAnio.js}"></script>
 
 </html>
