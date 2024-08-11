@@ -83,10 +83,8 @@ public class ControllerBachilleratos {
             attributes.addFlashAttribute("error", "Error: El año ya existe.");
             return "redirect:/Bachillerato/anio";
         } else {
-
             anioService.guardarAnio(anio);
             attributes.addFlashAttribute("success", "¡Registro guardado con exito!");
-
         }
 
         return "redirect:/Bachillerato/anio";
@@ -108,39 +106,108 @@ public class ControllerBachilleratos {
     }
 
     @GetMapping("/Oferta/{idAnio}")
-    public String oferta(Model model, @PathVariable("idAnio") int idAnio) {
-        AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnio);
+    public String oferta(Model model, @PathVariable("idAnio") int idAnio, RedirectAttributes attributes) {
+
+        AnioAcademico anioAcademico = new AnioAcademico();
+
+        if (idAnio > 0) {
+            anioAcademico = anioService.buscarPoridAnioAcademico(idAnio);
+            if (anioAcademico == null) {
+                attributes.addFlashAttribute("error", "Error: Ese año no existe.");
+                return "redirect:/Bachillerato/anio";
+            }
+        } else {
+            attributes.addFlashAttribute("error", "Error: El año ingresado no es valido.");
+            return "redirect:/Bachillerato/anio";
+        }
+
+        // AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnio);
         model.addAttribute("titulo", "Crear Oferta");
         model.addAttribute("anioAcademico", anioAcademico);
         model.addAttribute("bachillerato", new Bachillerato());
-        model.addAttribute("carreras", List.of("Atención Primaria en Salud", "Administrativo Contable","Desarrollo de Software","Electrónica","Sistemas Eléctricos")); // Lista de carreras
+        model.addAttribute("carreras", List.of("Atención Primaria en Salud", "Administrativo Contable",
+                "Desarrollo de Software", "Electrónica", "Sistemas Eléctricos")); // Lista de carreras
         model.addAttribute("secciones", List.of("A", "B", "C", "D")); // Lista de secciones disponibles
         return "Administrativo/GestionBachilleratos/crearOferta";
     }
 
     @PostMapping("/Oferta/guardar/{idAnio}")
-public String crearOferta(@PathVariable("idAnio") int idAnio, 
-                          @RequestParam("secciones") List<String> secciones, 
-                          Model model) {
+    public String crearOferta(@PathVariable("idAnio") int idAnio,
+            @RequestParam("secciones") List<String> secciones,
+            Model model) {
 
-    AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnio);
+        AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnio);
 
-    for (String seccion : secciones) {
-        String[] parts = seccion.split("\\|");  // Separar por el símbolo "|"
-        String carrera = parts[0];
-        int grado = Integer.parseInt(parts[1]); 
-        String seccionName = parts[2];
+        for (String seccion : secciones) {
+            String[] parts = seccion.split("\\|"); // Separar por el símbolo "|"
+            String carrera = parts[0];
+            int grado = Integer.parseInt(parts[1]);
+            String seccionName = parts[2];
 
-        Bachillerato bachillerato = new Bachillerato();
-        bachillerato.setNombreCarrera(carrera);
-        bachillerato.setGrado(grado);
-        bachillerato.setSeccion(seccionName);
-        bachillerato.setAnioAcademico(anioAcademico);
+            Bachillerato bachillerato = new Bachillerato();
+            bachillerato.setNombreCarrera(carrera);
+            bachillerato.setGrado(grado);
+            bachillerato.setSeccion(seccionName);
+            bachillerato.setAnioAcademico(anioAcademico);
 
-        bachilleratoService.guardarBachillerato(bachillerato); 
+            bachilleratoService.guardarBachillerato(bachillerato);
+        }
+
+        return "redirect:/Bachillerato/anio";
     }
 
-    return "redirect:/Bachillerato/anio"; 
-}
+    @GetMapping("/VerOferta/{idAnio}")
+    public String verOferta(Model model, @PathVariable("idAnio") int idAnio, RedirectAttributes attributes) {
+
+        AnioAcademico anioAcademico = new AnioAcademico();
+        if (idAnio > 0) {
+            anioAcademico = anioService.buscarPoridAnioAcademico(idAnio);
+            if (anioAcademico == null) {
+                attributes.addFlashAttribute("error", "Error: La oferta de ese año no existe");
+                return "redirect:/Bachillerato/anio";
+            }
+        } else {
+            attributes.addFlashAttribute("error", "Error: El año ingresado no es valido.");
+            return "redirect:/Bachillerato/anio";
+        }
+        Bachillerato bachillerato = new Bachillerato();
+        List<Bachillerato> listadoOfertas = bachilleratoService.listadOfertaPorAnio(idAnio);
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+        String grado = "";
+
+        model.addAttribute("titulo", "Oferta");
+        model.addAttribute("bachilleratos", listadoOfertas);
+        model.addAttribute("bachillerato", bachillerato);
+        model.addAttribute("listaCarrera", listaCarreras);
+        model.addAttribute("nivel", grado);
+        model.addAttribute("anioAcademico", anioAcademico);
+
+        return "Administrativo/GestionBachilleratos/ofertaBachillerato";
+    }
+
+    @PostMapping("/guardarBachillerato/{idAnio}")
+    public String guardarBachillerato(@ModelAttribute Bachillerato bachillerato, @RequestParam("nivel") String nivel,
+            @PathVariable("idAnio") int idAnio, Model model, RedirectAttributes attributes) {
+        // Convertir el valor de nivel a entero y asignarlo a grado
+        AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnio);
+        int grado = Integer.parseInt(nivel);
+        bachillerato.setGrado(grado);
+        bachillerato.setAnioAcademico(anioAcademico);
+
+        Bachillerato existe = bachilleratoService.existeBachillerato(bachillerato.getNombreCarrera(),
+                bachillerato.getGrado(), bachillerato.getSeccion(), idAnio);
+        if (existe != null) {
+            System.out.println("si existe");
+            attributes.addFlashAttribute("error", "Error: Este bachillerato ya está registrado.");
+            return "redirect:/Bachillerato/VerOferta/" + idAnio;
+        } else {
+
+            bachilleratoService.guardarBachillerato(bachillerato);
+
+        }
+
+        // Redirigir o devolver a la vista adecuada
+        return "redirect:/Bachillerato/VerOferta/" + idAnio;
+    }
 
 }

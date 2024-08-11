@@ -31,7 +31,14 @@ public class BachilleratoService {
                 .collect(Collectors.toList());
     }
 
-    public void guardarBachillerato(Bachillerato bachillerato){
-        bachilleratoRepository.save(bachillerato); 
+    public void guardarBachillerato(Bachillerato bachillerato) {
+        bachilleratoRepository.save(bachillerato);
+    }
+
+    public List<Bachillerato> listadOfertaPorAnio(int idAnioAcademico) {
+        return bachilleratoRepository.ofertaPorAnio(idAnioAcademico);
+    }
+    public Bachillerato existeBachillerato(String carrera, int grado, String seccion, int idAnio){
+        return bachilleratoRepository.existe(carrera, grado, seccion, idAnio);
     }
 }

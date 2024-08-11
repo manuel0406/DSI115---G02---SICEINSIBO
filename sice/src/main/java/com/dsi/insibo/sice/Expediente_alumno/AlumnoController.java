@@ -308,6 +308,9 @@ public class AlumnoController {
 		model.addAttribute("seccion", seccion);
 		model.addAttribute("page", page);
 		model.addAttribute("totalPages", pageAlumnos.getTotalPages());
+		model.addAttribute("totalElements", listaAlumnos.size());
+		int baseIndex = (page - 1) * size;//sirve para mantener la base de la numeración de lo alumnos cuando cambia de pagina
+		model.addAttribute("baseIndex", baseIndex);
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/verAlumno";

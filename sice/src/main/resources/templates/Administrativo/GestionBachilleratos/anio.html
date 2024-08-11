@@ -60,7 +60,7 @@
                                     <i class="bi bi-plus-circle"></i> Crear oferta
                                 </a>
                                 <a class="btn btn-success" th:if="${anioBachilleratoMap[anios.idAnioAcademico]}" data-bs-toggle="tooltip" data-bs-placement="top"
-                                    title="Consultar">
+                                    title="Consultar" th:href="@{/Bachillerato/VerOferta/}+${anios.idAnioAcademico}">
                                     <i class="bi bi-file-earmark-text"></i>
                                 </a>
                                 <a class="btn btn-primary editar-btn" th:if="${anioBachilleratoMap[anios.idAnioAcademico]}" data-bs-toggle="modal"
