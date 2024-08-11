@@ -55,7 +55,7 @@
           </thead>
           <tbody>
             <tr th:each="orientador, stat : ${listaOrientadores}">
-              <th scope="row" th:text="${stat.index + 1}"></th>
+              <th scope="row" th:text="${baseIndex + stat.index + 1}"></th>
               <td th:text="${orientador.docente.nombreDocente+ ' '+orientador.docente.apellidoDocente}"></td>
               <td th:text="${orientador.bachillerato.grado}"></td>
               <td th:text="${orientador.bachillerato.nombreCarrera}"></td>
@@ -77,6 +77,35 @@
           </tbody>
         </table>
       </div>
+    </div>
+    <!-- Contenedor de navegación para la paginación -->
+    <!-- Solo se mostrara cuando existan paginas y el total de las lista de alumnos supero los 50 estudiantes -->
+    <div th:if="${totalPages != 0 && totalElements > 20}">
+      <nav aria-label="...">
+        <!-- Lista de elementos de paginación centrada -->
+        <ul class="pagination justify-content-center">
+          <!-- Elemento de la lista para el enlace "Anterior" -->
+          <!-- Si la página actual es la primera, se desactiva el enlace -->
+          <li class="page-item" th:classappend="${page == 1} ? 'disabled' : ''">
+            <!-- Enlace que lleva a la página anterior -->
+            <a class="page-link" th:href="@{/AsignacionOrientador/Asignar(page=${page - 1})}">Anterior</a>
+          </li>
+          <!-- Bucle que genera los enlaces para cada página -->
+          <!-- Se usa th:each para iterar desde 1 hasta el total de páginas -->
+          <!-- Se resalta el enlace de la página actual con la clase "active" -->
+          <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+            th:classappend="${i == page} ? 'active' : ''">
+            <!-- Enlace que lleva a la página correspondiente -->
+            <a class="page-link" th:href="@{/AsignacionOrientador/Asignar(page=${i})}" th:text="${i}"></a>
+          </li>
+          <!-- Elemento de la lista para el enlace "Siguiente" -->
+          <!-- Si la página actual es la última, se desactiva el enlace -->
+          <li class="page-item" th:classappend="${page == totalPages} ? 'disabled' : ''">
+            <!-- Enlace que lleva a la página siguiente -->
+            <a class="page-link" th:href="@{/AsignacionOrientador/Asignar(page=${page + 1})}">Siguiente</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 

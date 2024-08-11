@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
 
@@ -24,7 +25,7 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
-import jakarta.persistence.criteria.ListJoin;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -32,9 +33,10 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SancionesPDF  extends AbstractPdfView{
 
     @Override
-    protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
-            HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected void buildPdfDocument(@NonNull Map<String, Object> model, @NonNull Document document, @NonNull PdfWriter writer,
+    @NonNull HttpServletRequest request,@NonNull HttpServletResponse response) throws Exception {
 
+                @SuppressWarnings("unchecked")
                 List<Sancion> listaSanciones= (List<Sancion>) model.get("listaSanciones");
                 Alumno alumno = (Alumno) model.get("alumno") ;
 

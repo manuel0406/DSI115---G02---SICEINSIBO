@@ -95,7 +95,7 @@
                                     <option value="" selected>Seleccione</option>
                                     <option value="M">M</option>
                                     <option value="F">F</option>
-                                    
+
                                 </select>
                             </div>
                             <input type="submit" class="btn btn-primary" value="Filtrar">
@@ -153,8 +153,8 @@
                     </tbody>
                 </table>
                 <!-- Contenedor de navegación para la paginación -->
-              <!-- Solo se mostrara cuando existan paginas y el total de las lista de alumnos supero los 50 estudiantes -->
-                <div th:if="${totalPages != 0 && totalElements > 50}"> 
+                <!-- Solo se mostrara cuando existan paginas y el total de las lista de alumnos supero los 50 estudiantes -->
+                <div th:if="${totalPages != 0 && totalElements > 50}">
                     <nav aria-label="...">
                         <!-- Lista de elementos de paginación centrada -->
                         <ul class="pagination justify-content-center">
@@ -183,9 +183,9 @@
                                     th:href="@{/ExpedienteAlumno/ver(page=${page + 1}, carrera=${carrera}, grado=${grado}, seccion=${seccion})}">Siguiente</a>
                             </li>
                         </ul>
-                    </nav>                    
-                 </div>
-                
+                    </nav>
+                </div>
+
             </div>
         </div>
     </div>
