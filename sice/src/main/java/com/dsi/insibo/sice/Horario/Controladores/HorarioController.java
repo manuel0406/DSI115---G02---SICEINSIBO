@@ -16,8 +16,8 @@ import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.AsignacionHorario;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.HorarioBase;
-
-import jakarta.servlet.http.HttpSession;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,11 +33,7 @@ public class HorarioController {
     @Autowired
     private HorarioService horarioService;
 
-    @GetMapping("/editarHoras")
-    public String editar() {
-        return "Horario/editarHoras";
-    }
-
+    // Carga la vista para asignar horas
     @GetMapping("/asignarHoras")
     public String asignar(Model model,
             @RequestParam(value = "carrera", required = false) String carrera,
@@ -59,14 +55,23 @@ public class HorarioController {
 
         // Obtener la lista de carreras (bachilleratos)
         List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+        List<Integer> horasExistentes = null;
 
         // Obtener el objeto Bachillerato si se proporcionan los parámetros necesarios
         Bachillerato bachillerato = null;
         if (carrera != null && grado != null && seccion != null) {
-            bachillerato = bachilleratoService.obtenerBachillerato(carrera, Integer.parseInt(grado), seccion);
+            bachillerato = bachilleratoService.obtenerBachilleratoEspecifico(carrera, Integer.parseInt(grado), seccion);
+
+            if (bachillerato != null && bachillerato.getCodigoBachillerato() != 0) {
+                horasExistentes = horarioService
+                        .obtenerIdHorariosBasePorCodigoBachillerato(bachillerato.getCodigoBachillerato());
+
+                // for (Integer numero : horasExistentes) {System.out.print(numero + " ");}
+            }
         }
 
-        // Obtener las asignaciones de una seccion dada su llave primaria
+        // Obtener las asignaciones (carga academica) de una seccion dada su llave
+        // primaria
         List<Asignacion> listaAsignaciones = null;
         if (bachillerato != null) {
             listaAsignaciones = asignacionService
@@ -82,10 +87,85 @@ public class HorarioController {
         model.addAttribute("formSubmitted", formSubmitted);
         model.addAttribute("asignaciones", listaAsignaciones != null ? listaAsignaciones : List.of());
 
+        // Convertir la lista de horasExistentes a JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String envioHoras = objectMapper.writeValueAsString(horasExistentes);
+            model.addAttribute("envioHoras", envioHoras); // Para JS
+        } catch (JsonProcessingException e) {
+            System.out.println(e);
+        }
+
         // Cargar la vista
         return "Horario/asignarHoras";
     }
 
+    // Maneja la vista para editar las horas asignadas
+    @GetMapping("/editarHoras")
+    public String editarHoras(Model model,
+            @RequestParam(value = "carrera", required = false) String carrera,
+            @RequestParam(value = "grado", required = false) String grado,
+            @RequestParam(value = "seccion", required = false) String seccion) {
+
+        boolean formSubmitted = (carrera != null || grado != null || seccion != null);
+
+        // Convertir cadenas vacías a null para evitar problemas con las consultas
+        if (carrera != null && carrera.isEmpty()) {
+            carrera = null;
+        }
+        if (grado != null && grado.isEmpty()) {
+            grado = null;
+        }
+        if (seccion != null && seccion.isEmpty()) {
+            seccion = null;
+        }
+
+        // Obtener la lista de carreras (bachilleratos)
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+        List<Integer> horasExistentes = null;
+
+        // Obtener el objeto Bachillerato si se proporcionan los parámetros necesarios
+        Bachillerato bachillerato = null;
+        if (carrera != null && grado != null && seccion != null) {
+            bachillerato = bachilleratoService.obtenerBachilleratoEspecifico(carrera, Integer.parseInt(grado), seccion);
+
+            if (bachillerato != null && bachillerato.getCodigoBachillerato() != 0) {
+                horasExistentes = horarioService
+                        .obtenerIdHorariosBasePorCodigoBachillerato(bachillerato.getCodigoBachillerato());
+            }
+        }
+
+        // Obtener las asignaciones (carga academica) de una seccion dada su llave
+        // primaria
+        List<Asignacion> listaAsignaciones = null;
+        if (bachillerato != null) {
+            listaAsignaciones = asignacionService
+                    .listarAsignacionesCodigoBachillerato(bachillerato.getCodigoBachillerato());
+        }
+
+        // Agregar atributos al modelo
+        model.addAttribute("bachilleratos", listaCarreras);
+        model.addAttribute("carrera", carrera);
+        model.addAttribute("grado", grado);
+        model.addAttribute("seccion", seccion);
+        model.addAttribute("bachillerato", bachillerato);
+        model.addAttribute("formSubmitted", formSubmitted);
+        model.addAttribute("asignaciones", listaAsignaciones != null ? listaAsignaciones : List.of());
+
+        // Convertir la lista de horasExistentes a JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String envioHoras = objectMapper.writeValueAsString(horasExistentes);
+            model.addAttribute("envioHoras", envioHoras); // Para JS
+        } catch (JsonProcessingException e) {
+            System.out.println(e);
+        }
+
+        // Cargar la vista
+        return "Horario/editarHoras";
+    }
+
+    // Guarda una hora de clase y redirige a la vista para asignar horas
     @PostMapping("/guardarHora")
     public String guardarhora(@RequestParam("asignacionSeleccionada") int asignacionID,
             @RequestParam("horaSeleccionada") int horarioBaseID,

@@ -34,7 +34,7 @@ public class BachilleratoService {
         bachilleratoRepository.save(bachillerato);
     }
 
-    public Bachillerato obtenerBachillerato(String carrera, int grado, String seccion) {
+    public Bachillerato obtenerBachilleratoEspecifico(String carrera, int grado, String seccion) {
         return bachilleratoRepository.findByNombreCarreraAndGradoAndSeccion(carrera, grado, seccion)
                 .orElse(null);
     }

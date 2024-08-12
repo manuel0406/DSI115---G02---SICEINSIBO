@@ -9,17 +9,17 @@ import com.dsi.insibo.sice.entity.AsignacionHorario;
 
 @Service
 public class HorarioService {
-    
+
     @Autowired
     private HorarioRepository horarioRepository;
-    
+
     // Asignaciones en general, cambiar despues a asignaciones por seccion
-    public List<AsignacionHorario> obtenerHorasAsignadas(){
+    public List<AsignacionHorario> obtenerHorasAsignadas() {
         return (List<AsignacionHorario>) horarioRepository.findAll();
     }
 
     // Guardar una asignacion
-    public void guardarHoraAsignacion (AsignacionHorario asignacionHorario){
+    public void guardarHoraAsignacion(AsignacionHorario asignacionHorario) {
         horarioRepository.save(asignacionHorario);
     }
 
@@ -32,5 +32,9 @@ public class HorarioService {
     public void eliminarHoraAsignacion(AsignacionHorario asignacionHorario) {
         horarioRepository.delete(asignacionHorario);
     }
-    
+
+    // Método para obtener los idHorarioBase dado un codigoBachillerato y que activoAnio sea true
+    public List<Integer> obtenerIdHorariosBasePorCodigoBachillerato(int codigoBachillerato) {
+        return horarioRepository.findIdHorarioBaseByCodigoBachilleratoAndActivoAnioTrue(codigoBachillerato);
+    }
 }
