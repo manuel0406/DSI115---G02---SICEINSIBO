@@ -37,8 +37,6 @@
                     <label for="profesor" class="form-label">Profesor</label>
                     <select class="form-select needs-validation" id="profesor" name="duiDocente" required>
                         <option value="">Seleccionar docente...</option>
-                        <option>
-                        </option>
                     </select>
                     <div class="invalid-feedback">Por favor, Seleccione el docente.</div>
                 </div>
@@ -63,9 +61,8 @@
                             <div class="tab-content" id="menuTabsContent">
                                 <!-- Primeros años -->
                                 <div class="tab-pane fade show active" id="primeros-anos" role="tabpanel" aria-labelledby="primeros-anos-tab">
-                                    <div class="mb-3 form-check form-switch">
-                                        <input class="form-check-input marcar-todos checkbox-group" type="checkbox" id="marcarTodosPrimerosAnos" data-group="primeros-anos" />
-                                        <label class="form-check-label label-checkbox-group" for="marcarTodosPrimerosAnos">Todos los primeros años</label>
+                                    <div class="mb-3 form-check form-switch" id="cbxTodosPrimeros">
+                                        No se encuentran primeros años por asignar.
                                     </div>
                                     <div class="row mx-0" id="cbxPrimeros">
                                     </div>
@@ -73,9 +70,8 @@
 
                                 <!-- Segundos años -->
                                 <div class="tab-pane fade" id="segundos-anos" role="tabpanel" aria-labelledby="segundos-anos-tab">
-                                    <div class="mb-3 form-check form-switch">
-                                        <input class="form-check-input marcar-todos checkbox-group" type="checkbox" id="marcarTodosSegundosAnos" data-group="segundos-anos" />
-                                        <label class="form-check-label label-checkbox-group" for="marcarTodosSegundosAnos">Todos los segundos años</label>
+                                    <div class="mb-3 form-check form-switch" id="cbxTodosSegundos">
+                                        No se encuentran segundos años por asignar.
                                     </div>
                                     <div class="row mx-0" id="cbxSegundos">
                                     </div>
@@ -83,9 +79,8 @@
 
                                 <!-- Terceros años -->
                                 <div class="tab-pane fade" id="terceros-anos" role="tabpanel" aria-labelledby="terceros-anos-tab">
-                                    <div class="mb-3 form-check form-switch">
-                                        <input class="form-check-input marcar-todos checkbox-group" type="checkbox" id="marcarTodosTercerosAnos" data-group="terceros-anos" />
-                                        <label class="form-check-label label-checkbox-group" for="marcarTodosTercerosAnos">Todos los terceros años</label>
+                                    <div class="mb-3 form-check form-switch" id="cbxTodosTerceros">
+                                        No se encuentran terceros años por asignar.
                                     </div>
                                     <div class="row mx-0" id="cbxTerceros">
                                     </div>
@@ -116,7 +111,6 @@
     <!-- Variable que contiene todas las materias -->
     <script th:inline="javascript">
         var materiasJSON = /*[[${materiasJson}]]*/ '[]';
-        var docentesJSON = /*[[${docentesJson}]]*/ '[]';
         var asignacionesJSON = /*[[${asignacionesJson}]]*/ '[]';
         var primerosJSON = /*[[${primerosJson}]]*/ '[]';
         var segundosJSON = /*[[${segundosJson}]]*/ '[]';

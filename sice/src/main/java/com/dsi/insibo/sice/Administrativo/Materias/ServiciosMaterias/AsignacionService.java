@@ -3,6 +3,9 @@ package com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dsi.insibo.sice.Administrativo.Materias.RespositoriosMaterias.AsignacionRepository;
@@ -38,6 +41,11 @@ public class AsignacionService {
         return asignacionRepository.findByMateria(idMateria);
     }
 
+    public Page<Asignacion> listarAsignaciones(int idMateria, int pagina, int tamanyo){
+        Pageable pageable = PageRequest.of(pagina, tamanyo);
+        return asignacionRepository.findByMateria(idMateria, pageable);
+    }
+
     public Asignacion buscarAsignacion(int idAsignacion){
         return asignacionRepository.findById(idAsignacion).orElse(null);
     }
@@ -53,4 +61,9 @@ public class AsignacionService {
     public List<Asignacion> listarAsignacionesCodigoBachillerato(Integer codigoBachillerato){
         return asignacionRepository.findByCodigoBachillerato(codigoBachillerato);
     }
+    public Page<Asignacion> obtenerTodaAsignaciones(int pagina, int tamanyo){
+        Pageable pageable = PageRequest.of(pagina, tamanyo);
+        return asignacionRepository.findAllAsignaciones(pageable);
+    }
+
 }

@@ -4,6 +4,8 @@ import com.dsi.insibo.sice.entity.Asignacion;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -27,6 +29,12 @@ public interface AsignacionRepository extends JpaRepository<Asignacion, Integer>
          + "a.bachillerato.seccion ASC")
     List<Asignacion> findByMateria(int idMateria);
 
+    @Query("SELECT a FROM Asignacion a WHERE a.materia.idMateria = :idMateria "
+    + "ORDER BY a.docente.nombreDocente ASC, " 
+    + "a.docente.apellidoDocente ASC, a.bachillerato.grado ASC, "
+    + "a.bachillerato.seccion ASC")
+    Page<Asignacion> findByMateria(int idMateria, Pageable pageable);
+
     // OBTENER TODAS LAS ASIGNACIONES
     @Query("SELECT a FROM Asignacion a "
           + "ORDER BY a.docente.nombreDocente ASC, a.materia.nomMateria ASC, " 
@@ -37,4 +45,11 @@ public interface AsignacionRepository extends JpaRepository<Asignacion, Integer>
     // OBTENER TODAS LAS ASIGNACIONES DADA UNA SECCIÓN
     @Query("SELECT a FROM Asignacion a WHERE a.bachillerato.codigoBachillerato = :codigoBachillerato")
     List<Asignacion> findByCodigoBachillerato(Integer codigoBachillerato);
+    
+    // OBTENER TODAS LAS ASIGNACIONES
+    @Query("SELECT a FROM Asignacion a "
+        + "ORDER BY a.docente.nombreDocente ASC, a.materia.nomMateria ASC, " 
+        + "a.docente.apellidoDocente ASC, a.bachillerato.grado ASC, "
+        + "a.bachillerato.seccion ASC")
+    Page<Asignacion> findAllAsignaciones(Pageable pageable);
 }
