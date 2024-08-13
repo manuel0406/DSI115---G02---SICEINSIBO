@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.dsi.insibo.sice.Administrativo.Bachilleratos.BachilleratoService;
+import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
 import com.dsi.insibo.sice.Horario.Servicios.HorarioService;
 import com.dsi.insibo.sice.entity.Asignacion;
