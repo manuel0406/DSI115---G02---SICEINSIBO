@@ -41,4 +41,9 @@ public class BachilleratoService {
     public Bachillerato existeBachillerato(String carrera, int grado, String seccion, int idAnio){
         return bachilleratoRepository.existe(carrera, grado, seccion, idAnio);
     }
+    public Bachillerato obtenerBachilleratoEspecifico(String carrera, int grado, String seccion) {
+        return bachilleratoRepository.findByNombreCarreraAndGradoAndSeccion(carrera, grado, seccion)
+                .orElse(null);
+    }
+    
 }

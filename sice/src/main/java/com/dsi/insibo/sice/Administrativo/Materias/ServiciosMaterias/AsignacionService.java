@@ -58,6 +58,9 @@ public class AsignacionService {
         return asignacionRepository.findAllAsignaciones();
     }
 
+    public List<Asignacion> listarAsignacionesCodigoBachillerato(Integer codigoBachillerato){
+        return asignacionRepository.findByCodigoBachillerato(codigoBachillerato);
+    }
     public Page<Asignacion> obtenerTodaAsignaciones(int pagina, int tamanyo){
         Pageable pageable = PageRequest.of(pagina, tamanyo);
         return asignacionRepository.findAllAsignaciones(pageable);
