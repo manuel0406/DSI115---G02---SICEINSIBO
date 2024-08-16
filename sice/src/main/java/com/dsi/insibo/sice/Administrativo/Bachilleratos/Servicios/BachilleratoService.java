@@ -21,6 +21,10 @@ public class BachilleratoService {
         return (List<Bachillerato>) bachilleratoRepository.findAll();
     }
 
+    public Bachillerato debolverBachillerato(String carrera, String seccion, String grado){
+        return bachilleratoRepository.especialidad(carrera, seccion, grado);
+    }
+
     public List<Bachillerato> listaCarrera() {
         List<Bachillerato> bachilleratos = bachilleratoRepository.findAll(); // tu lógica para obtener los
                                                                              // bachilleratos;
@@ -46,4 +50,11 @@ public class BachilleratoService {
                 .orElse(null);
     }
     
+    public List<String> getSeccionesByCarrera(String carrera, String grado) {
+        return bachilleratoRepository.findSeccionesByCarrera(carrera, grado);
+    }
+
+    public Bachillerato bachilleratoPorId(int id){
+        return bachilleratoRepository.findById(id).orElse(null);
+    }
 }

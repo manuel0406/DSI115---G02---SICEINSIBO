@@ -15,6 +15,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.dsi.insibo.sice.Administrativo.Orientadores.OrientadorService;
+import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteService;
+import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
+import com.dsi.insibo.sice.entity.Docente;
+
 
 @Controller
 @SpringBootApplication
@@ -24,9 +29,24 @@ public class SiceApplication  {
 		SpringApplication.run(SiceApplication.class, args);
 	}
 
+	@Autowired
+	SessionService sesion;
+	@Autowired
+	OrientadorService orientadorService;
+	@Autowired
+	DocenteService docenteService;
+
 	@GetMapping("/")
 	public String holamundo( Model model) {
+
+		String dui=sesion.duiSession();
+
+		Docente doocente = docenteService.buscarPorIdDocente(dui);
+		
 		model.addAttribute("titulo", "Inicio");
+		model.addAttribute("dui", doocente);
+		model.addAttribute("listaSecciones", orientadorService.listaSeccionesB(dui));
+
 		return "home";
 	}	
 	@GetMapping("/administracion")

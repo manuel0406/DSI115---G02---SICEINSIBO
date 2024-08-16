@@ -1,5 +1,6 @@
 package com.dsi.insibo.sice.Expediente_alumno;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
@@ -57,10 +59,14 @@ public class AlumnoController {
 	 * @return Una cadena que redirige a la vista de listado de alumnos.
 	 */
 	@PostMapping("/guardar")
-	public String guardarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes) {
+	public String guardarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes,
+			@RequestParam(value = "carrera", required = false) String carrera,
+			@RequestParam(value = "grado", required = false) String grado,
+			@RequestParam(value = "seccion", required = false) String seccion) {
 
 		// Busca si el NIE proporcionado ya existe
 		Alumno alumnoExistente = alumnoService.buscarPorIdAlumno(alumno.getNie());
+		Bachillerato bachillerato = bachilleratoService.debolverBachillerato(carrera, seccion, grado);
 
 		// Evalúa si el alumno ya existe y, de ser así, manda un mensaje de error y
 		// redirige
@@ -77,6 +83,11 @@ public class AlumnoController {
 		}
 		if (alumno.getFormaMedicacion().isEmpty()) {
 			alumno.setFormaMedicacion("No");
+		}
+
+		if (bachillerato != null) {
+			System.out.println("bachillerato no nulo");
+			alumno.setBachillerato(bachillerato);
 		}
 
 		// Guarda el nuevo alumno
@@ -106,16 +117,27 @@ public class AlumnoController {
 		// Crea un nuevo objeto Alumno
 		Alumno alumno = new Alumno();
 
-		// Extrae todos los bachilleratos registrados en la base de datos
-		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
+		// Obtener la lista de carreras (bachilleratos)
+		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
 
 		// Añade atributos al modelo para ser utilizados en la vista
 		model.addAttribute("titulo", "Crear Alumno");
 		model.addAttribute("alumno", alumno);
-		model.addAttribute("bachilleratos", listaBachilleratos);
+		model.addAttribute("bachilleratos", listaCarreras);
 
 		// Retorna el nombre de la vista de registro de alumnos
 		return "Expediente_alumno/registro";
+	}
+
+	@GetMapping("/secciones")
+	public ResponseEntity<List<String>> getSecciones(@RequestParam("carrera") String carrera,
+			@RequestParam("grado") String grado) {
+		if (carrera == null || grado == null || carrera.isEmpty() || grado.isEmpty()) {
+			return ResponseEntity.ok(Collections.emptyList());
+		}
+
+		List<String> secciones = bachilleratoService.getSeccionesByCarrera(carrera, grado);
+		return ResponseEntity.ok(secciones); // Esto asegurará que Spring lo serialice como JSON
 	}
 
 	/**
@@ -135,6 +157,7 @@ public class AlumnoController {
 	 * @return El nombre de la vista "Expediente_alumno/editar" si el alumno existe,
 	 *         de lo contrario redirige a la vista de listado de alumnos.
 	 */
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
 	@GetMapping("/editar/{nie}")
 	public String editar(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -157,12 +180,20 @@ public class AlumnoController {
 			return "redirect:/ExpedienteAlumno/ver";
 		}
 
+		String carrera, grado, seccion;
+		carrera = alumno.getBachillerato().getNombreCarrera();
+		grado = String.valueOf(alumno.getBachillerato().getGrado());
+		seccion = alumno.getBachillerato().getSeccion();
+
 		// Si el alumno existe, obtiene la lista de bachilleratos para el formulario
-		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
+		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
 		model.addAttribute("titulo", "Editar");
 		model.addAttribute("alumno", alumno);
-		model.addAttribute("bachilleratos", listaBachilleratos);
+		model.addAttribute("bachilleratos", listaCarreras);
 		model.addAttribute("editar", true); // Indica que se está en modo edición
+		model.addAttribute("carrera", carrera);
+		model.addAttribute("grado", grado);
+		model.addAttribute("seccion", seccion);
 
 		// Retorna el nombre de la vista de edición del alumno
 		return "Expediente_alumno/editar";
@@ -182,9 +213,15 @@ public class AlumnoController {
 	 *                   flash.
 	 * @return Una cadena que redirige a la vista de listado de alumnos.
 	 */
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
 	@PostMapping("/actualizar")
-	public String actualizarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes) {
+	public String actualizarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes,
+			@RequestParam(value = "carrera", required = false) String carrera,
+			@RequestParam(value = "grado", required = false) String grado,
+			@RequestParam(value = "seccion", required = false) String seccion) {
 
+		Bachillerato bachillerato = bachilleratoService.debolverBachillerato(carrera, seccion, grado);
+		alumno.setBachillerato(bachillerato);
 		// Guarda el alumno con la información actualizada
 		alumnoService.guardarAlumno(alumno);
 
@@ -309,7 +346,9 @@ public class AlumnoController {
 		model.addAttribute("page", page);
 		model.addAttribute("totalPages", pageAlumnos.getTotalPages());
 		model.addAttribute("totalElements", listaAlumnos.size());
-		int baseIndex = (page - 1) * size;//sirve para mantener la base de la numeración de lo alumnos cuando cambia de pagina
+		model.addAttribute("url", "/ExpedienteAlumno/ver");
+		int baseIndex = (page - 1) * size;// sirve para mantener la base de la numeración de lo alumnos cuando cambia de
+											// pagina
 		model.addAttribute("baseIndex", baseIndex);
 
 		// Retornar el nombre de la vista a ser renderizada
@@ -328,6 +367,7 @@ public class AlumnoController {
 	 * @param model El modelo de Spring utilizado para pasar datos a la vista.
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoInformacion".
 	 */
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
 	@GetMapping("/Alumno/{nie}")
 	public String informacionAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -372,6 +412,7 @@ public class AlumnoController {
 	 * @param model El modelo de Spring utilizado para pasar datos a la vista.
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoEnfermedad".
 	 */
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
 	@GetMapping("/Enfermedades/{nie}")
 	public String enfermedadAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -414,6 +455,7 @@ public class AlumnoController {
 	 * @param model El modelo de Spring utilizado para pasar datos a la vista.
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoDatosResponsable".
 	 */
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
 	@GetMapping("/Responsable/{nie}")
 	public String responsableAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -443,7 +485,7 @@ public class AlumnoController {
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoDatosResponsable";
 	}
-
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
 	@GetMapping("/Documentos/{nie}")
 	public String alumnoDocumentos(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -496,6 +538,7 @@ public class AlumnoController {
 	 *         "Expediente_alumno/verAlumnoPdf"
 	 *         y los datos necesarios para generar el PDF.
 	 */
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
 	@GetMapping(value = "/ver", produces = "application/pdf")
 	public ModelAndView verAlumnosPdf(Model model,
 			@RequestParam(value = "carrera", required = false) String carrera,

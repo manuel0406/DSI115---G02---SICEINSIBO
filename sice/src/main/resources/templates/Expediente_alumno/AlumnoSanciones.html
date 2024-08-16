@@ -92,9 +92,11 @@
                             </tbody>
                         </table>
 
-                        <div class="text-start">
-                            <a th:href="@{/ExpedienteAlumno/ver}" class="btn btn-primary " th:text="'Regresar'"> </a>
-    
+                        <div class="text-start" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
+                            <a th:href="@{/ExpedienteAlumno/ver}" class="btn btn-primary" th:text="'Regresar'"></a>
+                        </div>
+                        <div class="text-start" sec:authorize="hasRole('DOCENTE')">
+                            <a th:href="@{/AsignacionOrientador/seccionAsigada/}+${alumno.bachillerato.codigoBachillerato}" class="btn btn-primary" th:text="'Regresar'"></a>
                         </div>
                     </div>
                 </div>
