@@ -144,12 +144,6 @@
                             (seccion != null ? seccion: '')) : ''}">
                     </h5>
 
-                    <!-- Contiene el codigo del bachillerato por si acaso se necesito-->
-                    <!-- <div class="mb-3">
-                        <input type="hidden" id="codigoBachilleratop" name="codigoBachilleratop"
-                            th:value="${codigoBachillerato}">
-                    </div> -->
-
                     <!-- Contiene las tarjetas con las horas de clase y es mostrado unicamente cuando una sección realmente existe-->
                     <div class="row" th:if="${bachillerato != null and bachillerato.getCodigoBachillerato() != 0}">
 
@@ -975,8 +969,9 @@
         <footer th:replace="~{home :: footer}"></footer>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script type="text/javascript" src="/js/horarios.js"></script>
+        <script type="text/javascript" src="/js/horariosAsignar.js"></script>
         <script type="text/javascript" src="/js/validacionRequired.js"></script>
+        
         <script th:inline="javascript">
             // Convertir el valor de horasExistentes desde el atributo Thymeleaf a un array en JavaScript
             var envioHoras = /*[[${envioHoras}]]*/ '[]';
@@ -998,7 +993,6 @@
                 });
             });
         </script>
-
     </div>
 </body>
 
