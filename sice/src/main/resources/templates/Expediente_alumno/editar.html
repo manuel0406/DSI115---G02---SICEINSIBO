@@ -24,7 +24,7 @@
                 </h3>
                 <div class="col-12 col-md-4">
                     <label for="carrera" class="form-label fs-6">Carrera:</label>
-                    <select id="carrera" name="carrera" class="form-select" aria-label="Default select example"  th:disabled="${editar}" required>
+                    <select id="carrera" name="carrera" class="form-select" aria-label="Default select example"  th:disabled="${editarO}" required>
                         <option value="" th:if="${carrera == null}" selected>Seleccione</option>
                         <option th:each="bachillerato : ${bachilleratos}"
                                 th:value="${bachillerato.nombreCarrera}"
@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-12 col-md-4">
                     <label for="grado" class="form-label fs-6">Año:</label>
-                    <select id="grado" name="grado" class="form-select"  th:disabled="${editar}" required>
+                    <select id="grado" name="grado" class="form-select"  th:disabled="${editarO}" required>
                         <option value="" th:if="${grado == null}" selected>Seleccione</option>
                         <option value="1" th:selected="${grado == '1'}">1</option>
                         <option value="2" th:selected="${grado == '2'}">2</option>
@@ -52,7 +52,7 @@
                 </div>
                 <div class="col-12 col-md-4">
                     <label for="seccion" class="form-label fs-6">Sección:</label>
-                    <select id="seccion" name="seccion" class="form-select"  th:disabled="${editar}" required>
+                    <select id="seccion" name="seccion" class="form-select"  th:disabled="${editarO}" required>
                         <option value="" th:if="${seccion == null}" selected>Seleccione</option>
                         <option th:value="${seccion}" th:text="${seccion}" th:selected="true"></option>
                     </select>
