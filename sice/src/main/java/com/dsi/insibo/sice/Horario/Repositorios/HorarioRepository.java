@@ -12,5 +12,16 @@ public interface HorarioRepository extends CrudRepository<AsignacionHorario, Int
 
     @Query("SELECT ah FROM AsignacionHorario ah WHERE ah.asignacion.bachillerato.codigoBachillerato = :codigoBachillerato AND ah.asignacion.bachillerato.anioAcademico.activoAnio = true ORDER BY ah.horarioBase.idHorarioBase ASC")
     List<AsignacionHorario> findHorarioByCodigoBachilleratoAndActivoAnioTrue(int codigoBachillerato);
-    
+
+    @Query("SELECT ah FROM AsignacionHorario ah " +
+            "WHERE ah.asignacion.bachillerato.codigoBachillerato = :codigoBachillerato " +
+            "AND ah.horarioBase.dia.nombreDia = :nombreDia " +
+            "AND ah.horarioBase.hora.idHora BETWEEN :idHora - 2 AND :idHora + 2 " +
+            "AND ah.asignacion.idAsignacion = :idAsignacion " +
+            "AND ah.asignacion.materia.tipoMateria = 'Básica' " +
+            "AND ah.asignacion.bachillerato.anioAcademico.activoAnio = true " +
+            "ORDER BY ah.horarioBase.idHorarioBase ASC")
+    List<AsignacionHorario> findBloqueDeDosHoras(int codigoBachillerato, String nombreDia, int idHora,
+            int idAsignacion);
+
 }

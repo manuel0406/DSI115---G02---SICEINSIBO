@@ -57,7 +57,11 @@ public class HorarioController {
     @PostMapping("/guardarHora")
     public String guardarhora(@RequestParam("asignacionSeleccionada") int asignacionID,
             @RequestParam("horaSeleccionada") int horarioBaseID,
-            @RequestParam("codigoBachilleratop") String idBachillerato,
+            @RequestParam("codigoBachillerato") String idBachillerato,
+
+            @RequestParam("dia") String nombreDia,
+            @RequestParam("horaBase") String horaDia,
+
             @RequestParam(value = "carrera", required = false) String carrera,
             @RequestParam(value = "grado", required = false) String grado,
             @RequestParam(value = "seccion", required = false) String seccion,
@@ -67,24 +71,27 @@ public class HorarioController {
         grado = extraerPrimerValor(grado);
         seccion = extraerPrimerValor(seccion);
         idBachillerato = extraerPrimerValor(idBachillerato);
+        nombreDia = extraerPrimerValor(nombreDia);
+        horaDia = extraerPrimerValor(horaDia);
 
-        List<AsignacionHorario> listaAsignaciones = null;
-        listaAsignaciones = horarioService.obtenerHorasAsignadas(Integer.parseInt(idBachillerato));
-        System.out.println(listaAsignaciones.size());
+        if(horarioService.existeBloqueDeDosHoras(Integer.parseInt(idBachillerato), nombreDia,
+        Integer.parseInt(horaDia), asignacionID) == false){
+            AsignacionHorario hora = new AsignacionHorario();
+            Asignacion asignacion = new Asignacion();
+            HorarioBase horarioBase = new HorarioBase();
+    
+            asignacion.setIdAsignacion(asignacionID);
+            hora.setAsignacion(asignacion);
+    
+            horarioBase.setIdHorarioBase(horarioBaseID);
+            hora.setHorarioBase(horarioBase);
+    
+            horarioService.guardarHoraAsignacion(hora);
+            redirectAttributes.addFlashAttribute("success", "Hora agregada");
 
-        // Desde aquí
-        AsignacionHorario hora = new AsignacionHorario();
-        Asignacion asignacion = new Asignacion();
-        HorarioBase horarioBase = new HorarioBase();
-
-        asignacion.setIdAsignacion(asignacionID);
-        hora.setAsignacion(asignacion);
-
-        horarioBase.setIdHorarioBase(horarioBaseID);
-        hora.setHorarioBase(horarioBase);
-
-        horarioService.guardarHoraAsignacion(hora);
-        // Hasta aquí
+        } else{
+            redirectAttributes.addFlashAttribute("warning", "No puedes asignar bloques de mas de 2 horas para una misma materia de tipo basica");
+        }
 
         redirectAttributes.addAttribute("carrera", carrera);
         redirectAttributes.addAttribute("grado", grado);
@@ -93,7 +100,6 @@ public class HorarioController {
         return "redirect:/horarios/asignarHoras";
     }
 
-    
     @PostMapping("/actualizarHora")
     public String editarhora(@RequestParam("idAsignacionHorario") int asignacionHorarioID,
             @RequestParam("asignacionSeleccionada") int asignacionID,
@@ -125,7 +131,8 @@ public class HorarioController {
         redirectAttributes.addAttribute("grado", grado);
         redirectAttributes.addAttribute("seccion", seccion);
 
-        return "redirect:/horarios/editarHoras";}
+        return "redirect:/horarios/editarHoras";
+    }
 
     @GetMapping("/eliminarHora/{id}")
     public String eliminarDocente(@PathVariable("id") Integer idAsignacionHorario,

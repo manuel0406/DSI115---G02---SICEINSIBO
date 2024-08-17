@@ -6,9 +6,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
         checkbox.addEventListener('change', function () {
             if (this.checked) {
                 const hora = this.getAttribute('data-hora');
+                const dia = this.getAttribute('data-dia');
+                const horaBase = this.getAttribute('data-horaBase')
                 const value = this.value;
 
                 document.getElementById('horaSeleccionada').value = hora;
+                document.getElementById('dia').value = dia;
+                document.getElementById('horaBase').value = horaBase;
                 document.getElementById('horaSeleccionada').dataset.value = value;
 
                 // Por si acaso necesito el codigoBachilleratop

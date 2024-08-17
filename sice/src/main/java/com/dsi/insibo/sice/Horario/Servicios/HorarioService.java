@@ -29,7 +29,6 @@ public class HorarioService {
                 .findHorarioByCodigoBachilleratoAndActivoAnioTrue(codigoBachillerato);
     }
 
-    
     // Obtener una hora asignada por id
     public AsignacionHorario obtenerHoraAsignacionPorId(int idAsignacionHorario) {
         return horarioRepository.findById(idAsignacionHorario).orElse(null);
@@ -38,5 +37,12 @@ public class HorarioService {
     // Eliminar una hora asignada
     public void eliminarHoraAsignacion(int idAsignacionHorario) {
         horarioRepository.deleteById(idAsignacionHorario);
+    }
+
+    // Verificar si existe un bloque de 2 horas consecutivas
+    public boolean existeBloqueDeDosHoras(int codigoBachillerato, String nombreDia, int idHora, int idAsignacion) {
+        List<AsignacionHorario> asignaciones = horarioRepository.findBloqueDeDosHoras(codigoBachillerato, nombreDia,
+                idHora, idAsignacion);
+        return asignaciones.size() >= 2;
     }
 }
