@@ -9,4 +9,8 @@ import com.dsi.insibo.sice.entity.AsignacionHorario;
 public interface HorarioRepository extends CrudRepository<AsignacionHorario, Integer> {
     @Query("SELECT ah.horarioBase.idHorarioBase FROM AsignacionHorario ah WHERE ah.asignacion.bachillerato.codigoBachillerato = :codigoBachillerato AND ah.asignacion.bachillerato.anioAcademico.activoAnio = true")
     List<Integer> findIdHorarioBaseByCodigoBachilleratoAndActivoAnioTrue(int codigoBachillerato);
+
+    @Query("SELECT ah FROM AsignacionHorario ah WHERE ah.asignacion.bachillerato.codigoBachillerato = :codigoBachillerato AND ah.asignacion.bachillerato.anioAcademico.activoAnio = true ORDER BY ah.horarioBase.idHorarioBase ASC")
+    List<AsignacionHorario> findHorarioByCodigoBachilleratoAndActivoAnioTrue(int codigoBachillerato);
+    
 }

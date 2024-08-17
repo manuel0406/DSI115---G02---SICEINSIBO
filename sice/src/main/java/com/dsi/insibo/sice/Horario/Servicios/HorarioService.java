@@ -13,28 +13,30 @@ public class HorarioService {
     @Autowired
     private HorarioRepository horarioRepository;
 
-    // Asignaciones en general, cambiar despues a asignaciones por seccion
-    public List<AsignacionHorario> obtenerHorasAsignadas() {
-        return (List<AsignacionHorario>) horarioRepository.findAll();
-    }
-
     // Guardar una asignacion
     public void guardarHoraAsignacion(AsignacionHorario asignacionHorario) {
         horarioRepository.save(asignacionHorario);
     }
 
+    // Método para obtener los idHorarioBase dado un codigoBachillerato y año activo
+    public List<Integer> obtenerIdHorariosBasePorCodigoBachillerato(int codigoBachillerato) {
+        return horarioRepository.findIdHorarioBaseByCodigoBachilleratoAndActivoAnioTrue(codigoBachillerato);
+    }
+
+    // Horas asignadas dado un codigoBachillerato y año activo
+    public List<AsignacionHorario> obtenerHorasAsignadas(int codigoBachillerato) {
+        return (List<AsignacionHorario>) horarioRepository
+                .findHorarioByCodigoBachilleratoAndActivoAnioTrue(codigoBachillerato);
+    }
+
+    
     // Obtener una hora asignada por id
     public AsignacionHorario obtenerHoraAsignacionPorId(int idAsignacionHorario) {
         return horarioRepository.findById(idAsignacionHorario).orElse(null);
     }
 
     // Eliminar una hora asignada
-    public void eliminarHoraAsignacion(AsignacionHorario asignacionHorario) {
-        horarioRepository.delete(asignacionHorario);
-    }
-
-    // Método para obtener los idHorarioBase dado un codigoBachillerato y que activoAnio sea true
-    public List<Integer> obtenerIdHorariosBasePorCodigoBachillerato(int codigoBachillerato) {
-        return horarioRepository.findIdHorarioBaseByCodigoBachilleratoAndActivoAnioTrue(codigoBachillerato);
+    public void eliminarHoraAsignacion(int idAsignacionHorario) {
+        horarioRepository.deleteById(idAsignacionHorario);
     }
 }

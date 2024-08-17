@@ -827,6 +827,9 @@
                         <form class="needs-validation" novalidate id="formNuevaHora"
                             th:action="@{/horarios/guardarHora}" method="post">
 
+                            <input type="hidden" id="codigoBachilleratop" name="codigoBachilleratop"
+                                th:value="${bachillerato.codigoBachillerato}">
+
                             <!-- Hora -->
                             <div class="mb-3">
                                 <label for="horaSeleccionada" class="form-label">Hora</label>
@@ -881,13 +884,13 @@
                 horasExistentes = JSON.parse(envioHoras);
             }
             console.log("Contenido de horasExistentes después de parsear:", horasExistentes);
-        
+
             document.addEventListener("DOMContentLoaded", function () {
                 // Iterar sobre cada checkbox
                 document.querySelectorAll(".form-check-input.checkbox-clase").forEach(function (checkbox) {
                     // Obtener el valor del checkbox
                     let valor = parseInt(checkbox.value, 10);
-        
+
                     // Si el valor está en la lista de horas existentes, deshabilitar y ocultar el checkbox
                     if (horasExistentes.includes(valor)) {
                         checkbox.disabled = true;
@@ -896,7 +899,7 @@
                 });
             });
         </script>
-        
+
         <footer th:replace="~{home :: footer}"></footer>
     </div>
 </body>
