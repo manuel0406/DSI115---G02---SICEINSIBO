@@ -33,4 +33,9 @@ public class OrientadorService {
     public List<Alumno> listaAsignadaAlumnos(int codigoBachillerato){
         return orientadorRepository.listaAlumnos(codigoBachillerato);
     }
+
+    public Orientador existe(int codigoBachillerato){
+        return orientadorRepository.existeAsingnacion(codigoBachillerato);
+    }
+
 }

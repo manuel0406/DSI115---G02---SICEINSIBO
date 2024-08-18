@@ -74,6 +74,13 @@ public class OrientadorController {
     @PostMapping("/guardarOrientacion")
     public String guardar(@ModelAttribute Orientador orientador, RedirectAttributes attributes) {
 
+        Orientador existe = null;
+
+        existe = orientadorService.existe(orientador.getBachillerato().getCodigoBachillerato());
+        if (existe != null) {
+            attributes.addFlashAttribute("error", "¡Está sección ya fue asignada!");
+            return "redirect:/AsignacionOrientador/Asignar";
+        }
         orientadorService.guardarOrientador(orientador);
         attributes.addFlashAttribute("success", "¡Registro guardado con exito!");
 
@@ -172,7 +179,8 @@ public class OrientadorController {
         model.addAttribute("titulo", "Editar");
         model.addAttribute("alumno", alumno);
         model.addAttribute("bachilleratos", listaCarreras);
-        model.addAttribute("editar", true); // Indica que se está en modo edición
+        model.addAttribute("editar", true); // Indica que se está en modo edición+
+        model.addAttribute("editarO", true); // Indica que se está en modo edición
         model.addAttribute("carrera", carrera);
         model.addAttribute("grado", grado);
         model.addAttribute("seccion", seccion);

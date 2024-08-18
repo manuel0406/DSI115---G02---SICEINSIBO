@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.dsi.insibo.sice.Administrativo.Orientadores.OrientadorService;
 import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteService;
 import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
+import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Docente;
-
+import com.dsi.insibo.sice.entity.Orientador;
 
 @Controller
 @SpringBootApplication
-public class SiceApplication  {
+public class SiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SiceApplication.class, args);
@@ -37,45 +38,54 @@ public class SiceApplication  {
 	DocenteService docenteService;
 
 	@GetMapping("/")
-	public String holamundo( Model model) {
+	public String holamundo(Model model) {
 
-		String dui=sesion.duiSession();
+		String dui = sesion.duiSession();
+		boolean secciones = true;
 
 		Docente doocente = docenteService.buscarPorIdDocente(dui);
-		
+		List<Bachillerato> listaSecciones = orientadorService.listaSeccionesB(dui);
+
+		if (listaSecciones.isEmpty()) {
+			secciones = false;
+		}
+
 		model.addAttribute("titulo", "Inicio");
 		model.addAttribute("dui", doocente);
-		model.addAttribute("listaSecciones", orientadorService.listaSeccionesB(dui));
+		model.addAttribute("listaSecciones", listaSecciones);
+		model.addAttribute("activo", secciones);
 
 		return "home";
-	}	
+	}
+
 	@GetMapping("/administracion")
-	public String homeAdministracion(Model model){
+	public String homeAdministracion(Model model) {
 		model.addAttribute("titulo", "Administración");
 		return "Administrativo/homeAdministracion.html";
 	}
-	
+
 	@Autowired
 	private SessionRegistry sessionRegistry;
+
 	@GetMapping("/session")
 	public ResponseEntity<?> getDetailResponseEntity() {
-		String sessionId="";
+		String sessionId = "";
 		User userObject = null;
-		List<Object>sessions = sessionRegistry.getAllPrincipals();
+		List<Object> sessions = sessionRegistry.getAllPrincipals();
 
-		for(Object session :sessions){
+		for (Object session : sessions) {
 			if (session instanceof User) {
 				userObject = (User) session;
 			}
 			// Usuario a recuperar y no incluimos las sesiones expiradas
-			List <SessionInformation> sessionInformations = sessionRegistry.getAllSessions(session, false);
-			for(SessionInformation sessionInformation : sessionInformations){
+			List<SessionInformation> sessionInformations = sessionRegistry.getAllSessions(session, false);
+			for (SessionInformation sessionInformation : sessionInformations) {
 				sessionId = sessionInformation.getSessionId();
 			}
 
 		}
 
-		Map<String, Object> response= new HashMap<>();	
+		Map<String, Object> response = new HashMap<>();
 		response.put("response", "Hello World");
 		response.put("Session ID", sessionId);
 		response.put("sessionUser", userObject);
