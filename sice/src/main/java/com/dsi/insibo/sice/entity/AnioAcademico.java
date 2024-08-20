@@ -10,10 +10,10 @@ public class AnioAcademico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idAnioAcademico;
-    
+    private int idAnioAcademico;    
     private int anio;
     private boolean activoAnio;
+   // private boolean activoMatricula;
      
     public AnioAcademico() {
     }

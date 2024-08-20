@@ -95,7 +95,7 @@
                                     <option value="" selected>Seleccione</option>
                                     <option value="M">M</option>
                                     <option value="F">F</option>
-                                    
+
                                 </select>
                             </div>
                             <input type="submit" class="btn btn-primary" value="Filtrar">
@@ -121,7 +121,7 @@
                     <tbody class="">
                         <!-- Iterar sobre la lista de alumnos -->
                         <tr th:each="alumno, stat : ${alumnos}">
-                            <th scope="row" th:text="${stat.index + 1}"></th>
+                            <th scope="row" th:text="${baseIndex + stat.index + 1}"></th>
                             <td class="text-start " th:text="${alumno.nie}"></td>
                             <td class="text-start " th:text="${alumno.apellidoAlumno}"></td>
                             <td class="text-start " th:text="${alumno.nombreAlumno}"></td>
@@ -143,7 +143,6 @@
                                     data-bs-placement="top" title="Eliminar">
                                     <i class="bi bi-trash"></i>
                                 </a>
-
                                 <a th:href="@{/ExpedienteAlumno/editar/{id}(id=${alumno.nie}, format='pdf')} "
                                     class="btn btn-secondary " data-bs-toggle="tooltip" data-bs-placement="top"
                                     title="Imprimir" target="_blank" onclick="openInPopup(this.href); return false;">
@@ -154,35 +153,39 @@
                     </tbody>
                 </table>
                 <!-- Contenedor de navegación para la paginación -->
-                <nav aria-label="...">
-                    <!-- Lista de elementos de paginación centrada -->
-                    <ul class="pagination justify-content-center">
-                        <!-- Elemento de la lista para el enlace "Anterior" -->
-                        <!-- Si la página actual es la primera, se desactiva el enlace -->
-                        <li class="page-item" th:classappend="${page == 1} ? 'disabled' : ''">
-                            <!-- Enlace que lleva a la página anterior -->
-                            <a class="page-link"
-                                th:href="@{/ExpedienteAlumno/ver(page=${page - 1}, carrera=${carrera}, grado=${grado}, seccion=${seccion})}">Anterior</a>
-                        </li>
-                        <!-- Bucle que genera los enlaces para cada página -->
-                        <!-- Se usa th:each para iterar desde 1 hasta el total de páginas -->
-                        <!-- Se resalta el enlace de la página actual con la clase "active" -->
-                        <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
-                            th:classappend="${i == page} ? 'active' : ''">
-                            <!-- Enlace que lleva a la página correspondiente -->
-                            <a class="page-link"
-                                th:href="@{/ExpedienteAlumno/ver(page=${i}, carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
-                                th:text="${i}"></a>
-                        </li>
-                        <!-- Elemento de la lista para el enlace "Siguiente" -->
-                        <!-- Si la página actual es la última, se desactiva el enlace -->
-                        <li class="page-item" th:classappend="${page == totalPages} ? 'disabled' : ''">
-                            <!-- Enlace que lleva a la página siguiente -->
-                            <a class="page-link"
-                                th:href="@{/ExpedienteAlumno/ver(page=${page + 1}, carrera=${carrera}, grado=${grado}, seccion=${seccion})}">Siguiente</a>
-                        </li>
-                    </ul>
-                </nav>
+                <!-- Solo se mostrara cuando existan paginas y el total de las lista de alumnos supero los 50 estudiantes -->
+                <div th:if="${totalPages != 0 && totalElements > 50}">
+                    <nav aria-label="...">
+                        <!-- Lista de elementos de paginación centrada -->
+                        <ul class="pagination justify-content-center">
+                            <!-- Elemento de la lista para el enlace "Anterior" -->
+                            <!-- Si la página actual es la primera, se desactiva el enlace -->
+                            <li class="page-item" th:classappend="${page == 1} ? 'disabled' : ''">
+                                <!-- Enlace que lleva a la página anterior -->
+                                <a class="page-link"
+                                    th:href="@{/ExpedienteAlumno/ver(page=${page - 1}, carrera=${carrera}, grado=${grado}, seccion=${seccion})}">Anterior</a>
+                            </li>
+                            <!-- Bucle que genera los enlaces para cada página -->
+                            <!-- Se usa th:each para iterar desde 1 hasta el total de páginas -->
+                            <!-- Se resalta el enlace de la página actual con la clase "active" -->
+                            <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+                                th:classappend="${i == page} ? 'active' : ''">
+                                <!-- Enlace que lleva a la página correspondiente -->
+                                <a class="page-link"
+                                    th:href="@{/ExpedienteAlumno/ver(page=${i}, carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
+                                    th:text="${i}"></a>
+                            </li>
+                            <!-- Elemento de la lista para el enlace "Siguiente" -->
+                            <!-- Si la página actual es la última, se desactiva el enlace -->
+                            <li class="page-item" th:classappend="${page == totalPages} ? 'disabled' : ''">
+                                <!-- Enlace que lleva a la página siguiente -->
+                                <a class="page-link"
+                                    th:href="@{/ExpedienteAlumno/ver(page=${page + 1}, carrera=${carrera}, grado=${grado}, seccion=${seccion})}">Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
             </div>
         </div>
     </div>

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.dsi.insibo.sice.Administrativo.Bachilleratos.BachilleratoService;
+import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
 import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
 import com.dsi.insibo.sice.entity.Actividad;
 import com.dsi.insibo.sice.entity.Bachillerato;

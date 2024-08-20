@@ -18,7 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import com.dsi.insibo.sice.Administrativo.Bachilleratos.BachilleratoService;
+import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
 import com.dsi.insibo.sice.Calificaciones.NotaService;
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.AnexoAlumno;
@@ -308,6 +308,9 @@ public class AlumnoController {
 		model.addAttribute("seccion", seccion);
 		model.addAttribute("page", page);
 		model.addAttribute("totalPages", pageAlumnos.getTotalPages());
+		model.addAttribute("totalElements", listaAlumnos.size());
+		int baseIndex = (page - 1) * size;//sirve para mantener la base de la numeración de lo alumnos cuando cambia de pagina
+		model.addAttribute("baseIndex", baseIndex);
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/verAlumno";

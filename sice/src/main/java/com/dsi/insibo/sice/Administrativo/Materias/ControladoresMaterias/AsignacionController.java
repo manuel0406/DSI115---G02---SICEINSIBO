@@ -6,17 +6,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dsi.insibo.sice.Administrativo.Materias.Clases.DocenteAsignacionDTO;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.BachilleratosService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.MateriasService;
+import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteDTO;
 import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteService;
 import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.Bachillerato;
@@ -42,21 +46,34 @@ public class AsignacionController {
     private AsignacionService asignacionService;
 
     @GetMapping("/AsignacionMateria")
-    public String asignacionMateriasGeneral(Model model){
+    public String asignacionMateriasGeneral(Model model,  @RequestParam(required = false, defaultValue = "1") int pagina){
+
+        int tamanyo = 10; // Tamaño de la página
+        pagina = pagina - 1; // Convertir a base 0 para PageRequest
+
 
         String titulo = "Asignaciones de Materias";                                         // Asignar titulo
-        List<Asignacion> listadoAsignaciones = asignacionService.obtenerTodaAsignaciones(); // Obtener todas las asignaciones
+        List<Asignacion> totalAsignacions = asignacionService.obtenerTodaAsignaciones(); // Obtener todas las asignaciones
+        Page<Asignacion> listadoAsignaciones = asignacionService.obtenerTodaAsignaciones(pagina, tamanyo);
         List<Docente> docentes = docenteService.listarDocenteAsignacion();                  // Obtener maestros
+
+        // Calcular la cantidad de páginas
+        int cantidad = (int) Math.ceil((double) totalAsignacions.size() / tamanyo);
 
         // Construccion de infromacion a front-end
         model.addAttribute("asignaciones", listadoAsignaciones);
+        model.addAttribute("cantidad", cantidad);
         model.addAttribute("docentes", docentes);
         model.addAttribute("titulo", titulo);
         return "Administrativo/GestionMaterias/AsignacionMateriaGeneral";
     }
 
     @GetMapping("/AsignacionMateria/{id}")
-    public String asignacionMateria(Model model,  @PathVariable("id") int idMateria, RedirectAttributes attribute){
+    public String asignacionMateria(Model model,  @PathVariable("id") int idMateria, 
+                                    @RequestParam(required = false, defaultValue = "1") int pagina){
+
+        int tamanyo = 10; // Tamaño de la página
+        pagina = pagina - 1; // Convertir a base 0 para PageRequest
         
         // ID INVALIDA
         if (idMateria == 0) {
@@ -68,17 +85,24 @@ public class AsignacionController {
         String titulo = "Asignaciones a: " + materia.getNomMateria();
 
         // Para obtener todas las asignaciones
-        List<Asignacion> listadoAsignaciones = asignacionService.listarAsignaciones(idMateria); // Listado de asignaciones de la materia
+        List<Asignacion> listadoTotal = asignacionService.listarAsignaciones(idMateria); // Listado de asignaciones de la materia
+        Page<Asignacion> listadoAsignaciones = asignacionService.listarAsignaciones(idMateria, pagina, tamanyo);
 
         // Filtrado de maximo de docentes - obtener docentes sin repetir
         List<String> docentesMax = asignacionService.listarDocentesMaximo(idMateria);
         List<Docente> docentes = docenteService.listarDocenteAsignacion();
         docentes.removeIf(docente -> docentesMax.contains(docente.getDuiDocente())); // Eliminar de la lista de docentes aquellos cuyo duiDocente está en la lista de docentesMax
         
+
+        // Calcular la cantidad de páginas
+        int cantidad = (int) Math.ceil((double) listadoTotal.size() / tamanyo);
+
         model.addAttribute("titulo", titulo);
         model.addAttribute("asignaciones", listadoAsignaciones);
+        model.addAttribute("cantidad", cantidad);
         model.addAttribute("idMateria", idMateria);
         model.addAttribute("docentes", docentes);
+
         return "Administrativo/GestionMaterias/AsignacionMateria";
     }
 
@@ -93,9 +117,6 @@ public class AsignacionController {
         List<Bachillerato> segundos = bachilleratosService.obtenerSegundos();
         List<Bachillerato> terceros = bachilleratosService.obtenerTerceros();
 
-        // Obtenemos los docentes
-        List<Docente> docentes = docenteService.listarDocenteAsignacion();
-
         // Obtenemos las asignaciones
         List<Asignacion> asignaciones = asignacionService.obtenerTodaAsignaciones();
 
@@ -104,14 +125,12 @@ public class AsignacionController {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String materiasJson = objectMapper.writeValueAsString(materias);
-            String docentesJson = objectMapper.writeValueAsString(docentes);
             String asignacionesJson = objectMapper.writeValueAsString(asignaciones);
             String primerosJson = objectMapper.writeValueAsString(primeros);
             String segundosJson = objectMapper.writeValueAsString(segundos);
             String tercerosJson = objectMapper.writeValueAsString(terceros);
 
             model.addAttribute("materiasJson", materiasJson);
-            model.addAttribute("docentesJson", docentesJson);
             model.addAttribute("asignacionesJson", asignacionesJson);
             model.addAttribute("primerosJson", primerosJson);
             model.addAttribute("segundosJson", segundosJson);
@@ -127,6 +146,25 @@ public class AsignacionController {
         return "Administrativo/GestionMaterias/NuevaAsignacionGeneral";
         
     }
+
+    // PETICION AJAX A TIEMPO REAL
+    @GetMapping("/DocentesMax")
+    @ResponseBody
+    public List<DocenteAsignacionDTO> getDocentesByMateria(@RequestParam int idMateria) {
+        // Obtener la lista de docentes máximos
+        List<String> docentesMax = asignacionService.listarDocentesMaximo(idMateria);
+        
+        // Obtener todos los docentes y filtrar los que están en la lista de docentesMax
+        List<Docente> docentes = docenteService.listarDocenteAsignacion();
+        
+        // Filtrar los docentes cuyo duiDocente no está en la lista de docentesMax
+        List<DocenteAsignacionDTO> docentesDTO = docentes.stream()
+            .filter(docente -> !docentesMax.contains(docente.getDuiDocente()))
+            .map(docente -> new DocenteAsignacionDTO(docente.getDuiDocente(), docente.getNombreDocente(), docente.getApellidoDocente()))
+            .collect(Collectors.toList());
+    
+        return docentesDTO;
+    }    
 
     @GetMapping("/NuevaAsignacion/{id}")
     public String nuevaAsignacion(Model model, @PathVariable("id") int idMateria, RedirectAttributes attribute) {
@@ -178,14 +216,14 @@ public class AsignacionController {
     public String crearAsignacionMateria(
             @RequestParam("idMateria") int idMateria,
             @RequestParam("duiDocente") String duiDocente,
-            @RequestParam("codigoBachillerato") List<String> codigosBachillerato,
+            @RequestParam("codigoBachillerato") List<Integer> codigosBachillerato,
             RedirectAttributes redirectAttributes) {
         
         Docente docente = docenteService.buscarPorIdDocente(duiDocente);
         Materia materia = materiasService.obtenerMateriaPorId(idMateria);
 
         List<Asignacion> asignaciones = new ArrayList<>();
-        for (String codigo : codigosBachillerato) {
+        for (int codigo : codigosBachillerato) {
             Bachillerato bachillerato = bachilleratosService.obtenerBachilleratoPorId(codigo);
             
             Asignacion asignacion = new Asignacion();
