@@ -15,12 +15,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.AnioService;
 import com.dsi.insibo.sice.Administrativo.Orientadores.OrientadorService;
 import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteService;
 import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
+import com.dsi.insibo.sice.entity.AnioAcademico;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Docente;
-import com.dsi.insibo.sice.entity.Orientador;
+
 
 @Controller
 @SpringBootApplication
@@ -36,6 +38,8 @@ public class SiceApplication {
 	OrientadorService orientadorService;
 	@Autowired
 	DocenteService docenteService;
+	@Autowired
+	AnioService anioService;
 
 	@GetMapping("/")
 	public String holamundo(Model model) {
@@ -60,7 +64,14 @@ public class SiceApplication {
 
 	@GetMapping("/administracion")
 	public String homeAdministracion(Model model) {
+
+		AnioAcademico matriculaActiva = anioService.activoMatricula();
+		if (matriculaActiva ==null) {
+			System.out.println("No hay matricula activa");
+		}
+
 		model.addAttribute("titulo", "Administración");
+		model.addAttribute("activo", matriculaActiva);
 		return "Administrativo/homeAdministracion.html";
 	}
 

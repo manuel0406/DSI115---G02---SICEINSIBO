@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
@@ -144,6 +145,44 @@ public class OrientadorController {
 
         // Retornar el nombre de la vista a ser renderizada
         return "Expediente_alumno/verAlumno";
+    }
+
+    @GetMapping(value = "/seccionAsigada/{id}", produces = "application/pdf")
+    public ModelAndView verAlumnosPdf(Model model, @PathVariable("id") int id,
+            @RequestParam(value = "carrera", required = false) String carrera,
+            @RequestParam(value = "grado", required = false) String grado,
+            @RequestParam(value = "seccion", required = false) String seccion,
+            @RequestParam(value = "seccion", required = false) String genero) {
+        Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(id);
+        // Convertir cadenas vacías a null para evitar problemas con las consultas
+
+        if (genero != null && genero.isEmpty()) {
+            genero = null;
+        }
+
+        // Obtener la lista completa de alumnos filtrada por los parámetros
+        List<Alumno> listaAlumnos = alumnoService.listarAlumnos(bachillerato.getNombreCarrera(),
+                String.valueOf(bachillerato.getGrado()), bachillerato.getSeccion(), genero);
+        // Obtener la lista de carreras (bachilleratos)
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+
+        carrera = bachillerato.getNombreCarrera();
+		grado = String.valueOf(bachillerato.getGrado());
+		seccion = bachillerato.getSeccion();
+
+        // Crear un objeto ModelAndView con la vista "Expediente_alumno/verAlumnoPdf"
+        ModelAndView modelAndView = new ModelAndView("Expediente_alumno/verAlumnoPdf");
+
+        // Agregar atributos al ModelAndView para ser utilizados en la vista
+        model.addAttribute("titulo", "Alumnos");
+        modelAndView.addObject("alumnos", listaAlumnos);
+        modelAndView.addObject("bachilleratos", listaCarreras);
+        modelAndView.addObject("carrera", carrera);
+        modelAndView.addObject("grado", grado);
+        modelAndView.addObject("seccion", seccion);
+
+        // Retornar el objeto ModelAndView que contiene la vista y los datos
+        return modelAndView;
     }
 
     @GetMapping("/editar/{id}/{nie}")

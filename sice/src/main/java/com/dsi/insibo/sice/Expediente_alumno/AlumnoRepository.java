@@ -3,6 +3,8 @@ package com.dsi.insibo.sice.Expediente_alumno;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import com.dsi.insibo.sice.entity.Alumno;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -141,5 +143,11 @@ public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
 
     @Query("SELECT a FROM Alumno a JOIN a.bachillerato b WHERE b.seccion = :seccion")
     public Page<Alumno> findAllPorSeccion(String seccion, Pageable pageable);
+
+    @Query("SELECT a FROM Alumno a JOIN a.bachillerato b JOIN b.anioAcademico an WHERE (a.nombreAlumno ILIKE %:nombre% OR a.apellidoAlumno ILIKE %:apellido%) AND an.anio=:anio   ")
+    List<Alumno> listadoMatricula(@Param("nombre") String nombre, @Param("apellido") String apellido, int anio);
+
+    @Query("SELECT a FROM Alumno a JOIN a.bachillerato b JOIN b.anioAcademico an WHERE  an.activoMatricula=true")
+    List<Alumno> yaMatriculado();
 
 }

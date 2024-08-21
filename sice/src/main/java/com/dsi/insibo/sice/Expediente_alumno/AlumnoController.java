@@ -66,7 +66,7 @@ public class AlumnoController {
 
 		// Busca si el NIE proporcionado ya existe
 		Alumno alumnoExistente = alumnoService.buscarPorIdAlumno(alumno.getNie());
-		Bachillerato bachillerato = bachilleratoService.debolverBachillerato(carrera, seccion, grado);
+		Bachillerato bachillerato = bachilleratoService.debolverBachilleratoMatricula(carrera, seccion, grado);
 
 		// Evalúa si el alumno ya existe y, de ser así, manda un mensaje de error y
 		// redirige
@@ -194,6 +194,7 @@ public class AlumnoController {
 		model.addAttribute("carrera", carrera);
 		model.addAttribute("grado", grado);
 		model.addAttribute("seccion", seccion);
+		model.addAttribute("url", "/ExpedienteAlumno/actualizar");
 
 		// Retorna el nombre de la vista de edición del alumno
 		return "Expediente_alumno/editar";

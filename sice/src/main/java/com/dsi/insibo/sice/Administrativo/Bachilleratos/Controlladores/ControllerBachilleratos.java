@@ -93,15 +93,19 @@ public class ControllerBachilleratos {
     @PostMapping("/editarAnio")
     public String editarAnio(@ModelAttribute AnioAcademico anio, RedirectAttributes attributes) {
 
-        try {
+        AnioAcademico activoMatricula = anioService.activoMatricula();
+        AnioAcademico activoAnio = anioService.activoAnio();
+
+        if (activoMatricula != null && (anio.isActivoMatricula() == true)) {
+            attributes.addFlashAttribute("error", "¡Solo un año puede tener matricula activa!");
+        } else if (activoAnio != null && (anio.isActivoAnio() == true)) {
+            attributes.addFlashAttribute("error", "¡Solo un año puede es´tar activo activo!");
+        } else {
             anioService.guardarAnio(anio);
             attributes.addFlashAttribute("success", "¡Registro editado con exito!");
-
-        } catch (Exception sql) {
-            System.out.println("El error es: " + sql);
-            attributes.addFlashAttribute("error", "¡Ese año ya existe!");
-
+            return "redirect:/Bachillerato/anio";
         }
+
         return "redirect:/Bachillerato/anio";
     }
 

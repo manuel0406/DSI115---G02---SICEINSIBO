@@ -57,4 +57,8 @@ public class BachilleratoService {
     public Bachillerato bachilleratoPorId(int id){
         return bachilleratoRepository.findById(id).orElse(null);
     }
+
+    public Bachillerato debolverBachilleratoMatricula(String carrera, String seccion, String grado){
+        return bachilleratoRepository.especialidadMatricula(carrera, seccion, grado);
+    }
 }

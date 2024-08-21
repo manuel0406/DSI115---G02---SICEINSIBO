@@ -25,10 +25,11 @@
                 <div class="col-12 col-md-4">
                     <label for="carrera" class="form-label fs-6">Carrera:</label>
                     <select id="carrera" name="carrera" class="form-select" th:value="${carrera}" aria-label="Default select example" required>
-                        <option value="" selected>Seleccione</option>
+                        <option value="" th:if="${carrera == null}" selected>Seleccione</option>
                         <option th:each="bachillerato : ${bachilleratos}"
-                            th:value="${bachillerato.nombreCarrera}"
-                            th:text="${bachillerato.nombreCarrera}">
+                                th:value="${bachillerato.nombreCarrera}"
+                                th:text="${bachillerato.nombreCarrera}"
+                                th:selected="${bachillerato.nombreCarrera == carrera}">
                         </option>
                     </select>
                     <div class="invalid-feedback">
@@ -38,10 +39,10 @@
                 <div class="col-12 col-md-4">
                     <label for="grado" class="form-label fs-6">Año:</label>
                     <select id="grado" name="grado" th:value="${grado}" class="form-select" required>
-                        <option value="" selected>Seleccione</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
+                        <option value="" th:if="${grado == null}" selected>Seleccione</option>
+                        <option value="1" th:selected="${grado == '1'}">1</option>
+                        <option value="2" th:selected="${grado == '2'}">2</option>
+                        <option value="3" th:selected="${grado == '3'}">3</option>
                     </select>
                     <div class="invalid-feedback">
                         Es necesario agregar el año
@@ -50,7 +51,8 @@
                 <div class="col-12 col-md-4">
                     <label for="seccion" class="form-label fs-6">Sección:</label>
                     <select id="seccion" name="seccion" class="form-select"  th:value="${seccion}" required>
-                        <option value="" selected>Seleccione</option>
+                        <option value="" th:if="${seccion == null}" selected>Seleccione</option>
+                        <option th:value="${seccion}" th:text="${seccion}" th:selected="true"></option>
                     </select>
                     <div class="invalid-feedback">
                         Es necesario agregar la seccion

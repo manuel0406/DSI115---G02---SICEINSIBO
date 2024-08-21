@@ -70,6 +70,16 @@
                     </div>
                 </div>
             </div>
+            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DOCENTE','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
+                <div th:if="${activo != null}" class="card h-100">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-campus-universitario_114360-13748.jpg?t=st=1722375015~exp=1722378615~hmac=ba2d3f62a45e8715039cd18cfefed35f0fa65ea744d8b1220db901103b0baa9e&w=826" class="card-img-top" alt="Notas">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Matricula</h5>
+                        <p class="card-text">Empieza las inscripciones </p>
+                        <a  class="btn btn-primary mt-auto Agregar-btn">Ir a Sección</a>
+                    </div>
+                </div>
+            </div>
             
         </div>
     </div>
@@ -77,6 +87,39 @@
 
 </body>
 
+<div class="modal fade" id="agregarModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirAgregarModalLabel">¿Que desea realizar?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row py-1">
+                        <div class="col-8"> 
+                            <label for="inputPassword2" class="col-form-label">Nuevo ingreso</label>                              
+                        </div>
+                        <div class="col-4 row text-center">
+                            <a class="btn btn-primary" th:href="@{ExpedienteAlumno/Crear}">Ir</a>
+                        </div>                                       
+                    </div>            
+                    <hr>        
+                    <div class="row py-1">
+                        <div class="col-8"> 
+                            <label for="inputPassword2" class="col-form-label">Antiguo ingreso</label>                              
+                        </div>
+                        <div class="col-4 row text-center">
+                            <a class="btn btn-primary" th:href="@{/AntiguoIngreso}">Ir</a>
+                        </div>                                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <footer th:replace="~{home :: footer}"></footer>
+<script type="text/javascript" th:src="@{/js/home.js}"></script>
 
 </html>

@@ -8,8 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     agregarButton.forEach(function (button) {
         button.addEventListener("click", function (event) {
-            event.preventDefault();
-            //currentHref = button.getAttribute('href');
+            event.preventDefault();            
             confirmAgregarModal.show();
         });
     });
