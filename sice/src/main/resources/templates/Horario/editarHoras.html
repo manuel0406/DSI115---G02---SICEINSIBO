@@ -33,7 +33,7 @@
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 my-2">
-                            <a class="nav-link text-white">
+                            <a class="nav-link text-white" th:href="@{/horarios/generarHorarioSeccion}">
                                 <i class="bi bi-journal-check"></i>
                                 <span class="fs-6 ms-2 d-none d-sm-inline">Generar horario - sección</span>
                             </a>
@@ -48,12 +48,11 @@
                 </div>
             </nav>
 
-            <!-- Contiene el area de trabajo -->
+            <!-- Contiene el área de trabajo -->
             <div class="col-md-10 offset-md-2">
                 <header th:replace="~{home :: header}"></header>
 
                 <div class="container-fluid py-5">
-
                     <h3 class="text-start col-12 mb-3 mt-4">Seleccione una sección para gestionar sus horas de clase
                     </h3>
 
@@ -102,105 +101,130 @@
                                 </div>
                             </div>
 
+                            <!-- Botones -->
                             <div class="col-md-3 d-flex align-items-end mb-3">
-                                <input type="submit" class="btn btn-primary w-100" value="Filtrar">
+                                <div class="w-100 d-flex justify-content-between gap-2">
+                                    <!-- Filtrar -->
+                                    <input type="submit" class="btn btn-primary w-50" value="Filtrar"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Editar horas de clase"
+                                        alt="Botón Filtrar">
+
+                                    <!-- Asignar -->
+                                    <a class="btn btn-primary w-50"
+                                        th:href="@{/horarios/asignarHoras(carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Crear horas de clase"
+                                        alt="Botón Asignar"> Asignar horas
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </form>
 
-                    <!-- Contiene la sección elegida, si el filtro no encuentra un codigo relacionado con la 
-                     busqueda pedira que seleccione una seccion valida, ademas al entrar por primera vez simplemente no se mostrara-->
-                    <h5 class="text-start col-lg-9 mt-2" th:text="${formSubmitted ? 
-                        (bachillerato == null || bachillerato.getCodigoBachillerato() == 0 ? 
-                            'Selecciona una sección válida' : 
-                            'Asignando horas de clase a ' + 
-                            (grado != null ? grado + '° ' : '') +
-                            (carrera != null ? carrera + ' ' : '') +
-                            (seccion != null ? seccion: '')) : ''}">
-                    </h5>
 
-                    <!-- Alertas -->
-                    <div>
-                        <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2"
-                            th:if="${success != null}">
+                    <!-- Mensajes de alerta -->
+                    <div class="alert-container mb-3">
+                        <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
                             <label th:text="${success}"></label>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
-                        <div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2"
-                            th:if="${error != null}">
+                        <div class="alert alert-danger alert-dismissible fade show" th:if="${error != null}">
                             <label th:text="${error}"></label>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
-                        <div class="alert alert-warning alert-dismissible fade show mt-1 ms-2 mr-2"
-                            th:if="${warning != null}">
+                        <div class="alert alert-warning alert-dismissible fade show" th:if="${warning != null}">
                             <label th:text="${warning}"></label>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
-                        <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2"
-                            th:if="${info != null}">
+                        <div class="alert alert-info alert-dismissible fade show" th:if="${info != null}">
                             <label th:text="${info}"></label>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </div>
 
-                    <!-- Contiene las horas de clase de una sección-->
+                    <!-- Contiene la sección elegida -->
+                    <h5 class="text-start"
+                        th:text="${formSubmitted ? (bachillerato == null || bachillerato.getCodigoBachillerato() == 0 ? 'Selecciona una sección válida' : 'Mostrando horas de clase de ' + (grado != null ? grado + '° ' : '') + (carrera != null ? carrera + ' ' : '') + (seccion != null ? seccion: '')) : ''}">
+                    </h5>
+
                     <div class="row" th:if="${bachillerato != null and bachillerato.getCodigoBachillerato() != 0}">
+                        <!-- Contenedor para la tabla y filtro -->
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <div class="row mb-3 justify-content-center">
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label for="filtroDia" class="form-label">Filtrar por día</label>
+                                            <select id="filtroDia" class="form-select">
+                                                <option value="Todos" selected>Mostrar todos</option>
+                                                <option value="Lunes">Lunes</option>
+                                                <option value="Martes">Martes</option>
+                                                <option value="Miércoles">Miércoles</option>
+                                                <option value="Jueves">Jueves</option>
+                                                <option value="Viernes">Viernes</option>
+                                                <option value="Sábado">Sábado</option>
+                                            </select>
+                                        </div>
+                                    </div>
 
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Día</th>
-                                        <th>Hora</th>
-                                        <th>Materia</th>
-                                        <th>Docente</th>
-                                        <th style="width: 10%; text-align: left;">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Agrega la referencia al elemento que maneja la paginación (page.content) -->
-                                    <tr th:each="hours : ${horasDeClase}">
-                                        <td th:text="${hours.horarioBase.dia.nombreDia}">
-                                        </td>
-                                        <td
-                                            th:text="${hours.horarioBase.hora.horaFinalizacion + ' - ' + hours.horarioBase.hora.horaInicio}">
-                                        </td>
-                                        <td th:text="${hours.asignacion.materia.nomMateria}"></td>
-                                        <td
-                                            th:text="${hours.asignacion.docente.nombreDocente + ' ' + hours.asignacion.docente.apellidoDocente}">
-                                        </td>
-                                        <td>
-                                            <div class="d-flex justify-content-left">
-                                                <button class="btn btn-primary btn-sm mx-1 editar-btn"
-                                                    data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase"
-                                                    th:data-id="${hours.idAsignacionHorario}"
-                                                    th:data-horario="${hours.horarioBase.idHorarioBase}"
-                                                    th:data-intervalo="${hours.horarioBase.hora.horaFinalizacion + ' - ' + hours.horarioBase.hora.horaInicio}"
-                                                    th:data-docente="${hours.asignacion.idAsignacion}"
-                                                    th:data-hora="${hours.horarioBase.hora.idHora}"
-                                                    th:data-dia="${hours.horarioBase.dia.nombreDia}">
-                                                    <i class="bi bi-pencil-square"></i>
-                                                </button>
-                                                <a class="btn btn-danger btn-sm mx-1 delete-btn"
-                                                    th:href="@{/horarios/eliminarHora/{id}(id=${hours.idAsignacionHorario}, carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
-                                                    <i class="bi bi-trash"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th> <!-- Columna de numeración -->
+                                                    <th>Día</th>
+                                                    <th>Hora</th>
+                                                    <th>Materia</th>
+                                                    <th>Docente</th>
+                                                    <th style="width: 10%; text-align: left;">Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Recorre los registros y muestra la numeración -->
+                                                <tr th:each="hours, iterStat : ${horasDeClase}">
+                                                    <td th:text="${iterStat.index + 1}"></td> <!-- Numeración -->
+                                                    <td th:text="${hours.horarioBase.dia.nombreDia}"></td>
+                                                    <td
+                                                        th:text="${hours.horarioBase.hora.horaFinalizacion + ' - ' + hours.horarioBase.hora.horaInicio}">
+                                                    </td>
+                                                    <td th:text="${hours.asignacion.materia.nomMateria}"></td>
+                                                    <td
+                                                        th:text="${hours.asignacion.docente.nombreDocente + ' ' + hours.asignacion.docente.apellidoDocente}">
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex justify-content-left">
+                                                            <button class="btn btn-primary btn-sm mx-1 editar-btn"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase"
+                                                                th:data-id="${hours.idAsignacionHorario}"
+                                                                th:data-horario="${hours.horarioBase.idHorarioBase}"
+                                                                th:data-intervalo="${hours.horarioBase.hora.horaFinalizacion + ' - ' + hours.horarioBase.hora.horaInicio}"
+                                                                th:data-docente="${hours.asignacion.idAsignacion}"
+                                                                th:data-hora="${hours.horarioBase.hora.idHora}"
+                                                                th:data-dia="${hours.horarioBase.dia.nombreDia}">
+                                                                <i class="bi bi-pencil-square"></i>
+                                                            </button>
+                                                            <a class="btn btn-danger btn-sm mx-1 delete-btn"
+                                                                th:href="@{/horarios/eliminarHora/{id}(id=${hours.idAsignacionHorario}, carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="Eliminar">
+                                                                <i class="bi bi-trash"></i>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
 
         <!-- Modal de Confirmación -->
         <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
@@ -224,7 +248,7 @@
 
         <!-- Modal de edición -->
         <div class="modal fade" id="nuevaHoradeClase" tabindex="-1" aria-labelledby="nuevaHoradeClaseLabel"
-            aria-hidden="true">
+            aria-hidden="true" th:if="${bachillerato != null and bachillerato.getCodigoBachillerato() != 0}">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -306,6 +330,36 @@
         <script type="text/javascript" src="/js/modalEliminacion.js"></script>
         <script type="text/javascript" src="/js/horariosEditar.js"></script>
 
+        <script th:inline="javascript">
+            // Convertir el valor de horasDeClaseJson desde el atributo Thymeleaf a un array en JavaScript
+            var horasDeClaseJson = /*[[${horasDeClaseJson}]]*/ '[]';
+            var horasDeClase = [];
+
+            if (typeof horasDeClaseJson === 'string') {
+                horasDeClase = JSON.parse(horasDeClaseJson);
+            }
+
+            console.log(horasDeClase); // Muestra el JSON en la consola para depuración
+
+            document.addEventListener("DOMContentLoaded", function () {
+                // Ejemplo de iteración sobre el array de horasDeClase
+                horasDeClase.forEach(function (asignacionHorario) {
+                    console.log(asignacionHorario); // Muestra cada objeto AsignacionHorario en la consola
+                });
+
+                // Iterar sobre cada checkbox
+                document.querySelectorAll(".form-check-input.checkbox-clase").forEach(function (checkbox) {
+                    // Obtener el valor del checkbox
+                    let valor = parseInt(checkbox.value, 10);
+
+                    // Si el valor está en la lista de horas existentes, deshabilitar y ocultar el checkbox
+                    if (horasExistentes.includes(valor)) {
+                        checkbox.disabled = true;
+                        checkbox.closest(".form-check").style.display = "none";
+                    }
+                });
+            });
+        </script>
 
     </div>
 </body>

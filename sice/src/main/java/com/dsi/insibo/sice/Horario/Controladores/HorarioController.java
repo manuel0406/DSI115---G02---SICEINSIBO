@@ -35,6 +35,9 @@ public class HorarioController {
     @Autowired
     private HorarioService horarioService;
 
+    // Variable de instancia para almacenar horasExistentes
+    private List<Integer> horasExistentes;
+
     @GetMapping("/asignarHoras")
     public String asignar(Model model,
             @RequestParam(value = "carrera", required = false) String carrera,
@@ -53,6 +56,15 @@ public class HorarioController {
         return "Horario/editarHoras";
     }
 
+    @GetMapping("/generarHorarioSeccion")
+    public String generarHorarioSeccion(Model model,
+            @RequestParam(value = "carrera", required = false) String carrera,
+            @RequestParam(value = "grado", required = false) String grado,
+            @RequestParam(value = "seccion", required = false) String seccion) {
+        prepararVista(model, carrera, grado, seccion, true);
+        return "Horario/generarHorarioSeccion";
+    }
+
     @PostMapping("/guardarHora")
     public String guardarHora(@RequestParam("asignacionSeleccionada") int asignacionID,
             @RequestParam("horaSeleccionada") int horarioBaseID,
@@ -67,29 +79,69 @@ public class HorarioController {
         carrera = extraerPrimerValor(carrera);
         grado = extraerPrimerValor(grado);
         seccion = extraerPrimerValor(seccion);
-        //idBachillerato = extraerPrimerValor(idBachillerato);
-        //nombreDia = extraerPrimerValor(nombreDia);
-        //horaDia = extraerPrimerValor(horaDia);
+        // idBachillerato = extraerPrimerValor(idBachillerato);
+        // nombreDia = extraerPrimerValor(nombreDia);
+        // horaDia = extraerPrimerValor(horaDia);
+        if (horasExistentes != null) {
+            System.out.println("Horas de clase actuales = " + horasExistentes.size());
+        }
 
-        // Verifica que no se formen bloques de mas de 2 horas seguidas de una materia
-        // básica
-        if (!horarioService.existeBloqueDeDosHoras(Integer.parseInt(idBachillerato), nombreDia,
-                Integer.parseInt(horaDia), asignacionID)) {
-            AsignacionHorario hora = new AsignacionHorario();
-            Asignacion asignacion = new Asignacion();
-            HorarioBase horarioBase = new HorarioBase();
+        // Si el grado es 1º o 2º
+        if (Integer.parseInt(grado) <= 2) {
+            // Limita las horas de clase que puede tener una sección
+            if (horasExistentes != null && horasExistentes.size() <= 46) {
+                // Verifica que no se formen bloques de mas de 2 horas de clase seguidas de una
+                // materia básica
+                if (!horarioService.existeBloqueDeDosHoras(Integer.parseInt(idBachillerato), nombreDia,
+                        Integer.parseInt(horaDia), asignacionID)) {
+                    AsignacionHorario hora = new AsignacionHorario();
+                    Asignacion asignacion = new Asignacion();
+                    HorarioBase horarioBase = new HorarioBase();
 
-            asignacion.setIdAsignacion(asignacionID);
-            horarioBase.setIdHorarioBase(horarioBaseID);
+                    asignacion.setIdAsignacion(asignacionID);
+                    horarioBase.setIdHorarioBase(horarioBaseID);
 
-            hora.setHorarioBase(horarioBase);
-            hora.setAsignacion(asignacion);
+                    hora.setHorarioBase(horarioBase);
+                    hora.setAsignacion(asignacion);
 
-            horarioService.guardarHoraAsignacion(hora);
-            redirectAttributes.addFlashAttribute("success", "Hora agregada");
+                    horarioService.guardarHoraAsignacion(hora);
+                    redirectAttributes.addFlashAttribute("success", "Hora agregada");
+                    System.out.println("Horas de clase actuales = " + horasExistentes.size());
+                } else {
+                    redirectAttributes.addFlashAttribute("warning",
+                            "No puedes asignar bloques de más de 2 horas para una misma materia de tipo básica");
+                }
+            } else {
+                redirectAttributes.addFlashAttribute("warning",
+                        "No puedes agregar mas horas de clase. Los 1º y 2º años tienen un máximo de 47 horas de clase");
+            }
         } else {
-            redirectAttributes.addFlashAttribute("warning",
-                    "No puedes asignar bloques de más de 2 horas para una misma materia de tipo básica");
+            // Limita las horas de clase que puede tener una sección
+            if (horasExistentes != null && horasExistentes.size() <= 29) {
+                // Verifica que no se formen bloques de mas de 2 horas de clase seguidas de una
+                // materia básica
+                if (!horarioService.existeBloqueDeDosHoras(Integer.parseInt(idBachillerato), nombreDia,
+                        Integer.parseInt(horaDia), asignacionID)) {
+                    AsignacionHorario hora = new AsignacionHorario();
+                    Asignacion asignacion = new Asignacion();
+                    HorarioBase horarioBase = new HorarioBase();
+
+                    asignacion.setIdAsignacion(asignacionID);
+                    horarioBase.setIdHorarioBase(horarioBaseID);
+
+                    hora.setHorarioBase(horarioBase);
+                    hora.setAsignacion(asignacion);
+
+                    horarioService.guardarHoraAsignacion(hora);
+                    redirectAttributes.addFlashAttribute("success", "Hora agregada");
+                } else {
+                    redirectAttributes.addFlashAttribute("warning",
+                            "No puedes asignar bloques de más de 2 horas para una misma materia de tipo básica");
+                }
+            } else {
+                redirectAttributes.addFlashAttribute("warning",
+                        "No puedes agregar mas horas de clase. Los 3º años tienen un máximo de 30 horas de clase");
+            }
         }
 
         agregarParametrosRedireccion(redirectAttributes, carrera, grado, seccion);
@@ -111,9 +163,9 @@ public class HorarioController {
         carrera = extraerPrimerValor(carrera);
         grado = extraerPrimerValor(grado);
         seccion = extraerPrimerValor(seccion);
-        //idBachillerato = extraerPrimerValor(idBachillerato);
-        //nombreDia = extraerPrimerValor(nombreDia);
-        //horaDia = extraerPrimerValor(horaDia);
+        // idBachillerato = extraerPrimerValor(idBachillerato);
+        // nombreDia = extraerPrimerValor(nombreDia);
+        // horaDia = extraerPrimerValor(horaDia);
 
         // Verifica que no se formen bloques de mas de 2 horas seguidas de una materia
         // básica
@@ -170,7 +222,6 @@ public class HorarioController {
         List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
 
         // Variables para almacenar los datos necesarios
-        List<Integer> horasExistentes = null;
         Bachillerato bachillerato = null;
         List<Asignacion> listaAsignaciones = null;
 
@@ -193,6 +244,13 @@ public class HorarioController {
                 List<AsignacionHorario> horasDeClase = null;
                 horasDeClase = horarioService.obtenerHorasAsignadas(bachillerato.getCodigoBachillerato());
                 model.addAttribute("horasDeClase", horasDeClase != null ? horasDeClase : List.of());
+
+                try {
+                    String horasDeClaseJson = new ObjectMapper().writeValueAsString(horasDeClase);
+                    model.addAttribute("horasDeClaseJson", horasDeClaseJson);
+                } catch (JsonProcessingException e) {
+                    System.out.println("Error al procesar JSON: " + e.getMessage());
+                }
             }
         }
 
@@ -214,7 +272,8 @@ public class HorarioController {
         }
     }
 
-    // Agrega parámetros a los RedirectAttributes para mantener el contexto en las redirecciones
+    // Agrega parámetros a los RedirectAttributes para mantener el contexto en las
+    // redirecciones
     private void agregarParametrosRedireccion(RedirectAttributes redirectAttributes, String carrera, String grado,
             String seccion) {
         redirectAttributes.addAttribute("carrera", carrera);

@@ -32,7 +32,7 @@
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 my-2">
-                            <a class="nav-link text-white">
+                            <a class="nav-link text-white" th:href="@{/horarios/generarHorarioSeccion}">
                                 <i class="bi bi-journal-check"></i>
                                 <span class="fs-6 ms-2 d-none d-sm-inline">Generar horario - sección</span>
                             </a>
@@ -53,33 +53,6 @@
 
                 <div class="container-fluid py-5">
                     <h3 class="text-start col-12 mb-3 mt-4">Seleccione una sección para asignar horas de clase</h3>
-
-                    <!-- Alertas -->
-                    <div>
-                        <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2"
-                            th:if="${success != null}">
-                            <label th:text="${success}"></label>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-
-                        <div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2"
-                            th:if="${error != null}">
-                            <label th:text="${error}"></label>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-
-                        <div class="alert alert-warning alert-dismissible fade show mt-1 ms-2 mr-2"
-                            th:if="${warning != null}">
-                            <label th:text="${warning}"></label>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-
-                        <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2"
-                            th:if="${info != null}">
-                            <label th:text="${info}"></label>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    </div>
 
                     <!-- Contiene el formulario para seleccionar una sección -->
                     <form th:action="@{/horarios/asignarHoras}" method="get">
@@ -126,12 +99,46 @@
                                 </div>
                             </div>
 
+                            <!-- Botones -->
                             <div class="col-md-3 d-flex align-items-end mb-3">
-                                <input type="submit" class="btn btn-primary w-100" value="Filtrar">
+                                <div class="w-100 d-flex justify-content-between gap-2">
+                                    <!-- Filtrar -->
+                                    <input type="submit" class="btn btn-primary w-50" value="Filtrar"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Crear horas de clase">
+
+                                    <!-- Asignar -->
+                                    <a class="btn btn-primary w-50"
+                                        th:href="@{/horarios/editarHoras(carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Editar horas de clase">
+                                        Editar horas
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </form>
 
+                    <!-- Mensajes de alerta -->
+                    <div class="alert-container mb-3">
+                        <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
+                            <label th:text="${success}"></label>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <div class="alert alert-danger alert-dismissible fade show" th:if="${error != null}">
+                            <label th:text="${error}"></label>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <div class="alert alert-warning alert-dismissible fade show" th:if="${warning != null}">
+                            <label th:text="${warning}"></label>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <div class="alert alert-info alert-dismissible fade show" th:if="${info != null}">
+                            <label th:text="${info}"></label>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
 
                     <!-- Contiene la sección elegida, si el filtro no encuentra un codigo relacionado con la 
                      busqueda pedira que seleccione una seccion valida, ademas al entrar por primera vez simplemente no se mostrara-->
@@ -897,7 +904,7 @@
         </div>
 
         <div class="modal fade" id="nuevaHoradeClase" tabindex="-1" aria-labelledby="nuevaHoradeClaseLabel"
-            aria-hidden="true">
+            aria-hidden="true" th:if="${bachillerato != null and bachillerato.getCodigoBachillerato() != 0}">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -969,9 +976,11 @@
         <footer th:replace="~{home :: footer}"></footer>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script type="text/javascript" src="/js/horariosAsignar.js"></script>
         <script type="text/javascript" src="/js/validacionRequired.js"></script>
-        
+        <script type="text/javascript" src="/js/horariosAsignar.js"></script>
+        <script type="text/javascript" src="/js/tooltip.js"></script>
+
+
         <script th:inline="javascript">
             // Convertir el valor de horasExistentes desde el atributo Thymeleaf a un array en JavaScript
             var envioHoras = /*[[${envioHoras}]]*/ '[]';

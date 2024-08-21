@@ -22,6 +22,27 @@ form.addEventListener('submit', function (event) {
     form.appendChild(seccionInputHidden);
 });
 
+// Maneja el filtro de días para la tabla
+document.addEventListener("DOMContentLoaded", function () {
+    const filtroDia = document.getElementById('filtroDia');
+    const filas = document.querySelectorAll('tbody tr');
+
+    filtroDia.addEventListener('change', function () {
+        const diaSeleccionado = this.value;
+
+        filas.forEach(fila => {
+            const columnaDia = fila.querySelector('td:nth-child(2)'); // Indice de la columna
+            const dia = columnaDia.textContent.trim();
+
+            if (diaSeleccionado === "Todos" || dia === diaSeleccionado) {
+                fila.style.display = "";
+            } else {
+                fila.style.display = "none";
+            }
+        });
+    });
+});
+
 // Añade al modal los valores necesarios para el envío y referencia del usuario
 document.addEventListener("DOMContentLoaded", function () {
     const editButtons = document.querySelectorAll(".editar-btn");
