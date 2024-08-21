@@ -25,7 +25,7 @@ public interface BachilleratoRepository extends JpaRepository<Bachillerato, Inte
     @Query("SELECT b FROM Bachillerato b WHERE b.nombreCarrera = :carrera AND b.grado = :grado AND b.seccion = :seccion AND b.anioAcademico.activoAnio = true")
     Bachillerato especialidad(String carrera, String seccion, String grado);
 
-    @Query("SELECT b FROM Bachillerato b WHERE b.anioAcademico.activoAnio=true ")
+    @Query("SELECT b FROM Bachillerato b WHERE b.anioAcademico.activoMatricula=true ")
     List<Bachillerato> findAll();
 
     @Query("SELECT b.seccion FROM Bachillerato b WHERE b.nombreCarrera = :carrera AND b.grado = :grado AND b.anioAcademico.activoAnio=true")
