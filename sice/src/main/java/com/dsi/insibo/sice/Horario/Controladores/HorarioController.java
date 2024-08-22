@@ -14,10 +14,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
+import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteService;
+import com.dsi.insibo.sice.Horario.PDF.HorarioDTO;
 import com.dsi.insibo.sice.Horario.Servicios.HorarioService;
 import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.AsignacionHorario;
 import com.dsi.insibo.sice.entity.Bachillerato;
+import com.dsi.insibo.sice.entity.Docente;
 import com.dsi.insibo.sice.entity.HorarioBase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +37,9 @@ public class HorarioController {
 
     @Autowired
     private HorarioService horarioService;
+
+    @Autowired
+    private DocenteService docenteService;
 
     // Variable de instancia para almacenar horasExistentes
     private List<Integer> horasExistentes;
@@ -63,6 +69,56 @@ public class HorarioController {
             @RequestParam(value = "seccion", required = false) String seccion) {
         prepararVista(model, carrera, grado, seccion, true);
         return "Horario/generarHorarioSeccion";
+    }
+
+    @GetMapping("/generarHorarioDocente")
+    public String generarHorarioDocente(Model model,
+            @RequestParam(value = "duiDocente", required = false) String duiDocente,
+            RedirectAttributes redirectAttributes) {
+
+        boolean formSubmitted = (duiDocente != null);
+        duiDocente = normalizarParametro(duiDocente);
+        List<Docente> docentes = docenteService.listarDocenteAsignacion();
+        Docente docenteSeleccionado = null;
+
+        if (duiDocente != null && !duiDocente.isEmpty()) {
+            // Obtener el docente asociado al duiDocente
+            for (Docente docente : docentes) {
+                if (duiDocente.equals(docente.getDuiDocente())) {
+                    docenteSeleccionado = docente;
+                    break;
+                }
+            }
+
+            if (docenteSeleccionado != null) {
+                // Obtener el horario y convertirlo a DTO
+                List<HorarioDTO> horarioDTO = horarioService.obtenerHorasAsignadasDocenteDTO(
+                        horarioService.obtenerHorasAsignadasDocente(duiDocente));
+
+                try {
+                    // Convertir el horario a JSON y agregar al modelo
+                    String horasDeClaseJson = new ObjectMapper().writeValueAsString(horarioDTO);
+                    model.addAttribute("horasDeClaseJson", horasDeClaseJson);
+                    model.addAttribute("docenteSeleccionado", docenteSeleccionado);
+                    model.addAttribute("horarioDTO", horarioDTO);
+                    //model.addAttribute("success", "Horario de clases de " + docenteSeleccionado.getNombreDocente() + " " + docenteSeleccionado.getApellidoDocente() + " correctamente generado");
+
+                } catch (JsonProcessingException e) {
+                    System.out.println("Error al procesar JSON: " + e.getMessage());
+                    model.addAttribute("horarioDTO", List.of()); // Lista vacía en caso de error
+                }
+            } else {
+                model.addAttribute("horarioDTO", List.of()); // Lista vacía si no se encuentra el docente
+            }
+        } else {
+            model.addAttribute("horarioDTO", List.of()); // Lista vacía si no hay DUI
+            model.addAttribute("warning", "Selecciona un docente");
+        }
+
+        model.addAttribute("duiDocente", duiDocente);
+        model.addAttribute("docentes", docentes);
+        model.addAttribute("formSubmitted", formSubmitted);
+        return "Horario/generarHorarioDocente";
     }
 
     @PostMapping("/guardarHora")

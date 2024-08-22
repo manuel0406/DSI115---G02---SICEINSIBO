@@ -1,9 +1,13 @@
 package com.dsi.insibo.sice.Horario.Servicios;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dsi.insibo.sice.Horario.PDF.HorarioDTO;
 import com.dsi.insibo.sice.Horario.Repositorios.HorarioRepository;
 import com.dsi.insibo.sice.entity.AsignacionHorario;
 
@@ -27,6 +31,46 @@ public class HorarioService {
     public List<AsignacionHorario> obtenerHorasAsignadas(int codigoBachillerato) {
         return (List<AsignacionHorario>) horarioRepository
                 .findHorarioByCodigoBachilleratoAndActivoAnioTrue(codigoBachillerato);
+    }
+
+    // Horas asignadas dado un duiDocente y año activo
+    public List<AsignacionHorario> obtenerHorasAsignadasDocente(String duiDocente) {
+        return (List<AsignacionHorario>) horarioRepository
+                .findHorarioByDuiDocenteAndActivoAnioTrue(duiDocente);
+    }
+
+    // Método para convertir la lista de AsignacionHorario en una lista de
+    // HorarioDTO
+    public List<HorarioDTO> obtenerHorasAsignadasDocenteDTO(List<AsignacionHorario> horasDeClase) {
+        return horasDeClase.stream()
+                .map(hora -> {
+                    HorarioDTO dto = new HorarioDTO();
+                    dto.setDuiDocente(hora.getAsignacion().getDocente().getDuiDocente());
+                    dto.setIdHorarioBase(String.valueOf(hora.getHorarioBase().getIdHorarioBase()));
+                    dto.setCodMateria(hora.getAsignacion().getMateria().getCodMateria());
+                    dto.setNomMateria(hora.getAsignacion().getMateria().getNomMateria());
+                    dto.setNombreDocente(hora.getAsignacion().getDocente().getNombreDocente());
+                    dto.setApellidoDocente(hora.getAsignacion().getDocente().getApellidoDocente());
+                    dto.setGrado(String.valueOf(hora.getAsignacion().getBachillerato().getGrado()));
+                    dto.setSeccion(hora.getAsignacion().getBachillerato().getSeccion());
+                    dto.setNombreCarrera(hora.getAsignacion().getBachillerato().getNombreCarrera());
+
+                    // Generar y asignar el código
+                    String codigo = generarCodigo(hora.getAsignacion().getBachillerato().getNombreCarrera());
+                    dto.setCodigo(codigo);
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // Método privado para generar el código basado en el nombre de la carrera
+    private String generarCodigo(String nombreCarrera) {
+        return Arrays.stream(nombreCarrera.split(" ")) // Divide el nombre en palabras
+                .filter(palabra -> palabra.length() > 3) // Filtra palabras con más de 3 letras
+                .map(palabra -> palabra.substring(0, 1)) // Toma la primera letra de cada palabra
+                .collect(Collectors.joining()) // Une las letras en un solo String
+                .toUpperCase(); // Convierte a mayúsculas
     }
 
     // Obtener una hora asignada por id
