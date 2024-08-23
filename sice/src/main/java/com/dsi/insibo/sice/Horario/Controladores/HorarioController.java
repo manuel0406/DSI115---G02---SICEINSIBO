@@ -67,7 +67,52 @@ public class HorarioController {
             @RequestParam(value = "carrera", required = false) String carrera,
             @RequestParam(value = "grado", required = false) String grado,
             @RequestParam(value = "seccion", required = false) String seccion) {
-        prepararVista(model, carrera, grado, seccion, true);
+
+        boolean formSubmitted = (carrera != null || grado != null || seccion != null);
+
+        carrera = normalizarParametro(carrera);
+        grado = normalizarParametro(grado);
+        seccion = normalizarParametro(seccion);
+
+        // Obtener la lista de carreras disponibles
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+
+        // Variables para almacenar los datos necesarios
+        Bachillerato bachillerato = null;
+
+        // Obtener el bachillerato seleccionado
+        if (carrera != null && grado != null && seccion != null) {
+            bachillerato = bachilleratoService.obtenerBachilleratoEspecifico(carrera, Integer.parseInt(grado), seccion);
+        }
+
+        if (bachillerato != null && bachillerato.getCodigoBachillerato() != 0) {
+
+            // Obtener el horario y convertirlo a DTO
+            List<HorarioDTO> horarioDTO = horarioService.obtenerHorasAsignadasDocenteDTO(
+                    horarioService.obtenerHorasAsignadas(bachillerato.getCodigoBachillerato()));
+
+            try {
+                // Convertir el horario a JSON y agregar al modelo
+                String horasDeClaseJson = new ObjectMapper().writeValueAsString(horarioDTO);
+                model.addAttribute("horasDeClaseJson", horasDeClaseJson);
+                model.addAttribute("horarioDTO", horarioDTO);
+
+            } catch (JsonProcessingException e) {
+                System.out.println("Error al procesar JSON: " + e.getMessage());
+                model.addAttribute("horarioDTO", List.of()); // Lista vacía en caso de error
+            }
+        } else {
+            model.addAttribute("horarioDTO", List.of()); // Lista vacía si no hay DUI
+            model.addAttribute("warning", "Selecciona un docente");
+        }
+
+        // Añadir atributos al modelo para su uso en la vista
+        model.addAttribute("bachilleratos", listaCarreras);
+        model.addAttribute("carrera", carrera);
+        model.addAttribute("grado", grado);
+        model.addAttribute("seccion", seccion);
+        model.addAttribute("bachillerato", bachillerato);
+        model.addAttribute("formSubmitted", formSubmitted);
         return "Horario/generarHorarioSeccion";
     }
 
@@ -101,7 +146,6 @@ public class HorarioController {
                     model.addAttribute("horasDeClaseJson", horasDeClaseJson);
                     model.addAttribute("docenteSeleccionado", docenteSeleccionado);
                     model.addAttribute("horarioDTO", horarioDTO);
-                    //model.addAttribute("success", "Horario de clases de " + docenteSeleccionado.getNombreDocente() + " " + docenteSeleccionado.getApellidoDocente() + " correctamente generado");
 
                 } catch (JsonProcessingException e) {
                     System.out.println("Error al procesar JSON: " + e.getMessage());

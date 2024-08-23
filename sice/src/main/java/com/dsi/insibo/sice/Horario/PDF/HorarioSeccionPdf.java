@@ -11,7 +11,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
 
-import com.dsi.insibo.sice.entity.Docente;
+import com.dsi.insibo.sice.entity.Bachillerato;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -27,8 +27,8 @@ import com.lowagie.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component("Horario/generarHorarioDocente")
-public class HorarioDocentePdf extends AbstractPdfView {
+@Component("Horario/generarHorarioSeccion")
+public class HorarioSeccionPdf extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
@@ -36,8 +36,8 @@ public class HorarioDocentePdf extends AbstractPdfView {
 
         @SuppressWarnings("unchecked")
         List<HorarioDTO> horasDeClase = (List<HorarioDTO>) model.get("horarioDTO");
-        Docente docenteSeleccionado = (Docente) model.get("docenteSeleccionado");
-        String titulo = docenteSeleccionado.getNombreDocente() + " " + docenteSeleccionado.getApellidoDocente() + " Horario de clases";
+        Bachillerato bachilleratoSeleccionado = (Bachillerato) model.get("bachillerato");
+        String titulo = bachilleratoSeleccionado.getGrado() + "º " + bachilleratoSeleccionado.getNombreCarrera() + " " + bachilleratoSeleccionado.getSeccion();
         System.out.println(titulo);
         titulo = titulo.toUpperCase();
         System.out.println(titulo);
@@ -177,7 +177,7 @@ public class HorarioDocentePdf extends AbstractPdfView {
     // Método para añadir celdas a la tabla
     private void addTableCell(PdfPTable table, String text, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(text, font));
-        cell.setPadding(0);
+        cell.setPadding(2);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         table.addCell(cell);
@@ -326,8 +326,8 @@ public class HorarioDocentePdf extends AbstractPdfView {
     private String hora(List<HorarioDTO> hour, String id) {
         for (HorarioDTO horario : hour) {
             if (horario.getIdHorarioBase().equals(id)) {
-                return horario.getNomMateria() + " " + horario.getCodigo() + "-" + horario.getGrado()
-                        + horario.getSeccion();
+                return horario.getNomMateria() + "\n"  + horario.getNombreDocente()
+                       + " " + horario.getApellidoDocente();
             }
         }
         return " \n ";
