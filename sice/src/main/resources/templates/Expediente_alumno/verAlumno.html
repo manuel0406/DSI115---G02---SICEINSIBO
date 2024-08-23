@@ -54,14 +54,9 @@
                     onclick="openInPopup(this.href); return false;">
                     <i class="bi bi-printer"></i> Imprimir listado
                 </a>
-                <!-- <a th:href="@{/ExpedienteAlumno/editar/{id}(id=${alumno.idAlumno}, format='pdf')} "
-                                    class="btn btn-secondary " data-bs-toggle="tooltip" data-bs-placement="top"
-                                    title="Imprimir" target="_blank" onclick="openInPopup(this.href); return false;">
-                                    <i class="bi bi-printer"></i>
-                                </a> -->
-
-                <a sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-primary" data-bs-toggle="tooltip"
-                    data-bs-placement="top" title="Agregar alumno" th:text="'Agregar alumno'"></a>
+               
+                <!-- <a sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-primary" data-bs-toggle="tooltip"
+                    data-bs-placement="top" title="Agregar alumno" th:text="'Agregar alumno'"></a> -->
             </div>
         </div>
         <div class="row my-2">

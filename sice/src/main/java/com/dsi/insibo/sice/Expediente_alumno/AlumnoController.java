@@ -300,6 +300,7 @@ public class AlumnoController {
 	 *                predeterminado 10.
 	 * @return El nombre de la vista "Expediente_alumno/verAlumno".
 	 */
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
 	@GetMapping("/ver")
 	public String verAlumno(Model model,
 			@RequestParam(value = "carrera", required = false) String carrera,
