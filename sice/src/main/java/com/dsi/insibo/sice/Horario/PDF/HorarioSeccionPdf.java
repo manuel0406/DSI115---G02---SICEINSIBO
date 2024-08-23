@@ -37,13 +37,13 @@ public class HorarioSeccionPdf extends AbstractPdfView {
         @SuppressWarnings("unchecked")
         List<HorarioDTO> horasDeClase = (List<HorarioDTO>) model.get("horarioDTO");
         Bachillerato bachilleratoSeleccionado = (Bachillerato) model.get("bachillerato");
-        String titulo = bachilleratoSeleccionado.getGrado() + "º " + bachilleratoSeleccionado.getNombreCarrera() + " " + bachilleratoSeleccionado.getSeccion();
+        String titulo = bachilleratoSeleccionado.getGrado() + "º " + bachilleratoSeleccionado.getNombreCarrera() + " " + bachilleratoSeleccionado.getSeccion() + ": Horario de clases";
         System.out.println(titulo);
         titulo = titulo.toUpperCase();
         System.out.println(titulo);
 
         // Configurar el nombre y tipo de documento
-        response.setHeader("Content-Disposition", "inline; filename=" + "Horario de clases" + ".pdf");
+        response.setHeader("Content-Disposition", "inline; filename=" + "Horario de Clases - " + bachilleratoSeleccionado.getGrado() + "º " + bachilleratoSeleccionado.getNombreCarrera() + " " + bachilleratoSeleccionado.getSeccion() + ".pdf");
 
         // Configurar tamaño y márgenes de la página
         document.setPageSize(PageSize.LETTER.rotate());

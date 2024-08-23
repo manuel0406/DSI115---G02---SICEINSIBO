@@ -16,6 +16,7 @@ import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoSe
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
 import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteService;
 import com.dsi.insibo.sice.Horario.PDF.HorarioDTO;
+import com.dsi.insibo.sice.Horario.PDF.HorarioEditarDTO;
 import com.dsi.insibo.sice.Horario.Servicios.HorarioService;
 import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.AsignacionHorario;
@@ -41,15 +42,66 @@ public class HorarioController {
     @Autowired
     private DocenteService docenteService;
 
-    // Variable de instancia para almacenar horasExistentes
-    private List<Integer> horasExistentes;
-
     @GetMapping("/asignarHoras")
     public String asignar(Model model,
             @RequestParam(value = "carrera", required = false) String carrera,
             @RequestParam(value = "grado", required = false) String grado,
             @RequestParam(value = "seccion", required = false) String seccion) {
-        prepararVista(model, carrera, grado, seccion, false);
+
+        boolean formSubmitted = (carrera != null || grado != null || seccion != null);
+
+        carrera = normalizarParametro(carrera);
+        grado = normalizarParametro(grado);
+        seccion = normalizarParametro(seccion);
+
+        // Obtener la lista de carreras disponibles
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+
+        // Variables para almacenar los datos necesarios
+        Bachillerato bachillerato = null;
+        List<Asignacion> listaAsignaciones = null;
+
+        // Si el formulario no se ha enviado, muestra la alerta 'info'
+        if (!formSubmitted) {
+            model.addAttribute("info", "Selecciona una sección para comenzar");
+        }
+
+        // Obtener el bachillerato seleccionado
+        if (carrera != null && grado != null && seccion != null) {
+            bachillerato = bachilleratoService.obtenerBachilleratoEspecifico(carrera, Integer.parseInt(grado), seccion);
+        }
+
+        if (bachillerato != null && bachillerato.getCodigoBachillerato() != 0) {
+            listaAsignaciones = asignacionService
+                    .listarAsignacionesCodigoBachillerato(bachillerato.getCodigoBachillerato());
+            // Obtener el horario y convertirlo a DTO
+            List<HorarioDTO> horarioDTO = horarioService.obtenerHorasAsignadasDTO(
+                    horarioService.obtenerHorasAsignadas(bachillerato.getCodigoBachillerato()));
+
+            try {
+                // Convertir el horario a JSON y agregar al modelo
+                String horasDeClaseJson = new ObjectMapper().writeValueAsString(horarioDTO);
+                model.addAttribute("horasDeClaseJson", horasDeClaseJson);
+                model.addAttribute("horarioDTO", horarioDTO);
+            } catch (JsonProcessingException e) {
+                System.out.println("Error al procesar JSON: " + e.getMessage());
+                model.addAttribute("horarioDTO", List.of()); // Lista vacía en caso de error
+            }
+        } else if (formSubmitted) {
+            // Mostrar alerta 'warning' si no se encontró el bachillerato tras filtrar
+            model.addAttribute("warning", "Selecciona una sección válida");
+            model.addAttribute("horarioDTO", List.of()); // Lista vacía si no hay bachillerato
+        }
+
+        // Añadir atributos al modelo para su uso en la vista
+        model.addAttribute("bachilleratos", listaCarreras);
+        model.addAttribute("carrera", carrera);
+        model.addAttribute("grado", grado);
+        model.addAttribute("seccion", seccion);
+        model.addAttribute("bachillerato", bachillerato);
+        model.addAttribute("formSubmitted", formSubmitted);
+        model.addAttribute("asignaciones", listaAsignaciones != null ? listaAsignaciones : List.of());
+
         return "Horario/asignarHoras";
     }
 
@@ -58,7 +110,52 @@ public class HorarioController {
             @RequestParam(value = "carrera", required = false) String carrera,
             @RequestParam(value = "grado", required = false) String grado,
             @RequestParam(value = "seccion", required = false) String seccion) {
-        prepararVista(model, carrera, grado, seccion, true);
+
+        boolean formSubmitted = (carrera != null || grado != null || seccion != null);
+
+        carrera = normalizarParametro(carrera);
+        grado = normalizarParametro(grado);
+        seccion = normalizarParametro(seccion);
+
+        // Obtener la lista de carreras disponibles
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+
+        // Variables para almacenar los datos necesarios
+        Bachillerato bachillerato = null;
+        List<Asignacion> listaAsignaciones = null;
+
+        // Si el formulario no se ha enviado, muestra la alerta 'info'
+        if (!formSubmitted) {
+            model.addAttribute("info", "Selecciona una sección para comenzar");
+        }
+
+        // Obtener el bachillerato seleccionado
+        if (carrera != null && grado != null && seccion != null) {
+            bachillerato = bachilleratoService.obtenerBachilleratoEspecifico(carrera, Integer.parseInt(grado), seccion);
+        }
+
+        if (bachillerato != null && bachillerato.getCodigoBachillerato() != 0) {
+
+            listaAsignaciones = asignacionService
+                    .listarAsignacionesCodigoBachillerato(bachillerato.getCodigoBachillerato());
+            List<HorarioEditarDTO> horarioDTO = horarioService.obtenerHorasAsignadasEditarDTO(
+                    horarioService.obtenerHorasAsignadas(bachillerato.getCodigoBachillerato()));
+
+            model.addAttribute("horasDeClase", horarioDTO != null ? horarioDTO : List.of());
+        } else if (formSubmitted) {
+            // Mostrar alerta 'warning' si no se encontró el bachillerato tras filtrar
+            model.addAttribute("warning", "Selecciona una sección válida");
+            model.addAttribute("horarioDTO", List.of()); // Lista vacía si no hay bachillerato
+        }
+
+        // Añadir atributos al modelo para su uso en la vista
+        model.addAttribute("bachilleratos", listaCarreras);
+        model.addAttribute("carrera", carrera);
+        model.addAttribute("grado", grado);
+        model.addAttribute("seccion", seccion);
+        model.addAttribute("bachillerato", bachillerato);
+        model.addAttribute("formSubmitted", formSubmitted);
+        model.addAttribute("asignaciones", listaAsignaciones != null ? listaAsignaciones : List.of());
         return "Horario/editarHoras";
     }
 
@@ -80,6 +177,11 @@ public class HorarioController {
         // Variables para almacenar los datos necesarios
         Bachillerato bachillerato = null;
 
+        // Si el formulario no se ha enviado, muestra la alerta 'info'
+        if (!formSubmitted) {
+            model.addAttribute("info", "Selecciona una sección para comenzar");
+        }
+
         // Obtener el bachillerato seleccionado
         if (carrera != null && grado != null && seccion != null) {
             bachillerato = bachilleratoService.obtenerBachilleratoEspecifico(carrera, Integer.parseInt(grado), seccion);
@@ -88,7 +190,7 @@ public class HorarioController {
         if (bachillerato != null && bachillerato.getCodigoBachillerato() != 0) {
 
             // Obtener el horario y convertirlo a DTO
-            List<HorarioDTO> horarioDTO = horarioService.obtenerHorasAsignadasDocenteDTO(
+            List<HorarioDTO> horarioDTO = horarioService.obtenerHorasAsignadasDTO(
                     horarioService.obtenerHorasAsignadas(bachillerato.getCodigoBachillerato()));
 
             try {
@@ -101,9 +203,10 @@ public class HorarioController {
                 System.out.println("Error al procesar JSON: " + e.getMessage());
                 model.addAttribute("horarioDTO", List.of()); // Lista vacía en caso de error
             }
-        } else {
-            model.addAttribute("horarioDTO", List.of()); // Lista vacía si no hay DUI
-            model.addAttribute("warning", "Selecciona un docente");
+        } else if (formSubmitted) {
+            // Mostrar alerta 'warning' si no se encontró el bachillerato tras filtrar
+            model.addAttribute("warning", "Selecciona una sección válida");
+            model.addAttribute("horarioDTO", List.of()); // Lista vacía si no hay bachillerato
         }
 
         // Añadir atributos al modelo para su uso en la vista
@@ -126,6 +229,11 @@ public class HorarioController {
         List<Docente> docentes = docenteService.listarDocenteAsignacion();
         Docente docenteSeleccionado = null;
 
+        // Si el formulario no se ha enviado, muestra la alerta 'info'
+        if (!formSubmitted) {
+            model.addAttribute("info", "Selecciona un docente para comenzar");
+        }
+
         if (duiDocente != null && !duiDocente.isEmpty()) {
             // Obtener el docente asociado al duiDocente
             for (Docente docente : docentes) {
@@ -137,7 +245,7 @@ public class HorarioController {
 
             if (docenteSeleccionado != null) {
                 // Obtener el horario y convertirlo a DTO
-                List<HorarioDTO> horarioDTO = horarioService.obtenerHorasAsignadasDocenteDTO(
+                List<HorarioDTO> horarioDTO = horarioService.obtenerHorasAsignadasDTO(
                         horarioService.obtenerHorasAsignadasDocente(duiDocente));
 
                 try {
@@ -154,9 +262,10 @@ public class HorarioController {
             } else {
                 model.addAttribute("horarioDTO", List.of()); // Lista vacía si no se encuentra el docente
             }
-        } else {
-            model.addAttribute("horarioDTO", List.of()); // Lista vacía si no hay DUI
-            model.addAttribute("warning", "Selecciona un docente");
+        } else if (formSubmitted) {
+            // Mostrar alerta 'warning' si no se encontró el bachillerato tras filtrar
+            model.addAttribute("warning", "Selecciona una docente válido");
+            model.addAttribute("horarioDTO", List.of()); // Lista vacía si no hay duiDocente
         }
 
         model.addAttribute("duiDocente", duiDocente);
@@ -179,17 +288,14 @@ public class HorarioController {
         carrera = extraerPrimerValor(carrera);
         grado = extraerPrimerValor(grado);
         seccion = extraerPrimerValor(seccion);
-        // idBachillerato = extraerPrimerValor(idBachillerato);
-        // nombreDia = extraerPrimerValor(nombreDia);
-        // horaDia = extraerPrimerValor(horaDia);
-        if (horasExistentes != null) {
-            System.out.println("Horas de clase actuales = " + horasExistentes.size());
-        }
+
+        List<AsignacionHorario> horario = horarioService.obtenerHorasAsignadas(Integer.parseInt(idBachillerato));
+        Integer horasExistentes = horario.size();
 
         // Si el grado es 1º o 2º
         if (Integer.parseInt(grado) <= 2) {
             // Limita las horas de clase que puede tener una sección
-            if (horasExistentes != null && horasExistentes.size() <= 46) {
+            if (horasExistentes != null && horasExistentes <= 46) {
                 // Verifica que no se formen bloques de mas de 2 horas de clase seguidas de una
                 // materia básica
                 if (!horarioService.existeBloqueDeDosHoras(Integer.parseInt(idBachillerato), nombreDia,
@@ -206,7 +312,6 @@ public class HorarioController {
 
                     horarioService.guardarHoraAsignacion(hora);
                     redirectAttributes.addFlashAttribute("success", "Hora agregada");
-                    System.out.println("Horas de clase actuales = " + horasExistentes.size());
                 } else {
                     redirectAttributes.addFlashAttribute("warning",
                             "No puedes asignar bloques de más de 2 horas para una misma materia de tipo básica");
@@ -217,7 +322,7 @@ public class HorarioController {
             }
         } else {
             // Limita las horas de clase que puede tener una sección
-            if (horasExistentes != null && horasExistentes.size() <= 29) {
+            if (horasExistentes != null && horasExistentes <= 29) {
                 // Verifica que no se formen bloques de mas de 2 horas de clase seguidas de una
                 // materia básica
                 if (!horarioService.existeBloqueDeDosHoras(Integer.parseInt(idBachillerato), nombreDia,
@@ -263,9 +368,6 @@ public class HorarioController {
         carrera = extraerPrimerValor(carrera);
         grado = extraerPrimerValor(grado);
         seccion = extraerPrimerValor(seccion);
-        // idBachillerato = extraerPrimerValor(idBachillerato);
-        // nombreDia = extraerPrimerValor(nombreDia);
-        // horaDia = extraerPrimerValor(horaDia);
 
         // Verifica que no se formen bloques de mas de 2 horas seguidas de una materia
         // básica
@@ -308,68 +410,6 @@ public class HorarioController {
 
         agregarParametrosRedireccion(redirectAttributes, carrera, grado, seccion);
         return "redirect:/horarios/editarHoras";
-    }
-
-    // Prepara la vista tanto para asignarHoras como para editarHoras
-    private void prepararVista(Model model, String carrera, String grado, String seccion, boolean esEdicion) {
-        boolean formSubmitted = (carrera != null || grado != null || seccion != null);
-
-        carrera = normalizarParametro(carrera);
-        grado = normalizarParametro(grado);
-        seccion = normalizarParametro(seccion);
-
-        // Obtener la lista de carreras disponibles
-        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
-
-        // Variables para almacenar los datos necesarios
-        Bachillerato bachillerato = null;
-        List<Asignacion> listaAsignaciones = null;
-
-        // Obtener el bachillerato seleccionado
-        if (carrera != null && grado != null && seccion != null) {
-            bachillerato = bachilleratoService.obtenerBachilleratoEspecifico(carrera, Integer.parseInt(grado), seccion);
-        }
-
-        // Si se ha seleccionado un bachillerato válido
-        if (bachillerato != null && bachillerato.getCodigoBachillerato() != 0) {
-            horasExistentes = horarioService
-                    .obtenerIdHorariosBasePorCodigoBachillerato(bachillerato.getCodigoBachillerato());
-            listaAsignaciones = asignacionService
-                    .listarAsignacionesCodigoBachillerato(bachillerato.getCodigoBachillerato());
-
-            if (esEdicion) {
-                // horasDeClase contiene todas los registros de AsignacionHorario de una sección
-                // determinada
-                // Estos datos son necesarios unicamente cuando se carga la vista de edición
-                List<AsignacionHorario> horasDeClase = null;
-                horasDeClase = horarioService.obtenerHorasAsignadas(bachillerato.getCodigoBachillerato());
-                model.addAttribute("horasDeClase", horasDeClase != null ? horasDeClase : List.of());
-
-                try {
-                    String horasDeClaseJson = new ObjectMapper().writeValueAsString(horasDeClase);
-                    model.addAttribute("horasDeClaseJson", horasDeClaseJson);
-                } catch (JsonProcessingException e) {
-                    System.out.println("Error al procesar JSON: " + e.getMessage());
-                }
-            }
-        }
-
-        // Añadir atributos al modelo para su uso en la vista
-        model.addAttribute("bachilleratos", listaCarreras);
-        model.addAttribute("carrera", carrera);
-        model.addAttribute("grado", grado);
-        model.addAttribute("seccion", seccion);
-        model.addAttribute("bachillerato", bachillerato);
-        model.addAttribute("formSubmitted", formSubmitted);
-        model.addAttribute("asignaciones", listaAsignaciones != null ? listaAsignaciones : List.of());
-
-        // Transformar a JSON la lista de idHorarioBase de las horas de clase existentes
-        try {
-            String envioHoras = new ObjectMapper().writeValueAsString(horasExistentes);
-            model.addAttribute("envioHoras", envioHoras);
-        } catch (JsonProcessingException e) {
-            System.out.println("Error al procesar JSON: " + e.getMessage());
-        }
     }
 
     // Agrega parámetros a los RedirectAttributes para mantener el contexto en las

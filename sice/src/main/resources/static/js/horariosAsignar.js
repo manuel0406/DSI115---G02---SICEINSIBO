@@ -1,6 +1,5 @@
+// Añade al modal los valores necesarios para el envío y referencia del usuario
 document.addEventListener('DOMContentLoaded', (event) => {
-    // Se encarga de mostrar valores de referencia adecuados para el usuario y enviar 
-    // los datos correspondientes al guardar el formulario
     const checkboxes = document.querySelectorAll('.checkbox-clase');
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function () {
@@ -14,26 +13,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 document.getElementById('dia').value = dia;
                 document.getElementById('horaBase').value = horaBase;
                 document.getElementById('horaSeleccionada').dataset.value = value;
-
-                // Por si acaso necesito el codigoBachilleratop
-                //const seccionSeleccionada = document.getElementById('seccionSeleccionada');
-
-                // const codigoBachillerato = document.getElementById('codigoBachilleratop').value;
-                // seccionSeleccionada.dataset.value = codigoBachillerato;
             }
         });
     });
 
+    // Añadir los parámetros carrera, grado, seccion al select para mantener el contexto
     const form = document.getElementById('formNuevaHora');
     form.addEventListener('submit', function (event) {
         const horaInput = document.getElementById('horaSeleccionada');
-        //const seccionInput = document.getElementById('seccionSeleccionada');
-
         horaInput.value = horaInput.dataset.value;
-        //seccionInput.value = seccionInput.dataset.value;
 
-        // Añadir los parámetros carrera, grado y seccion al formulario antes de enviarlo para
-        // actualizar la vista para la misma sección
         const carreraInput = document.createElement('input');
         carreraInput.type = 'hidden';
         carreraInput.name = 'carrera';

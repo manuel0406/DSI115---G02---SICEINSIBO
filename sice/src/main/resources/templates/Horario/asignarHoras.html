@@ -22,13 +22,13 @@
                         <li class="nav-item py-2 py-sm-0 my-2">
                             <a class="nav-link text-white" th:href="@{/horarios/asignarHoras}">
                                 <i class="bi bi-journal-plus"></i>
-                                <span class="fs-6 ms-2 d-none d-sm-inline">Asignar horas de clase</span>
+                                <span class="fs-6 ms-2 d-none d-sm-inline">Crear horas de clase</span>
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 my-2">
                             <a class="nav-link text-white" th:href="@{/horarios/editarHoras}">
                                 <i class="bi bi-journal-minus"></i>
-                                <span class="fs-6 ms-2 d-none d-sm-inline">Cambiar horas de clase</span>
+                                <span class="fs-6 ms-2 d-none d-sm-inline">Editar horas de clase</span>
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 my-2">
@@ -38,7 +38,7 @@
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 my-2">
-                            <a class="nav-link text-white">
+                            <a class="nav-link text-white" th:href="@{/horarios/generarHorarioDocente}">
                                 <i class="bi bi-journal-check"></i>
                                 <span class="fs-6 ms-2 d-none d-sm-inline">Generar horario - docente</span>
                             </a>
@@ -52,224 +52,264 @@
                 <header th:replace="~{home :: header}"></header>
 
                 <div class="container-fluid py-5">
-                    <h3 class="text-start col-12 mb-3 mt-4">Seleccione una sección para asignar horas de clase</h3>
+                    <div class="card border-0  mt-4">
+                        <div class="card-header bg-light text-dark">
+                            <h5 class="mb-0"><i class="fas fa-chalkboard-teacher"></i> Crear Horas de Clase
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/horarios/asignarHoras}" method="get">
+                                <div class="row justify-content-center">
+                                    <!-- Carrera -->
+                                    <div class="col-md-3">
+                                        <div class="form-group mb-3">
+                                            <label for="selectGrado" class="form-label">Carrera</label>
+                                            <select id="carrera" name="carrera" th:value="${carrera}"
+                                                class="form-select" aria-label="Default select example">
+                                                <option value="" selected>Seleccione</option>
+                                                <option th:each="bachillerato : ${bachilleratos}"
+                                                    th:value="${bachillerato.nombreCarrera}"
+                                                    th:text="${bachillerato.nombreCarrera}"
+                                                    th:selected="${carrera == bachillerato.nombreCarrera}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
 
-                    <!-- Contiene el formulario para seleccionar una sección -->
-                    <form th:action="@{/horarios/asignarHoras}" method="get">
-                        <div class="row mt-4 justify-content-center">
-                            <!-- Carrera -->
-                            <div class="col-md-3">
-                                <div class="form-group mb-3">
-                                    <label for="selectGrado" class="form-label">Carrera</label>
-                                    <select id="carrera" name="carrera" th:value="${carrera}" class="form-select"
-                                        aria-label="Default select example">
-                                        <option value="" selected>Seleccione</option>
-                                        <option th:each="bachillerato : ${bachilleratos}"
-                                            th:value="${bachillerato.nombreCarrera}"
-                                            th:text="${bachillerato.nombreCarrera}"
-                                            th:selected="${carrera == bachillerato.nombreCarrera}"></option>
-                                    </select>
+                                    <!-- Año -->
+                                    <div class="col-md-3">
+                                        <div class="form-group mb-3">
+                                            <label for="selectGrado" class="form-label">Grado</label>
+                                            <select id="grado" name="grado" th:value="${grado}" class="form-select">
+                                                <option value="" selected>Seleccione</option>
+                                                <option value="1" th:selected="${grado == '1'}">1</option>
+                                                <option value="2" th:selected="${grado == '2'}">2</option>
+                                                <option value="3" th:selected="${grado == '3'}">3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sección -->
+                                    <div class="col-md-3">
+                                        <div class="form-group mb-3">
+                                            <label for="selectGrado" class="form-label">Sección</label>
+                                            <select id="seccion" name="seccion" th:value="${seccion}"
+                                                class="form-select">
+                                                <option value="" selected>Seleccione</option>
+                                                <option value="A" th:selected="${seccion == 'A'}">A</option>
+                                                <option value="B" th:selected="${seccion == 'B'}">B</option>
+                                                <option value="C" th:selected="${seccion == 'C'}">C</option>
+                                                <option value="D" th:selected="${seccion == 'D'}">D</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Botones -->
+                                    <div class="col-md-3 d-flex align-items-end mb-3">
+                                        <div class="w-100 d-flex justify-content-between gap-2">
+                                            <!-- Filtrar -->
+                                            <input type="submit" class="btn btn-primary w-100" value="Buscar">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- Mensajes de alerta -->
+                            <div class="alert-container">
+                                <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
+                                    <label th:text="${success}"></label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="alert alert-danger alert-dismissible fade show" th:if="${error != null}">
+                                    <label th:text="${error}"></label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="alert alert-warning alert-dismissible fade show" th:if="${warning != null}">
+                                    <label th:text="${warning}"></label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="alert alert-info alert-dismissible fade show" th:if="${info != null}">
+                                    <label th:text="${info}"></label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                                 </div>
                             </div>
-
-                            <!-- Año -->
-                            <div class="col-md-3">
-                                <div class="form-group mb-3">
-                                    <label for="selectGrado" class="form-label">Año</label>
-                                    <select id="grado" name="grado" th:value="${grado}" class="form-select">
-                                        <option value="" selected>Seleccione</option>
-                                        <option value="1" th:selected="${grado == '1'}">1</option>
-                                        <option value="2" th:selected="${grado == '2'}">2</option>
-                                        <option value="3" th:selected="${grado == '3'}">3</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Sección -->
-                            <div class="col-md-3">
-                                <div class="form-group mb-3">
-                                    <label for="selectGrado" class="form-label">Sección</label>
-                                    <select id="seccion" name="seccion" th:value="${seccion}" class="form-select">
-                                        <option value="" selected>Seleccione</option>
-                                        <option value="A" th:selected="${seccion == 'A'}">A</option>
-                                        <option value="B" th:selected="${seccion == 'B'}">B</option>
-                                        <option value="C" th:selected="${seccion == 'C'}">C</option>
-                                        <option value="D" th:selected="${seccion == 'D'}">D</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Botones -->
-                            <div class="col-md-3 d-flex align-items-end mb-3">
-                                <div class="w-100 d-flex justify-content-between gap-2">
-                                    <!-- Filtrar -->
-                                    <input type="submit" class="btn btn-primary w-50" value="Filtrar"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Crear horas de clase">
-
-                                    <!-- Asignar -->
-                                    <a class="btn btn-primary w-50"
-                                        th:href="@{/horarios/editarHoras(carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Editar horas de clase">
-                                        Editar horas
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                    <!-- Mensajes de alerta -->
-                    <div class="alert-container mb-3">
-                        <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
-                            <label th:text="${success}"></label>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-
-                        <div class="alert alert-danger alert-dismissible fade show" th:if="${error != null}">
-                            <label th:text="${error}"></label>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-
-                        <div class="alert alert-warning alert-dismissible fade show" th:if="${warning != null}">
-                            <label th:text="${warning}"></label>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-
-                        <div class="alert alert-info alert-dismissible fade show" th:if="${info != null}">
-                            <label th:text="${info}"></label>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </div>
 
-                    <!-- Contiene la sección elegida, si el filtro no encuentra un codigo relacionado con la 
-                     busqueda pedira que seleccione una seccion valida, ademas al entrar por primera vez simplemente no se mostrara-->
-                    <h5 class="text-start col-lg-9 mt-2" th:text="${formSubmitted ? 
-                        (bachillerato == null || bachillerato.getCodigoBachillerato() == 0 ? 
-                            'Selecciona una sección válida' : 
-                            'Asignando horas de clase a ' + 
-                            (grado != null ? grado + '° ' : '') +
-                            (carrera != null ? carrera + ' ' : '') +
-                            (seccion != null ? seccion: '')) : ''}">
-                    </h5>
 
-                    <!-- Contiene las tarjetas con las horas de clase y es mostrado unicamente cuando una sección realmente existe-->
-                    <div class="row" th:if="${bachillerato != null and bachillerato.getCodigoBachillerato() != 0}">
+                    <div class="container-fluid p-3 border rounded shadow-sm bg-light"
+                        th:if="${bachillerato != null and bachillerato.getCodigoBachillerato() != 0}">
+                        <!-- Contiene las tarjetas con las horas de clase y es mostrado unicamente cuando una sección realmente existe-->
+                        <div class="row">
 
-                        <!-- Lunes -->
-                        <div class="col-md-6 mb-3 mr-3">
-                            <div class="card day-card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">Lunes</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+                                <!-- Contiene la sección elegida -->
+                                <h5 class="text-start col-md-6" th:text="${formSubmitted ? ('Horas: ' + (grado != null ? grado + '° ' : '') + 
+                                    (carrera != null ? carrera + ' ' : '') + (seccion != null ? seccion: '')) : ''}">
+                                </h5>
+
+                                <div class="d-flex gap-2">
+                                    <a class="btn btn-secondary"
+                                        th:href="@{/horarios/editarHoras(carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        title="Editar las horas de clase de esta sección" alt="Botón Asignar">
+                                        Editar horas
+                                    </a>
+
+                                    <a class="btn btn-secondary"
+                                        th:href="@{/horarios/generarHorarioSeccion(carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        title="Ver horario de clases de esta sección"> Ver horario
+                                    </a>
                                 </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h6 class="period-title">Turno Matutino</h6>
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            id="lunes_1" value="1" data-hora="07:00 - 07:45 AM"
-                                                            data-dia="Lunes" data-horaBase="1" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="lunes_1">07:00 - 07:45
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            id="lunes_2" value="2" data-hora="07:45 - 08:30 AM"
-                                                            data-dia="Lunes" data-horaBase="2" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="lunes_2">07:45 - 08:30
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            id="lunes_3" value="3" data-hora="08:50 - 09:35 AM"
-                                                            data-dia="Lunes" data-horaBase="3" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="lunes_3">08:50 - 09:35
-                                                            AM</label>
-                                                    </div>
+                            </div>
+                            <!-- Lunes -->
+                            <div class="col-md-6 mt-2 mb-3 mr-3">
+                                <div class="card day-card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Lunes</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="period-title">Turno Matutino</h6>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" id="lunes_1" value="1"
+                                                                data-hora="07:00 - 07:45 AM" data-dia="Lunes"
+                                                                data-horaBase="1" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="lunes_1">07:00 -
+                                                                07:45
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" id="lunes_2" value="2"
+                                                                data-hora="07:45 - 08:30 AM" data-dia="Lunes"
+                                                                data-horaBase="2" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="lunes_2">07:45 -
+                                                                08:30
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" id="lunes_3" value="3"
+                                                                data-hora="08:50 - 09:35 AM" data-dia="Lunes"
+                                                                data-horaBase="3" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="lunes_3">08:50 -
+                                                                09:35
+                                                                AM</label>
+                                                        </div>
 
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            id="lunes_4" value="4" data-hora="09:35 - 10:20 AM"
-                                                            data-dia="Lunes" data-horaBase="4" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="lunes_4">09:35 - 10:20
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            id="lunes_5" value="5" data-hora="10:30 - 11:15 AM"
-                                                            data-dia="Lunes" data-horaBase="5" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="lunes_5">10:30 - 11:15
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            id="lunes_6" value="6" data-hora="11:15 - 12:00 PM"
-                                                            data-dia="Lunes" data-horaBase="6" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="lunes_6">11:15 - 12:00
-                                                            PM</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" id="lunes_4" value="4"
+                                                                data-hora="09:35 - 10:20 AM" data-dia="Lunes"
+                                                                data-horaBase="4" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="lunes_4">09:35 -
+                                                                10:20
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" id="lunes_5" value="5"
+                                                                data-hora="10:30 - 11:15 AM" data-dia="Lunes"
+                                                                data-horaBase="5" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="lunes_5">10:30 -
+                                                                11:15
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" id="lunes_6" value="6"
+                                                                data-hora="11:15 - 12:00 PM" data-dia="Lunes"
+                                                                data-horaBase="6" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="lunes_6">11:15 -
+                                                                12:00
+                                                                PM</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h6 class="period-title">Turno Vespertino</h6>
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            id="lunes_7" value="7" data-hora="01:00 - 01:45 PM"
-                                                            data-dia="Lunes" data-horaBase="7" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="lunes_7">01:00 - 01:45
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            id="lunes_8" value="8" data-hora="01:45 - 02:30 PM"
-                                                            data-dia="Lunes" data-horaBase="8" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="lunes_8">01:45 - 02:30
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            id="lunes_9" value="9" data-hora="02:50 - 03:35 PM"
-                                                            data-dia="Lunes" data-horaBase="9" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="lunes_9">02:50 - 03:35
-                                                            PM</label>
-                                                    </div>
+                                            <div class="col-md-6">
+                                                <h6 class="period-title">Turno Vespertino</h6>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" id="lunes_7" value="7"
+                                                                data-hora="01:00 - 01:45 PM" data-dia="Lunes"
+                                                                data-horaBase="7" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="lunes_7">01:00 -
+                                                                01:45
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" id="lunes_8" value="8"
+                                                                data-hora="01:45 - 02:30 PM" data-dia="Lunes"
+                                                                data-horaBase="8" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="lunes_8">01:45 -
+                                                                02:30
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" id="lunes_9" value="9"
+                                                                data-hora="02:50 - 03:35 PM" data-dia="Lunes"
+                                                                data-horaBase="9" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="lunes_9">02:50 -
+                                                                03:35
+                                                                PM</label>
+                                                        </div>
 
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            id="lunes_10" value="10" data-hora="03:35 - 04:20 PM"
-                                                            data-dia="Lunes" data-horaBase="10" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="lunes_10">03:35 - 04:20
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            id="lunes_11" value="11" data-hora="04:30 - 05:15 PM"
-                                                            data-dia="Lunes" data-horaBase="11" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="lunes_11">04:30 - 05:15
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            id="lunes_12" value="12" data-hora="05:15 - 06:00 PM"
-                                                            data-dia="Lunes" data-horaBase="12" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="lunes_12">05:15 - 06:00
-                                                            PM</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" id="lunes_10" value="10"
+                                                                data-hora="03:35 - 04:20 PM" data-dia="Lunes"
+                                                                data-horaBase="10" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="lunes_10">03:35 -
+                                                                04:20
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" id="lunes_11" value="11"
+                                                                data-hora="04:30 - 05:15 PM" data-dia="Lunes"
+                                                                data-horaBase="11" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="lunes_11">04:30 -
+                                                                05:15
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" id="lunes_12" value="12"
+                                                                data-hora="05:15 - 06:00 PM" data-dia="Lunes"
+                                                                data-horaBase="12" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="lunes_12">05:15 -
+                                                                06:00
+                                                                PM</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -277,123 +317,147 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Martes -->
-                        <div class="col-md-6 mb-3 mr-3">
-                            <div class="card day-card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">martes</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h6 class="period-title">Turno Matutino</h6>
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Martes" data-horaBase="1" id="martes_1" value="13"
-                                                            data-hora="07:00 - 07:45 AM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="martes_1">07:00 - 07:45
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Martes" data-horaBase="2" id="martes_2" value="14"
-                                                            data-hora="07:45 - 08:30 AM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="martes_2">07:45 - 08:30
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Martes" data-horaBase="3" id="martes_3" value="15"
-                                                            data-hora="08:50 - 09:35 AM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="martes_3">08:50 - 09:35
-                                                            AM</label>
-                                                    </div>
+                            <!-- Martes -->
+                            <div class="col-md-6 mt-2 mb-3 mr-3">
+                                <div class="card day-card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Martes</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="period-title">Turno Matutino</h6>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Martes" data-horaBase="1"
+                                                                id="martes_1" value="13" data-hora="07:00 - 07:45 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="martes_1">07:00 -
+                                                                07:45
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Martes" data-horaBase="2"
+                                                                id="martes_2" value="14" data-hora="07:45 - 08:30 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="martes_2">07:45 -
+                                                                08:30
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Martes" data-horaBase="3"
+                                                                id="martes_3" value="15" data-hora="08:50 - 09:35 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="martes_3">08:50 -
+                                                                09:35
+                                                                AM</label>
+                                                        </div>
 
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Martes" data-horaBase="4" id="martes_4" value="16"
-                                                            data-hora="09:35 - 10:20 AM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="martes_4">09:35 - 10:20
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Martes" data-horaBase="5" id="martes_5" value="17"
-                                                            data-hora="10:30 - 11:15 AM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="martes_5">10:30 - 11:15
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Martes" data-horaBase="6" id="martes_6" value="18"
-                                                            data-hora="11:15 - 12:00 PM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="martes_6">11:15 - 12:00
-                                                            PM</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Martes" data-horaBase="4"
+                                                                id="martes_4" value="16" data-hora="09:35 - 10:20 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="martes_4">09:35 -
+                                                                10:20
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Martes" data-horaBase="5"
+                                                                id="martes_5" value="17" data-hora="10:30 - 11:15 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="martes_5">10:30 -
+                                                                11:15
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Martes" data-horaBase="6"
+                                                                id="martes_6" value="18" data-hora="11:15 - 12:00 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="martes_6">11:15 -
+                                                                12:00
+                                                                PM</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h6 class="period-title">Turno Vespertino</h6>
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Martes" data-horaBase="7" id="martes_7" value="19"
-                                                            data-hora="01:00 - 01:45 PM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="martes_7">01:00 - 01:45
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Martes" data-horaBase="8" id="martes_8" value="20"
-                                                            data-hora="01:45 - 02:30 PM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="martes_8">01:45 - 02:30
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Martes" data-horaBase="9" id="martes_9" value="21"
-                                                            data-hora="02:50 - 03:35 PM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="martes_9">02:50 - 03:35
-                                                            PM</label>
-                                                    </div>
+                                            <div class="col-md-6">
+                                                <h6 class="period-title">Turno Vespertino</h6>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Martes" data-horaBase="7"
+                                                                id="martes_7" value="19" data-hora="01:00 - 01:45 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="martes_7">01:00 -
+                                                                01:45
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Martes" data-horaBase="8"
+                                                                id="martes_8" value="20" data-hora="01:45 - 02:30 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="martes_8">01:45 -
+                                                                02:30
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Martes" data-horaBase="9"
+                                                                id="martes_9" value="21" data-hora="02:50 - 03:35 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="martes_9">02:50 -
+                                                                03:35
+                                                                PM</label>
+                                                        </div>
 
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Martes" data-horaBase="10" id="martes_10"
-                                                            value="22" data-hora="03:35 - 04:20 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="martes_10">03:35 - 04:20
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Martes" data-horaBase="11" id="martes_11"
-                                                            value="23" data-hora="04:30 - 05:15 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="martes_11">04:30 - 05:15
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Martes" data-horaBase="12" id="martes_12"
-                                                            value="24" data-hora="05:15 - 06:00 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="martes_12">05:15 - 06:00
-                                                            PM</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Martes" data-horaBase="10"
+                                                                id="martes_10" value="22" data-hora="03:35 - 04:20 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="martes_10">03:35 -
+                                                                04:20
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Martes" data-horaBase="11"
+                                                                id="martes_11" value="23" data-hora="04:30 - 05:15 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="martes_11">04:30 -
+                                                                05:15
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Martes" data-horaBase="12"
+                                                                id="martes_12" value="24" data-hora="05:15 - 06:00 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="martes_12">05:15 -
+                                                                06:00
+                                                                PM</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -401,123 +465,159 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Miercoles -->
-                        <div class="col-md-6 mb-3 mr-3">
-                            <div class="card day-card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">miercoles</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h6 class="period-title">Turno Matutino</h6>
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Miércoles" data-horaBase="1" id="miercoles_1"
-                                                            value="25" data-hora="07:00 - 07:45 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="miercoles_1">07:00 - 07:45
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Miércoles" data-horaBase="2" id="miercoles_2"
-                                                            value="26" data-hora="07:45 - 08:30 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="miercoles_2">07:45 - 08:30
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Miércoles" data-horaBase="3" id="miercoles_3"
-                                                            value="27" data-hora="08:50 - 09:35 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="miercoles_3">08:50 - 09:35
-                                                            AM</label>
-                                                    </div>
+                            <!-- Miercoles -->
+                            <div class="col-md-6 mb-3 mr-3">
+                                <div class="card day-card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Miercoles</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="period-title">Turno Matutino</h6>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Miércoles" data-horaBase="1"
+                                                                id="miercoles_1" value="25" data-hora="07:00 - 07:45 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="miercoles_1">07:00
+                                                                -
+                                                                07:45
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Miércoles" data-horaBase="2"
+                                                                id="miercoles_2" value="26" data-hora="07:45 - 08:30 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="miercoles_2">07:45
+                                                                -
+                                                                08:30
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Miércoles" data-horaBase="3"
+                                                                id="miercoles_3" value="27" data-hora="08:50 - 09:35 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="miercoles_3">08:50
+                                                                -
+                                                                09:35
+                                                                AM</label>
+                                                        </div>
 
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Miércoles" data-horaBase="4" id="miercoles_4"
-                                                            value="28" data-hora="09:35 - 10:20 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="miercoles_4">09:35 - 10:20
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Miércoles" data-horaBase="5" id="miercoles_5"
-                                                            value="29" data-hora="10:30 - 11:15 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="miercoles_5">10:30 - 11:15
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Miércoles" data-horaBase="6" id="miercoles_6"
-                                                            value="30" data-hora="11:15 - 12:00 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="miercoles_6">11:15 - 12:00
-                                                            PM</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Miércoles" data-horaBase="4"
+                                                                id="miercoles_4" value="28" data-hora="09:35 - 10:20 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="miercoles_4">09:35
+                                                                -
+                                                                10:20
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Miércoles" data-horaBase="5"
+                                                                id="miercoles_5" value="29" data-hora="10:30 - 11:15 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="miercoles_5">10:30
+                                                                -
+                                                                11:15
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Miércoles" data-horaBase="6"
+                                                                id="miercoles_6" value="30" data-hora="11:15 - 12:00 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="miercoles_6">11:15
+                                                                -
+                                                                12:00
+                                                                PM</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h6 class="period-title">Turno Vespertino</h6>
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Miércoles" data-horaBase="7" id="miercoles_7"
-                                                            value="31" data-hora="01:00 - 01:45 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="miercoles_7">01:00 - 01:45
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Miércoles" data-horaBase="8" id="miercoles_8"
-                                                            value="32" data-hora="01:45 - 02:30 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="miercoles_8">01:45 - 02:30
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Miércoles" data-horaBase="9" id="miercoles_9"
-                                                            value="33" data-hora="02:50 - 03:35 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="miercoles_9">02:50 - 03:35
-                                                            PM</label>
-                                                    </div>
+                                            <div class="col-md-6">
+                                                <h6 class="period-title">Turno Vespertino</h6>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Miércoles" data-horaBase="7"
+                                                                id="miercoles_7" value="31" data-hora="01:00 - 01:45 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="miercoles_7">01:00
+                                                                -
+                                                                01:45
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Miércoles" data-horaBase="8"
+                                                                id="miercoles_8" value="32" data-hora="01:45 - 02:30 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="miercoles_8">01:45
+                                                                -
+                                                                02:30
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Miércoles" data-horaBase="9"
+                                                                id="miercoles_9" value="33" data-hora="02:50 - 03:35 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="miercoles_9">02:50
+                                                                -
+                                                                03:35
+                                                                PM</label>
+                                                        </div>
 
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Miércoles" data-horaBase="10" id="miercoles_10"
-                                                            value="34" data-hora="03:35 - 04:20 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="miercoles_10">03:35 - 04:20
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Miércoles" data-horaBase="11" id="miercoles_11"
-                                                            value="35" data-hora="04:30 - 05:15 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="miercoles_11">04:30 - 05:15
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Miércoles" data-horaBase="12" id="miercoles_12"
-                                                            value="36" data-hora="05:15 - 06:00 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="miercoles_12">05:15 - 06:00
-                                                            PM</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Miércoles" data-horaBase="10"
+                                                                id="miercoles_10" value="34"
+                                                                data-hora="03:35 - 04:20 PM" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="miercoles_10">03:35
+                                                                -
+                                                                04:20
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Miércoles" data-horaBase="11"
+                                                                id="miercoles_11" value="35"
+                                                                data-hora="04:30 - 05:15 PM" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="miercoles_11">04:30
+                                                                -
+                                                                05:15
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Miércoles" data-horaBase="12"
+                                                                id="miercoles_12" value="36"
+                                                                data-hora="05:15 - 06:00 PM" data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="miercoles_12">05:15
+                                                                -
+                                                                06:00
+                                                                PM</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -525,123 +625,147 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Jueves -->
-                        <div class="col-md-6 mb-3 mr-3">
-                            <div class="card day-card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">jueves</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h6 class="period-title">Turno Matutino</h6>
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Jueves" data-horaBase="1" id="jueves_1" value="37"
-                                                            data-hora="07:00 - 07:45 AM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="jueves_1">07:00 - 07:45
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Jueves" data-horaBase="2" id="jueves_2" value="38"
-                                                            data-hora="07:45 - 08:30 AM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="jueves_2">07:45 - 08:30
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Jueves" data-horaBase="3" id="jueves_3" value="39"
-                                                            data-hora="08:50 - 09:35 AM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="jueves_3">08:50 - 09:35
-                                                            AM</label>
-                                                    </div>
+                            <!-- Jueves -->
+                            <div class="col-md-6 mb-3 mr-3">
+                                <div class="card day-card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Jueves</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="period-title">Turno Matutino</h6>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Jueves" data-horaBase="1"
+                                                                id="jueves_1" value="37" data-hora="07:00 - 07:45 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="jueves_1">07:00 -
+                                                                07:45
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Jueves" data-horaBase="2"
+                                                                id="jueves_2" value="38" data-hora="07:45 - 08:30 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="jueves_2">07:45 -
+                                                                08:30
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Jueves" data-horaBase="3"
+                                                                id="jueves_3" value="39" data-hora="08:50 - 09:35 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="jueves_3">08:50 -
+                                                                09:35
+                                                                AM</label>
+                                                        </div>
 
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Jueves" data-horaBase="4" id="jueves_4" value="40"
-                                                            data-hora="09:35 - 10:20 AM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="jueves_4">09:35 - 10:20
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Jueves" data-horaBase="5" id="jueves_5" value="41"
-                                                            data-hora="10:30 - 11:15 AM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="jueves_5">10:30 - 11:15
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Jueves" data-horaBase="6" id="jueves_6" value="42"
-                                                            data-hora="11:15 - 12:00 PM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="jueves_6">11:15 - 12:00
-                                                            PM</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Jueves" data-horaBase="4"
+                                                                id="jueves_4" value="40" data-hora="09:35 - 10:20 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="jueves_4">09:35 -
+                                                                10:20
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Jueves" data-horaBase="5"
+                                                                id="jueves_5" value="41" data-hora="10:30 - 11:15 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="jueves_5">10:30 -
+                                                                11:15
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Jueves" data-horaBase="6"
+                                                                id="jueves_6" value="42" data-hora="11:15 - 12:00 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="jueves_6">11:15 -
+                                                                12:00
+                                                                PM</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h6 class="period-title">Turno Vespertino</h6>
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Jueves" data-horaBase="7" id="jueves_7" value="43"
-                                                            data-hora="01:00 - 01:45 PM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="jueves_7">01:00 - 01:45
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Jueves" data-horaBase="8" id="jueves_8" value="44"
-                                                            data-hora="01:45 - 02:30 PM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="jueves_8">01:45 - 02:30
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Jueves" data-horaBase="9" id="jueves_9" value="45"
-                                                            data-hora="02:50 - 03:35 PM" data-bs-toggle="modal"
-                                                            data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="jueves_9">02:50 - 03:35
-                                                            PM</label>
-                                                    </div>
+                                            <div class="col-md-6">
+                                                <h6 class="period-title">Turno Vespertino</h6>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Jueves" data-horaBase="7"
+                                                                id="jueves_7" value="43" data-hora="01:00 - 01:45 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="jueves_7">01:00 -
+                                                                01:45
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Jueves" data-horaBase="8"
+                                                                id="jueves_8" value="44" data-hora="01:45 - 02:30 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="jueves_8">01:45 -
+                                                                02:30
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Jueves" data-horaBase="9"
+                                                                id="jueves_9" value="45" data-hora="02:50 - 03:35 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="jueves_9">02:50 -
+                                                                03:35
+                                                                PM</label>
+                                                        </div>
 
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Jueves" data-horaBase="10" id="jueves_10"
-                                                            value="46" data-hora="03:35 - 04:20 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="jueves_10">03:35 - 04:20
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Jueves" data-horaBase="11" id="jueves_11"
-                                                            value="47" data-hora="04:30 - 05:15 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="jueves_11">04:30 - 05:15
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Jueves" data-horaBase="12" id="jueves_12"
-                                                            value="48" data-hora="05:15 - 06:00 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="jueves_12">05:15 - 06:00
-                                                            PM</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Jueves" data-horaBase="10"
+                                                                id="jueves_10" value="46" data-hora="03:35 - 04:20 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="jueves_10">03:35 -
+                                                                04:20
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Jueves" data-horaBase="11"
+                                                                id="jueves_11" value="47" data-hora="04:30 - 05:15 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="jueves_11">04:30 -
+                                                                05:15
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Jueves" data-horaBase="12"
+                                                                id="jueves_12" value="48" data-hora="05:15 - 06:00 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="jueves_12">05:15 -
+                                                                06:00
+                                                                PM</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -649,123 +773,147 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Viernes -->
-                        <div class="col-md-6 mb-3 mr-3">
-                            <div class="card day-card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">viernes</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h6 class="period-title">Turno Matutino</h6>
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Viernes" data-horaBase="1" id="viernes_1"
-                                                            value="49" data-hora="07:00 - 07:45 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="viernes_1">07:00 - 07:45
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Viernes" data-horaBase="2" id="viernes_2"
-                                                            value="50" data-hora="07:45 - 08:30 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="viernes_2">07:45 - 08:30
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Viernes" data-horaBase="3" id="viernes_3"
-                                                            value="51" data-hora="08:50 - 09:35 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="viernes_3">08:50 - 09:35
-                                                            AM</label>
-                                                    </div>
+                            <!-- Viernes -->
+                            <div class="col-md-6 mb-3 mr-3">
+                                <div class="card day-card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Viernes</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="period-title">Turno Matutino</h6>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Viernes" data-horaBase="1"
+                                                                id="viernes_1" value="49" data-hora="07:00 - 07:45 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="viernes_1">07:00 -
+                                                                07:45
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Viernes" data-horaBase="2"
+                                                                id="viernes_2" value="50" data-hora="07:45 - 08:30 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="viernes_2">07:45 -
+                                                                08:30
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Viernes" data-horaBase="3"
+                                                                id="viernes_3" value="51" data-hora="08:50 - 09:35 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="viernes_3">08:50 -
+                                                                09:35
+                                                                AM</label>
+                                                        </div>
 
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Viernes" data-horaBase="4" id="viernes_4"
-                                                            value="52" data-hora="09:35 - 10:20 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="viernes_4">09:35 - 10:20
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Viernes" data-horaBase="5" id="viernes_5"
-                                                            value="53" data-hora="10:30 - 11:15 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="viernes_5">10:30 - 11:15
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Viernes" data-horaBase="6" id="viernes_6"
-                                                            value="54" data-hora="11:15 - 12:00 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="viernes_6">11:15 - 12:00
-                                                            PM</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Viernes" data-horaBase="4"
+                                                                id="viernes_4" value="52" data-hora="09:35 - 10:20 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="viernes_4">09:35 -
+                                                                10:20
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Viernes" data-horaBase="5"
+                                                                id="viernes_5" value="53" data-hora="10:30 - 11:15 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="viernes_5">10:30 -
+                                                                11:15
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Viernes" data-horaBase="6"
+                                                                id="viernes_6" value="54" data-hora="11:15 - 12:00 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="viernes_6">11:15 -
+                                                                12:00
+                                                                PM</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h6 class="period-title">Turno Vespertino</h6>
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Viernes" data-horaBase="7" id="viernes_7"
-                                                            value="55" data-hora="01:00 - 01:45 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="viernes_7">01:00 - 01:45
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Viernes" data-horaBase="8" id="viernes_8"
-                                                            value="56" data-hora="01:45 - 02:30 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="viernes_8">01:45 - 02:30
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Viernes" data-horaBase="9" id="viernes_9"
-                                                            value="57" data-hora="02:50 - 03:35 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="viernes_9">02:50 - 03:35
-                                                            PM</label>
-                                                    </div>
+                                            <div class="col-md-6">
+                                                <h6 class="period-title">Turno Vespertino</h6>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Viernes" data-horaBase="7"
+                                                                id="viernes_7" value="55" data-hora="01:00 - 01:45 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="viernes_7">01:00 -
+                                                                01:45
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Viernes" data-horaBase="8"
+                                                                id="viernes_8" value="56" data-hora="01:45 - 02:30 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="viernes_8">01:45 -
+                                                                02:30
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Viernes" data-horaBase="9"
+                                                                id="viernes_9" value="57" data-hora="02:50 - 03:35 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="viernes_9">02:50 -
+                                                                03:35
+                                                                PM</label>
+                                                        </div>
 
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Viernes" data-horaBase="10" id="viernes_10"
-                                                            value="58" data-hora="03:35 - 04:20 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="viernes_10">03:35 - 04:20
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Viernes" data-horaBase="11" id="viernes_11"
-                                                            value="59" data-hora="04:30 - 05:15 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="viernes_11">04:30 - 05:15
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Viernes" data-horaBase="12" id="viernes_12"
-                                                            value="60" data-hora="05:15 - 06:00 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="viernes_12">05:15 - 06:00
-                                                            PM</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Viernes" data-horaBase="10"
+                                                                id="viernes_10" value="58" data-hora="03:35 - 04:20 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="viernes_10">03:35 -
+                                                                04:20
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Viernes" data-horaBase="11"
+                                                                id="viernes_11" value="59" data-hora="04:30 - 05:15 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="viernes_11">04:30 -
+                                                                05:15
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Viernes" data-horaBase="12"
+                                                                id="viernes_12" value="60" data-hora="05:15 - 06:00 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="viernes_12">05:15 -
+                                                                06:00
+                                                                PM</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -773,123 +921,159 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Sabado -->
-                        <div class="col-md-6 mb-3 mr-3">
-                            <div class="card day-card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">sabado</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h6 class="period-title">Turno Matutino</h6>
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Sábado" data-horaBase="1" id="sabado_1" value="61"
-                                                            data-hora="Día: sabado - Hora: 07:00 - 07:45 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="sabado_1">07:00 - 07:45
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Sábado" data-horaBase="2" id="sabado_2" value="62"
-                                                            data-hora="Día: sabado - Hora: 07:45 - 08:30 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="sabado_2">07:45 - 08:30
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Sábado" data-horaBase="3" id="sabado_3" value="63"
-                                                            data-hora="Día: sabado - Hora: 08:50 - 09:35 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="sabado_3">08:50 - 09:35
-                                                            AM</label>
-                                                    </div>
+                            <!-- Sabado -->
+                            <div class="col-md-6 mb-3 mr-3">
+                                <div class="card day-card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Sabado</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="period-title">Turno Matutino</h6>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Sábado" data-horaBase="1"
+                                                                id="sabado_1" value="61"
+                                                                data-hora="Día: sabado - Hora: 07:00 - 07:45 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="sabado_1">07:00 -
+                                                                07:45
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Sábado" data-horaBase="2"
+                                                                id="sabado_2" value="62"
+                                                                data-hora="Día: sabado - Hora: 07:45 - 08:30 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="sabado_2">07:45 -
+                                                                08:30
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Sábado" data-horaBase="3"
+                                                                id="sabado_3" value="63"
+                                                                data-hora="Día: sabado - Hora: 08:50 - 09:35 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="sabado_3">08:50 -
+                                                                09:35
+                                                                AM</label>
+                                                        </div>
 
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Sábado" data-horaBase="4" id="sabado_4" value="64"
-                                                            data-hora="Día: sabado - Hora: 09:35 - 10:20 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="sabado_4">09:35 - 10:20
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Sábado" data-horaBase="5" id="sabado_5" value="65"
-                                                            data-hora="Día: sabado - Hora: 10:30 - 11:15 AM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="sabado_5">10:30 - 11:15
-                                                            AM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Sábado" data-horaBase="6" id="sabado_6" value="66"
-                                                            data-hora="Día: sabado - Hora: 11:15 - 12:00 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="sabado_6">11:15 - 12:00
-                                                            PM</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Sábado" data-horaBase="4"
+                                                                id="sabado_4" value="64"
+                                                                data-hora="Día: sabado - Hora: 09:35 - 10:20 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="sabado_4">09:35 -
+                                                                10:20
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Sábado" data-horaBase="5"
+                                                                id="sabado_5" value="65"
+                                                                data-hora="Día: sabado - Hora: 10:30 - 11:15 AM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="sabado_5">10:30 -
+                                                                11:15
+                                                                AM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Sábado" data-horaBase="6"
+                                                                id="sabado_6" value="66"
+                                                                data-hora="Día: sabado - Hora: 11:15 - 12:00 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="sabado_6">11:15 -
+                                                                12:00
+                                                                PM</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h6 class="period-title">Turno Vespertino</h6>
-                                            <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Sábado" data-horaBase="7" id="sabado_7" value="67"
-                                                            data-hora="Día: sabado - Hora: 01:00 - 01:45 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="sabado_7">01:00 - 01:45
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Sábado" data-horaBase="8" id="sabado_8" value="68"
-                                                            data-hora="Día: sabado - Hora: 01:45 - 02:30 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="sabado_8">01:45 - 02:30
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Sábado" data-horaBase="9" id="sabado_9" value="69"
-                                                            data-hora="Día: sabado - Hora: 02:50 - 03:35 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="sabado_9">02:50 - 03:35
-                                                            PM</label>
-                                                    </div>
+                                            <div class="col-md-6">
+                                                <h6 class="period-title">Turno Vespertino</h6>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Sábado" data-horaBase="7"
+                                                                id="sabado_7" value="67"
+                                                                data-hora="Día: sabado - Hora: 01:00 - 01:45 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="sabado_7">01:00 -
+                                                                01:45
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Sábado" data-horaBase="8"
+                                                                id="sabado_8" value="68"
+                                                                data-hora="Día: sabado - Hora: 01:45 - 02:30 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="sabado_8">01:45 -
+                                                                02:30
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Sábado" data-horaBase="9"
+                                                                id="sabado_9" value="69"
+                                                                data-hora="Día: sabado - Hora: 02:50 - 03:35 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="sabado_9">02:50 -
+                                                                03:35
+                                                                PM</label>
+                                                        </div>
 
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Sábado" data-horaBase="10" id="sabado_10"
-                                                            value="70" data-hora="Día: sabado - Hora: 03:35 - 04:20 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="sabado_10">03:35 - 04:20
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Sábado" data-horaBase="11" id="sabado_11"
-                                                            value="71" data-hora="Día: sabado - Hora: 04:30 - 05:15 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="sabado_11">04:30 - 05:15
-                                                            PM</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input checkbox-clase" type="checkbox"
-                                                            data-dia="Sábado" data-horaBase="12" id="sabado_12"
-                                                            value="72" data-hora="Día: sabado - Hora: 05:15 - 06:00 PM"
-                                                            data-bs-toggle="modal" data-bs-target="#nuevaHoradeClase">
-                                                        <label class="form-check-label" for="sabado_12">05:15 - 06:00
-                                                            PM</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Sábado" data-horaBase="10"
+                                                                id="sabado_10" value="70"
+                                                                data-hora="Día: sabado - Hora: 03:35 - 04:20 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="sabado_10">03:35 -
+                                                                04:20
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Sábado" data-horaBase="11"
+                                                                id="sabado_11" value="71"
+                                                                data-hora="Día: sabado - Hora: 04:30 - 05:15 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="sabado_11">04:30 -
+                                                                05:15
+                                                                PM</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-clase"
+                                                                type="checkbox" data-dia="Sábado" data-horaBase="12"
+                                                                id="sabado_12" value="72"
+                                                                data-hora="Día: sabado - Hora: 05:15 - 06:00 PM"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#nuevaHoradeClase">
+                                                            <label class="form-check-label" for="sabado_12">05:15 -
+                                                                06:00
+                                                                PM</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -980,27 +1164,58 @@
         <script type="text/javascript" src="/js/horariosAsignar.js"></script>
         <script type="text/javascript" src="/js/tooltip.js"></script>
 
+        <!-- Pasa horasDeClaseJson al script -->
+        <script type="text/javascript" th:inline="javascript">
+            var horasDeClaseJson = /*[[${horasDeClaseJson}]]*/ '[]';
+            var horasDeClase = JSON.parse(horasDeClaseJson);
+            var checkboxes = document.querySelectorAll('.checkbox-clase');
 
-        <script th:inline="javascript">
-            // Convertir el valor de horasExistentes desde el atributo Thymeleaf a un array en JavaScript
-            var envioHoras = /*[[${envioHoras}]]*/ '[]';
-            if (typeof envioHoras === 'string') {
-                horasExistentes = JSON.parse(envioHoras);
-            }
-
-            document.addEventListener("DOMContentLoaded", function () {
-                // Iterar sobre cada checkbox
-                document.querySelectorAll(".form-check-input.checkbox-clase").forEach(function (checkbox) {
-                    // Obtener el valor del checkbox
-                    let valor = parseInt(checkbox.value, 10);
-
-                    // Si el valor está en la lista de horas existentes, deshabilitar y ocultar el checkbox
-                    if (horasExistentes.includes(valor)) {
-                        checkbox.disabled = true;
-                        checkbox.closest(".form-check").style.display = "none";
-                    }
+            checkboxes.forEach(function (checkbox) {
+                var idHorarioBase = checkbox.value;
+                var asignacion = horasDeClase.find(function (item) {
+                    return item.idHorarioBase == idHorarioBase;
                 });
+
+                // Asegúrate de que el label exista
+                var label = checkbox.nextElementSibling;
+                if (label) {
+                    if (asignacion) {
+                        checkbox.disabled = true;
+
+                        // Crear un contenedor para separar el texto original del label y el nuevo texto
+                        var container = document.createElement('div');
+                        container.style.display = 'inline';
+
+                        // Clonar el label original y aplicar tachado solo a ese
+                        var originalText = document.createElement('span');
+                        originalText.innerHTML = label.innerHTML;
+                        originalText.style.textDecoration = 'line-through';
+                        originalText.style.color = '#6c757d';
+
+                        // Insertar el texto original y luego el nuevo texto
+                        label.innerHTML = ''; // Limpiar el contenido del label
+                        container.appendChild(originalText);
+
+                        var infoDocenteMateria = document.createElement('span');
+                        infoDocenteMateria.innerHTML = `&nbsp;<em> (<em><strong>${asignacion.nombreDocente}</strong> - <em>${asignacion.codMateria})</em>`;
+                        infoDocenteMateria.style.textDecoration = 'none';
+                        infoDocenteMateria.style.color = '#495057';
+                        infoDocenteMateria.classList.add('ml-2'); // Clase Bootstrap opcional para agregar margen a la izquierda
+
+                        container.appendChild(infoDocenteMateria);
+                        label.appendChild(container);
+
+                    } else {
+                        var emptySpace = document.createElement('span');
+                        emptySpace.innerHTML = `&nbsp;<em> (Disponible)<em>`;
+                        emptySpace.style.textDecoration = 'none';
+                        emptySpace.style.color = '#878686';
+                        emptySpace.classList.add('text-start', 'mb-2');
+                        label.appendChild(emptySpace);
+                    }
+                }
             });
+
         </script>
     </div>
 </body>

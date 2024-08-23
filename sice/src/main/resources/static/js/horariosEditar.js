@@ -1,4 +1,4 @@
-// Añadir los parámetros carrera, grado y seccion al formulario antes de enviarlo para actualizar la vista usando el mismo contexto
+// Añadir los parámetros carrera, grado, seccion al select para mantener el contexto
 const form = document.getElementById('formNuevaHora');
 form.addEventListener('submit', function (event) {
 

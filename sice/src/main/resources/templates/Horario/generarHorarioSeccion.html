@@ -23,13 +23,13 @@
                         <li class="nav-item py-2 py-sm-0 my-2">
                             <a class="nav-link text-white" th:href="@{/horarios/asignarHoras}">
                                 <i class="bi bi-journal-plus"></i>
-                                <span class="fs-6 ms-2 d-none d-sm-inline">Asignar horas de clase</span>
+                                <span class="fs-6 ms-2 d-none d-sm-inline">Crear horas de clase</span>
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 my-2">
                             <a class="nav-link text-white" th:href="@{/horarios/editarHoras}">
                                 <i class="bi bi-journal-minus"></i>
-                                <span class="fs-6 ms-2 d-none d-sm-inline">Cambiar horas de clase</span>
+                                <span class="fs-6 ms-2 d-none d-sm-inline">Editar horas de clase</span>
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 my-2">
@@ -53,116 +53,116 @@
                 <header th:replace="~{home :: header}"></header>
 
                 <div class="container-fluid py-5">
+                    <div class="card border-0  mt-4">
+                        <div class="card-header bg-light text-dark">
+                            <h5 class="mb-0"><i class="fas fa-chalkboard-teacher"></i> Generar Horario - Sección
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/horarios/generarHorarioSeccion}" method="get">
+                                <div class="row justify-content-center">
+                                    <!-- Carrera -->
+                                    <div class="col-md-3">
+                                        <div class="form-group mb-3">
+                                            <label for="selectGrado" class="form-label">Carrera</label>
+                                            <select id="carrera" name="carrera" th:value="${carrera}"
+                                                class="form-select" aria-label="Default select example">
+                                                <option value="" selected>Seleccione</option>
+                                                <option th:each="bachillerato : ${bachilleratos}"
+                                                    th:value="${bachillerato.nombreCarrera}"
+                                                    th:text="${bachillerato.nombreCarrera}"
+                                                    th:selected="${carrera == bachillerato.nombreCarrera}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
 
-                    <div class="container-fluid">
-                        <h3 class="text-start col-12 mb-3 mt-4">Seleccione una sección para gestionar sus horas de clase
-                        </h3>
+                                    <!-- Año -->
+                                    <div class="col-md-3">
+                                        <div class="form-group mb-3">
+                                            <label for="selectGrado" class="form-label">Grado</label>
+                                            <select id="grado" name="grado" th:value="${grado}" class="form-select">
+                                                <option value="" selected>Seleccione</option>
+                                                <option value="1" th:selected="${grado == '1'}">1</option>
+                                                <option value="2" th:selected="${grado == '2'}">2</option>
+                                                <option value="3" th:selected="${grado == '3'}">3</option>
+                                            </select>
+                                        </div>
+                                    </div>
 
-                        <!-- Contiene el formulario para seleccionar una sección -->
-                        <form th:action="@{/horarios/generarHorarioSeccion}" method="get">
-                            <div class="row mt-4 justify-content-center">
-                                <!-- Carrera -->
-                                <div class="col-md-3">
-                                    <div class="form-group mb-3">
-                                        <label for="selectGrado" class="form-label">Carrera</label>
-                                        <select id="carrera" name="carrera" th:value="${carrera}" class="form-select"
-                                            aria-label="Default select example">
-                                            <option value="" selected>Seleccione</option>
-                                            <option th:each="bachillerato : ${bachilleratos}"
-                                                th:value="${bachillerato.nombreCarrera}"
-                                                th:text="${bachillerato.nombreCarrera}"
-                                                th:selected="${carrera == bachillerato.nombreCarrera}"></option>
-                                        </select>
+                                    <!-- Sección -->
+                                    <div class="col-md-3">
+                                        <div class="form-group mb-3">
+                                            <label for="selectGrado" class="form-label">Sección</label>
+                                            <select id="seccion" name="seccion" th:value="${seccion}"
+                                                class="form-select">
+                                                <option value="" selected>Seleccione</option>
+                                                <option value="A" th:selected="${seccion == 'A'}">A</option>
+                                                <option value="B" th:selected="${seccion == 'B'}">B</option>
+                                                <option value="C" th:selected="${seccion == 'C'}">C</option>
+                                                <option value="D" th:selected="${seccion == 'D'}">D</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Botones -->
+                                    <div class="col-md-3 d-flex align-items-end mb-3">
+                                        <div class="w-100 d-flex justify-content-between gap-2">
+                                            <!-- Filtrar -->
+                                            <input type="submit" class="btn btn-primary w-100" value="Buscar">
+                                        </div>
                                     </div>
                                 </div>
+                            </form>
 
-                                <!-- Año -->
-                                <div class="col-md-3">
-                                    <div class="form-group mb-3">
-                                        <label for="selectGrado" class="form-label">Año</label>
-                                        <select id="grado" name="grado" th:value="${grado}" class="form-select">
-                                            <option value="" selected>Seleccione</option>
-                                            <option value="1" th:selected="${grado == '1'}">1</option>
-                                            <option value="2" th:selected="${grado == '2'}">2</option>
-                                            <option value="3" th:selected="${grado == '3'}">3</option>
-                                        </select>
-                                    </div>
+                            <!-- Mensajes de alerta -->
+                            <div class="alert-container">
+                                <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
+                                    <label th:text="${success}"></label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                                 </div>
 
-                                <!-- Sección -->
-                                <div class="col-md-3">
-                                    <div class="form-group mb-3">
-                                        <label for="selectGrado" class="form-label">Sección</label>
-                                        <select id="seccion" name="seccion" th:value="${seccion}" class="form-select">
-                                            <option value="" selected>Seleccione</option>
-                                            <option value="A" th:selected="${seccion == 'A'}">A</option>
-                                            <option value="B" th:selected="${seccion == 'B'}">B</option>
-                                            <option value="C" th:selected="${seccion == 'C'}">C</option>
-                                            <option value="D" th:selected="${seccion == 'D'}">D</option>
-                                        </select>
-                                    </div>
+                                <div class="alert alert-danger alert-dismissible fade show" th:if="${error != null}">
+                                    <label th:text="${error}"></label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                                 </div>
 
-                                <!-- Botones -->
-                                <div class="col-md-3 d-flex align-items-end mb-3">
-                                    <div class="w-100 d-flex justify-content-between gap-2">
-                                        <!-- Filtrar -->
-                                        <input type="submit" class="btn btn-primary w-100" value="Filtrar"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="Editar horas de clase" alt="Botón Filtrar">
-                                    </div>
+                                <div class="alert alert-warning alert-dismissible fade show" th:if="${warning != null}">
+                                    <label th:text="${warning}"></label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                                 </div>
-                            </div>
-                        </form>
 
-
-                        <!-- Mensajes de alerta -->
-                        <div class="alert-container">
-                            <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
-                                <label th:text="${success}"></label>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-
-                            <div class="alert alert-danger alert-dismissible fade show" th:if="${error != null}">
-                                <label th:text="${error}"></label>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-
-                            <div class="alert alert-warning alert-dismissible fade show" th:if="${warning != null}">
-                                <label th:text="${warning}"></label>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-
-                            <div class="alert alert-info alert-dismissible fade show" th:if="${info != null}">
-                                <label th:text="${info}"></label>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
+                                <div class="alert alert-info alert-dismissible fade show" th:if="${info != null}">
+                                    <label th:text="${info}"></label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="container-fluid">
+
+                    <div class="container">
                         <!-- Horario de clases -->
                         <div class="row" th:if="${bachillerato != null and bachillerato.getCodigoBachillerato() != 0}">
-                            <div class="col-12 mt-4">
+                            <div class="col-12 mt-2">
                                 <!-- Contenedor del horario con bordes y sombra -->
                                 <div class="p-3 border rounded shadow-sm bg-light">
                                     <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
-                                        <h5 class="text-start col-md-4"
-                                            th:text="${formSubmitted ? (bachillerato == null || bachillerato.getCodigoBachillerato() == 0 ? 'Selecciona una sección válida' : 'Horario de clases de ' + (grado != null ? grado + '° ' : '') + (carrera != null ? carrera + ' ' : '') + (seccion != null ? seccion: '')) : ''}">
+                                        <h5 class="text-start col-md-5"
+                                            th:text="${formSubmitted ? ('Horario de clases: ' + (grado != null ? grado + '° ' : '') + (carrera != null ? carrera + ' ' : '') + (seccion != null ? seccion: '')) : ''}">
                                             ></h5>
 
                                         <div class="d-flex gap-2">
-                                            <a class="btn btn-primary"
+                                            <a class="btn btn-secondary"
                                                 th:href="@{/horarios/asignarHoras(carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
                                                 data-bs-toggle="tooltip" data-bs-placement="top"
-                                                title="Crear horas de clase" alt="Botón Asignar"> Agregar horas
+                                                title="Crear horas de clase" alt="Botón Asignar"> Crear horas
                                             </a>
 
-                                            <a class="btn btn-primary"
+                                            <a class="btn btn-secondary"
                                                 th:href="@{/horarios/editarHoras(carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="Editar horas de clase">
@@ -174,7 +174,7 @@
                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="Imprimir horario" target="_blank"
                                                 onclick="openInPopup(this.href); return false;">
-                                                <i class="bi bi-printer"></i> Imprimir horario
+                                                <i class="bi bi-printer"></i> Imprimir
                                             </a>
                                         </div>
                                     </div>
@@ -367,8 +367,6 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script type="text/javascript" src="/js/validacionRequired.js"></script>
         <script type="text/javascript" src="/js/tooltip.js"></script>
-        <!-- <script type="text/javascript" src="/js/horariosEditar.js"></script> -->
-
         <script type="text/javascript" th:inline="javascript">
             // Convertir el valor de horasDeClaseJson desde el atributo Thymeleaf a un array en JavaScript
             var horasDeClase = JSON.parse(/*[[${horasDeClaseJson}]]*/ '[]');
@@ -388,8 +386,8 @@
 
                     // Crear el contenido HTML con la información filtrada
                     var contenido = datosFiltrados.map(horario =>
-                        `<span>${horario.codMateria} ${horario.nomMateria}<br>
-                            ${horario.nombreDocente + " - "} ${horario.apellidoDocente}</span>`
+                        `<span>${horario.nomMateria}<br>
+                            ${horario.nombreDocente} ${horario.apellidoDocente}</span>`
                     ).join('<br>');
                     contenedor.innerHTML = contenido;
                 }

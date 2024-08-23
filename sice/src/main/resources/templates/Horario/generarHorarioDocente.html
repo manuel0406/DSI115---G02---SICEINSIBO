@@ -24,13 +24,13 @@
                         <li class="nav-item py-2 py-sm-0 my-2">
                             <a class="nav-link text-white" th:href="@{/horarios/asignarHoras}">
                                 <i class="bi bi-journal-plus"></i>
-                                <span class="fs-6 ms-2 d-none d-sm-inline">Asignar horas de clase</span>
+                                <span class="fs-6 ms-2 d-none d-sm-inline">Crear horas de clase</span>
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 my-2">
                             <a class="nav-link text-white" th:href="@{/horarios/editarHoras}">
                                 <i class="bi bi-journal-minus"></i>
-                                <span class="fs-6 ms-2 d-none d-sm-inline">Cambiar horas de clase</span>
+                                <span class="fs-6 ms-2 d-none d-sm-inline">Editar horas de clase</span>
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 my-2">
@@ -40,7 +40,7 @@
                             </a>
                         </li>
                         <li class="nav-item py-2 py-sm-0 my-2">
-                            <a class="nav-link text-white">
+                            <a class="nav-link text-white" th:href="@{/horarios/generarHorarioDocente}">
                                 <i class="bi bi-journal-check"></i>
                                 <span class="fs-6 ms-2 d-none d-sm-inline">Generar horario - docente</span>
                             </a>
@@ -55,77 +55,80 @@
 
                 <div class="container-fluid py-5">
 
-                    <div class="container-fluid">
-                        <h3 class="text-start col-12 mb-3 mt-4">Seleccione un docente para ver su horario de clases</h3>
+                    <div class="card border-0 mt-4">
+                        <div class="card-header bg-light text-dark">
+                            <h5 class="mb-0"><i class="fas fa-chalkboard-teacher"></i> Generar Horario - Docente
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/horarios/generarHorarioDocente}" method="get">
+                                <div class="row">
+                                    <!-- Docentes -->
+                                    <div class="col-md-9">
+                                        <div class="form-group mb-3">
+                                            <label for="duiDocente" class="form-label">
+                                                <i class="fas fa-user-tie"></i> Seleccione el Docente
+                                            </label>
+                                            <select id="duiDocente" name="duiDocente" th:value="${duiDocente}"
+                                                class="form-select" aria-label="Default select example">
+                                                <option value="" selected>Seleccione</option>
+                                                <option th:each="docente : ${docentes}" th:value="${docente.duiDocente}"
+                                                    th:text="${docente.nombreDocente + ' ' + docente.apellidoDocente}"
+                                                    th:selected="${duiDocente == docente.duiDocente}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
 
-                        <!-- Contiene el formulario para seleccionar un docente -->
-                        <form th:action="@{/horarios/generarHorarioDocente}" method="get">
-                            <div class="row mt-4 justify-content-start">
-                                <!-- Carrera -->
-                                <div class="col-md-4">
-                                    <div class="form-group mb-3">
-                                        <label for="selectGrado" class="form-label">Docentes</label>
-
-                                        <select id="duiDocente" name="duiDocente" th:value="${duiDocente}"
-                                            class="form-select" aria-label="Default select example">
-                                            <option value="" selected>Seleccione</option>
-                                            <option th:each="docente : ${docentes}" th:value="${docente.duiDocente}"
-                                                th:text="${docente.nombreDocente + ' ' + docente.apellidoDocente}"
-                                                th:selected="${duiDocente == docente.duiDocente}"></option>
-                                        </select>
-
+                                    <!-- Botones -->
+                                    <div class="col-md-3 d-flex align-items-end mb-3">
+                                        <div class="w-100 d-flex justify-content-between gap-2">
+                                            <!-- Filtrar -->
+                                            <input type="submit" class="btn btn-primary w-100" value="Buscar">
+                                        </div>
                                     </div>
                                 </div>
+                            </form>
 
-                                <!-- Botones -->
-                                <div class="col-md-3 d-flex align-items-end mb-3">
-                                    <div class="w-100 d-flex justify-content-between gap-2">
-                                        <input type="submit" class="btn btn-primary w-50" value="Ver horario"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="Genera el horario del docente" alt="Botón Filtrar">
-                                    </div>
+                            <!-- Mensajes de alerta -->
+                            <div class="alert-container">
+                                <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
+                                    <label th:text="${success}"></label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                                 </div>
-                            </div>
-                        </form>
 
+                                <div class="alert alert-danger alert-dismissible fade show" th:if="${error != null}">
+                                    <label th:text="${error}"></label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
 
-                        <!-- Mensajes de alerta -->
-                        <div class="alert-container">
-                            <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
-                                <label th:text="${success}"></label>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
+                                <div class="alert alert-warning alert-dismissible fade show" th:if="${warning != null}">
+                                    <label th:text="${warning}"></label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
 
-                            <div class="alert alert-danger alert-dismissible fade show" th:if="${error != null}">
-                                <label th:text="${error}"></label>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-
-                            <div class="alert alert-warning alert-dismissible fade show" th:if="${warning != null}">
-                                <label th:text="${warning}"></label>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-
-                            <div class="alert alert-info alert-dismissible fade show" th:if="${info != null}">
-                                <label th:text="${info}"></label>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
+                                <div class="alert alert-info alert-dismissible fade show" th:if="${info != null}">
+                                    <label th:text="${info}"></label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="container-fluid">
+
+                    <div class="container">
                         <!-- Horario de clases -->
                         <div class="row" th:if="${docenteSeleccionado != null and horasDeClaseJson != null}">
-                            <div class="col-12 mt-4">
+                            <div class="col-12 mt-2">
                                 <!-- Contenedor del horario con bordes y sombra -->
                                 <div class="p-3 border rounded shadow-sm bg-light">
                                     <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
-                                        <h5 class="text-start col-md-4"
-                                            th:text="${formSubmitted ? (docenteSeleccionado == null ? 'Selecciona un docente válido' : 'Horario de clases de ' + (docenteSeleccionado.getNombreDocente()) + ' ' + (docenteSeleccionado.getApellidoDocente())) : ''}">
+                                        <h5 class="text-start col-md-5"
+                                            th:text="${formSubmitted ? ('Horario de clases: ' + (docenteSeleccionado.getNombreDocente()) + ' ' + (docenteSeleccionado.getApellidoDocente())) : ''}">
                                             ></h5>
 
                                         <div class="d-flex gap-2">
