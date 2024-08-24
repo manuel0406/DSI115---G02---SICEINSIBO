@@ -20,4 +20,7 @@ public interface OrientadorRepository extends JpaRepository<Orientador, Integer>
     @Query("SELECT o FROM Orientador o WHERE  o.bachillerato.codigoBachillerato=:codigoBachillerato")
     Orientador existeAsingnacion(int codigoBachillerato);
 
+    @Query("SELECT o FROM Orientador o WHERE o.bachillerato.anioAcademico.activoAnio=true")
+    List<Orientador> findAll();
+
 }

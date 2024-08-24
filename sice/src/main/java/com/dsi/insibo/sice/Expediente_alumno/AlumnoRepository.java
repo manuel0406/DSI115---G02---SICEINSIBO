@@ -144,8 +144,9 @@ public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
     @Query("SELECT a FROM Alumno a JOIN a.bachillerato b WHERE b.seccion = :seccion")
     public Page<Alumno> findAllPorSeccion(String seccion, Pageable pageable);
 
-    @Query("SELECT a FROM Alumno a JOIN a.bachillerato b JOIN b.anioAcademico an WHERE (a.nombreAlumno ILIKE %:nombre% OR a.apellidoAlumno ILIKE %:apellido%) AND an.anio=:anio   ")
-    List<Alumno> listadoMatricula(@Param("nombre") String nombre, @Param("apellido") String apellido, int anio);
+    @Query("SELECT a FROM Alumno a JOIN a.bachillerato b JOIN b.anioAcademico an WHERE (CAST(a.nie AS string) LIKE %:nie% AND a.nombreAlumno ILIKE %:nombre% AND a.apellidoAlumno ILIKE %:apellido%) AND an.anio = :anio")
+    List<Alumno> listadoMatricula(@Param("nie") String nie, @Param("nombre") String nombre,
+            @Param("apellido") String apellido, @Param("anio") int anio);
 
     @Query("SELECT a FROM Alumno a JOIN a.bachillerato b JOIN b.anioAcademico an WHERE  an.activoMatricula=true")
     List<Alumno> yaMatriculado();

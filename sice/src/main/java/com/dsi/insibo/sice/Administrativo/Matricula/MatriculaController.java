@@ -33,13 +33,14 @@ public class MatriculaController {
 	BachilleratoService bachilleratoService;
 
 	@GetMapping("/AntiguoIngreso")
-	public String antiguoIngreso(Model model, @RequestParam(value = "nombre", required = false) String nombre,
+	public String antiguoIngreso(Model model, @RequestParam(value = "nie", required = false) String nie,
+	@RequestParam(value = "nombre", required = false) String nombre,
 			@RequestParam(value = "apellido", required = false) String apellido) {
 
 		AnioAcademico anioAcademico = anioService.activoMatricula();
 		int anioActivo = anioAcademico.getAnio() - 1;
 
-		List<Alumno> busqueda = alumnoService.matricula(nombre, apellido, anioActivo);
+		List<Alumno> busqueda = alumnoService.matricula(nie,nombre, apellido, anioActivo);
 		List<Alumno> listadoMatriculado = alumnoService.yaMatriculado();
 
 		List<Alumno> listado = new ArrayList<>();
@@ -63,6 +64,7 @@ public class MatriculaController {
 
 		model.addAttribute("alumnos", listado);
 		model.addAttribute("titulo", "Antiguo ingreso");
+		model.addAttribute("nie", nie);
 		model.addAttribute("nombre", nombre);
 		model.addAttribute("apellido", apellido);
 
