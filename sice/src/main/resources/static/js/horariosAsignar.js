@@ -1,4 +1,3 @@
-// Añade al modal los valores necesarios para el envío y referencia del usuario
 document.addEventListener('DOMContentLoaded', (event) => {
     const checkboxes = document.querySelectorAll('.checkbox-clase');
     checkboxes.forEach(checkbox => {
@@ -41,6 +40,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
         form.appendChild(carreraInput);
         form.appendChild(gradoInput);
         form.appendChild(seccionInputHidden);
+
+        // Obtener el duiDocente del select
+        const asignacionSelect = document.getElementById('asignacionSeleccionada');
+        const selectedOption = asignacionSelect.options[asignacionSelect.selectedIndex];
+        const duiDocente = selectedOption.getAttribute('data-docente');
+
+        // Crear un campo oculto para enviar el duiDocente
+        const duiDocenteInput = document.createElement('input');
+        duiDocenteInput.type = 'hidden';
+        duiDocenteInput.name = 'duiDocente';
+        duiDocenteInput.value = duiDocente;
+
+        form.appendChild(duiDocenteInput);
     });
 
     // Desmarcar checkboxes al hacer clic en Cancelar

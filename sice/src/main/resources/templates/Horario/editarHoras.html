@@ -412,9 +412,9 @@
                                         name="asignacionSeleccionada" aria-label="Default select example" required>
                                         <option value="" selected>Seleccione</option>
                                         <option th:each="asignaciones : ${asignaciones}"
-                                            th:value="${asignaciones.idAsignacion}"
-                                            th:text="${asignaciones.materia.nomMateria + ' - ' +  asignaciones.docente.nombreDocente + ' ' + asignaciones.docente.apellidoDocente}">
-                                        </option>
+                                        th:value="${asignaciones.idAsignacion}"
+                                        th:text="${asignaciones.materia.nomMateria + ' - ' +  asignaciones.docente.nombreDocente + '  ' + asignaciones.docente.apellidoDocente}"
+                                        th:data-docente="${asignaciones.docente.duiDocente}"></option>
                                     </select>
                                     <div class="invalid-feedback">Por favor, selecciona la materia y el docente.</div>
                                 </div>

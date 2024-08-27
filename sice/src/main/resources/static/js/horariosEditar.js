@@ -20,6 +20,19 @@ form.addEventListener('submit', function (event) {
     form.appendChild(carreraInput);
     form.appendChild(gradoInput);
     form.appendChild(seccionInputHidden);
+
+    // Obtener el duiDocente del select
+    const asignacionSelect = document.getElementById('asignacionSeleccionada');
+    const selectedOption = asignacionSelect.options[asignacionSelect.selectedIndex];
+    const duiDocente = selectedOption.getAttribute('data-docente');
+
+    // Crear un campo oculto para enviar el duiDocente
+    const duiDocenteInput = document.createElement('input');
+    duiDocenteInput.type = 'hidden';
+    duiDocenteInput.name = 'duiDocente';
+    duiDocenteInput.value = duiDocente;
+
+    form.appendChild(duiDocenteInput);
 });
 
 // Maneja el filtro de días para la tabla
