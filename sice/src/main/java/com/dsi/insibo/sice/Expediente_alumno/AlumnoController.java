@@ -349,6 +349,7 @@ public class AlumnoController {
 		model.addAttribute("totalPages", pageAlumnos.getTotalPages());
 		model.addAttribute("totalElements", listaAlumnos.size());
 		model.addAttribute("url", "/ExpedienteAlumno/ver");
+		model.addAttribute("matricula", false);
 		int baseIndex = (page - 1) * size;// sirve para mantener la base de la numeración de lo alumnos cuando cambia de
 											// pagina
 		model.addAttribute("baseIndex", baseIndex);
@@ -576,6 +577,7 @@ public class AlumnoController {
 		modelAndView.addObject("carrera", carrera);
 		modelAndView.addObject("grado", grado);
 		modelAndView.addObject("seccion", seccion);
+		
 
 		// Retornar el objeto ModelAndView que contiene la vista y los datos
 		return modelAndView;

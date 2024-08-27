@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.AnioService;
@@ -34,13 +35,13 @@ public class MatriculaController {
 
 	@GetMapping("/AntiguoIngreso")
 	public String antiguoIngreso(Model model, @RequestParam(value = "nie", required = false) String nie,
-	@RequestParam(value = "nombre", required = false) String nombre,
+			@RequestParam(value = "nombre", required = false) String nombre,
 			@RequestParam(value = "apellido", required = false) String apellido) {
 
 		AnioAcademico anioAcademico = anioService.activoMatricula();
 		int anioActivo = anioAcademico.getAnio() - 1;
 
-		List<Alumno> busqueda = alumnoService.matricula(nie,nombre, apellido, anioActivo);
+		List<Alumno> busqueda = alumnoService.matricula(nie, nombre, apellido, anioActivo);
 		List<Alumno> listadoMatriculado = alumnoService.yaMatriculado();
 
 		List<Alumno> listado = new ArrayList<>();
@@ -204,6 +205,7 @@ public class MatriculaController {
 		model.addAttribute("page", page);
 		model.addAttribute("totalPages", pageAlumnos.getTotalPages());
 		model.addAttribute("totalElements", listaAlumnos.size());
+		model.addAttribute("matricula", true);
 		model.addAttribute("url", "/matriculados");
 		int baseIndex = (page - 1) * size;// sirve para mantener la base de la numeración de lo alumnos cuando cambia de
 											// pagina
@@ -211,5 +213,63 @@ public class MatriculaController {
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/verAlumno";
+	}
+
+	@GetMapping(value = "/matriculados", produces = "application/pdf")
+	public ModelAndView verAlumnosPdf(Model model,
+			@RequestParam(value = "carrera", required = false) String carrera,
+			@RequestParam(value = "grado", required = false) String grado,
+			@RequestParam(value = "seccion", required = false) String seccion,
+			@RequestParam(value = "seccion", required = false) String genero) {
+		// Convertir cadenas vacías a null para los parámetros opcionales
+		if (carrera != null && carrera.isEmpty()) {
+			carrera = null;
+		}
+		if (grado != null && grado.isEmpty()) {
+			grado = null;
+		}
+		if (seccion != null && seccion.isEmpty()) {
+			seccion = null;
+		}
+		if (genero != null && genero.isEmpty()) {
+			genero = null;
+		}
+		// Obtener la lista completa de alumnos filtrada por los parámetros
+		List<Alumno> alumnosAnioActivo = alumnoService.listarAlumnos(carrera, grado, seccion, genero);
+		List<Alumno> alumnosMatriculados = alumnoService.yaMatriculado();
+
+		List<Alumno> listaAlumnos = new ArrayList<>();
+
+		for (Alumno alumno : alumnosMatriculados) {
+			boolean existeEnMatriculados = false;
+
+			for (Alumno alumno2 : alumnosAnioActivo) {
+				if (alumno.getNie() == alumno2.getNie()) {
+					existeEnMatriculados = true;
+					break;
+				}
+			}
+			if (existeEnMatriculados) {
+				listaAlumnos.add(alumno);
+				// System.out.println("Alumno añadido: " + alumno.getNombreAlumno()); //
+				// Opcional, para verificar
+			}
+		}
+		// Obtener la lista de carreras (bachilleratos)
+		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+
+		// Crear un objeto ModelAndView con la vista "Expediente_alumno/verAlumnoPdf"
+		ModelAndView modelAndView = new ModelAndView("Expediente_alumno/verAlumnoPdf");
+
+		// Agregar atributos al ModelAndView para ser utilizados en la vista
+		model.addAttribute("titulo", "Alumnos");
+		modelAndView.addObject("alumnos", listaAlumnos);
+		modelAndView.addObject("bachilleratos", listaCarreras);
+		modelAndView.addObject("carrera", carrera);
+		modelAndView.addObject("grado", grado);
+		modelAndView.addObject("seccion", seccion);
+
+		// Retornar el objeto ModelAndView que contiene la vista y los datos
+		return modelAndView;
 	}
 }

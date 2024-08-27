@@ -42,21 +42,29 @@
 
 
             <div class="d-flex gap-2">
-                <a sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="btn btn-secondary"
+                <a th:if="${matricula ==false}" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="btn btn-secondary"
                     th:href="@{/ExpedienteAlumno/ver(format='pdf', carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
                     data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual" target="_blank"
                     onclick="openInPopup(this.href); return false;">
                     <i class="bi bi-printer"></i> Imprimir listado
                 </a>
+                <!-- Boton imprimir del docente -->
                 <a sec:authorize="hasAnyRole('DOCENTE')" class="btn btn-secondary"
                     th:href="@{/AsignacionOrientador/seccionAsigada/{id}(id=${id},format='pdf', carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
                     data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual" target="_blank"
                     onclick="openInPopup(this.href); return false;">
                     <i class="bi bi-printer"></i> Imprimir listado
                 </a>
+                <!-- boton imprimir de matricula -->
+                <a th:if="${matricula !=false}" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="btn btn-secondary"
+                    th:href="@{/matriculados(format='pdf', carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
+                    data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual" target="_blank"
+                    onclick="openInPopup(this.href); return false;">
+                    <i class="bi bi-printer"></i> Imprimir listado
+                </a>
                
-                <!-- <a sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-primary" data-bs-toggle="tooltip"
-                    data-bs-placement="top" title="Agregar alumno" th:text="'Agregar alumno'"></a> -->
+                <a sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" th:if="${matricula !=false}" th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-primary" data-bs-toggle="tooltip"
+                    data-bs-placement="top" title="Agregar alumno" th:text="'Agregar alumno'"></a>
             </div>
         </div>
         <div class="row my-2">
