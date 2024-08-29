@@ -28,8 +28,48 @@
                         <li class="nav-item">
                             <a class="nav-link active text-white" aria-current="page" th:href="@{/}">
                                 <i class="bi bi-house-door text-white"></i> Inicio
-                            </a>
+                            </a>                            
                         </li>
+                        <li class="nav-item">                            
+                            <a class="nav-link active text-white" aria-current="page" th:href="@{/expedientedocente/plantadocente}">
+                                <i class="bi bi-person-badge"></i>Docentes
+                            </a>                            
+                        </li>
+                        <li class="nav-item">                            
+                            <a class="nav-link active text-white" aria-current="page" th:href="@{/expedienteadministrativo/plantaadministrativa}">
+                                <i class="bi bi-briefcase"></i>  Administrativos
+                            </a>                            
+                        </li>
+                        <li class="nav-item">                            
+                            <a class="nav-link active text-white" aria-current="page" th:href="@{/ExpedienteAlumno/ver}">
+                                <i class="bi bi-mortarboard"></i> Alumnos
+                            </a>                            
+                        </li>
+                        <li class="nav-item">                            
+                            <a class="nav-link active text-white" aria-current="page" th:href="@{/}">
+                                <i class="bi bi-journal-text"></i> Notas
+                            </a>                            
+                        </li>
+                        <li class="nav-item">                            
+                            <a class="nav-link active text-white" aria-current="page" th:href="@{/asistenciaPersonal/asistenciaGeneral}">
+                                <i class="bi bi-calendar-check"></i> Asistencia
+                            </a>                            
+                        </li>
+                        <li class="nav-item dropdown">                            
+                            <a class="nav-link dropdown-toggle" th:href="@{/administracion}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear"></i> Administracion
+                            </a>   
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{/AsignacionMateria}">Asignación materias</a></li>
+                                <li><a class="dropdown-item" th:href="@{/Bachillerato/anio}">Bachilleratos</a></li>                                
+                                <li><a class="dropdown-item" href="#">Horarios</a></li>
+                                <li><a class="dropdown-item" th:href="@{/GestionMaterias}">Materias</a></li>                                
+                                <li><a class="dropdown-item" th:href="@{/AsignacionOrientador/Asignar}">Orientadores</a></li>
+                              </ul>                         
+                        </li>
+
+
+
                     </ul>
                     <form class="d-flex" th:action="@{/logout}" method="post">
                         <button class="btn btn-outline-danger text-white" type="submit" th:href="@{/logout}">
