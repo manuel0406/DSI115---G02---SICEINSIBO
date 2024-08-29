@@ -804,3 +804,21 @@ td {
 }
 
 
+/* ----------------------------------------------------------------------------------------- */
+/*                               BARRA DE NAVEGACIÓN (HORARIO) - Bryan                                 */
+/* ----------------------------------------------------------------------------------------- */
+
+.custom-navbar2 {
+  background-color: #005187;
+}
+
+.custom-navbar2 .nav-link {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sticky-top {
+    position: sticky;
+    top: 0;
+}
