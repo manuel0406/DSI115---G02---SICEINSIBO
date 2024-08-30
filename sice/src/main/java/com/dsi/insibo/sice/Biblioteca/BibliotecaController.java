@@ -1,11 +1,16 @@
 package com.dsi.insibo.sice.Biblioteca;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,10 +21,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Biblioteca.Service.InventarioLibroService;
+import com.dsi.insibo.sice.Biblioteca.Service.PrestamoLibroService;
+import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
+import com.dsi.insibo.sice.entity.Alumno;
+import com.dsi.insibo.sice.entity.EntregaPapeleria;
 import com.dsi.insibo.sice.entity.InventarioLibro;
+import com.dsi.insibo.sice.entity.InventarioPapeleria;
+import com.dsi.insibo.sice.entity.PrestamoLibro;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -35,15 +48,12 @@ public class BibliotecaController {
         return "/Biblioteca/inicioBiblioteca.html";
     }
 
-    @GetMapping("/Prestamos")
-    public String PrestamosBiblioteca(Model model){
-        model.addAttribute("titulo","Gestión de Prestamos");
-
-        return "/Biblioteca/prestamos.html";
-    }
-
     @Autowired
     private InventarioLibroService inventarioLibroService;
+    @Autowired
+    private PrestamoLibroService prestamoLibroService;
+    @Autowired
+    private AlumnoService alumnoService;
 
     // @GetMapping("/InventarioLibros")
     // public String inventarioLibros(Model model){
@@ -58,9 +68,19 @@ public class BibliotecaController {
     @GetMapping("/InventarioLibros")
     public String inventarioLibros(Model model,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String searchTerm) {
 
         List<InventarioLibro> listadoLibros = inventarioLibroService.listarLibros();
+
+        // Filtrar productos si se proporciona un término de búsqueda
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            listadoLibros = listadoLibros.stream()
+                    .filter(p -> p.getTituloLibro().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                    p.getAutorLibro().toLowerCase().contains(searchTerm.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+        
         int start = page * size;
         int end = Math.min((start + size), listadoLibros.size());
 
@@ -125,4 +145,191 @@ public class BibliotecaController {
         return "redirect:/Biblioteca/InventarioLibros";
     }
 
+
+    //PRESTAMOS
+    @GetMapping("/Prestamos")
+    public String PrestamosBiblioteca(Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size,
+            @RequestParam(value = "nombreAlumno", required = false) String nombreAlumno) {
+    
+        // Obtener todos los préstamos con estado "Pendiente"
+        List<PrestamoLibro> listadoPrestamos = prestamoLibroService.listarPrestamos().stream()
+            .filter(prestamo -> "Pendiente".equals(prestamo.getEstadoPrestamo()))
+            .collect(Collectors.toList());
+    
+        // Filtrar por nombre del alumno si se proporciona un término de búsqueda
+        if (nombreAlumno != null && !nombreAlumno.trim().isEmpty()) {
+            listadoPrestamos = listadoPrestamos.stream()
+                .filter(prestamo -> prestamo.getAlumno().getNombreAlumno().toLowerCase().contains(nombreAlumno.toLowerCase()))
+                .collect(Collectors.toList());
+        }
+    
+        // Calcular el rango para la página actual
+        int start = page * size;
+        int end = Math.min((start + size), listadoPrestamos.size());
+    
+        if (start > listadoPrestamos.size()) {
+            start = listadoPrestamos.size() - size;
+            if (start < 0) {
+                start = 0;
+            }
+        }
+    
+        // Crear una sublista para la página actual
+        List<PrestamoLibro> pagedPrestamos = listadoPrestamos.subList(start, end);
+    
+        // Crear el objeto Page para pasar a la vista
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<PrestamoLibro> pagePrestamos = new PageImpl<>(
+                pagedPrestamos,
+                pageRequest,
+                listadoPrestamos.size()
+        );
+    
+        // Cargar otros datos necesarios
+        List<InventarioLibro> listadoLibros = inventarioLibroService.listarLibros();
+        List<Alumno> listadoAlumnos = alumnoService.listarAlumnos(null, null, null, null);
+    
+        // Añadir los atributos al modelo
+        model.addAttribute("titulo", "Gestión de Préstamos");
+        model.addAttribute("prestamos", pagePrestamos.getContent());
+        model.addAttribute("libros", listadoLibros);
+        model.addAttribute("alumnos", listadoAlumnos);
+        model.addAttribute("nuevoPrestamo", new PrestamoLibro());
+        model.addAttribute("page", pagePrestamos);
+    
+        return "/Biblioteca/prestamos.html";
+    }
+
+    @PostMapping("/Prestamos/registrar")
+    public String registrarPrestamo(@ModelAttribute("nuevoPrestamo") PrestamoLibro nuevoPrestamo, Model model, RedirectAttributes attribute) {
+        // Obtener el libro seleccionado
+        InventarioLibro libro = inventarioLibroService.buscarPorId(nuevoPrestamo.getInventarioLibro().getIdInventarioLibros());
+
+        // Verificar si hay suficiente cantidad en el inventario
+        if (libro.getExistenciaLibro() < nuevoPrestamo.getCantidadPrestamo()) {
+            attribute.addFlashAttribute("error", "Titulo de libro no disponible, verificar inventario");
+            return "redirect:/Biblioteca/Prestamos";
+        }
+
+        // Restar la cantidad del inventario
+        libro.setExistenciaLibro(libro.getExistenciaLibro() - nuevoPrestamo.getCantidadPrestamo());
+        inventarioLibroService.guardar(libro);
+
+        // Guardar el nuevo préstamo
+        prestamoLibroService.guardar(nuevoPrestamo);
+
+        // Redirigir a la página principal con un mensaje de éxito
+        attribute.addFlashAttribute("success", "Préstamo registrado correctamente.");
+        return "redirect:/Biblioteca/Prestamos";
+    }
+
+    @PostMapping("/Prestamos/devolver/{id}")
+    public String devolverPrestamo(@PathVariable("id") int idPrestamoLibro, 
+                                @RequestParam("cantidadPrestamo") int cantidadPrestamo, 
+                                @RequestParam("idInventario") int idInventarioLibros, 
+                                RedirectAttributes attributes) {
+        // Buscar el préstamo por su ID
+        PrestamoLibro prestamo = prestamoLibroService.buscarPorId(idPrestamoLibro);
+
+        if (prestamo != null && "Pendiente".equals(prestamo.getEstadoPrestamo())) {
+            // Actualizar el estado del préstamo a "Devuelto"
+            prestamo.setEstadoPrestamo("Devuelto");
+
+            // Buscar el libro en el inventario por su ID
+            InventarioLibro libro = inventarioLibroService.buscarPorId(idInventarioLibros);
+            if (libro != null) {
+                // Sumar la cantidad prestada al inventario
+                libro.setExistenciaLibro(libro.getExistenciaLibro() + cantidadPrestamo);
+                inventarioLibroService.guardar(libro);
+
+                // Guardar el préstamo actualizado
+                prestamoLibroService.guardar(prestamo);
+
+                // Añadir mensaje de éxito
+                attributes.addFlashAttribute("success", "Préstamo marcado como Devuelto y el inventario actualizado correctamente.");
+            } else {
+                // Si no se encuentra el libro
+                attributes.addFlashAttribute("error", "Libro no encontrado en el inventario.");
+            }
+        } else {
+            attributes.addFlashAttribute("error", "El préstamo no existe o ya está marcado como Devuelto.");
+        }
+
+        // Redirigir a la página principal
+        return "redirect:/Biblioteca/Prestamos";
+    }
+
+    @GetMapping("/Prestamos/Devueltos")
+    public String PrestamosDevueltos(Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size,
+            @RequestParam(value = "nombreAlumno", required = false) String nombreAlumno) {
+    
+        // Obtener todos los préstamos con estado "Devuelto"
+        List<PrestamoLibro> listadoPrestamos = prestamoLibroService.listarPrestamos().stream()
+            .filter(prestamo -> "Devuelto".equals(prestamo.getEstadoPrestamo()))
+            .collect(Collectors.toList());
+    
+    // Filtrar por nombre del alumno o NIE si se proporciona un término de búsqueda
+    if (nombreAlumno != null && !nombreAlumno.trim().isEmpty()) {
+        try {
+            // Intentar convertir el término de búsqueda a Integer para comparar con el NIE
+            int nie = Integer.parseInt(nombreAlumno);
+            listadoPrestamos = listadoPrestamos.stream()
+                .filter(prestamo -> prestamo.getAlumno().getNie() == nie)
+                .collect(Collectors.toList());
+        } catch (NumberFormatException e) {
+            // Si no es un número, buscar por el nombre del alumno
+            listadoPrestamos = listadoPrestamos.stream()
+                .filter(prestamo -> prestamo.getAlumno().getNombreAlumno().toLowerCase().contains(nombreAlumno.toLowerCase()))
+                .collect(Collectors.toList());
+        }
+    }
+    
+        // Calcular el rango para la página actual
+        int start = page * size;
+        int end = Math.min((start + size), listadoPrestamos.size());
+    
+        if (start > listadoPrestamos.size()) {
+            start = listadoPrestamos.size() - size;
+            if (start < 0) {
+                start = 0;
+            }
+        }
+    
+        // Crear una sublista para la página actual
+        List<PrestamoLibro> pagedPrestamos = listadoPrestamos.subList(start, end);
+    
+        // Crear el objeto Page para pasar a la vista
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<PrestamoLibro> pagePrestamos = new PageImpl<>(
+                pagedPrestamos,
+                pageRequest,
+                listadoPrestamos.size()
+        );
+    
+        // Cargar otros datos necesarios
+        List<InventarioLibro> listadoLibros = inventarioLibroService.listarLibros();
+        List<Alumno> listadoAlumnos = alumnoService.listarAlumnos(null, null, null, null);
+    
+        // Añadir los atributos al modelo
+        model.addAttribute("titulo", "Préstamos Devueltos");
+        model.addAttribute("prestamos", pagePrestamos.getContent());
+        model.addAttribute("libros", listadoLibros);
+        model.addAttribute("alumnos", listadoAlumnos);
+        model.addAttribute("page", pagePrestamos);
+        model.addAttribute("nombreAlumno", nombreAlumno); // Para mantener el valor del término de búsqueda
+    
+        return "/Biblioteca/prestamosDevueltos.html";
+    }
+
+    @GetMapping(value = "/verPrestamos", produces = "application/pdf")
+    public ModelAndView verPrestamosPdf(Model model) {
+        List<PrestamoLibro> listaPrestamos = prestamoLibroService.listarPrestamos();
+        ModelAndView modelAndView = new ModelAndView("Biblioteca/verPrestamosPdf");
+        modelAndView.addObject("prestamos", listaPrestamos);
+        return modelAndView;
+    }
 }

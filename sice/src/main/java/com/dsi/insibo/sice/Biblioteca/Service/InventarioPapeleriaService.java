@@ -9,4 +9,6 @@ public interface InventarioPapeleriaService {
     public void guardar(InventarioPapeleria inventarioPapeleria);
     public InventarioPapeleria buscarPorId(Integer idArticulo);
     public void eliminar(Integer idArticulo);
+    public void actualizarProducto(InventarioPapeleria producto);
+    
 }

@@ -27,15 +27,39 @@
     <div class="navbar">
         <div class="container">
           <div class="d-grid gap-2 d-md-block">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#NuevoPrestamoModal">Nueva entrega</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#NuevoPrestamoModal">Nuevo Prestamo</button>
             <a th:href="@{/Biblioteca/InventarioLibros}" class="btn btn-secondary field" >Gestionar Inventario</a>
+            <a th:href="@{/Biblioteca/Prestamos/Devueltos}" class="btn btn-secondary">
+              <i class="bi bi-clock-history"></i> <!-- Ícono de historial de Bootstrap Icons -->
+            </a>
+            <a th:href="@{/Biblioteca/verPrestamos}" class="btn btn-secondary">
+              <i class="bi bi-printer"></i> <!-- Ícono de impresión de Bootstrap Icons -->
+            </a>
           </div>
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Buscar Alumno" aria-label="Buscar Alumno">
+          <form class="d-flex" role="search" th:action="@{/Biblioteca/Prestamos}" method="get">
+            <input class="form-control me-2" type="search" name="nombreAlumno" placeholder="Buscar Alumno" aria-label="Buscar Alumno" th:value="${param.nombreAlumno}">
             <button class="btn btn-primary" type="submit">Buscar</button>
           </form>
         </div>
     </div>
+
+            <!--Mensajes-->
+            <div class="container">
+              <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
+                  <label th:text="${success}"></label>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+          
+              <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
+                  <label th:text="${error}"></label>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+  
+              <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
+                  <label th:text="${warning}"></label>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+          </div>
 
     <!--Tabla de datos-->
     <div class="container">
@@ -46,29 +70,53 @@
                 <th scope="col">Alumno</th>
                 <th scope="col">Grado/Sección</th>
                 <th scope="col">Nombre del Libro</th>
+                <th scope="col">Cantidad</th>
                 <th scope="col">Estado</th>
                 <th scope="col">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+              <tr th:each="prestamo : ${prestamos}">
+                <td th:text="${prestamo.fechaPrestamo}"></td>
+                <td th:text="${prestamo.alumno.nombreAlumno + ' ' + prestamo.alumno.apellidoAlumno}"></td>
+                <td th:text="${prestamo.alumno.bachillerato.nombreCarrera}"></td>
+                <td th:text="${prestamo.inventarioLibro.tituloLibro}"></td>
+                <td th:text="${prestamo.cantidadPrestamo}"></td>
                 <td>
-                    <span class="badge text-bg-danger"></span>
+                  <span th:classappend="${prestamo.estadoPrestamo == 'Pendiente' ? 'badge text-bg-danger' : (prestamo.estadoPrestamo == 'Devuelto' ? 'badge text-bg-success' : '')}"
+                  th:text="${prestamo.estadoPrestamo}">
+            </span>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-primary btn-sm" >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
-                        </svg>
+                  <!-- Botón que activa el formulario de devolución -->
+                  <form th:action="@{/Biblioteca/Prestamos/devolver/{id}(id=${prestamo.idPrestamoLibro})}" method="post" style="display: inline;" id="devolverForm">
+                    <input type="hidden" name="cantidadPrestamo" th:value="${prestamo.cantidadPrestamo}" />
+                    <input type="hidden" name="idInventario" th:value="${prestamo.inventarioLibro.idInventarioLibros}" />
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmDevolverModal">
+                      <i class="bi bi-check-all"></i>
                     </button>
+                  </form>
                 </td>
               </tr>
             </tbody>
           </table>
+
+          <!-- Manejo de la paginación -->
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${page.number - 1}}">Anterior</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                    th:classappend="${page.number == i} ? 'active'">
+                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${i}}"
+                        th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${page.number + 1}}">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
     </div>
   
       <!-- Modal Nuevo Prestamo -->
@@ -80,16 +128,79 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            ...
+            <form  action="#" th:action="@{/Biblioteca/Prestamos/registrar}" th:object="${nuevoPrestamo}" method="post">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="fechaPrestamo" class="form-label">Fecha de Entrega</label>
+                        <input type="date" class="form-control" id="fechaPrestamo" th:field="*{fechaPrestamo}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="alumno" class="form-label">Alumno a entregar</label>
+                      <select class="form-control" id="alumno" th:field="*{alumno}" required>
+                        <option value="">Seleccione un alumno</option>
+                        <option th:each="alumno : ${alumnos}" th:value="${alumno.nie}" th:text="${alumno.nombreAlumno + ' ' + alumno.apellidoAlumno}"></option>
+                    </select>
+                    </div>
+                </div>
+            
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="libro" class="form-label">Libro</label>
+                      <select class="form-control" id="libro" th:field="*{inventarioLibro}" required>
+                          <option value="">Seleccione un libro</option>
+                          <option th:each="libro : ${libros}" th:value="${libro.idInventarioLibros}" th:text="${libro.tituloLibro}"></option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="cantidad" class="form-label">Cantidad</label>
+                      <input type="number" class="form-control" id="cantidad" th:field="*{cantidadPrestamo}" required />
+                  </div>
+                </div>
+
+                <input type="hidden" id="estado" name="estadoPrestamo" th:value="'Pendiente'" />
+            
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div class="modal fade" id="confirmDevolverModal" tabindex="-1" aria-labelledby="confirmDevolverModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmDevolverModalLabel">Confirmar devolución</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ¿Estás seguro de que quieres marcar este préstamo como Devuelto?
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary">Registrar</button>
+            <button type="button" class="btn btn-success" id="confirmarDevolucionBtn">Devolver</button>
           </div>
         </div>
       </div>
     </div>
 
     <footer th:replace="home :: footer"></footer>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          var today = new Date().toISOString().split('T')[0]; // Obtiene la fecha en formato 'YYYY-MM-DD'
+          document.getElementById('fechaPrestamo').value = today; // Asigna la fecha al input
+      });
+  </script>
+
+  <script>
+    document.getElementById('confirmarDevolucionBtn').addEventListener('click', function () {
+      document.getElementById('devolverForm').submit();
+    });
+  </script>
 </body>
+
 </html>

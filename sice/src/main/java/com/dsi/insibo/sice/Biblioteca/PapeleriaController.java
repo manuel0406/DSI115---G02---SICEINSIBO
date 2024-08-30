@@ -1,6 +1,7 @@
 package com.dsi.insibo.sice.Biblioteca;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,12 +46,23 @@ public class PapeleriaController {
     //     return "/Biblioteca/inventarioPapeleria.html";
     // }
 
+    //INVENTARIO PAPELERIA
+
     @GetMapping("/InventarioPapeleria")
     public String inventarioPapeleria(Model model,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "8") int size) {
+            @RequestParam(defaultValue = "8") int size,
+            @RequestParam(required = false) String searchTerm) {
 
         List<InventarioPapeleria> listadoProductos = inventarioPapeleriaService.listarProductos();
+        
+        // Filtrar productos si se proporciona un término de búsqueda
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            listadoProductos = listadoProductos.stream()
+                    .filter(p -> p.getNombreArticulo().toLowerCase().contains(searchTerm.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+
         int start = page * size;
         int end = Math.min((start + size), listadoProductos.size());
 
@@ -72,6 +84,7 @@ public class PapeleriaController {
         model.addAttribute("productos", pageProductos.getContent());
         model.addAttribute("nuevoProducto", new InventarioPapeleria());
         model.addAttribute("page", pageProductos);
+        model.addAttribute("searchTerm", searchTerm);
 
         return "/Biblioteca/inventarioPapeleria.html";
     }
@@ -117,6 +130,10 @@ public class PapeleriaController {
         return "redirect:/Biblioteca/Papeleria/InventarioPapeleria";
     }
 
+    
+
+    // GESTIÓN DE ENTREGA 
+
     @GetMapping("/Control")
     public String ControlPapeleria(Model model,
             @RequestParam(defaultValue = "0") int page,
@@ -157,5 +174,57 @@ public class PapeleriaController {
         model.addAttribute("page", pageEntregas);
 
         return "/Biblioteca/controlPapeleria.html";
+    }
+
+    @PostMapping("/Control/entrega")
+    public String registrarEntrega(@ModelAttribute("nuevaEntrega") EntregaPapeleria nuevaEntrega, Model model, RedirectAttributes redirectAttributes) {
+        // Obtener el producto seleccionado
+        InventarioPapeleria producto = inventarioPapeleriaService.buscarPorId(nuevaEntrega.getInventarioPapeleria().getIdArticulo());
+
+        // Restar la cantidad entregada del inventario
+        int cantidadRestante = producto.getExistenciaArticulo() - nuevaEntrega.getEntregaCantidad();
+        if (cantidadRestante < 0) {
+            producto.setExistenciaArticulo(cantidadRestante);
+            inventarioPapeleriaService.actualizarProducto(producto);
+            entregaPapeleriaService.guardar(nuevaEntrega);
+            // Manejo de advertencia: no hay suficiente inventario
+            redirectAttributes.addFlashAttribute("warning", "Verifique la disponibilidad del articulo en el inventario.");
+            return "redirect:/Biblioteca/Papeleria/Control";
+        }
+
+        // Actualizar la cantidad en el inventario
+        producto.setExistenciaArticulo(cantidadRestante);
+        inventarioPapeleriaService.actualizarProducto(producto);
+
+        // Guardar la nueva entrega
+        entregaPapeleriaService.guardar(nuevaEntrega);
+        redirectAttributes.addFlashAttribute("success", "Entrega registrada correctamente.");
+        // Redirigir a la página principal
+        return "redirect:/Biblioteca/Papeleria/Control";
+    }
+
+    @PostMapping("/Control/editar")
+    public String actualizarEntrega(@ModelAttribute("entrega") EntregaPapeleria entrega, Model model, RedirectAttributes redirectAttributes) {
+        // Obtener la entrega original
+        EntregaPapeleria entregaOriginal = entregaPapeleriaService.buscarPorId(entrega.getIdEntregaPapeleria());
+
+        // Obtener el producto original
+        InventarioPapeleria producto = inventarioPapeleriaService.buscarPorId(entregaOriginal.getInventarioPapeleria().getIdArticulo());
+
+        // Ajustar el inventario
+        int cantidadOriginal = entregaOriginal.getEntregaCantidad();
+        int cantidadNueva = entrega.getEntregaCantidad();
+        int diferencia = cantidadOriginal - cantidadNueva;
+
+        // Actualizar el inventario en función de la diferencia
+        producto.setExistenciaArticulo(producto.getExistenciaArticulo() + diferencia);
+        inventarioPapeleriaService.actualizarProducto(producto);
+
+        // Actualizar la entrega
+        entregaOriginal.setEntregaCantidad(cantidadNueva);
+        entregaPapeleriaService.guardar(entregaOriginal);
+
+        redirectAttributes.addFlashAttribute("success", "Cantidad modificada correctamente.");
+        return "redirect:/Biblioteca/Papeleria/Control";
     }
 }

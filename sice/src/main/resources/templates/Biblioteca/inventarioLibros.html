@@ -26,10 +26,10 @@
     <div class="navbar">
         <div class="container">
           <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarLibro">Registrar Nuevo Libro</button>
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Buscar Alumno" aria-label="Buscar Alumno">
+          <form class="d-flex" role="search" method="get" action="/Biblioteca/InventarioLibros">
+            <input class="form-control me-2" type="search" name="searchTerm"  placeholder="Buscar" aria-label="Buscar">
             <button class="btn btn-primary" type="submit">Buscar</button>
-          </form>
+        </form>
         </div>
     </div>
     
@@ -61,9 +61,11 @@
                     <button class="btn btn-primary" th:attr="onclick='showEditModal(' + ${inventario.idInventarioLibros} + ')'" >
                         <i class="bi bi-pencil"></i>
                     </button>
-                  <a href="" th:href="@{/Biblioteca/InventarioLibros/delete/{idInventarioLibros}(idInventarioLibros=${inventario.idInventarioLibros})}" class="btn btn-danger " data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="return confirm('Esta seguro de eliminar el registro')">
-                                    <i class="bi bi-trash"></i>
+
+                    <a href="#" class="btn btn-danger" th:attr="onclick='showDeleteModal(' + ${inventario.idInventarioLibros} + ')'">
+                        <i class="bi bi-trash"></i>
                     </a>
+                  
                 </td>
               </tr>
             </tbody>
@@ -203,6 +205,28 @@
         </div>
     </div>
 
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            ¿Estás seguro de que quieres eliminar este artículo?
+            </div>
+            <div class="modal-footer">
+            <form id="deleteForm" method="get" action="#">
+                <input type="hidden" id="itemId" name="itemId" value=""/>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+
     <footer th:replace="home :: footer"></footer>
 
     <script>
@@ -224,6 +248,21 @@
                 .catch(error => {
                     console.error('Error al obtener los datos del libro:', error);
                 });
+        }
+    </script>
+
+    <script>
+        function showDeleteModal(itemId) {
+        // Establece el ID del artículo en el formulario
+        document.getElementById('itemId').value = itemId;
+        
+        // Configura la acción del formulario de eliminación
+        const deleteForm = document.getElementById('deleteForm');
+        deleteForm.action = `/Biblioteca/InventarioLibros/delete/${itemId}`;
+        
+        // Muestra el modal
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
         }
     </script>
 </body>

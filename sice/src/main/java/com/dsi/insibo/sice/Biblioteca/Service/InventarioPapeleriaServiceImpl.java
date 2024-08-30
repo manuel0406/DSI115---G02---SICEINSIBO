@@ -33,4 +33,9 @@ public class InventarioPapeleriaServiceImpl implements InventarioPapeleriaServic
     public void eliminar(Integer idArticulo){
         inventarioPapeleriaRepository.deleteById(idArticulo);
     }
+
+    @Override
+    public void actualizarProducto(InventarioPapeleria producto) {
+        inventarioPapeleriaRepository.save(producto);
+    }
 }
