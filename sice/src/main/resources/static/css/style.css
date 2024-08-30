@@ -805,7 +805,7 @@ td {
 
 
 /* ----------------------------------------------------------------------------------------- */
-/*                               BARRA DE NAVEGACIÓN (HORARIO) - Bryan                                 */
+/*                               BARRA DE NAVEGACIÓN (HORARIO) - Bryan                       */
 /* ----------------------------------------------------------------------------------------- */
 
 .custom-navbar2 {
@@ -822,3 +822,30 @@ td {
     position: sticky;
     top: 0;
 }
+
+
+/* Estilo básico del checkbox */
+.custom-checkbox-section .form-check-input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  border: 1px solid #005187; 
+  border-radius: 4px; 
+  position: relative;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Fondo suave cuando no está seleccionado */
+.custom-checkbox-section .form-check-input::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: #F0F4F8; 
+  border-radius: 4px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+
+

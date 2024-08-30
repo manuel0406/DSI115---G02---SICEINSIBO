@@ -28,9 +28,10 @@
                             <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
                                 <h2 class="mb-0 ms-2"><i class="fas fa-chalkboard-teacher"></i> Crear Horas de Clase
                                 </h2>
-                                <button class="btn btn-dark bi bi-layout-sidebar" type="button"
+                                <button class="btn btn-dark bi bi-layout-sidebar" type="button" id="botonNav"
                                     data-bs-toggle="collapse" data-bs-target="#collapseWidthExample"
-                                    aria-expanded="false" aria-controls="collapseWidthExample">
+                                    aria-expanded="true" aria-controls="collapseWidthExample"
+                                    title="Ocultar Opciones - Barra de navegación">
                                 </button>
                             </div>
                         </div>
@@ -123,30 +124,32 @@
 
                     <div class="container p-3 border rounded shadow-sm bg-light"
                         th:if="${bachillerato != null and bachillerato.getCodigoBachillerato() != 0}">
-                        <!-- Contiene las tarjetas con las horas de clase y es mostrado unicamente cuando una sección realmente existe-->
-                        <div class="row justify-content-center">
 
-                            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
-                                <!-- Contiene la sección elegida -->
-                                <h5 class="text-start col-md-6" th:text="${formSubmitted ? ('Horas: ' + (grado != null ? grado + '° ' : '') + 
-                                    (carrera != null ? carrera + ' ' : '') + (seccion != null ? seccion: '')) : ''}">
-                                </h5>
+                        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+                            <!-- Contiene la sección elegida -->
+                            <h5 class="text-start col-md-6" th:text="${formSubmitted ? ('Horas: ' + (grado != null ? grado + '° ' : '') + 
+                                (carrera != null ? carrera + ' ' : '') + (seccion != null ? seccion: '')) : ''}">
+                            </h5>
 
-                                <div class="d-flex gap-2">
-                                    <a class="btn btn-secondary"
-                                        th:href="@{/horarios/editarHoras(carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
-                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="Editar las horas de clase de esta sección" alt="Botón Asignar">
-                                        Editar horas
-                                    </a>
+                            <div class="d-flex gap-2">
+                                <a class="btn btn-secondary"
+                                    th:href="@{/horarios/editarHoras(carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
+                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Editar las horas de clase de esta sección" alt="Botón Asignar">
+                                    Editar horas
+                                </a>
 
-                                    <a class="btn btn-secondary"
-                                        th:href="@{/horarios/generarHorarioSeccion(carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
-                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="Ver horario de clases de esta sección"> Ver horario
-                                    </a>
-                                </div>
+                                <a class="btn btn-secondary"
+                                    th:href="@{/horarios/generarHorarioSeccion(carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
+                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Ver horario de clases de esta sección"> Ver horario
+                                </a>
                             </div>
+                        </div> 
+                        
+                        <!-- Contiene las tarjetas con las horas de clase y es mostrado unicamente cuando una sección realmente existe-->
+                        <div class="row justify-content-center custom-checkbox-section">
+
                             <!-- Lunes -->
                             <div class="col-sm-auto mt-2 mb-3 mr-3">
                                 <div class="card day-card">
@@ -1044,63 +1047,12 @@
     </div>
 
     <footer th:replace="~{home :: footer}"></footer>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script> -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script type="text/javascript" src="/js/validacionRequired.js"></script>
     <script type="text/javascript" src="/js/horariosAsignar.js"></script>
     <script type="text/javascript" src="/js/tooltip.js"></script>
-
-    <!-- Pasa horasDeClaseJson al script -->
-    <script type="text/javascript" th:inline="javascript">
-        var horasDeClaseJson = /*[[${horasDeClaseJson}]]*/ '[]';
-        var horasDeClase = JSON.parse(horasDeClaseJson);
-        var checkboxes = document.querySelectorAll('.checkbox-clase');
-
-        checkboxes.forEach(function (checkbox) {
-            var idHorarioBase = checkbox.value;
-            var asignacion = horasDeClase.find(function (item) {
-                return item.idHorarioBase == idHorarioBase;
-            });
-
-            // Asegúrate de que el label exista
-            var label = checkbox.nextElementSibling;
-            if (label) {
-                if (asignacion) {
-                    checkbox.disabled = true;
-
-                    // Crear un contenedor para separar el texto original del label y el nuevo texto
-                    var container = document.createElement('div');
-                    container.style.display = 'inline';
-
-                    // Clonar el label original y aplicar tachado solo a ese
-                    var originalText = document.createElement('span');
-                    originalText.innerHTML = label.innerHTML;
-                    originalText.style.textDecoration = 'line-through';
-                    originalText.style.color = '#6c757d';
-
-                    // Insertar el texto original y luego el nuevo texto
-                    label.innerHTML = ''; // Limpiar el contenido del label
-                    container.appendChild(originalText);
-
-                    var infoDocenteMateria = document.createElement('span');
-                    infoDocenteMateria.innerHTML = `&nbsp;<em> (<em><strong>${asignacion.nombreDocente}</strong> - <em>${asignacion.codMateria})</em>`;
-                    infoDocenteMateria.style.textDecoration = 'none';
-                    infoDocenteMateria.style.color = '#495057';
-                    infoDocenteMateria.classList.add('ml-2'); // Clase Bootstrap opcional para agregar margen a la izquierda
-
-                    container.appendChild(infoDocenteMateria);
-                    label.appendChild(container);
-
-                } else {
-                    var emptySpace = document.createElement('span');
-                    emptySpace.innerHTML = `&nbsp;<em> (Disponible)<em>`;
-                    emptySpace.style.textDecoration = 'none';
-                    emptySpace.style.color = '#878686';
-                    emptySpace.classList.add('text-start', 'mb-2');
-                    label.appendChild(emptySpace);
-                }
-            }
-        });
+    <script th:inline="javascript">
+        var horasDeClaseJson = /*[[${horasDeClaseJson}]]*/ "[]";
     </script>
 </body>
 

@@ -29,15 +29,11 @@
                             <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
                                 <h2 class="mb-0 ms-2"><i class="fas fa-chalkboard-teacher"></i> Editar Horas de Clase
                                 </h2>
-                                <button class="btn btn-dark bi bi-layout-sidebar" type="button"
+                                <button class="btn btn-dark bi bi-layout-sidebar" type="button" id="botonNav"
                                     data-bs-toggle="collapse" data-bs-target="#collapseWidthExample"
-                                    aria-expanded="false" aria-controls="collapseWidthExample">
+                                    aria-expanded="true" aria-controls="collapseWidthExample"
+                                    title="Ocultar Opciones - Barra de navegación">
                                 </button>
-
-                                <!-- <button class="btn bi bi-layout-sidebar p-0 border-0 bg-transparent" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#collapseWidthExample"
-                                    aria-expanded="false" aria-controls="collapseWidthExample">
-                                </button> -->
                             </div>
                         </div>
                         <div class="card-body">
@@ -144,6 +140,7 @@
                                             <option value="Viernes">Viernes</option>
                                             <option value="Sábado">Sábado</option>
                                         </select>
+                                        
                                     </div>
 
                                     <div class="gap-2">
@@ -278,10 +275,10 @@
                                     <input type="hidden" class="form-control" id="horaBase" name="horaBase" readonly>
 
                                     <!-- Datos necesarios para actualizar el registro asignacionHorario  -->
-                                    <!-- Llave primaria del registro "asignacionHorario" es decir hora + docente + materia -->
+                                    <!-- Llave primaria del registro "asignacionHorario" es decir una hora de clase -->
                                     <input type="hidden" class="form-control" id="idAsignacionHorario"
                                         name="idAsignacionHorario" readonly>
-                                    <!-- LLave primaria de la "horaBase" asociada al registro es decir hora inicio - hora fin + día-->
+                                    <!-- LLave primaria de la "horaBase" asociada al registro es decir la hora en que se da una clase-->
                                     <input type="hidden" class="form-control" id="horaSeleccionada"
                                         name="horaSeleccionada" readonly>
                                 </div>

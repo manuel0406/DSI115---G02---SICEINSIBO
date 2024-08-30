@@ -14,7 +14,7 @@
 <body>
     <!-- barra -->
     <div th:fragment="navHorario" class="text-white sticky-top mt-5">
-        <div class="collapse" id="collapseWidthExample">
+        <div class="collapse show" id="collapseWidthExample">
             <div class="custom-navbar2 d-flex align-items-center sticky-top w-100">
                 <div class="container-fluid">
                     <div class="row no-gutters">
@@ -27,13 +27,13 @@
                                     </a>
                                 </li>
                                 <li class="nav-item me-2 py-2">
-                                    <a class="nav-link text-white  align-items-center" th:href="@{/horarios/editarHoras}">
+                                    <a class="nav-link text-white align-items-center" th:href="@{/horarios/editarHoras}">
                                         <i class="bi bi-journal-minus"></i>
                                         <span class="fs-6 ms-2 d-none d-md-inline">Editar horas de clase</span>
                                     </a>
                                 </li>
                                 <li class="nav-item me-2 py-2">
-                                    <a class="nav-link text-white  align-items-center" th:href="@{/horarios/generarHorarioSeccion}">
+                                    <a class="nav-link text-white align-items-center" th:href="@{/horarios/generarHorarioSeccion}">
                                         <i class="bi bi-journal-check"></i>
                                         <span class="fs-6 ms-2 d-none d-md-inline">Generar horario - sección</span>
                                     </a>
@@ -53,4 +53,23 @@
     </div>
 </body>
 
+
+<script>
+    // Inicializa el estado basado en la visibilidad del collapse
+    document.addEventListener('DOMContentLoaded', function () {
+        var collapseElement = document.getElementById('collapseWidthExample');
+        var toggleButton = document.getElementById('toggleButton');
+
+        // Actualiza el aria-expanded del botón según el estado inicial
+        toggleButton.setAttribute('aria-expanded', collapseElement.classList.contains('show'));
+
+        collapseElement.addEventListener('hidden.bs.collapse', function () {
+            toggleButton.setAttribute('aria-expanded', 'false');
+        });
+
+        collapseElement.addEventListener('shown.bs.collapse', function () {
+            toggleButton.setAttribute('aria-expanded', 'true');
+        });
+    });
+</script>
 </html>

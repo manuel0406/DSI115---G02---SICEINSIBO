@@ -1,7 +1,8 @@
-// Añadir los parámetros carrera, grado, seccion al select para mantener el contexto
+// Añade los parámetros necesarios al enviar el form, estos datos son necesario en el controller 'guardarHora'
 const form = document.getElementById('formNuevaHora');
 form.addEventListener('submit', function (event) {
 
+    // Crea un campo oculto para enviar 'carrera' 'grado' y 'seccion'
     const carreraInput = document.createElement('input');
     carreraInput.type = 'hidden';
     carreraInput.name = 'carrera';
@@ -21,12 +22,12 @@ form.addEventListener('submit', function (event) {
     form.appendChild(gradoInput);
     form.appendChild(seccionInputHidden);
 
-    // Obtener el duiDocente del select
+    // Obtiene el 'select' de ID 'asignacionSeleccionada' y el valor 'data-docente' de la opción seleccionada
     const asignacionSelect = document.getElementById('asignacionSeleccionada');
     const selectedOption = asignacionSelect.options[asignacionSelect.selectedIndex];
     const duiDocente = selectedOption.getAttribute('data-docente');
 
-    // Crear un campo oculto para enviar el duiDocente
+    // Crea un campo oculto para enviar 'duiDocente'
     const duiDocenteInput = document.createElement('input');
     duiDocenteInput.type = 'hidden';
     duiDocenteInput.name = 'duiDocente';
@@ -56,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// Añade al modal los valores necesarios para el envío y referencia del usuario
+// Toma la informacion relacionada al registro seleccionado de la tabla y la pasa al form
 document.addEventListener("DOMContentLoaded", function () {
     const editButtons = document.querySelectorAll(".editar-btn");
 
