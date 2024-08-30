@@ -169,20 +169,88 @@ public class MatriculaController {
 		List<Alumno> listaAlumnos = new ArrayList<>();
 
 		for (Alumno alumno : alumnosMatriculados) {
-			boolean existeEnMatriculados = false;
+			// boolean agregar = false;
 
-			for (Alumno alumno2 : alumnosAnioActivo) {
-				if (alumno.getNie() == alumno2.getNie()) {
-					existeEnMatriculados = true;
-					break;
+			if (carrera != null && grado != null && seccion != null && genero != null) {// 8
+				if (alumno.getBachillerato().getNombreCarrera() == carrera
+						&& alumno.getBachillerato().getSeccion() == seccion
+						&& alumno.getBachillerato().getGrado() == Integer.parseInt(grado)
+						&& alumno.getSexoAlumno() == genero) {
+					listaAlumnos.add(alumno);
 				}
-			}
-			if (existeEnMatriculados) {
+			} else if (carrera != null && grado != null && seccion != null && genero == null) {
+				if (alumno.getBachillerato().getNombreCarrera() == carrera
+						&& alumno.getBachillerato().getSeccion() == seccion
+						&& alumno.getBachillerato().getGrado() == Integer.parseInt(grado)) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera != null && grado == null && seccion == null && genero == null) {
+				if (alumno.getBachillerato().getNombreCarrera() == carrera) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera != null && grado == null && seccion == null && genero != null) {// 1
+				if (alumno.getBachillerato().getNombreCarrera() == carrera && alumno.getSexoAlumno() == genero) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera == null && grado != null && seccion == null && genero == null) {
+				if (alumno.getBachillerato().getGrado() == Integer.parseInt(grado)) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera == null && grado != null && seccion == null && genero != null) {// 2
+				if (alumno.getBachillerato().getGrado() == Integer.parseInt(grado)
+						&& alumno.getSexoAlumno() == genero) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera == null && grado == null && seccion != null && genero == null) {
+				if (alumno.getBachillerato().getSeccion() == seccion) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera == null && grado == null && seccion != null && genero != null) {// 3
+				if (alumno.getBachillerato().getSeccion() == seccion && alumno.getSexoAlumno() == genero) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera != null && grado != null && seccion == null && genero == null) {
+				if (alumno.getBachillerato().getNombreCarrera() == carrera
+						&& alumno.getBachillerato().getGrado() == Integer.parseInt(grado)) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera != null && grado != null && seccion == null && genero != null) {// 4
+				if (alumno.getBachillerato().getNombreCarrera() == carrera
+						&& alumno.getBachillerato().getGrado() == Integer.parseInt(grado)
+						&& alumno.getSexoAlumno() == genero) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera != null && grado == null && seccion != null && genero == null) {
+				if (alumno.getBachillerato().getNombreCarrera() == carrera
+						&& alumno.getBachillerato().getSeccion() == seccion) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera != null && grado == null && seccion != null && genero != null) {// 5
+				if (alumno.getBachillerato().getNombreCarrera() == carrera
+						&& alumno.getBachillerato().getSeccion() == seccion && alumno.getSexoAlumno() == genero) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera == null && grado != null && seccion != null && genero == null) {
+				if (alumno.getBachillerato().getSeccion() == seccion
+						&& alumno.getBachillerato().getGrado() == Integer.parseInt(grado)) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera == null && grado != null && seccion != null && genero != null) {// 6
+				if (alumno.getBachillerato().getSeccion() == seccion
+						&& alumno.getBachillerato().getGrado() == Integer.parseInt(grado)
+						&& alumno.getSexoAlumno() == genero) {
+					listaAlumnos.add(alumno);
+				}
+			} else if (carrera == null && grado == null && seccion == null && genero != null) {// 7
+				if (alumno.getSexoAlumno() == genero) {
+					listaAlumnos.add(alumno);
+				}
+			} else {
 				listaAlumnos.add(alumno);
-				// System.out.println("Alumno añadido: " + alumno.getNombreAlumno()); //
-				// Opcional, para verificar
 			}
+
 		}
+
 		// Ordenar la lista por "apellidoAlumno"
 		listaAlumnos.sort(Comparator.comparing(Alumno::getApellidoAlumno));
 

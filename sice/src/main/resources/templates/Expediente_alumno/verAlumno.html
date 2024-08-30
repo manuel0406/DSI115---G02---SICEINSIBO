@@ -12,7 +12,7 @@
 <body>
     <header th:replace="~{home :: header}"></header>
 
-    <div class="container my-4 py-5 flex-wrap">
+    <div class="container-fluid my-5 px-4 py-5 flex-wrap">
         <!--Mensajes-->
         <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${success != null}">
             <label th:text="${success}"></label>

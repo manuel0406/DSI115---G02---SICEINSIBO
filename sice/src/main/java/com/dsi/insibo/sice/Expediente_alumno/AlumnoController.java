@@ -72,7 +72,7 @@ public class AlumnoController {
 		// redirige
 		if (alumnoExistente != null) {
 			attributes.addFlashAttribute("error", "Error: El NIE ya está registrado.");
-			return "redirect:/ExpedienteAlumno/ver";
+			return "redirect:/matriculados";
 		}
 
 		if (alumno.getPadecimientos().isEmpty()) {
@@ -95,7 +95,7 @@ public class AlumnoController {
 		attributes.addFlashAttribute("success", "¡Alumno guardado con éxito!");
 
 		// Redirige a la vista de listado de alumnos
-		return "redirect:/ExpedienteAlumno/ver";
+		return "redirect:/matriculados";
 	}
 
 	/**
