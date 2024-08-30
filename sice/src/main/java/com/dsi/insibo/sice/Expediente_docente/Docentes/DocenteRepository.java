@@ -19,5 +19,6 @@ public interface DocenteRepository extends CrudRepository<Docente, String> {
     List<Docente> obtenerDocentesPorRol(@Param("roleEnum") UsuarioRoleEnum roleEnum);
 
 
+    
 
 }

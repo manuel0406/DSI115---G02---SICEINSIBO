@@ -12,7 +12,7 @@
 <body>
     <header th:replace="~{home :: header}"></header>
 
-    <div class="container my-4 py-5 flex-wrap">
+    <div class="container-fluid my-5 px-4 py-5 flex-wrap">
         <!--Mensajes-->
         <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${success != null}">
             <label th:text="${success}"></label>
@@ -42,14 +42,28 @@
 
 
             <div class="d-flex gap-2">
-                <a class="btn btn-secondary"
+                <a th:if="${matricula ==false}" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="btn btn-secondary"
                     th:href="@{/ExpedienteAlumno/ver(format='pdf', carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
                     data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual" target="_blank"
                     onclick="openInPopup(this.href); return false;">
                     <i class="bi bi-printer"></i> Imprimir listado
                 </a>
-
-                <a th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-primary" data-bs-toggle="tooltip"
+                <!-- Boton imprimir del docente -->
+                <a sec:authorize="hasAnyRole('DOCENTE')" class="btn btn-secondary"
+                    th:href="@{/AsignacionOrientador/seccionAsigada/{id}(id=${id},format='pdf', carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
+                    data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual" target="_blank"
+                    onclick="openInPopup(this.href); return false;">
+                    <i class="bi bi-printer"></i> Imprimir listado
+                </a>
+                <!-- boton imprimir de matricula -->
+                <a th:if="${matricula !=false}" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="btn btn-secondary"
+                    th:href="@{/matriculados(format='pdf', carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
+                    data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual" target="_blank"
+                    onclick="openInPopup(this.href); return false;">
+                    <i class="bi bi-printer"></i> Imprimir listado
+                </a>
+               
+                <a sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" th:if="${matricula !=false}" th:href="@{/ExpedienteAlumno/Crear}" class="btn btn-primary" data-bs-toggle="tooltip"
                     data-bs-placement="top" title="Agregar alumno" th:text="'Agregar alumno'"></a>
             </div>
         </div>
@@ -58,8 +72,8 @@
                 <div class="card">
                     <div class="container-fluid my-2">
                         <h1 class="fs-6">Filtrar Alumnos</h1>
-                        <form th:action="@{/ExpedienteAlumno/ver}" method="get">
-                            <div class="mb-3">
+                        <form th:action="${url}" method="get">
+                            <div class="mb-3" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
                                 <label for="carrera" class="form-label fs-6">Carrera:</label>
                                 <select id="carrera" name="carrera" th:value="${carrera}" class="form-select"
                                     aria-label="Default select example">
@@ -70,7 +84,7 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" >
                                 <label for="grado" class="form-label fs-6">Año:</label>
                                 <select id="grado" name="grado" th:value="${grado}" class="form-select">
                                     <option value="" selected>Seleccione</option>
@@ -79,7 +93,7 @@
                                     <option value="3">3</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
                                 <label for="seccion" class="form-label fs-6">Sección:</label>
                                 <select id="seccion" name="seccion" th:value="${seccion}" class="form-select">
                                     <option value="" selected>Seleccione</option>
@@ -130,20 +144,26 @@
                             <td class="text-center" th:text="${alumno.bachillerato.grado}"></td>
                             <td class="text-center" th:text="${alumno.sexoAlumno}"></td>
                             <td class="text-center">
-                                <a class="btn btn-success " th:href="@{/ExpedienteAlumno/Alumno/} + ${alumno.nie}"
+                                <a class="btn btn-success " th:href="@{/ExpedienteAlumno/Alumno/} + ${alumno.idAlumno}"
                                     data-bs-toggle="tooltip" data-bs-placement="top" title="Consultar">
                                     <i class="bi bi-file-earmark-text"></i>
                                 </a>
-                                <a class="btn btn-primary" th:href="@{/ExpedienteAlumno/editar/} + ${alumno.nie}"
+                                <a class="btn btn-primary" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
+                                 th:href="@{/ExpedienteAlumno/editar/} + ${alumno.idAlumno}"
                                     data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <a class="btn btn-danger delete-btn"
-                                    th:href="@{/ExpedienteAlumno/delete/} + ${alumno.nie}" data-bs-toggle="tooltip"
+                                <!-- editar docente -->
+                                <a class="btn btn-primary" sec:authorize="hasAnyRole('DOCENTE')" th:href="@{/AsignacionOrientador/editar/}+${id} + ${'/'+ alumno.idAlumno}"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a class="btn btn-danger delete-btn" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
+                                    th:href="@{/ExpedienteAlumno/delete/} + ${alumno.idAlumno}" data-bs-toggle="tooltip"
                                     data-bs-placement="top" title="Eliminar">
                                     <i class="bi bi-trash"></i>
                                 </a>
-                                <a th:href="@{/ExpedienteAlumno/editar/{id}(id=${alumno.nie}, format='pdf')} "
+                                <a th:href="@{/ExpedienteAlumno/editar/{id}(id=${alumno.idAlumno}, format='pdf')} "
                                     class="btn btn-secondary " data-bs-toggle="tooltip" data-bs-placement="top"
                                     title="Imprimir" target="_blank" onclick="openInPopup(this.href); return false;">
                                     <i class="bi bi-printer"></i>

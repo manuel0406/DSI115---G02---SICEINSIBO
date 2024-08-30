@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head th:replace="~{home :: head}">
+    <!-- Asegúrate de incluir el meta viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+    <header th:replace="~{home :: header}"></header>
+
+    <div class="py-5"></div>
+    <div class="container">
+        <!-- Formulario Responsivo -->
+        <div class="row">
+            <div class="col-12">
+                <form class="row g-3" th:action="@{/AntiguoIngreso}" method="get">
+                    <div class="col-12 text-center">  
+                        <h4 class="mb-4">Buscar Alumno</h4>      
+                        <p class="text-muted">Ingrese los datos para realizar la búsqueda</p>  
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <input type="text" class="form-control" id="nie" name="nie" th:value="${nie}" placeholder="NIE">
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <input type="text" class="form-control" id="nombre" name="nombre" th:value="${nombre}" placeholder="Nombres">
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <input type="text" class="form-control" id="apellido" name="apellido" th:value="${apellido}" placeholder="Apellidos">
+                    </div>
+                    <div class="col-12 col-md-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary w-100 mb-2 mb-md-0">Buscar</button>
+                        <a class="btn btn-success w-100" th:href="@{/matriculados}">Ver matriculados</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabla Responsiva -->
+        <div class="table-responsive mt-3">
+            <table class="table table-sm table-hover align-middle">
+                <thead class="text-start">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nie</th>
+                        <th scope="col">Apellidos</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Carrera</th>
+                        <th scope="col">Sección</th>
+                        <th scope="col">Año</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Iterar sobre la lista de alumnos -->
+                    <tr th:each="alumno, stat : ${alumnos}">
+                        <th scope="row" th:text="${stat.index + 1}"></th>
+                        <td th:text="${alumno.nie}"></td>
+                        <td th:text="${alumno.apellidoAlumno}"></td>
+                        <td th:text="${alumno.nombreAlumno}"></td>
+                        <td th:text="${alumno.bachillerato.nombreCarrera}"></td>
+                        <td class="text-center" th:text="${alumno.bachillerato.seccion}"></td>
+                        <td class="text-center" th:text="${alumno.bachillerato.grado}"></td>
+                        <td class="text-center">
+                            <a th:href="@{/saveMatricula/}+${alumno.idAlumno}" class="btn btn-success">Matricular</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer th:replace="~{home :: footer}"></footer>
+</body>
+
+</html>

@@ -37,6 +37,7 @@ public class ListaAlumnosPdf extends AbstractPdfView {
         String carrera = (String) model.get("carrera");
         String grado = (String) model.get("grado");
         String seccion = (String) model.get("seccion");
+        
 
         document.setPageSize(PageSize.LETTER.rotate());
         document.setMargins(40, 40, 36, 72); // Margen de 3 cm a los lados y 2.5 cm abajo

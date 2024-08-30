@@ -33,7 +33,7 @@
                 <h3 class="text-start col-lg-9">Listado de bachilleratos</h3>
                 <div class="d-flex gap-2">
                     <a class="btn btn-primary Agregar-btn" data-bs-toggle="tooltip" data-bs-placement="top"
-                        title="Agregar bachillerato" th:text="'Agregar asignación'"></a>
+                        title="Agregar bachillerato" th:text="'Agregar bachillerato'"></a>
                 </div>
             </div>
 
@@ -45,7 +45,7 @@
                             <th scope="col">Año</th>
                             <th scope="col">Especialidad</th>
                             <th scope="col">Sección</th>
-                            <th scope="col">Acciones</th>
+                            <th th:if="${anioAcademico.activoMatricula != false}" scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,7 +54,7 @@
                             <td th:text="${bachillerato.grado}"></td>
                             <td th:text="${bachillerato.nombreCarrera}"></td>
                             <td th:text="${bachillerato.seccion}"></td>
-                            <td>
+                            <td th:if="${bachillerato.anioAcademico.activoMatricula != false}">
                                 <a class="btn btn-danger delete-btn" data-bs-placement="top" title="Eliminar">
                                     <i class="bi bi-trash"></i>
                                 </a>

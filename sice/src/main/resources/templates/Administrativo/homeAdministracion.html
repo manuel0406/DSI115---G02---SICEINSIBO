@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="~{home :: head}">
+<head th:replace="~{home :: head}"></head>
 
 <body>
     <header th:replace="~{home :: header}"></header>
@@ -10,39 +10,46 @@
         <!-- Jumbotron -->
         <div class="jumbotron  mb-3 bg-light rounded-3">
             <div class="container py-5 text-center">
-                <h1 class="display-5 fw-bold">Gestion administrativa</h1>                
+                <h1 class="display-5 fw-bold">Gestion administrativa</h1>
                 <p class="col-md-12 fs-5">Accede a las herramientas necesarias para una gestión eficiente y efectiva.
 
                 </p>
-                
+
             </div>
         </div>
 
         <!-- Cards -->
         <div class="row mb-3 justify-content-center">
-            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
+            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
+                class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
                 <div class="card h-100">
-                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-maestro-estudiante_114360-7985.jpg?t=st=1722374748~exp=1722378348~hmac=dc7aa5327aa6afa1c70909d022f10059fb52070e2d1240fe9d74388301047294&w=826" class="card-img-top" alt="Docentes">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-maestro-estudiante_114360-7985.jpg?t=st=1722374748~exp=1722378348~hmac=dc7aa5327aa6afa1c70909d022f10059fb52070e2d1240fe9d74388301047294&w=826"
+                        class="card-img-top" alt="Docentes">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Orientadores</h5>
-                        <p class="card-text">Asignaco orientadores a cada de una las especialidades de la institución.</p>
+                        <p class="card-text">Asignar orientadores a cada de una las especialidades de la institución.
+                        </p>
                         <a th:href="@{/AsignacionOrientador/Asignar}" class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
                 </div>
             </div>
-            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
+            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
+                class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
                 <div class="card h-100">
-                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-bibliofilo_114360-923.jpg?t=st=1722374842~exp=1722378442~hmac=f8f08a353eb18302aa2521506e75a5556358d565ad1bd4dbd6ce369bc74add6d&w=826" class="card-img-top" alt="Administrativos">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-bibliofilo_114360-923.jpg?t=st=1722374842~exp=1722378442~hmac=f8f08a353eb18302aa2521506e75a5556358d565ad1bd4dbd6ce369bc74add6d&w=826"
+                        class="card-img-top" alt="Administrativos">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Materias</h5>
                         <p class="card-text">Administre las materias actuales.</p>
-                        <a th:href="@{/GestionMaterias}"  class="btn btn-primary mt-auto">Ir a Sección</a>
+                        <a th:href="@{/GestionMaterias}" class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
                 </div>
             </div>
-            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
+            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
+                class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
                 <div class="card h-100">
-                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-bibliofilo_114360-923.jpg?t=st=1722374842~exp=1722378442~hmac=f8f08a353eb18302aa2521506e75a5556358d565ad1bd4dbd6ce369bc74add6d&w=826" class="card-img-top" alt="Administrativos">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-preferencias_114360-1384.jpg?t=st=1724451990~exp=1724455590~hmac=0cc21f599dd42e97e09fc2dbba0e65e5aa994c43b41aecac0c07941248f6dbbf&w=740"
+                        class="card-img-top" alt="Administrativos">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Asignacion Materias</h5>
                         <p class="card-text">Asigne las materias a los docentes.</p>
@@ -50,9 +57,11 @@
                     </div>
                 </div>
             </div>
-            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DOCENTE','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
+            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DOCENTE','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
+                class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
                 <div class="card h-100">
-                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-horario_114360-1751.jpg?t=st=1722374906~exp=1722378506~hmac=325e0208961018fc3984097c25a7f90c2d5b340dbe2b8e004ef367ab269df28c&w=826" class="card-img-top" alt="Alumnos">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-horario_114360-1751.jpg?t=st=1722374906~exp=1722378506~hmac=325e0208961018fc3984097c25a7f90c2d5b340dbe2b8e004ef367ab269df28c&w=826"
+                        class="card-img-top" alt="Alumnos">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Horarios</h5>
                         <p class="card-text">Cree los horarios del año lectivo.</p>
@@ -60,9 +69,11 @@
                     </div>
                 </div>
             </div>
-            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DOCENTE','DIRECTOR','SUBDIRECTORA','SECRETARIA')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
+            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DOCENTE','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
+                class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
                 <div class="card h-100">
-                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-campus-universitario_114360-13748.jpg?t=st=1722375015~exp=1722378615~hmac=ba2d3f62a45e8715039cd18cfefed35f0fa65ea744d8b1220db901103b0baa9e&w=826" class="card-img-top" alt="Notas">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-campus-universitario_114360-13748.jpg?t=st=1722375015~exp=1722378615~hmac=ba2d3f62a45e8715039cd18cfefed35f0fa65ea744d8b1220db901103b0baa9e&w=826"
+                        class="card-img-top" alt="Notas">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Bachilleratos</h5>
                         <p class="card-text">Administra las ofertas academicas.</p>
@@ -70,13 +81,63 @@
                     </div>
                 </div>
             </div>
-            
+            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DOCENTE','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
+                class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
+                <div th:if="${activo != null}" class="card h-100">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-marcador-posicion_114360-4983.jpg?t=st=1724452064~exp=1724455664~hmac=0caa730ac130f8d686ddfbfcb448e62e12dcaece6090e37774fb5294705ec269&w=740"
+                        class="card-img-top" alt="Notas">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Matricula</h5>
+                        <p class="card-text">Empieza las inscripciones </p>
+                        <a class="btn btn-primary mt-auto Agregar-btn">Ir a Sección</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-    
+
 
 </body>
 
+<div class="modal fade" id="agregarModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirAgregarModalLabel">Seleccione el tipo de matricula</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <!-- Nuevo Ingreso -->
+                    <div class="col-12 col-md-6 text-center py-2">
+                        <a class="btn btn-outline-dark d-flex flex-column align-items-center py-4"
+                            th:href="@{ExpedienteAlumno/Crear}">
+                            <span class="fs-5 mb-2">Nuevo Ingreso</span>
+                            <i class="bi bi-person-plus fs-1"></i>
+                        </a>
+                    </div>
+
+                    <!-- Antiguo Ingreso -->
+                    <div class="col-12 col-md-6 text-center py-2">
+                        <a class="btn btn-outline-dark d-flex flex-column align-items-center py-4"
+                            th:href="@{/AntiguoIngreso}">
+                            <span class="fs-5 mb-2">Antiguo Ingreso</span>
+                            <i class="bi bi-person-check fs-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <footer th:replace="~{home :: footer}"></footer>
+<script type="text/javascript" th:src="@{/js/home.js}"></script>
 
 </html>

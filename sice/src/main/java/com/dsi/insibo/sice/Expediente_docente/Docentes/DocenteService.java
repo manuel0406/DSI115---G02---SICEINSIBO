@@ -40,7 +40,7 @@ public class DocenteService {
         docenteRepository.deleteById(duiDocente);
     }
 
-    // Usado para asignación de materias - bachilleratos
+    // retorna una lista de docentes
     public List<Docente> listarDocenteAsignacion(){
         return docenteRepository.obtenerDocentesPorRol(UsuarioRoleEnum.DOCENTE);
     }

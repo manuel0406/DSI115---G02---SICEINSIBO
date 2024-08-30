@@ -1,27 +1,33 @@
-var tooltipTriggerList = [].slice.call(
-    document.querySelectorAll('[data-bs-toggle="tooltip"]')
-);
-var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl);
-});
-
 document.addEventListener("DOMContentLoaded", function () {
     var agregarButton = document.querySelectorAll(".Agregar-btn");
     var confirmAgregarModal = new bootstrap.Modal(
         document.getElementById("agregarModal")
     );
     var confirmAgregarButton = document.getElementById("agregarModalButton");
-    var currentHref = "";
 
     agregarButton.forEach(function (button) {
         button.addEventListener("click", function (event) {
             event.preventDefault();
-            //currentHref = button.getAttribute('href');
             confirmAgregarModal.show();
         });
     });
+
     confirmAgregarButton.addEventListener("click", function () {
         var form = document.getElementById("formAnio");
+        var yearField = document.getElementById("anio");
+        var yearValue = parseInt(yearField.value, 10);
+
+        // Limpia los mensajes de error anteriores
+        yearField.setCustomValidity("");
+
+        // Verifica si el año es mayor a 2020
+        if (yearField.value === "") {
+            yearField.setCustomValidity("Este campo no puede quedar vacío.");
+        } else if (yearValue < 2020) {
+            yearField.setCustomValidity("El año debe ser mayor a 2020.");
+        }
+
+        // Valida el formulario
         if (!form.checkValidity()) {
             form.classList.add("was-validated");
         } else {
@@ -29,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
 document.addEventListener("DOMContentLoaded", function () {
     var consultarButton = document.querySelectorAll(".consultar-btn");
     var confirmConsultarModal = new bootstrap.Modal(document.getElementById("consultarModal"));
@@ -37,18 +44,8 @@ document.addEventListener("DOMContentLoaded", function () {
     consultarButton.forEach(function (button) {
         button.addEventListener("click", function (event) {
             event.preventDefault();
-            //currentHref = button.getAttribute('href');
             confirmConsultarModal.show();
         });
-    });
-
-    confirmAgregarButton.addEventListener("click", function () {
-        var form = document.getElementById("formAnio");
-        if (!form.checkValidity()) {
-            form.classList.add("was-validated");
-        } else {
-            form.submit();
-        }
     });
 });
 
@@ -97,20 +94,17 @@ document
         form.classList.remove("was-validated"); // Eliminar la clase de validación
     });
 
-    $(document).ready(function() {
-        $('.editar-btn').on('click', function() {
-            var idAnio = $(this).data('id');
-            var estado = $(this).data('est');
-            var anio = $(this).data('an');
-                 
-    
-            $('#editIdAnio').val(idAnio);
-            $('#editEstado').prop('checked', estado);
-            $('#editAnio').val(anio);
-            
-           
-        });
+$(document).ready(function() {
+    $('.editar-btn').on('click', function() {
+        var idAnio = $(this).data('id');
+        var estado = $(this).data('est');
+        var anio = $(this).data('an');
+        var matricula = $(this).data('ma');
+        
+        $('#editIdAnio').val(idAnio);
+        $('#editEstado').prop('checked', estado);
+        $('#editAnio').val(anio);
+        $('#editMatricula').prop('checked', matricula);
+        
     });
-
-
-   
+});

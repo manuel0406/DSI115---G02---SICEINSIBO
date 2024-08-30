@@ -163,4 +163,11 @@ public class AlumnoService {
         return alumnoRepository.findByBachilleratoCodigoBachillerato(codigoBachillerato);
     }
 
+    public List<Alumno> matricula(String nie, String nombre, String apellido, int anio){
+        return alumnoRepository.listadoMatricula(nie, nombre, apellido, anio);
+    }
+
+    public List<Alumno> yaMatriculado(){
+        return alumnoRepository.yaMatriculado();
+    }
 }
