@@ -353,6 +353,10 @@ public class AlumnoController {
 		int baseIndex = (page - 1) * size;// sirve para mantener la base de la numeración de lo alumnos cuando cambia de
 											// pagina
 		model.addAttribute("baseIndex", baseIndex);
+		model.addAttribute("urlBtnEditar", "/ExpedienteAlumno/editar/");
+		model.addAttribute("urlBtnVer", "/ExpedienteAlumno/Alumno/");
+		model.addAttribute("urlBtnEli", "/ExpedienteAlumno/delete/");
+		
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/verAlumno";
@@ -396,6 +400,12 @@ public class AlumnoController {
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("titulo", "Información");
 		model.addAttribute("alumno", alumno);
+		model.addAttribute("urlInfo", "/ExpedienteAlumno/Alumno/");
+		model.addAttribute("urlEnf", "/ExpedienteAlumno/Enfermedades/");
+		model.addAttribute("urlResp", "/ExpedienteAlumno/Responsable/");
+		model.addAttribute("urlDoc", "/ExpedienteAlumno/Documentos/");
+		model.addAttribute("sanciones", true);
+		model.addAttribute("btnRegresa", "/ExpedienteAlumno/ver");
 		// model.addAttribute("bachillerato", bachillerato);
 
 		// Retornar el nombre de la vista a ser renderizada
@@ -441,6 +451,12 @@ public class AlumnoController {
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("titulo", "Padecimientos");
 		model.addAttribute("alumno", alumno);
+		model.addAttribute("urlInfo", "/ExpedienteAlumno/Alumno/");
+		model.addAttribute("urlEnf", "/ExpedienteAlumno/Enfermedades/");
+		model.addAttribute("urlResp", "/ExpedienteAlumno/Responsable/");
+		model.addAttribute("urlDoc", "/ExpedienteAlumno/Documentos/");
+		model.addAttribute("sanciones", true);
+		model.addAttribute("btnRegresa", "/ExpedienteAlumno/ver");
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoEnfermedad";
@@ -484,18 +500,24 @@ public class AlumnoController {
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("titulo", "Encargado");
+		model.addAttribute("urlInfo", "/ExpedienteAlumno/Alumno/");
+		model.addAttribute("urlEnf", "/ExpedienteAlumno/Enfermedades/");
+		model.addAttribute("urlResp", "/ExpedienteAlumno/Responsable/");
+		model.addAttribute("urlDoc", "/ExpedienteAlumno/Documentos/");
+		model.addAttribute("sanciones", true);
+		model.addAttribute("btnRegresa", "/ExpedienteAlumno/ver");
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoDatosResponsable";
 	}
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
-	@GetMapping("/Documentos/{nie}")
-	public String alumnoDocumentos(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+	@GetMapping("/Documentos/{idAlumno}")
+	public String alumnoDocumentos(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
-		if (nie > 0) {
+		if (idAlumno > 0) {
 			// Busca al alumno por su número de identificación estudiantil (NIE)
-			alumno = alumnoService.buscarPorIdAlumno(nie);
+			alumno = alumnoService.buscarPorIdAlumno(idAlumno);
 
 			// Verifica que el alumno exista
 			if (alumno == null) {
@@ -512,12 +534,18 @@ public class AlumnoController {
 		}
 
 		// Obtener los anexos asociados al alumno
-		AnexoAlumno anexos = anexoAlumnoService.buscarAlumno(nie);
+		AnexoAlumno anexos = anexoAlumnoService.buscarAlumno(idAlumno);
 
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("anexos", anexos);
 		model.addAttribute("titulo", "Documentos");
+		model.addAttribute("urlInfo", "/ExpedienteAlumno/Alumno/");
+		model.addAttribute("urlEnf", "/ExpedienteAlumno/Enfermedades/");
+		model.addAttribute("urlResp", "/ExpedienteAlumno/Responsable/");
+		model.addAttribute("urlDoc", "/ExpedienteAlumno/Documentos/");
+		model.addAttribute("sanciones", true);
+		model.addAttribute("btnRegresa", "/ExpedienteAlumno/ver");
 
 		return "Expediente_alumno/AlumnoDocumentos";
 	}

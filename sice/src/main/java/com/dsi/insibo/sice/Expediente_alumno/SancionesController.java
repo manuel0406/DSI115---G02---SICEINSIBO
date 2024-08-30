@@ -55,6 +55,12 @@ public class SancionesController {
         model.addAttribute("alumno", alumno);
         model.addAttribute("sancion", sancion);
         model.addAttribute("listaSanciones", listaSanciones);
+        model.addAttribute("urlInfo", "/ExpedienteAlumno/Alumno/");
+		model.addAttribute("urlEnf", "/ExpedienteAlumno/Enfermedades/");
+		model.addAttribute("urlResp", "/ExpedienteAlumno/Responsable/");
+		model.addAttribute("urlDoc", "/ExpedienteAlumno/Documentos/");
+		model.addAttribute("sanciones", true);
+		model.addAttribute("btnRegresa", "/ExpedienteAlumno/ver");
         return "Expediente_alumno/AlumnoSanciones";
     }
 
