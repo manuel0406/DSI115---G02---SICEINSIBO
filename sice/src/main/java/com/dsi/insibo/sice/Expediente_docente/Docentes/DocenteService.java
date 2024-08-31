@@ -1,5 +1,6 @@
 package com.dsi.insibo.sice.Expediente_docente.Docentes;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class DocenteService {
     public List<DocenteDTO> listarDocentes() {
         List<Docente> docentes = (List<Docente>) docenteRepository.findAll();
         return docentes.stream()
+                .sorted(Comparator.comparing(Docente::getNombreDocente)
+                        .thenComparing(Docente::getApellidoDocente)) 
                 .map(DocenteDTO::new)
                 .collect(Collectors.toList());
     }

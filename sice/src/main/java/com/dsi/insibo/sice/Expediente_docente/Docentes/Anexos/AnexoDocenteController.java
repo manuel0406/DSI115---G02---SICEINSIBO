@@ -48,7 +48,6 @@ public class AnexoDocenteController {
         model.addAttribute("duiDocente", duiDocente);
         model.addAttribute("titulo", "Documentos");
         model.addAttribute("enlace", "/expedientedocente/Documentos/" + duiDocente); // cambiar por el del controller
-        System.out.println("duiDocente: " + duiDocente); // Imprime el duiDocente en la consola
         return "Expediente_docente/Docentes/upload";
         //return "upload";
 
@@ -78,7 +77,7 @@ public class AnexoDocenteController {
         if (clave.equals("dui")) {
             if (file.isEmpty()) {
                 redirectAttributes.addFlashAttribute("success", "Por favor, seleccione un archivo para subir.");
-                return "redirect:/expedientedocente/plantadocente";
+                return "redirect:/expedientedocente/Documentos/" + docente.getDuiDocente();
             }
             try {
                 byte[] bytes = file.getBytes(); // Lee los bytes del archivo
@@ -102,7 +101,7 @@ public class AnexoDocenteController {
         else if (clave.equals("curriculum")) {
             if (file.isEmpty()) {
                 redirectAttributes.addFlashAttribute("success", "Por favor, seleccione un archivo para subir.");
-                return "redirect:/expedientedocente/plantadocente";
+                return "redirect:/expedientedocente/Documentos/" + docente.getDuiDocente();
             }
             try {
                 byte[] bytes = file.getBytes();
@@ -126,7 +125,7 @@ public class AnexoDocenteController {
         else if (clave.equals("nup")) {
             if (file.isEmpty()) {
                 redirectAttributes.addFlashAttribute("success", "Por favor, seleccione un archivo para subir.");
-                return "redirect:/expedientedocente/plantadocente";
+                return "redirect:/expedientedocente/Documentos/" + docente.getDuiDocente();
             }
             try {
                 byte[] bytes = file.getBytes();
@@ -145,7 +144,7 @@ public class AnexoDocenteController {
             }
             return "redirect:/expedientedocente/Documentos/" + duiDocente; // cambiar por el del controller
         }
-        return "redirect:/expedientedocente/plantadocente";
+        return "redirect:/expedientedocente/Documentos/" + docente.getDuiDocente();
     }
 
     // Controlador para eliminar archivos

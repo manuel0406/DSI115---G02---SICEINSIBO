@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.dsi.insibo.sice.Expediente_docente.Docentes.Anexos.AnexoDocenteService;
-import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
 import com.dsi.insibo.sice.Seguridad.SeguridadService.UsuarioService;
 import com.dsi.insibo.sice.entity.AnexoDocente;
 import com.dsi.insibo.sice.entity.Docente;
@@ -38,9 +37,6 @@ public class DocenteController {
     // Lista docentes usando la DB /expedientedocente/plantadocente
     @Autowired
     private DocenteService docenteService;
-
-    @Autowired
-    private SessionService sessionService;
 
     // Direccionadores estaticos
     @GetMapping("/anexosDocente")
@@ -96,7 +92,6 @@ public class DocenteController {
             usuario.setPrimerIngreso(true);           // Primera vez
             usuario.setContrasenaUsuario(" ");    // Contraseña
             Long idRol = 0L;
-            System.out.println(rolSeleccionado);                    // Rol
             switch (rolSeleccionado) {
                 case "Docente":
                     idRol = 2L;
@@ -114,7 +109,6 @@ public class DocenteController {
             
             if (result.hasErrors()) {
                 model.addAttribute("profesor", docente);
-                System.out.println("Se tienen errores en el formulario");
                 return "expedientedocente/formulario";
             }
 
@@ -129,6 +123,7 @@ public class DocenteController {
     }
 
     // actualizando la informacion de un docente
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR', 'DOCENTE')")
     @PostMapping("/actualizar")
     public String actualizar(@Validated @ModelAttribute Docente docente,
             @RequestParam("docenteRol") String rolSeleccionado, BindingResult result, Model model,
@@ -139,7 +134,6 @@ public class DocenteController {
         usuario.setCorreoUsuario(docente.getCorreoDocente());   // Nuevo Correo
         usuario.getRolesUsuario().clear();
         Long idRol = 0L;
-        System.out.println(rolSeleccionado);                    
         switch (rolSeleccionado) {                              // Nuevo Rol
             case "Docente":
                 idRol = 2L;
@@ -160,9 +154,18 @@ public class DocenteController {
         return "redirect:plantadocente";
     }
 
+    @PreAuthorize("hasRole('DOCENTE')")
+    @PostMapping("/actualizarGen")
+    public String actualizarGen(@Validated @ModelAttribute Docente docente,
+            @RequestParam("docenteRol") String rolSeleccionado, BindingResult result, Model model,
+            RedirectAttributes attribute) {
+
+        docenteService.guardarDocente(docente);
+        attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
+        return "redirect:consultarexpediente/" + docente.getDuiDocente();
+    }
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'DOCENTE', 'SUBDIRECTORA')")
-
-
     @GetMapping("/plantadocente")
     public String listarDocentes(Model model,
             @RequestParam(defaultValue = "0") int page,
@@ -178,10 +181,6 @@ public class DocenteController {
                 Math.min((pageRequest.getPageNumber() + 1) * pageRequest.getPageSize(), listadoDocentes.size())),
                 pageRequest, listadoDocentes.size());
 
-
-                String dui = sessionService.duiSession();
-                System.out.println(dui);
-
         model.addAttribute("titulo", "Planta Docente");
         model.addAttribute("Docentes", listadoDocentes);
         // Hace el envio de la estructura con paginación a la vista
@@ -190,13 +189,12 @@ public class DocenteController {
     }
 
     // Consultando docente
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'DOCENTE', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/consultarexpediente/{id}")
     public String consultarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
 
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
         if (profesor == null) {
-            System.out.println("El docente no existe");
             attribute.addFlashAttribute("error", "El expediente no existe");
             return "redirect:/expedientedocente/plantadocente";
         }
@@ -214,14 +212,13 @@ public class DocenteController {
 
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
         if (profesor == null) {
-            System.out.println("El docente no existe");
             attribute.addFlashAttribute("error", "El expediente no existe");
             return "redirect:/expedientedocente/plantadocente";
         }
 
         model.addAttribute("profesor", profesor);
         model.addAttribute("editar", true); // Indica que se está editando un docente
-        return "Expediente_docente/Docentes/fichaDocenteEdit";
+        return "Expediente_docente/Docentes/fichaDocente";
     }
 
     @PreAuthorize("hasRole('DOCENTE')")
@@ -230,7 +227,6 @@ public class DocenteController {
     public String editarComoDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
         if (profesor == null) {
-            System.out.println("El docente no existe");
             attribute.addFlashAttribute("error", "El expediente no existe");
             return "redirect:/expedientedocente/plantadocente";
         }
@@ -246,7 +242,6 @@ public class DocenteController {
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
 
         if (profesor == null) {
-            System.out.println("El docente no existe");
             attribute.addFlashAttribute("error", "El expediente no existe");
             return "redirect:/expedientedocente/plantadocente";
         }
@@ -268,6 +263,7 @@ public class DocenteController {
     }
 
     // Gestionando anexos
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'DOCENTE', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("Documentos/{id}")
     public String docenteDocumentos(@PathVariable("id") String idDocente, Model model,
             RedirectAttributes attributes) {
@@ -284,7 +280,6 @@ public class DocenteController {
             }
         } else {
             // Maneja el caso donde el iddocente no es válido
-            System.out.println("Error: ¡El idDocente ingresado no es válido!");
             attributes.addFlashAttribute("error", "Error: ¡El iddocente ingresado no es válido!");
             return "redirect:/expedientedocente/plantadocente";
         }
