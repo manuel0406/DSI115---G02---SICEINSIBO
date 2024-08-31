@@ -11,7 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -19,7 +21,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.AnioService;
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
 import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
+import com.dsi.insibo.sice.Expediente_alumno.AnexoAlumnoService;
 import com.dsi.insibo.sice.entity.Alumno;
+import com.dsi.insibo.sice.entity.AnexoAlumno;
 import com.dsi.insibo.sice.entity.AnioAcademico;
 import com.dsi.insibo.sice.entity.Bachillerato;
 
@@ -32,6 +36,8 @@ public class MatriculaController {
 	AnioService anioService;
 	@Autowired
 	BachilleratoService bachilleratoService;
+	@Autowired
+	private AnexoAlumnoService anexoAlumnoService;
 
 	@GetMapping("/AntiguoIngreso")
 	public String antiguoIngreso(Model model, @RequestParam(value = "nie", required = false) String nie,
@@ -84,14 +90,14 @@ public class MatriculaController {
 			if (alumno == null) {
 				System.out.println("Error: ¡El NIE ingresado no existe!");
 				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
-				return "redirect:/ExpedienteAlumno/ver";
+				return "redirect:/matriculados";
 			}
 
 		} else {
 			// Maneja el caso donde el NIE no es válido
 			System.out.println("Error: ¡El NIE ingresado no es válido!");
 			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
-			return "redirect:/ExpedienteAlumno/ver";
+			return "redirect:/matriculados";
 		}
 
 		String carrera, grado, seccion;
@@ -149,106 +155,34 @@ public class MatriculaController {
 			@RequestParam(value = "size", defaultValue = "50") int size) {
 
 		// Convertir cadenas vacías a null para evitar problemas con las consultas
-		if (carrera != null && carrera.isEmpty()) {
-			carrera = null;
-		}
-		if (grado != null && grado.isEmpty()) {
-			grado = null;
-		}
-		if (seccion != null && seccion.isEmpty()) {
-			seccion = null;
-		}
-		if (genero != null && genero.isEmpty()) {
-			genero = null;
-		}
+		carrera = (carrera != null && carrera.isEmpty()) ? null : carrera;
+		grado = (grado != null && grado.isEmpty()) ? null : grado;
+		seccion = (seccion != null && seccion.isEmpty()) ? null : seccion;
+		genero = (genero != null && genero.isEmpty()) ? null : genero;
 
-		// Obtener la lista completa de alumnos filtrada por los parámetros
-		List<Alumno> alumnosAnioActivo = alumnoService.listarAlumnos(carrera, grado, seccion, genero);
+		// Obtener la lista completa de alumnos
 		List<Alumno> alumnosMatriculados = alumnoService.yaMatriculado();
-
 		List<Alumno> listaAlumnos = new ArrayList<>();
 
 		for (Alumno alumno : alumnosMatriculados) {
-			// boolean agregar = false;
+			boolean matches = true;
 
-			if (carrera != null && grado != null && seccion != null && genero != null) {// 8
-				if (alumno.getBachillerato().getNombreCarrera() == carrera
-						&& alumno.getBachillerato().getSeccion() == seccion
-						&& alumno.getBachillerato().getGrado() == Integer.parseInt(grado)
-						&& alumno.getSexoAlumno() == genero) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera != null && grado != null && seccion != null && genero == null) {
-				if (alumno.getBachillerato().getNombreCarrera() == carrera
-						&& alumno.getBachillerato().getSeccion() == seccion
-						&& alumno.getBachillerato().getGrado() == Integer.parseInt(grado)) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera != null && grado == null && seccion == null && genero == null) {
-				if (alumno.getBachillerato().getNombreCarrera() == carrera) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera != null && grado == null && seccion == null && genero != null) {// 1
-				if (alumno.getBachillerato().getNombreCarrera() == carrera && alumno.getSexoAlumno() == genero) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera == null && grado != null && seccion == null && genero == null) {
-				if (alumno.getBachillerato().getGrado() == Integer.parseInt(grado)) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera == null && grado != null && seccion == null && genero != null) {// 2
-				if (alumno.getBachillerato().getGrado() == Integer.parseInt(grado)
-						&& alumno.getSexoAlumno() == genero) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera == null && grado == null && seccion != null && genero == null) {
-				if (alumno.getBachillerato().getSeccion() == seccion) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera == null && grado == null && seccion != null && genero != null) {// 3
-				if (alumno.getBachillerato().getSeccion() == seccion && alumno.getSexoAlumno() == genero) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera != null && grado != null && seccion == null && genero == null) {
-				if (alumno.getBachillerato().getNombreCarrera() == carrera
-						&& alumno.getBachillerato().getGrado() == Integer.parseInt(grado)) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera != null && grado != null && seccion == null && genero != null) {// 4
-				if (alumno.getBachillerato().getNombreCarrera() == carrera
-						&& alumno.getBachillerato().getGrado() == Integer.parseInt(grado)
-						&& alumno.getSexoAlumno() == genero) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera != null && grado == null && seccion != null && genero == null) {
-				if (alumno.getBachillerato().getNombreCarrera() == carrera
-						&& alumno.getBachillerato().getSeccion() == seccion) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera != null && grado == null && seccion != null && genero != null) {// 5
-				if (alumno.getBachillerato().getNombreCarrera() == carrera
-						&& alumno.getBachillerato().getSeccion() == seccion && alumno.getSexoAlumno() == genero) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera == null && grado != null && seccion != null && genero == null) {
-				if (alumno.getBachillerato().getSeccion() == seccion
-						&& alumno.getBachillerato().getGrado() == Integer.parseInt(grado)) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera == null && grado != null && seccion != null && genero != null) {// 6
-				if (alumno.getBachillerato().getSeccion() == seccion
-						&& alumno.getBachillerato().getGrado() == Integer.parseInt(grado)
-						&& alumno.getSexoAlumno() == genero) {
-					listaAlumnos.add(alumno);
-				}
-			} else if (carrera == null && grado == null && seccion == null && genero != null) {// 7
-				if (alumno.getSexoAlumno() == genero) {
-					listaAlumnos.add(alumno);
-				}
-			} else {
-				listaAlumnos.add(alumno);
+			if (carrera != null && !alumno.getBachillerato().getNombreCarrera().equals(carrera)) {
+				matches = false;
+			}
+			if (grado != null && alumno.getBachillerato().getGrado() != Integer.parseInt(grado)) {
+				matches = false;
+			}
+			if (seccion != null && !alumno.getBachillerato().getSeccion().equals(seccion)) {
+				matches = false;
+			}
+			if (genero != null && !alumno.getSexoAlumno().equals(genero)) {
+				matches = false;
 			}
 
+			if (matches) {
+				listaAlumnos.add(alumno);
+			}
 		}
 
 		// Ordenar la lista por "apellidoAlumno"
@@ -278,7 +212,11 @@ public class MatriculaController {
 		int baseIndex = (page - 1) * size;// sirve para mantener la base de la numeración de lo alumnos cuando cambia de
 											// pagina
 		model.addAttribute("baseIndex", baseIndex);
+		model.addAttribute("urlBtnEditar", "/matriculados/editar/");
 
+		model.addAttribute("urlBtnVer", "/matriculados/Alumno/");
+		model.addAttribute("urlBtnEli", "/matriculados/delete/");
+		model.addAttribute("navMatriculados", true);
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/verAlumno";
 	}
@@ -289,40 +227,37 @@ public class MatriculaController {
 			@RequestParam(value = "grado", required = false) String grado,
 			@RequestParam(value = "seccion", required = false) String seccion,
 			@RequestParam(value = "seccion", required = false) String genero) {
-		// Convertir cadenas vacías a null para los parámetros opcionales
-		if (carrera != null && carrera.isEmpty()) {
-			carrera = null;
-		}
-		if (grado != null && grado.isEmpty()) {
-			grado = null;
-		}
-		if (seccion != null && seccion.isEmpty()) {
-			seccion = null;
-		}
-		if (genero != null && genero.isEmpty()) {
-			genero = null;
-		}
-		// Obtener la lista completa de alumnos filtrada por los parámetros
-		List<Alumno> alumnosAnioActivo = alumnoService.listarAlumnos(carrera, grado, seccion, genero);
-		List<Alumno> alumnosMatriculados = alumnoService.yaMatriculado();
+		// Convertir cadenas vacías a null para evitar problemas con las consultas
+		carrera = (carrera != null && carrera.isEmpty()) ? null : carrera;
+		grado = (grado != null && grado.isEmpty()) ? null : grado;
+		seccion = (seccion != null && seccion.isEmpty()) ? null : seccion;
+		genero = (genero != null && genero.isEmpty()) ? null : genero;
 
+		// Obtener la lista completa de alumnos
+		List<Alumno> alumnosMatriculados = alumnoService.yaMatriculado();
 		List<Alumno> listaAlumnos = new ArrayList<>();
 
 		for (Alumno alumno : alumnosMatriculados) {
-			boolean existeEnMatriculados = false;
+			boolean matches = true;
 
-			for (Alumno alumno2 : alumnosAnioActivo) {
-				if (alumno.getNie() == alumno2.getNie()) {
-					existeEnMatriculados = true;
-					break;
-				}
+			if (carrera != null && !alumno.getBachillerato().getNombreCarrera().equals(carrera)) {
+				matches = false;
 			}
-			if (existeEnMatriculados) {
+			if (grado != null && alumno.getBachillerato().getGrado() != Integer.parseInt(grado)) {
+				matches = false;
+			}
+			if (seccion != null && !alumno.getBachillerato().getSeccion().equals(seccion)) {
+				matches = false;
+			}
+			if (genero != null && !alumno.getSexoAlumno().equals(genero)) {
+				matches = false;
+			}
+
+			if (matches) {
 				listaAlumnos.add(alumno);
-				// System.out.println("Alumno añadido: " + alumno.getNombreAlumno()); //
-				// Opcional, para verificar
 			}
 		}
+
 		// Obtener la lista de carreras (bachilleratos)
 		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
 
@@ -336,8 +271,248 @@ public class MatriculaController {
 		modelAndView.addObject("carrera", carrera);
 		modelAndView.addObject("grado", grado);
 		modelAndView.addObject("seccion", seccion);
+		
 
 		// Retornar el objeto ModelAndView que contiene la vista y los datos
 		return modelAndView;
+	}
+
+	@GetMapping("/matriculados/editar/{nie}")
+	public String editar(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+
+		Alumno alumno = null;
+		if (nie > 0) {
+			// Busca al alumno por su número de identificación estudiantil (NIE)
+			alumno = alumnoService.buscarPorIdAlumno(nie);
+
+			// Verifica que el alumno exista
+			if (alumno == null) {
+				System.out.println("Error: ¡El NIE ingresado no existe!");
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
+				return "redirect:/matriculados";
+			}
+
+		} else {
+			// Maneja el caso donde el NIE no es válido
+			System.out.println("Error: ¡El NIE ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
+			return "redirect:/matriculados";
+		}
+
+		String carrera, grado, seccion;
+		carrera = alumno.getBachillerato().getNombreCarrera();
+		grado = String.valueOf(alumno.getBachillerato().getGrado());
+		seccion = alumno.getBachillerato().getSeccion();
+
+		// Si el alumno existe, obtiene la lista de bachilleratos para el formulario
+		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+		model.addAttribute("titulo", "Editar");
+		model.addAttribute("alumno", alumno);
+		model.addAttribute("bachilleratos", listaCarreras);
+		model.addAttribute("editar", true); // Indica que se está en modo edición
+		model.addAttribute("carrera", carrera);
+		model.addAttribute("grado", grado);
+		model.addAttribute("seccion", seccion);
+		model.addAttribute("url", "/matriculados/actualizar");
+		model.addAttribute("btnCancelar", "/matriculados");
+
+		// Retorna el nombre de la vista de edición del alumno
+		return "Expediente_alumno/editar";
+	}
+
+	@PostMapping("/matriculados/actualizar")
+	public String actualizarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes,
+			@RequestParam(value = "carrera", required = false) String carrera,
+			@RequestParam(value = "grado", required = false) String grado,
+			@RequestParam(value = "seccion", required = false) String seccion) {
+
+		Bachillerato bachillerato = bachilleratoService.debolverBachilleratoMatricula(carrera, seccion, grado);
+		alumno.setBachillerato(bachillerato);
+		// Guarda el alumno con la información actualizada
+		alumnoService.guardarAlumno(alumno);
+
+		// Añade un mensaje flash indicando que la actualización fue exitosa
+		attributes.addFlashAttribute("success", "¡Alumno actualizado con éxito!");
+
+		// Redirige a la vista de listado de alumnos
+		return "redirect:/matriculados";
+	}
+	@GetMapping("/matriculados/Alumno/{nie}")
+	public String informacionAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+
+		Alumno alumno = null;
+		if (nie > 0) {
+			// Busca al alumno por su número de identificación estudiantil (NIE)
+			alumno = alumnoService.buscarPorIdAlumno(nie);
+
+			// Verifica que el alumno exista
+			if (alumno == null) {
+				System.out.println("Error: ¡El NIE ingresado no existe!");
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
+				return "redirect:/matriculados";
+			}
+
+		} else {
+			// Maneja el caso donde el NIE no es válido
+			System.out.println("Error: ¡El NIE ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
+			return "redirect:/matriculados";
+		}
+
+		// Agregar atributos al modelo para ser utilizados en la vista
+		model.addAttribute("titulo", "Información");
+		model.addAttribute("alumno", alumno);
+		model.addAttribute("urlInfo", "/matriculados/Alumno/");
+		model.addAttribute("urlEnf", "/matriculados/Enfermedades/");
+		model.addAttribute("urlResp", "/matriculados/Responsable/");
+		model.addAttribute("urlDoc", "/matriculados/Documentos/");
+		model.addAttribute("sanciones", false);
+		model.addAttribute("btnRegresa", "/matriculados");
+		
+		// model.addAttribute("bachillerato", bachillerato);
+
+		// Retornar el nombre de la vista a ser renderizada
+		return "Expediente_alumno/AlumnoInformacion";
+	}
+
+	@GetMapping("/matriculados/Enfermedades/{nie}")
+	public String enfermedadAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+
+		Alumno alumno = null;
+		if (nie > 0) {
+			// Busca al alumno por su número de identificación estudiantil (NIE)
+			alumno = alumnoService.buscarPorIdAlumno(nie);
+
+			// Verifica que el alumno exista
+			if (alumno == null) {
+				System.out.println("Error: ¡El NIE ingresado no existe!");
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
+				return "redirect:/matriculados";
+			}
+
+		} else {
+			// Maneja el caso donde el NIE no es válido
+			System.out.println("Error: ¡El NIE ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
+			return "redirect:/matriculados";
+		}
+
+		// Agregar atributos al modelo para ser utilizados en la vista
+		model.addAttribute("titulo", "Padecimientos");
+		model.addAttribute("alumno", alumno);
+		model.addAttribute("urlInfo", "/matriculados/Alumno/");
+		model.addAttribute("urlEnf", "/matriculados/Enfermedades/");
+		model.addAttribute("urlResp", "/matriculados/Responsable/");
+		model.addAttribute("urlDoc", "/matriculados/Documentos/");
+		model.addAttribute("sanciones", false);
+		model.addAttribute("btnRegresa", "/matriculados");
+
+		// Retornar el nombre de la vista a ser renderizada
+		return "Expediente_alumno/AlumnoEnfermedad";
+	}
+
+	@GetMapping("/matriculados/Responsable/{nie}")
+	public String responsableAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+
+		Alumno alumno = null;
+		if (nie > 0) {
+			// Busca al alumno por su número de identificación estudiantil (NIE)
+			alumno = alumnoService.buscarPorIdAlumno(nie);
+
+			// Verifica que el alumno exista
+			if (alumno == null) {
+				System.out.println("Error: ¡El NIE ingresado no existe!");
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
+				return "redirect:/matriculados";
+			}
+
+		} else {
+			// Maneja el caso donde el NIE no es válido
+			System.out.println("Error: ¡El NIE ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
+			return "redirect:/matriculados";
+		}
+
+		// Agregar atributos al modelo para ser utilizados en la vista
+		model.addAttribute("alumno", alumno);
+		model.addAttribute("titulo", "Encargado");
+		model.addAttribute("urlInfo", "/matriculados/Alumno/");
+		model.addAttribute("urlEnf", "/matriculados/Enfermedades/");
+		model.addAttribute("urlResp", "/matriculados/Responsable/");
+		model.addAttribute("urlDoc", "/matriculados/Documentos/");
+		model.addAttribute("sanciones", false);
+		model.addAttribute("btnRegresa", "/matriculados");
+
+		// Retornar el nombre de la vista a ser renderizada
+		return "Expediente_alumno/AlumnoDatosResponsable";
+	}
+
+	@GetMapping("/matriculados/Documentos/{nie}")
+	public String alumnoDocumentos(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+
+		Alumno alumno = null;
+		if (nie > 0) {
+			// Busca al alumno por su número de identificación estudiantil (NIE)
+			alumno = alumnoService.buscarPorIdAlumno(nie);
+
+			// Verifica que el alumno exista
+			if (alumno == null) {
+				System.out.println("Error: ¡El NIE ingresado no existe!");
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
+				return "redirect:/matriculados";
+			}
+
+		} else {
+			// Maneja el caso donde el NIE no es válido
+			System.out.println("Error: ¡El NIE ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
+			return "redirect:/matriculados";
+		}
+
+		// Obtener los anexos asociados al alumno
+		AnexoAlumno anexos = anexoAlumnoService.buscarAlumno(nie);
+
+		// Agregar atributos al modelo para ser utilizados en la vista
+		model.addAttribute("alumno", alumno);
+		model.addAttribute("anexos", anexos);
+		model.addAttribute("titulo", "Documentos");
+		model.addAttribute("urlInfo", "/matriculados/Alumno/");
+		model.addAttribute("urlEnf", "/matriculados/Enfermedades/");
+		model.addAttribute("urlResp", "/matriculados/Responsable/");
+		model.addAttribute("urlDoc", "/matriculados/Documentos/");
+		model.addAttribute("sanciones", false);
+		model.addAttribute("btnRegresa", "/matriculados");
+
+		return "Expediente_alumno/AlumnoDocumentos";
+	}
+	@GetMapping("/matriculados/delete/{nie}")
+	public String eliminarAlumno(@PathVariable("nie") int nie, RedirectAttributes attributes) {
+
+		Alumno alumno = null;
+		if (nie > 0) {
+			// Busca al alumno por su número de identificación estudiantil (NIE)
+			alumno = alumnoService.buscarPorIdAlumno(nie);
+
+			// Verifica que el alumno exista
+			if (alumno == null) {
+				System.out.println("Error: ¡El NIE ingresado no existe!");
+				attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
+				return "redirect:/matriculados";
+			}
+		} else {
+			// Maneja el caso donde el NIE no es válido
+			System.out.println("Error: ¡El NIE ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no es válido!");
+			return "redirect:/matriculados";
+		}
+
+		// Elimino primero los anexos relacionados al alumno encontrado
+		anexoAlumnoService.eliminarAnexoAlumno(nie);
+		// Se eliminan las notas relacionadas a ese alumno
+		//notaService.deleteNotasByAlumnoNie(nie);
+		// Elimina el registro del alumno y añade un mensaje de confirmación
+		alumnoService.eliminar(nie);
+		attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");
+		return "redirect:/matriculados"; // Redirige a la vista de listado de alumnos
 	}
 }

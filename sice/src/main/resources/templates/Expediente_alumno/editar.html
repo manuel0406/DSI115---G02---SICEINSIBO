@@ -336,7 +336,7 @@
                 </div>
 
                 <div class="col-auto" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
-                    <a class="btn btn-danger my-2" th:href="@{/ExpedienteAlumno/ver}" th:text="Cancelar"></a>
+                    <a class="btn btn-danger my-2" th:href="${btnCancelar}" th:text="Cancelar"></a>
                 </div>
                 <div class="col-auto" sec:authorize="hasAnyRole('DOCENTE')">
                     <a class="btn btn-danger my-2" th:href="@{/AsignacionOrientador/seccionAsigada/}+${id}" th:text="Cancelar"></a>
