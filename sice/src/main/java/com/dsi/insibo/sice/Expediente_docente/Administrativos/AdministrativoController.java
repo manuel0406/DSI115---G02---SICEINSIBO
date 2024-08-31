@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SUBDIRECTORA', 'DIRECTOR', 'SECRETARIA')")
 @RequestMapping("/expedienteadministrativo")
 public class AdministrativoController {
     @Autowired
@@ -52,7 +54,6 @@ public class AdministrativoController {
         
         if (result.hasErrors()) {
             model.addAttribute("administrativo", administrativo);
-            System.out.println("Se tienen errores en el formulario");
             return "expedienteadministrativo/formulario";
         }
 
@@ -76,7 +77,6 @@ public class AdministrativoController {
             usuario.setPrimerIngreso(true);           // Primera vez
             usuario.setContrasenaUsuario(" ");    // Contraseña
             Long idRol = 4L;
-            System.out.println(rolSeleccionado);
             switch (rolSeleccionado) {
                 case "Secretaria":
                     idRol = 3L;
@@ -108,7 +108,6 @@ public class AdministrativoController {
         usuario.setCorreoUsuario(administrativo.getCorreoPersonal());   // Nuevo Correo
         usuario.getRolesUsuario().clear();
         Long idRol = 4L;
-        System.out.println(rolSeleccionado);                    
         switch (rolSeleccionado) {                              // Nuevo Rol
             case "Secretaria":
                 idRol = 3L;
@@ -125,10 +124,6 @@ public class AdministrativoController {
         attribute.addFlashAttribute("success", "Expediente actualizado con exito!");
         return "redirect:plantaadministrativa";
     }
-
-    // Otras consultas
-    // @Autowired
-    // private AdministrativoService administrativoService;
 
     // Listando toda la planta administrativa
     @GetMapping("/plantaadministrativa")
@@ -161,7 +156,6 @@ public class AdministrativoController {
         PersonalAdministrativo administrativo = administrativoService.buscarPorIdAdministrativo(idAdministrativo);
         // Por si ingresa un id inexistente desde URL
         if (administrativo == null) {
-            System.out.println("El docente no existe");
             attribute.addFlashAttribute("error", "El expediente no existe");
             return "redirect:/expedienteadministrativo/plantaadministrativa";
         }
@@ -177,14 +171,13 @@ public class AdministrativoController {
         PersonalAdministrativo administrativo = administrativoService.buscarPorIdAdministrativo(idAdministrativo);
         // Por si ingresa un id inexistente desde URL
         if (administrativo == null) {
-            System.out.println("El docente no existe");
             attribute.addFlashAttribute("error", "El expediente no existe");
             return "redirect:/expedienteadministrativo/plantaadministrativa";
         }
 
         model.addAttribute("administrativo", administrativo);
         model.addAttribute("editar", true); // Deshabilita el campo DUI
-        return "Expediente_docente/Administrativos/fichaAdministrativoEdit";
+        return "Expediente_docente/Administrativos/fichaAdministrativo";
     }
 
     // Eliminando
@@ -222,7 +215,6 @@ public class AdministrativoController {
             }
         } else {
             // Maneja el caso donde el idAdministrativo no es válido
-            System.out.println("Error: ¡El idAdministrativo ingresado no es válido!");
             attributes.addFlashAttribute("error", "Error: ¡El idAdministrativo ingresado no es válido!");
             return "redirect:/expedienteadministrativo/plantaadministrativa";
         }

@@ -38,18 +38,6 @@ public class DocenteController {
     @Autowired
     private DocenteService docenteService;
 
-    // Direccionadores estaticos
-    @GetMapping("/anexosDocente")
-    public String docentes() {
-        return "Expediente_docente/Docentes/anexosDocente";
-    }
-
-    @GetMapping("/barra")
-    public String barra() {
-        return "Expediente_docente/barra";
-    }
-
-    // Direccionadores de acción
     // Ficha general de expediente docente /expedientedocente/formulario
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/formulario")
