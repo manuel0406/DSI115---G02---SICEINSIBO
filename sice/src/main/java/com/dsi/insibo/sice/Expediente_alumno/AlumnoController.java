@@ -195,6 +195,7 @@ public class AlumnoController {
 		model.addAttribute("grado", grado);
 		model.addAttribute("seccion", seccion);
 		model.addAttribute("url", "/ExpedienteAlumno/actualizar");
+		model.addAttribute("btnCancelar", "/ExpedienteAlumno/ver");
 
 		// Retorna el nombre de la vista de edición del alumno
 		return "Expediente_alumno/editar";
@@ -356,7 +357,7 @@ public class AlumnoController {
 		model.addAttribute("urlBtnEditar", "/ExpedienteAlumno/editar/");
 		model.addAttribute("urlBtnVer", "/ExpedienteAlumno/Alumno/");
 		model.addAttribute("urlBtnEli", "/ExpedienteAlumno/delete/");
-		
+		model.addAttribute("navMatriculados", false);
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/verAlumno";
