@@ -68,6 +68,11 @@
                 return `${year}-${month}-${day}`;
               }
   
+              function formatTimeToTwoDigits(timeStr) {
+                // Asegura que el tiempo este en el formato HH:mm (e.g., "06:50" en lugar de "6:50")
+                return timeStr.length === 4 ? `0${timeStr}` : timeStr;
+              }
+  
               // Encuentra la columna con el titulo "ID"
               for (let i = 0; i < json.length; i++) {
                 let row = json[i];
@@ -86,14 +91,17 @@
                       // Formatear los datos segun el formato deseado
                       const formattedDate = formatDate(adjacentData[3]);
   
-                      // Verificar si los campos de "Inicio" y "Fin" periodo 1 para  estan presentes
+                      // Verificar si los campos de "Inicio" y "Fin" periodo 1 estan presentes
                       if (
                         (adjacentData[4] || adjacentData[4] === "Falta") &&
                         (adjacentData[5] || adjacentData[5] === "Falta")
                       ) {
-                        //coloca hora "1:00" si es "Falta" y como se maneja formato 24 horas es 'am' una hora cualquiera
-                        const formattedInicioMatutino = adjacentData[4] && adjacentData[4] !== "Falta" ? `${formattedDate}T${adjacentData[4]}:00` : `${formattedDate}T01:00:00`;
-                        const formattedFinMatutino = adjacentData[5] && adjacentData[5] !== "Falta" ? `${formattedDate}T${adjacentData[5]}:00` : `${formattedDate}T01:00:00`;
+                        const formattedInicioMatutino = adjacentData[4] && adjacentData[4] !== "Falta" 
+                          ? `${formattedDate}T${formatTimeToTwoDigits(adjacentData[4])}:00` 
+                          : `${formattedDate}T01:00:00`;
+                        const formattedFinMatutino = adjacentData[5] && adjacentData[5] !== "Falta" 
+                          ? `${formattedDate}T${formatTimeToTwoDigits(adjacentData[5])}:00` 
+                          : `${formattedDate}T01:00:00`;
   
                         // Agregar datos para periodo solo si Inicio o Fin estan presentes
                         results.push({
@@ -104,14 +112,18 @@
                           Fin: formattedFinMatutino,
                         });
                       }
-
+  
                       // Verificar si los campos de "Inicio" y "Fin" para periodo 2 estan presentes
                       if (
                         (adjacentData[6] || adjacentData[6] === "Falta") &&
                         (adjacentData[7] || adjacentData[7] === "Falta")
                       ) {
-                        const formattedInicioVespertino = adjacentData[6] && adjacentData[6] !== "Falta" ? `${formattedDate}T${adjacentData[6]}:00` : `${formattedDate}T01:00:00`;
-                        const formattedFinVespertino = adjacentData[7] && adjacentData[7] !== "Falta" ? `${formattedDate}T${adjacentData[7]}:00` : `${formattedDate}T01:00:00`;
+                        const formattedInicioVespertino = adjacentData[6] && adjacentData[6] !== "Falta" 
+                          ? `${formattedDate}T${formatTimeToTwoDigits(adjacentData[6])}:00` 
+                          : `${formattedDate}T01:00:00`;
+                        const formattedFinVespertino = adjacentData[7] && adjacentData[7] !== "Falta" 
+                          ? `${formattedDate}T${formatTimeToTwoDigits(adjacentData[7])}:00` 
+                          : `${formattedDate}T01:00:00`;
   
                         // Agregar datos periodo 2 solo si Inicio o Fin estan presentes
                         results.push({
@@ -177,6 +189,7 @@
       }
     });
   </script>
+  
 </body>
 
 </html>
