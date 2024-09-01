@@ -51,7 +51,7 @@ public class AsistenciaController {
 
 	// Procesa las asistencias
 	@ResponseBody
-	@PostMapping("procesarAsistencias")
+	@PostMapping("/procesarAsistencias")
 	public ResponseEntity<Map<String, String>> procesarAsistencia(@RequestBody List<AsistenciaDTO> asistencias) {
 		Map<String, String> response = new HashMap<>();
 
