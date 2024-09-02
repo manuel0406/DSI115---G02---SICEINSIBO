@@ -94,29 +94,7 @@
 
                             <!-- Mensajes de alerta -->
                             <div class="alert-container">
-                                <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
-                                    <label th:text="${success}"></label>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-
-                                <div class="alert alert-danger alert-dismissible fade show" th:if="${error != null}">
-                                    <label th:text="${error}"></label>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-
-                                <div class="alert alert-warning alert-dismissible fade show" th:if="${warning != null}">
-                                    <label th:text="${warning}"></label>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-
-                                <div class="alert alert-info alert-dismissible fade show" th:if="${info != null}">
-                                    <label th:text="${info}"></label>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
+                                <header th:replace="~{alertas :: alertas}"></header>
                             </div>
                         </div>
                     </div>
@@ -140,7 +118,6 @@
                                             <option value="Viernes">Viernes</option>
                                             <option value="Sábado">Sábado</option>
                                         </select>
-                                        
                                     </div>
 
                                     <div class="gap-2">
@@ -160,18 +137,15 @@
                                     </div>
                                 </div>
 
-
-
-                                <!-- Contenedor para la tabla y filtro -->
+                                <!-- Contenedor para la tabla -->
                                 <div class="card mt-4">
                                     <div class="card-body">
                                         <div class="row mb-3 justify-content-center">
-
-
                                             <div class="table-responsive">
                                                 <table class="table table-hover">
                                                     <thead>
                                                         <tr>
+                                                            <th><input type="checkbox" id="selectAll"></th>
                                                             <th>#</th> <!-- Columna de numeración -->
                                                             <th>Día</th>
                                                             <th>Hora</th>
@@ -181,10 +155,11 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <!-- Recorre los registros y muestra la numeración -->
                                                         <tr th:each="hours, iterStat : ${horasDeClase}">
+                                                            <td><input type="checkbox" name="selectItem"
+                                                                    th:value="${hours.idAsignacionHorario}"
+                                                                    class="select-item"></td>
                                                             <td th:text="${iterStat.index + 1}"></td>
-                                                            <!-- Numeración -->
                                                             <td th:text="${hours.nombreDia}"></td>
                                                             <td
                                                                 th:text="${hours.horaFinalizacion + ' - ' + hours.horaInicio}">
@@ -219,6 +194,15 @@
                                                     </tbody>
                                                 </table>
                                             </div>
+
+                                            <!-- Botón que abre el modal de confirmación -->
+                                            <div class="align-items-start">
+                                                <button type="button" class="btn btn-danger col-sm-auto"
+                                                    id="deleteSelected" disabled data-bs-toggle="modal"
+                                                    data-bs-target="#confirmSelectedDeleteModal">
+                                                    Eliminar seleccionados
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -228,13 +212,14 @@
                 </div>
             </div>
 
-            <!-- Modal de Confirmación -->
-            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+
+            <!-- Modal de Confirmación para un unico registro-->
+            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModal"
                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                            <h5 class="modal-title" id="confirmDeleteModal">Confirmar Eliminación</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -247,6 +232,36 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal de Confirmación para multiples registros -->
+            <div class="modal fade" id="confirmSelectedDeleteModal" tabindex="-1"
+                aria-labelledby="confirmSelectedDeleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmSelectedDeleteModalLabel">Confirmar Eliminación</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-warning" role="alert">
+                                ¡Cuidado! Estás a punto de eliminar múltiples registros. Esta acción no puede
+                                deshacerse.
+                            </div>
+                            ¿Estás seguro de que deseas continuar?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-danger"
+                                id="confirmSelectedDeleteButton">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de eliminación multiple oculto en el modal -->
+            <form th:action="@{/horarios/eliminarHoras(carrera=${carrera}, grado=${grado}, seccion=${seccion})}"
+                method="post" id="eliminarHorasForm" style="display:none;">
+            </form>
 
             <!-- Modal de edición -->
             <div class="modal fade" id="nuevaHoradeClase" tabindex="-1" aria-labelledby="nuevaHoradeClaseLabel"
@@ -331,8 +346,8 @@
             <footer th:replace="~{home :: footer}"></footer>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
             <script type="text/javascript" src="/js/validacionRequired.js"></script>
-            <script type="text/javascript" src="/js/modalEliminacion.js"></script>
             <script type="text/javascript" src="/js/horariosEditar.js"></script>
+            <script type="text/javascript" src="/js/modalEliminacion.js"></script>
             <script type="text/javascript" src="/js/tooltip.js"></script>
         </div>
 </body>

@@ -75,7 +75,8 @@ public class HorarioController {
 
         if (bachillerato != null && bachillerato.getCodigoBachillerato() != 0) {
             // Obtener la carga academica de un bachillerato
-            listaAsignaciones = asignacionService.listarAsignacionesCodigoBachillerato(bachillerato.getCodigoBachillerato());
+            listaAsignaciones = asignacionService
+                    .listarAsignacionesCodigoBachillerato(bachillerato.getCodigoBachillerato());
             // Obtener el horario y filtrarlo a una DTO
             List<HorarioDTO> horarioDTO = horarioService.obtenerHorasAsignadasDTO(
                     horarioService.obtenerHorasAsignadas(bachillerato.getCodigoBachillerato()));
@@ -463,6 +464,25 @@ public class HorarioController {
         redirectAttributes.addFlashAttribute("warning", "La hora de clase se eliminó");
 
         agregarParametrosRedireccion(redirectAttributes, carrera, grado, seccion);
+        return "redirect:/horarios/editarHoras";
+    }
+
+    @PostMapping("/eliminarHoras")
+    public String eliminarHoras(@RequestParam("ids") List<Integer> ids,
+            @RequestParam(value = "carrera", required = false) String carrera,
+            @RequestParam(value = "grado", required = false) String grado,
+            @RequestParam(value = "seccion", required = false) String seccion,
+            RedirectAttributes redirectAttributes) {
+
+        carrera = extraerPrimerValor(carrera);
+        grado = extraerPrimerValor(grado);
+        seccion = extraerPrimerValor(seccion);
+
+        horarioService.eliminarHorasAsignacion(ids);
+
+        redirectAttributes.addFlashAttribute("warning", "Las horas de clase seleccionadas se eliminaron");
+        agregarParametrosRedireccion(redirectAttributes, carrera, grado, seccion);
+
         return "redirect:/horarios/editarHoras";
     }
 

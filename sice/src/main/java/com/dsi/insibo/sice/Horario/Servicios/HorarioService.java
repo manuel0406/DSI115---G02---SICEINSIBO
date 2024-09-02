@@ -103,6 +103,11 @@ public class HorarioService {
         horarioRepository.deleteById(idAsignacionHorario);
     }
 
+    public void eliminarHorasAsignacion(List<Integer> ids) {
+        horarioRepository.deleteAllById(ids);
+    }
+    
+
     // Verificar si existe un bloque de 2 horas consecutivas
     public boolean existeBloqueDeDosHoras(int codigoBachillerato, String nombreDia, int idHora, int idAsignacion) {
         List<AsignacionHorario> asignaciones = horarioRepository.findBloqueDeDosHoras(codigoBachillerato, nombreDia,

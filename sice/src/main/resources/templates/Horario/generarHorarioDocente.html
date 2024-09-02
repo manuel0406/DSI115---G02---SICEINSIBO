@@ -70,29 +70,7 @@
 
                             <!-- Mensajes de alerta -->
                             <div class="alert-container">
-                                <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
-                                    <label th:text="${success}"></label>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-
-                                <div class="alert alert-danger alert-dismissible fade show" th:if="${error != null}">
-                                    <label th:text="${error}"></label>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-
-                                <div class="alert alert-warning alert-dismissible fade show" th:if="${warning != null}">
-                                    <label th:text="${warning}"></label>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-
-                                <div class="alert alert-info alert-dismissible fade show" th:if="${info != null}">
-                                    <label th:text="${info}"></label>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
+                                <header th:replace="~{alertas :: alertas}"></header>
                             </div>
                         </div>
                     </div>
