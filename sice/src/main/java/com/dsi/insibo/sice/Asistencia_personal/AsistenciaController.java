@@ -52,9 +52,11 @@ public class AsistenciaController {
 	// Procesa las asistencias
 	@ResponseBody
 	@PostMapping("/procesarAsistencias")
-	public ResponseEntity<Map<String, String>> procesarAsistencia(@RequestBody List<AsistenciaDTO> asistencias) {
-		Map<String, String> response = new HashMap<>();
+	@PreAuthorize("hasRole('ADMINISTRADOR')")   
+	public ResponseEntity<Map<String, String>> procesarAsistencia(@RequestBody List<AsistenciaDTO> asistencias ) {
+		System.out.println("AQUI FUE");
 
+		Map<String, String> response = new HashMap<>();
 		System.out.println(asistencias);
 
 		// Validación de entrada
