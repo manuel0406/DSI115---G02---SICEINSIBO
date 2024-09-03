@@ -32,7 +32,7 @@
             <a th:href="@{/Biblioteca/Prestamos/Devueltos}" class="btn btn-secondary">
               <i class="bi bi-clock-history"></i> <!-- Ícono de historial de Bootstrap Icons -->
             </a>
-            <a th:href="@{/Biblioteca/verPrestamos}" class="btn btn-secondary">
+            <a th:href="@{/Biblioteca/verPrestamos}" class="btn btn-secondary" target="_blank">
               <i class="bi bi-printer"></i> <!-- Ícono de impresión de Bootstrap Icons -->
             </a>
           </div>
@@ -89,10 +89,16 @@
                 </td>
                 <td>
                   <!-- Botón que activa el formulario de devolución -->
-                  <form th:action="@{/Biblioteca/Prestamos/devolver/{id}(id=${prestamo.idPrestamoLibro})}" method="post" style="display: inline;" id="devolverForm">
+                  <form id="devolverForm" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <input type="hidden" name="cantidadPrestamo" th:value="${prestamo.cantidadPrestamo}" />
                     <input type="hidden" name="idInventario" th:value="${prestamo.inventarioLibro.idInventarioLibros}" />
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmDevolverModal">
+                    <button type="button" class="btn btn-success btn-devolver" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#confirmDevolverModal" 
+                            th:data-id="${prestamo.idPrestamoLibro}"
+                            th:data-inventario="${prestamo.inventarioLibro.idInventarioLibros}"
+                            th:data-cantidad="${prestamo.cantidadPrestamo}">
                       <i class="bi bi-check-all"></i>
                     </button>
                   </form>
@@ -170,11 +176,11 @@
     </div>
 
     <!-- Modal de confirmación -->
-    <div class="modal fade" id="confirmDevolverModal" tabindex="-1" aria-labelledby="confirmDevolverModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirmDevolverModal" tabindex="-1" aria-labelledby="confirmDevolverLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="confirmDevolverModalLabel">Confirmar devolución</h5>
+            <h5 class="modal-title" id="confirmDevolverLabel">Confirmar devolución</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -182,7 +188,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-success" id="confirmarDevolucionBtn">Devolver</button>
+            <button type="button" class="btn btn-primary" id="confirmDevolverBtn">Confirmar</button>
           </div>
         </div>
       </div>
@@ -197,8 +203,42 @@
   </script>
 
   <script>
-    document.getElementById('confirmarDevolucionBtn').addEventListener('click', function () {
-      document.getElementById('devolverForm').submit();
+    document.addEventListener("DOMContentLoaded", function() {
+      const confirmDevolverBtn = document.getElementById("confirmDevolverBtn");
+      const devolverForm = document.getElementById("devolverForm");
+
+      // Variables para almacenar los datos del préstamo seleccionado
+      let prestamoId = null;
+      let inventarioId = null;
+      let cantidadPrestamo = null;
+
+      // Agregar eventos a todos los botones de devolución
+      document.querySelectorAll(".btn-devolver").forEach(button => {
+        button.addEventListener("click", function() {
+          // Obtener los datos del préstamo desde los atributos data-id, data-inventario, y data-cantidad
+          prestamoId = this.getAttribute("data-id");
+          inventarioId = this.getAttribute("data-inventario");
+          cantidadPrestamo = this.getAttribute("data-cantidad");
+        });
+      });
+
+      // Manejar el clic en el botón de confirmar devolución
+      confirmDevolverBtn.addEventListener("click", function() {
+        if (prestamoId && inventarioId && cantidadPrestamo) {
+          // Actualizar la acción del formulario con el id del préstamo seleccionado
+          devolverForm.action = `/Biblioteca/Prestamos/devolver/${prestamoId}`;
+
+          // Asegurar que el idInventario y cantidadPrestamo se envíen correctamente
+          const idInventarioInput = devolverForm.querySelector("input[name='idInventario']");
+          const cantidadPrestamoInput = devolverForm.querySelector("input[name='cantidadPrestamo']");
+          
+          idInventarioInput.value = inventarioId;
+          cantidadPrestamoInput.value = cantidadPrestamo;
+
+          // Enviar el formulario
+          devolverForm.submit();
+        }
+      });
     });
   </script>
 </body>

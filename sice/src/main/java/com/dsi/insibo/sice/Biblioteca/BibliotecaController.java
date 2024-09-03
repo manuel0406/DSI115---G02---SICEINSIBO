@@ -145,7 +145,6 @@ public class BibliotecaController {
         return "redirect:/Biblioteca/InventarioLibros";
     }
 
-
     //PRESTAMOS
     @GetMapping("/Prestamos")
     public String PrestamosBiblioteca(Model model,
@@ -328,8 +327,39 @@ public class BibliotecaController {
     @GetMapping(value = "/verPrestamos", produces = "application/pdf")
     public ModelAndView verPrestamosPdf(Model model) {
         List<PrestamoLibro> listaPrestamos = prestamoLibroService.listarPrestamos();
+    
+        // Filtrar los préstamos que tienen estado "Pendiente"
+        List<PrestamoLibro> listaPrestamosPendientes = listaPrestamos.stream()
+            .filter(prestamo -> "Pendiente".equals(prestamo.getEstadoPrestamo()))
+            .collect(Collectors.toList());
+
         ModelAndView modelAndView = new ModelAndView("Biblioteca/verPrestamosPdf");
-        modelAndView.addObject("prestamos", listaPrestamos);
+        modelAndView.addObject("prestamos", listaPrestamosPendientes);
+        return modelAndView;
+    }
+
+    @GetMapping(value = "/verDevueltos", produces = "application/pdf")
+    public ModelAndView verDevueltosPdf(Model model) {
+        List<PrestamoLibro> listaPrestamos = prestamoLibroService.listarPrestamos();
+    
+        // Filtrar los préstamos que tienen estado "Pendiente"
+        List<PrestamoLibro> listaPrestamosPendientes = listaPrestamos.stream()
+            .filter(prestamo -> "Devuelto".equals(prestamo.getEstadoPrestamo()))
+            .collect(Collectors.toList());
+
+        ModelAndView modelAndView = new ModelAndView("Biblioteca/verDevueltosPdf");
+        modelAndView.addObject("prestamos", listaPrestamosPendientes);
+        return modelAndView;
+    }
+
+    @GetMapping(value = "/verInventarioPdf", produces = "application/pdf")
+    public ModelAndView verInventarioPdf(Model model) {
+        
+        // Obtener la lista de todos los libros
+        List<InventarioLibro> listadoLibros = inventarioLibroService.listarLibros();
+
+        ModelAndView modelAndView = new ModelAndView("Biblioteca/verInventarioPdf");
+        modelAndView.addObject("libros", listadoLibros);
         return modelAndView;
     }
 }

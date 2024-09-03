@@ -26,7 +26,13 @@
     <!--Botones y Barra de busqueda de alumnos-->
     <div class="navbar">
         <div class="container">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarArticulo">Agregar Nuevo Producto</button>
+            <div class="d-grid gap-2 d-md-block">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarArticulo">Agregar Nuevo Producto</button>
+                <a th:href="@{/Biblioteca/Papeleria/verPapeleriaPdf}" class="btn btn-secondary" target="_blank">
+                    <i class="bi bi-printer"></i> <!-- Ícono de impresión de Bootstrap Icons -->
+                  </a>
+            </div>
+            
             <form class="d-flex" role="search" method="get" action="/Biblioteca/Papeleria/InventarioPapeleria">
                 <input class="form-control me-2" type="search" name="searchTerm"  placeholder="Buscar Producto" aria-label="Buscar">
                 <button class="btn btn-primary" type="submit">Buscar</button>

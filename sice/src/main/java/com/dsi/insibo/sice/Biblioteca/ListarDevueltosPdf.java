@@ -25,8 +25,8 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component("Biblioteca/verPrestamosPdf")
-public class ListarPrestamosPdf extends AbstractPdfView {
+@Component("Biblioteca/verDevueltosPdf")
+public class ListarDevueltosPdf extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(@NonNull Map<String, Object> model,@NonNull Document document,@NonNull PdfWriter writer,
@@ -86,7 +86,7 @@ public class ListarPrestamosPdf extends AbstractPdfView {
 
         // Añadir títulos
         Paragraph title = new Paragraph("INSTITUTO NACIONAL SIMON BOLIVAR\nCODIGO 11694 SANTO TOMAS", titleFont);
-        Paragraph title2 = new Paragraph("LISTADO DE PRESTAMOS REALIZADOS\n\n", titleFont2);
+        Paragraph title2 = new Paragraph("LISTADO DE PRESTAMOS DEVUELTOS\n\n", titleFont2);
         title.setAlignment(Element.ALIGN_LEFT);
         title2.setAlignment(Element.ALIGN_LEFT);
 
@@ -100,7 +100,7 @@ public class ListarPrestamosPdf extends AbstractPdfView {
 
         PdfPTable tablaPrestamos = new PdfPTable(5); // Cambiar a 5 columnas para los datos del préstamo
         tablaPrestamos.setWidthPercentage(100);
-        tablaPrestamos.setWidths(new float[] { 0.5f, 2f, 2f, 2f, 1.5f });  // Ajustar los tamaños de las columnas
+        tablaPrestamos.setWidths(new float[] { 0.5f, 2f, 2f, 0.5f, 0.5f });  // Ajustar los tamaños de las columnas
 
         // Encabezados de la tabla
         addTableHeader(tablaPrestamos, "No.", headerFont);

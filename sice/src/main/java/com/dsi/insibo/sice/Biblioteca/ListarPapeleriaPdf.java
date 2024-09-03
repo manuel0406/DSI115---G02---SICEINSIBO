@@ -1,13 +1,6 @@
 package com.dsi.insibo.sice.Biblioteca;
 
-import java.util.Map;
-import java.awt.Color;
-import java.net.URL;
-
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.view.document.AbstractPdfView;
-import com.dsi.insibo.sice.entity.PrestamoLibro;
+import com.dsi.insibo.sice.entity.InventarioPapeleria;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -19,30 +12,36 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.view.document.AbstractPdfView;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component("Biblioteca/verPrestamosPdf")
-public class ListarPrestamosPdf extends AbstractPdfView {
+import java.awt.Color;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+@Component("Biblioteca/verPapeleriaPdf")
+public class ListarPapeleriaPdf extends AbstractPdfView {
 
     @Override
-    protected void buildPdfDocument(@NonNull Map<String, Object> model,@NonNull Document document,@NonNull PdfWriter writer,
-    @NonNull HttpServletRequest request, @NonNull HttpServletResponse response) throws Exception {
+    protected void buildPdfDocument(@NonNull Map<String, Object> model, @NonNull Document document, @NonNull PdfWriter writer,
+                                    @NonNull HttpServletRequest request, @NonNull HttpServletResponse response) throws Exception {
 
         @SuppressWarnings("unchecked")
-        List<PrestamoLibro> listarPrestamos = (List<PrestamoLibro>) model.get("prestamos");
+        List<InventarioPapeleria> listadoProductos = (List<InventarioPapeleria>) model.get("productos");
 
         document.setPageSize(PageSize.LETTER.rotate());
         document.setMargins(40, 40, 36, 72); // Margen de 3 cm a los lados y 2.5 cm abajo
         document.open();
 
-        // Fuentes
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Color.BLACK);
         Font titleFont2 = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.BLACK);
-        Font titleFont3 = FontFactory.getFont(FontFactory.HELVETICA, 11, Font.UNDERLINE,Color.BLACK);
-        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA, 11, Color.BLACK);
         Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE);
         Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.BLACK);
         Font footerFont = FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 10, Color.GRAY);
@@ -86,7 +85,7 @@ public class ListarPrestamosPdf extends AbstractPdfView {
 
         // Añadir títulos
         Paragraph title = new Paragraph("INSTITUTO NACIONAL SIMON BOLIVAR\nCODIGO 11694 SANTO TOMAS", titleFont);
-        Paragraph title2 = new Paragraph("LISTADO DE PRESTAMOS REALIZADOS\n\n", titleFont2);
+        Paragraph title2 = new Paragraph("INVENTARIO DE PAPALERÍA INSTITUCIONAL\n\n", titleFont2);
         title.setAlignment(Element.ALIGN_LEFT);
         title2.setAlignment(Element.ALIGN_LEFT);
 
@@ -98,37 +97,31 @@ public class ListarPrestamosPdf extends AbstractPdfView {
 
         document.add(headerTable);
 
-        PdfPTable tablaPrestamos = new PdfPTable(5); // Cambiar a 5 columnas para los datos del préstamo
-        tablaPrestamos.setWidthPercentage(100);
-        tablaPrestamos.setWidths(new float[] { 0.5f, 2f, 2f, 2f, 1.5f });  // Ajustar los tamaños de las columnas
 
-        // Encabezados de la tabla
-        addTableHeader(tablaPrestamos, "No.", headerFont);
-        addTableHeader(tablaPrestamos, "Alumno", headerFont);
-        addTableHeader(tablaPrestamos, "Libro", headerFont);
-        addTableHeader(tablaPrestamos, "Fecha Préstamo", headerFont);
-        addTableHeader(tablaPrestamos, "Estado", headerFont);
+    // Crear tabla para el inventario de papelería (5 columnas)
+    PdfPTable tablaPapeleria = new PdfPTable(4); // 5 columnas para los datos del inventario
+    tablaPapeleria.setWidthPercentage(100);
+    tablaPapeleria.setWidths(new float[] { 0.5f, 3f, 4f, 1.5f});
 
-        // Datos de los préstamos
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    // Encabezados de la tabla
+    addTableHeader(tablaPapeleria, "Nº", headerFont);
+    addTableHeader(tablaPapeleria, "Nombre", headerFont);
+    addTableHeader(tablaPapeleria, "Descripción", headerFont);
+    addTableHeader(tablaPapeleria, "Existencia", headerFont);
 
-        // Iniciar contador en 1 para el número correlativo
-        int correlativo = 1;
+    // Datos del inventario
+    int correlativo = 1; // Contador para el número correlativo
+    for (InventarioPapeleria producto : listadoProductos) {
+        addTableCell(tablaPapeleria, String.valueOf(correlativo), bodyFont);
+        addTableCell(tablaPapeleria, producto.getNombreArticulo(), bodyFont);
+        addTableCell(tablaPapeleria, producto.getDescripcionArticulo(), bodyFont);
+        addTableCell(tablaPapeleria, String.valueOf(producto.getExistenciaArticulo()), bodyFont, Element.ALIGN_CENTER);
+        correlativo++;
+    }
 
-        for (PrestamoLibro prestamo : listarPrestamos) {
-            // Añadir número correlativo en lugar del ID del préstamo
-            addTableCell(tablaPrestamos, String.valueOf(correlativo), bodyFont);
-            addTableCell(tablaPrestamos, prestamo.getAlumno().getNombreAlumno() + " " + prestamo.getAlumno().getApellidoAlumno(), bodyFont);
-            addTableCell(tablaPrestamos, prestamo.getInventarioLibro().getTituloLibro(), bodyFont);
-            addTableCell(tablaPrestamos, dateFormat.format(prestamo.getFechaPrestamo()), bodyFont);
-            addTableCell(tablaPrestamos, prestamo.getEstadoPrestamo(), bodyFont);
+    document.add(tablaPapeleria);
 
-            // Incrementar el correlativo
-            correlativo++;
-        }
-
-        document.add(tablaPrestamos);
-
+        // Añadir pie de página
         String fechaImpresion = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
         Paragraph footer = new Paragraph("\nINSIBO - " + fechaImpresion, footerFont);
         footer.setAlignment(Element.ALIGN_CENTER);
@@ -147,6 +140,13 @@ public class ListarPrestamosPdf extends AbstractPdfView {
         PdfPCell cell = new PdfPCell(new Phrase(text, font));
         cell.setPadding(5);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(cell);
+    }
+
+    private void addTableCell(PdfPTable table, String text, Font font, int alignment) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setPadding(5);
+        cell.setHorizontalAlignment(alignment);
         table.addCell(cell);
     }
 }

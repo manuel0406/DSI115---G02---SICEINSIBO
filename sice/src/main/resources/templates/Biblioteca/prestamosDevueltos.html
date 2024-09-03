@@ -29,9 +29,9 @@
           <div class="d-grid gap-2 d-md-block">
             <a th:href="@{/Biblioteca/Prestamos}" class="btn btn-secondary field" >Prestamos Pendientes</a>
             <a th:href="@{/Biblioteca/InventarioLibros}" class="btn btn-secondary field" >Gestionar Inventario</a>
-            <button type="button" class="btn btn-secondary" onclick="window.print()">
-              <i class="bi bi-printer"></i> <!-- Ícono de impresión de Bootstrap Icons -->
-            </button>
+            <a th:href="@{/Biblioteca/verDevueltos}" class="btn btn-secondary" target="_blank">
+                <i class="bi bi-printer"></i> <!-- Ícono de impresión de Bootstrap Icons -->
+              </a>
           </div>
           <form class="d-flex" role="search" th:action="@{/Biblioteca/Prestamos/Devueltos}" method="get">
             <input class="form-control me-2" type="search" name="nombreAlumno" placeholder="Buscar Alumno" aria-label="Buscar Alumno" th:value="${nombreAlumno}">

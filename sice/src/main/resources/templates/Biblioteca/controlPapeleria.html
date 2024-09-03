@@ -30,9 +30,9 @@
               <div class="d-grid gap-2 d-md-block">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#NuevaEntregaModal">Nueva entrega</button>
                 <a th:href="@{/Biblioteca/Papeleria/InventarioPapeleria}" class="btn btn-secondary field" >Gestionar Inventario</a>
-                <button type="button" class="btn btn-secondary" onclick="window.print()">
+                <a th:href="@{/Biblioteca/Papeleria/verEntregasPdf}" class="btn btn-secondary" target="_blank">
                     <i class="bi bi-printer"></i> <!-- Ícono de impresión de Bootstrap Icons -->
-                </button>
+                  </a>
               </div>
                 
               <form class="d-flex" role="search">

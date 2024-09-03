@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Biblioteca.Service.EntregaPapeleriaService;
 import com.dsi.insibo.sice.Biblioteca.Service.InventarioPapeleriaService;
 import com.dsi.insibo.sice.entity.EntregaPapeleria;
+import com.dsi.insibo.sice.entity.InventarioLibro;
 import com.dsi.insibo.sice.entity.InventarioPapeleria;
 
 
@@ -226,5 +228,28 @@ public class PapeleriaController {
 
         redirectAttributes.addFlashAttribute("success", "Cantidad modificada correctamente.");
         return "redirect:/Biblioteca/Papeleria/Control";
+    }
+
+
+    @GetMapping(value = "/verPapeleriaPdf", produces = "application/pdf")
+    public ModelAndView verPapeleriaPdf(Model model) {
+        List<InventarioPapeleria> listadoProductos = inventarioPapeleriaService.listarProductos();
+    
+        // Crear la vista para el PDF
+        ModelAndView modelAndView = new ModelAndView("Biblioteca/verPapeleriaPdf");
+        modelAndView.addObject("productos", listadoProductos);
+    
+        return modelAndView;
+    }
+
+    @GetMapping(value = "/verEntregasPdf", produces = "application/pdf")
+    public ModelAndView verEntregasPdf() {
+        List<EntregaPapeleria> listadoEntregas = entregaPapeleriaService.listarEntregas();
+
+        // Crear la vista para el PDF
+        ModelAndView modelAndView = new ModelAndView("Biblioteca/verEntregasPdf");
+        modelAndView.addObject("entregas", listadoEntregas);
+
+        return modelAndView;
     }
 }

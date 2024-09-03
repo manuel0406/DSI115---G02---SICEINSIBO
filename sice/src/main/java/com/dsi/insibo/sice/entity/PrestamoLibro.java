@@ -104,4 +104,14 @@ public class PrestamoLibro {
         this.estadoPrestamo = estadoPrestamo;
     }
 
+    public String getGradoSeccion() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getGradoSeccion'");
+    }
+
+    public String getNombreLibro() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getNombreLibro'");
+    }
+
 }
