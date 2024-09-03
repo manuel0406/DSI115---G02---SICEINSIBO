@@ -72,7 +72,7 @@ public class AlumnoController {
 		// redirige
 		if (alumnoExistente != null) {
 			attributes.addFlashAttribute("error", "Error: El NIE ya está registrado.");
-			return "redirect:/ExpedienteAlumno/ver";
+			return "redirect:/matriculados";
 		}
 
 		if (alumno.getPadecimientos().isEmpty()) {
@@ -95,7 +95,7 @@ public class AlumnoController {
 		attributes.addFlashAttribute("success", "¡Alumno guardado con éxito!");
 
 		// Redirige a la vista de listado de alumnos
-		return "redirect:/ExpedienteAlumno/ver";
+		return "redirect:/matriculados";
 	}
 
 	/**
@@ -195,6 +195,7 @@ public class AlumnoController {
 		model.addAttribute("grado", grado);
 		model.addAttribute("seccion", seccion);
 		model.addAttribute("url", "/ExpedienteAlumno/actualizar");
+		model.addAttribute("btnCancelar", "/ExpedienteAlumno/ver");
 
 		// Retorna el nombre de la vista de edición del alumno
 		return "Expediente_alumno/editar";
@@ -300,6 +301,7 @@ public class AlumnoController {
 	 *                predeterminado 10.
 	 * @return El nombre de la vista "Expediente_alumno/verAlumno".
 	 */
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
 	@GetMapping("/ver")
 	public String verAlumno(Model model,
 			@RequestParam(value = "carrera", required = false) String carrera,
@@ -348,9 +350,14 @@ public class AlumnoController {
 		model.addAttribute("totalPages", pageAlumnos.getTotalPages());
 		model.addAttribute("totalElements", listaAlumnos.size());
 		model.addAttribute("url", "/ExpedienteAlumno/ver");
+		model.addAttribute("matricula", false);
 		int baseIndex = (page - 1) * size;// sirve para mantener la base de la numeración de lo alumnos cuando cambia de
 											// pagina
 		model.addAttribute("baseIndex", baseIndex);
+		model.addAttribute("urlBtnEditar", "/ExpedienteAlumno/editar/");
+		model.addAttribute("urlBtnVer", "/ExpedienteAlumno/Alumno/");
+		model.addAttribute("urlBtnEli", "/ExpedienteAlumno/delete/");
+		model.addAttribute("navMatriculados", false);
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/verAlumno";
@@ -394,6 +401,12 @@ public class AlumnoController {
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("titulo", "Información");
 		model.addAttribute("alumno", alumno);
+		model.addAttribute("urlInfo", "/ExpedienteAlumno/Alumno/");
+		model.addAttribute("urlEnf", "/ExpedienteAlumno/Enfermedades/");
+		model.addAttribute("urlResp", "/ExpedienteAlumno/Responsable/");
+		model.addAttribute("urlDoc", "/ExpedienteAlumno/Documentos/");
+		model.addAttribute("sanciones", true);
+		model.addAttribute("btnRegresa", "/ExpedienteAlumno/ver");
 		// model.addAttribute("bachillerato", bachillerato);
 
 		// Retornar el nombre de la vista a ser renderizada
@@ -439,6 +452,12 @@ public class AlumnoController {
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("titulo", "Padecimientos");
 		model.addAttribute("alumno", alumno);
+		model.addAttribute("urlInfo", "/ExpedienteAlumno/Alumno/");
+		model.addAttribute("urlEnf", "/ExpedienteAlumno/Enfermedades/");
+		model.addAttribute("urlResp", "/ExpedienteAlumno/Responsable/");
+		model.addAttribute("urlDoc", "/ExpedienteAlumno/Documentos/");
+		model.addAttribute("sanciones", true);
+		model.addAttribute("btnRegresa", "/ExpedienteAlumno/ver");
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoEnfermedad";
@@ -482,18 +501,24 @@ public class AlumnoController {
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("titulo", "Encargado");
+		model.addAttribute("urlInfo", "/ExpedienteAlumno/Alumno/");
+		model.addAttribute("urlEnf", "/ExpedienteAlumno/Enfermedades/");
+		model.addAttribute("urlResp", "/ExpedienteAlumno/Responsable/");
+		model.addAttribute("urlDoc", "/ExpedienteAlumno/Documentos/");
+		model.addAttribute("sanciones", true);
+		model.addAttribute("btnRegresa", "/ExpedienteAlumno/ver");
 
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoDatosResponsable";
 	}
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
-	@GetMapping("/Documentos/{nie}")
-	public String alumnoDocumentos(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+	@GetMapping("/Documentos/{idAlumno}")
+	public String alumnoDocumentos(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
-		if (nie > 0) {
+		if (idAlumno > 0) {
 			// Busca al alumno por su número de identificación estudiantil (NIE)
-			alumno = alumnoService.buscarPorIdAlumno(nie);
+			alumno = alumnoService.buscarPorIdAlumno(idAlumno);
 
 			// Verifica que el alumno exista
 			if (alumno == null) {
@@ -510,12 +535,18 @@ public class AlumnoController {
 		}
 
 		// Obtener los anexos asociados al alumno
-		AnexoAlumno anexos = anexoAlumnoService.buscarAlumno(nie);
+		AnexoAlumno anexos = anexoAlumnoService.buscarAlumno(idAlumno);
 
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("anexos", anexos);
 		model.addAttribute("titulo", "Documentos");
+		model.addAttribute("urlInfo", "/ExpedienteAlumno/Alumno/");
+		model.addAttribute("urlEnf", "/ExpedienteAlumno/Enfermedades/");
+		model.addAttribute("urlResp", "/ExpedienteAlumno/Responsable/");
+		model.addAttribute("urlDoc", "/ExpedienteAlumno/Documentos/");
+		model.addAttribute("sanciones", true);
+		model.addAttribute("btnRegresa", "/ExpedienteAlumno/ver");
 
 		return "Expediente_alumno/AlumnoDocumentos";
 	}
@@ -575,6 +606,7 @@ public class AlumnoController {
 		modelAndView.addObject("carrera", carrera);
 		modelAndView.addObject("grado", grado);
 		modelAndView.addObject("seccion", seccion);
+		
 
 		// Retornar el objeto ModelAndView que contiene la vista y los datos
 		return modelAndView;

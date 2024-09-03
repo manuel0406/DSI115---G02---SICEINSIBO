@@ -18,7 +18,7 @@ public class BachilleratoService {
     private BachilleratoRepository bachilleratoRepository;
 
     public List<Bachillerato> listaBachilleratos() {
-        return (List<Bachillerato>) bachilleratoRepository.findAll();
+        return (List<Bachillerato>) bachilleratoRepository.findAllBachilleratos();
     }
 
     public Bachillerato debolverBachillerato(String carrera, String seccion, String grado){
