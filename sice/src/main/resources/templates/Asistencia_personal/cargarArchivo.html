@@ -1,39 +1,56 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asistencia | Cargar asistencia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet"/>
+  </head>
 
-<head th:replace="~{home :: head}">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-  <title>Arquivo</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}" />
-  
-</head>
-
-<body>
-  <header th:replace="~{home :: header}"></header>
-  <div class="p-4 mt-5">
-    <h2 class="text-center pb-4">Cargar archivo de asistencias</h2>
-    <div class="d-flex justify-content-end py-3">
-      <form id="formulario" method="post" th:action="@{/asistencias/seleccionInicio}">
-        <a type="button" class="btn btn-outline-primary" th:href="@{/asistencias/seleccionInicio}">
-          Regresar
-        </a>
-      </form>
-    </div>
-    <div class="w-75 mx-auto d-flex flex-column">
-      <input class="form-control form-control-lg" id="input-excel" type="file" accept=".xlsx,.xls">
-      <div class="py-3 text-center">
-        <button class="btn btn-primary" id="idCarga">Cargar Asistencias</button>
+  <body>
+    <header th:replace="~{home :: header}"></header>
+    <div class="p-4 mt-5">
+      <h2 class="text-center pb-4">Cargar archivo de asistencias</h2>
+      <div class="d-flex justify-content-end py-3">
+        <form
+          id="formulario"
+          method="post"
+          th:action="@{/asistencias/seleccionInicio}"
+        >
+          <a
+            type="button"
+            class="btn btn-outline-primary"
+            href="javascript:window.history.back()"
+          >
+            Regresar
+          </a>
+        </form>
+      </div>
+      <div class="w-75 mx-auto d-flex flex-column">
+        <input
+          class="form-control form-control-lg"
+          id="input-excel"
+          type="file"
+          accept=".xlsx,.xls"
+        />
+        <div class="py-3 text-center">
+          <button class="btn btn-primary" id="idCarga">
+            Cargar Asistencias
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-  <div>
-    <div id="output" class=""></div>
-  </div>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script type="text/javascript" th:src="@{/js/subirAsistencia.js}"></script>
-</body>
-
+    <div>
+      <div id="output" class=""></div>
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/subirAsistencia.js}"></script>
+  </body>
 </html>

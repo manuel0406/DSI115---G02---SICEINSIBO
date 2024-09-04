@@ -8,7 +8,14 @@ document.addEventListener("DOMContentLoaded", function () {
       if (selectedFile) {
         handleFile();
       } else {
-        alert("Por favor, seleccione un archivo primero.");
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error de archivo",
+          text: "Por favor, seleccione un archivo primero.",
+          showConfirmButton: false,
+          timer: 5000
+        });
       }
     });
   
@@ -146,7 +153,13 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         success: function (response) {
           console.log("Respuesta del servidor:", response);
-          alert(response.mensaje);
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: response.mensaje,
+            showConfirmButton: false,
+            timer: 5000
+          });
         },
         error: function (xhr, status, error) {
           console.error("Error al enviar datos:", error);

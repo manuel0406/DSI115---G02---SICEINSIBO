@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="home :: head">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agregar Numero Aparato</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}" />
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asistencia | Identificador de personal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet"/>
+  </head>
 
 <body>
-  <header th:replace="home :: header"></header>
+  <header th:replace="~{home :: header}"></header>
   <div class="p-4 mt-5">
     <h2 class="text-center" th:text="${txtTitulo}"></h2>
     <div class="d-flex justify-content-end">
@@ -46,7 +48,7 @@
     </form>
   </div>
   </div>
-</body>
-<script type="text/javascript"></script>
+  <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
+</body>
 </html>

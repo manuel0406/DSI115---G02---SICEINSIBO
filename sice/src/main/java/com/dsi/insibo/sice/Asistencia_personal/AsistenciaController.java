@@ -52,13 +52,8 @@ public class AsistenciaController {
 	// Procesa las asistencias
 	@ResponseBody
 	@PostMapping("/procesarAsistencias")
-	@PreAuthorize("hasRole('ADMINISTRADOR')")   
 	public ResponseEntity<Map<String, String>> procesarAsistencia(@RequestBody List<AsistenciaDTO> asistencias ) {
-		System.out.println("AQUI FUE");
-
 		Map<String, String> response = new HashMap<>();
-		System.out.println(asistencias);
-
 		// Validación de entrada
 		if (asistencias == null || asistencias.isEmpty()) {
 			response.put("mensaje", "No se han proporcionado asistencias");
