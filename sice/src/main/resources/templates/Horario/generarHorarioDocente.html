@@ -14,51 +14,29 @@
 </head>
 
 <body>
+    <header th:replace="~{Horario/nav :: navHorario}"></header>
+
+
     <div class="container-fluid">
         <div class="row">
 
-            <!-- Contiene el menú lateral -->
-            <nav class="col-md-2 d-none d-md-block custom-navbar min-vh-100 navbar navbar-expand-lg fixed-top">
-                <div class="custom-navbar py-5">
-                    <ul class="nav nav-pills flex-column mt-2">
-                        <li class="nav-item py-2 py-sm-0 my-2">
-                            <a class="nav-link text-white" th:href="@{/horarios/asignarHoras}">
-                                <i class="bi bi-journal-plus"></i>
-                                <span class="fs-6 ms-2 d-none d-sm-inline">Crear horas de clase</span>
-                            </a>
-                        </li>
-                        <li class="nav-item py-2 py-sm-0 my-2">
-                            <a class="nav-link text-white" th:href="@{/horarios/editarHoras}">
-                                <i class="bi bi-journal-minus"></i>
-                                <span class="fs-6 ms-2 d-none d-sm-inline">Editar horas de clase</span>
-                            </a>
-                        </li>
-                        <li class="nav-item py-2 py-sm-0 my-2">
-                            <a class="nav-link text-white" th:href="@{/horarios/generarHorarioSeccion}">
-                                <i class="bi bi-journal-check"></i>
-                                <span class="fs-6 ms-2 d-none d-sm-inline">Generar horario - sección</span>
-                            </a>
-                        </li>
-                        <li class="nav-item py-2 py-sm-0 my-2">
-                            <a class="nav-link text-white" th:href="@{/horarios/generarHorarioDocente}">
-                                <i class="bi bi-journal-check"></i>
-                                <span class="fs-6 ms-2 d-none d-sm-inline">Generar horario - docente</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-
-            <!-- Contiene el área de trabajo -->
-            <div class="col-md-10 offset-md-2">
+            <!-- Area de trabajo -->
+            <div class="p-3 min-vh-100">
                 <header th:replace="~{home :: header}"></header>
 
-                <div class="container-fluid py-5">
-
-                    <div class="card border-0 mt-4">
+                <div class="container-fluid">
+                    <div class="card border-0">
                         <div class="card-header bg-light text-dark">
-                            <h5 class="mb-0"><i class="fas fa-chalkboard-teacher"></i> Generar Horario - Docente
-                            </h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+                                <h2 class="mb-0 ms-2"><i class="fas fa-chalkboard-teacher"></i> Generar Horario -
+                                    Docente
+                                </h2>
+                                <button class="btn btn-dark bi bi-layout-sidebar" type="button" id="botonNav"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseWidthExample"
+                                    aria-expanded="true" aria-controls="collapseWidthExample"
+                                    title="Ocultar Opciones - Barra de navegación">
+                                </button>
+                            </div>
                         </div>
                         <div class="card-body">
                             <form th:action="@{/horarios/generarHorarioDocente}" method="get">
@@ -92,29 +70,7 @@
 
                             <!-- Mensajes de alerta -->
                             <div class="alert-container">
-                                <div class="alert alert-success alert-dismissible fade show" th:if="${success != null}">
-                                    <label th:text="${success}"></label>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-
-                                <div class="alert alert-danger alert-dismissible fade show" th:if="${error != null}">
-                                    <label th:text="${error}"></label>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-
-                                <div class="alert alert-warning alert-dismissible fade show" th:if="${warning != null}">
-                                    <label th:text="${warning}"></label>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-
-                                <div class="alert alert-info alert-dismissible fade show" th:if="${info != null}">
-                                    <label th:text="${info}"></label>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
+                                <header th:replace="~{alertas :: alertas}"></header>
                             </div>
                         </div>
                     </div>
@@ -328,42 +284,13 @@
 
     <footer th:replace="~{home :: footer}"></footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/validacionRequired.js"></script>
     <script type="text/javascript" src="/js/tooltip.js"></script>
-
-    <script type="text/javascript" th:inline="javascript">
-        // Convertir el valor de horasDeClaseJson desde el atributo Thymeleaf a un array en JavaScript
+    <script th:inline="javascript">
         var horasDeClase = JSON.parse(/*[[${horasDeClaseJson}]]*/ '[]');
-
-        console.log(Array.isArray(horasDeClase)); // Debería ser true
-        console.log(horasDeClase); // Para verificar los datos
-
-        document.addEventListener('DOMContentLoaded', function () {
-            var horasDeClase = window.horasDeClase;
-
-            function actualizarContenido(idHorarioBase) {
-                var contenedor = document.querySelector(`td[data-idHorarioBase="${idHorarioBase}"]`);
-                if (!contenedor) return;
-
-                // Filtrar los datos según idHorarioBase
-                var datosFiltrados = horasDeClase.filter(horario => horario.idHorarioBase === String(idHorarioBase));
-
-                // Crear el contenido HTML con la información filtrada
-                var contenido = datosFiltrados.map(horario =>
-                    `<span>${horario.codMateria} ${horario.nomMateria}<br>
-                        ${horario.codigo + " - "} ${horario.grado + horario.seccion}</span>`
-                ).join('<br>');
-
-                contenedor.innerHTML = contenido;
-            }
-
-            // Actualizar el contenido de todos los elementos td con data-idHorarioBase
-            for (var i = 1; i <= 72; i++) {
-                actualizarContenido(i);
-            }
-        });
     </script>
+    <script type="text/javascript" src="/js/horarioDocente.js"></script>
+
     </div>
 </body>
 
