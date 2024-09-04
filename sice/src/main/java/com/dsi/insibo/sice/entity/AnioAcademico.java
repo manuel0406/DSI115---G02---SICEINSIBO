@@ -10,18 +10,18 @@ public class AnioAcademico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idAnioAcademico;    
+    private int idAnioAcademico;
     private int anio;
     private boolean activoAnio;
-   // private boolean activoMatricula;
-     
+    private boolean activoMatricula;
+
     public AnioAcademico() {
     }
 
-    public AnioAcademico(int idAnioAcademico, int anio, boolean activoAnio) {
-        this.idAnioAcademico = idAnioAcademico;
+    public AnioAcademico(int anio, boolean activoAnio, boolean activoMatricula) {
         this.anio = anio;
         this.activoAnio = activoAnio;
+        this.activoMatricula = activoMatricula;
     }
 
     public int getIdAnioAcademico() {
@@ -48,7 +48,12 @@ public class AnioAcademico {
         this.activoAnio = activoAnio;
     }
 
-    
-    
-    
+    public boolean isActivoMatricula() {
+        return activoMatricula;
+    }
+
+    public void setActivoMatricula(boolean activoMatricula) {
+        this.activoMatricula = activoMatricula;
+    }
+
 }

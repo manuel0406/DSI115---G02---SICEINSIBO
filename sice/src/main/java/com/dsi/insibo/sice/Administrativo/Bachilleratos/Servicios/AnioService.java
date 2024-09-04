@@ -47,4 +47,11 @@ public class AnioService {
         List<Bachillerato> bachilleratos = anioRepository.listaBuscarAnio(idAnioAcademico);
         return bachilleratos != null && !bachilleratos.isEmpty();
     }
+
+    public AnioAcademico activoMatricula(){
+        return anioRepository.matriculaActiva();
+    }
+    public AnioAcademico activoAnio(){
+        return anioRepository.anioActivo();
+    }
 }

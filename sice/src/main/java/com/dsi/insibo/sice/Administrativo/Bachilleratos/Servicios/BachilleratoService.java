@@ -18,7 +18,11 @@ public class BachilleratoService {
     private BachilleratoRepository bachilleratoRepository;
 
     public List<Bachillerato> listaBachilleratos() {
-        return (List<Bachillerato>) bachilleratoRepository.findAll();
+        return (List<Bachillerato>) bachilleratoRepository.findAllBachilleratos();
+    }
+
+    public Bachillerato debolverBachillerato(String carrera, String seccion, String grado){
+        return bachilleratoRepository.especialidad(carrera, seccion, grado);
     }
 
     public List<Bachillerato> listaCarrera() {
@@ -46,4 +50,15 @@ public class BachilleratoService {
                 .orElse(null);
     }
     
+    public List<String> getSeccionesByCarrera(String carrera, String grado) {
+        return bachilleratoRepository.findSeccionesByCarrera(carrera, grado);
+    }
+
+    public Bachillerato bachilleratoPorId(int id){
+        return bachilleratoRepository.findById(id).orElse(null);
+    }
+
+    public Bachillerato debolverBachilleratoMatricula(String carrera, String seccion, String grado){
+        return bachilleratoRepository.especialidadMatricula(carrera, seccion, grado);
+    }
 }

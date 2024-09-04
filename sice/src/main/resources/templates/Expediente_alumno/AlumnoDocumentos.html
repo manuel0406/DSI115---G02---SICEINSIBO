@@ -53,7 +53,7 @@
 
                                     <!-- Aquí empieza la sección de subida y visualización de documentos -->
                                     <td th:if="${anexos == null || anexos.nombreDui == null}">
-                                        <a class="btn btn-primary" th:href="@{/Subir/dui/}+${alumno.nie}"
+                                        <a class="btn btn-primary" th:href="@{/Subir/dui/}+${alumno.idAlumno}"
                                             data-bs-toggle="tooltip" data-bs-placement="top" title="Adjuntar documento">
                                             <i class="bi bi-upload"></i>
                                         </a>
@@ -68,7 +68,7 @@
                                         </a>
                                         <!-- Eliminar documento -->
                                         <a class="btn btn-outline-danger mx-2 delete-btn"
-                                            th:href="@{/delete/dui/}+${anexos.idAnexoAlumno}+@{/}+${alumno.nie}"
+                                            th:href="@{/delete/dui/}+${anexos.idAnexoAlumno}+@{/}+${alumno.idAlumno}"
                                             data-bs-toggle="tooltip" data-bs-placement="top"
                                             title="Click para eliminar documento">
                                             <i class="fs-4 bi bi-x-circle"></i>
@@ -89,7 +89,7 @@
 
                                     <!-- Aquí empieza la sección de subida y visualización de documentos -->
                                     <td th:if="${anexos == null || anexos.nombrePartidaNacimiento == null}">
-                                        <a class="btn btn-primary" th:href="@{/Subir/PartidaNacimiento/}+${alumno.nie}"
+                                        <a class="btn btn-primary" th:href="@{/Subir/PartidaNacimiento/}+${alumno.idAlumno}"
                                             data-bs-toggle="tooltip" data-bs-placement="top" title="Adjuntar documento">
                                             <i class="bi bi-upload"></i>
                                         </a>
@@ -105,7 +105,7 @@
                                         </a>
                                         <!-- Eliminar documento -->
                                         <a class="btn btn-outline-danger mx-2 delete-btn"
-                                            th:href="@{/delete/PartidaNacimiento/}+${anexos.idAnexoAlumno}+@{/}+${alumno.nie}"
+                                            th:href="@{/delete/PartidaNacimiento/}+${anexos.idAnexoAlumno}+@{/}+${alumno.idAlumno}"
                                             data-bs-toggle="tooltip" data-bs-placement="top"
                                             title="Click para eliminar documento">
                                             <i class="fs-4 bi bi-x-circle"></i>
@@ -117,9 +117,11 @@
                         </table>
 
                     </div>
-                    <div class="text-start">
-                        <a th:href="@{/ExpedienteAlumno/ver}" class="btn btn-primary " th:text="'Regresar'"> </a>
-
+                    <div class="text-start" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
+                        <a th:href="${btnRegresa}" class="btn btn-primary" th:text="'Regresar'"></a>
+                    </div>
+                    <div class="text-start" sec:authorize="hasRole('DOCENTE')">
+                        <a th:href="@{/AsignacionOrientador/seccionAsigada/}+${alumno.bachillerato.codigoBachillerato}" class="btn btn-primary" th:text="'Regresar'"></a>
                     </div>
                 </div>
             </div>

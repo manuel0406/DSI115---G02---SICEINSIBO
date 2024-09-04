@@ -18,4 +18,14 @@ public interface AnioRepository extends JpaRepository<AnioAcademico, Integer> {
 
     @Query("SELECT b FROM Bachillerato b JOIN  b.anioAcademico a WHERE a.idAnioAcademico = :idAnioAcademico")
     List<Bachillerato> listaBuscarAnio(@Param("idAnioAcademico") int idAnioAcademico);
+
+    //RETORNA EL AÑO QUE TIENE LA MATRICULA ACTIVA
+    @Query("SELECT a FROM AnioAcademico a WHERE a.activoMatricula = true")
+    AnioAcademico matriculaActiva();
+
+    //RETORNA EL AÑO QUE TIENE LA MATRICULA ACTIVA
+    @Query("SELECT a FROM AnioAcademico a WHERE a.activoAnio = true")
+    AnioAcademico anioActivo();
+    
+    
 }
