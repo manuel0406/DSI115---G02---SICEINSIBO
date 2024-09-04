@@ -69,16 +69,16 @@ public class HorarioService {
         return horasDeClase.stream()
                 .map(hora -> {
                     HorarioEditarDTO dto = new HorarioEditarDTO();
-                    dto.setIdHorarioBase(hora.getHorarioBase().getIdHorarioBase());
+                    dto.setIdHorarioBase(String.valueOf(hora.getHorarioBase().getIdHorarioBase()));
                     dto.setNomMateria(hora.getAsignacion().getMateria().getNomMateria());
                     dto.setNombreDocente(hora.getAsignacion().getDocente().getNombreDocente());
                     dto.setApellidoDocente(hora.getAsignacion().getDocente().getApellidoDocente());
                     dto.setNombreDia(hora.getHorarioBase().getDia().getNombreDia());
                     dto.setHoraInicio(hora.getHorarioBase().getHora().getHoraInicio());
                     dto.setHoraFinalizacion(hora.getHorarioBase().getHora().getHoraFinalizacion());
-                    dto.setIdAsignacion(hora.getAsignacion().getIdAsignacion());
-                    dto.setIdHora(hora.getHorarioBase().getHora().getIdHora());
-                    dto.setIdAsignacionHorario(hora.getIdAsignacionHorario());
+                    dto.setIdAsignacion(String.valueOf(hora.getAsignacion().getIdAsignacion()));
+                    dto.setIdHora(String.valueOf(hora.getHorarioBase().getHora().getIdHora()));
+                    dto.setIdAsignacionHorario(String.valueOf(hora.getIdAsignacionHorario()));
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -102,6 +102,11 @@ public class HorarioService {
     public void eliminarHoraAsignacion(int idAsignacionHorario) {
         horarioRepository.deleteById(idAsignacionHorario);
     }
+
+    public void eliminarHorasAsignacion(List<Integer> ids) {
+        horarioRepository.deleteAllById(ids);
+    }
+    
 
     // Verificar si existe un bloque de 2 horas consecutivas
     public boolean existeBloqueDeDosHoras(int codigoBachillerato, String nombreDia, int idHora, int idAsignacion) {

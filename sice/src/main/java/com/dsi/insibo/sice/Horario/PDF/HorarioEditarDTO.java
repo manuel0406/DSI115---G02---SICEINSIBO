@@ -2,13 +2,13 @@ package com.dsi.insibo.sice.Horario.PDF;
 
 public class HorarioEditarDTO {
     private String nomMateria, nombreDocente, apellidoDocente, nombreDia, horaFinalizacion, horaInicio;
-    private int idHorarioBase, idAsignacion, idHora, idAsignacionHorario;
+    private String idHorarioBase, idAsignacion, idHora, idAsignacionHorario;
 
-    public int getIdHorarioBase() {
+    public String getIdHorarioBase() {
         return idHorarioBase;
     }
 
-    public void setIdHorarioBase(int idHorarioBase) {
+    public void setIdHorarioBase(String idHorarioBase) {
         this.idHorarioBase = idHorarioBase;
     }
 
@@ -60,27 +60,27 @@ public class HorarioEditarDTO {
         this.horaInicio = horaInicio;
     }
 
-    public int getIdAsignacion() {
+    public String getIdAsignacion() {
         return idAsignacion;
     }
 
-    public void setIdAsignacion(int idAsignacion) {
+    public void setIdAsignacion(String idAsignacion) {
         this.idAsignacion = idAsignacion;
     }
 
-    public int getIdHora() {
+    public String getIdHora() {
         return idHora;
     }
 
-    public void setIdHora(int idHora) {
+    public void setIdHora(String idHora) {
         this.idHora = idHora;
     }
 
-    public int getIdAsignacionHorario() {
+    public String getIdAsignacionHorario() {
         return idAsignacionHorario;
     }
 
-    public void setIdAsignacionHorario(int idAsignacionHorario) {
+    public void setIdAsignacionHorario(String idAsignacionHorario) {
         this.idAsignacionHorario = idAsignacionHorario;
     }
 

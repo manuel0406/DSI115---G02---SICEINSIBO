@@ -1,5 +1,6 @@
 package com.dsi.insibo.sice.Expediente_docente.Administrativos;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,14 @@ public class AdministrativoService {
     private AdministrativoRepository administrativoRepository;
 
     public List<AdministrativoDTO> listarAdministrativos() {
-        List<PersonalAdministrativo> administrativos = (List<PersonalAdministrativo>) administrativoRepository
-                .findAll();
+        List<PersonalAdministrativo> administrativos = (List<PersonalAdministrativo>) administrativoRepository.findAll();
         return administrativos.stream()
+                .sorted(Comparator.comparing(PersonalAdministrativo::getNombrePersonal)
+                        .thenComparing(PersonalAdministrativo::getApellidoPersonal))
                 .map(AdministrativoDTO::new)
                 .collect(Collectors.toList());
     }
+
 
     public boolean guardarAdministrativo(PersonalAdministrativo administrativo) {
         // Verificar si el docente ya existe en la base de datos
