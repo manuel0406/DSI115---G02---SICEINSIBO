@@ -50,7 +50,7 @@
                             </a>                            
                         </li>
                         <li class="nav-item">                            
-                            <a class="nav-link active text-white" aria-current="page" th:href="@{/asistenciaPersonal/asistenciaGeneral}">
+                            <a class="nav-link active text-white" aria-current="page" th:href="@{/asistencias/seleccionInicio}">
                                 <i class="bi bi-calendar-check"></i> Asistencia
                             </a>                            
                         </li>
@@ -87,7 +87,6 @@
                 <h1 class="display-5 fw-bold">Bienvenido a SICE</h1>
                 <p class="col-md-12 fs-5">Accede a toda la información y herramientas necesarias para una gestión
                     eficiente y efectiva.
-
                 </p>
 
             </div>
@@ -105,6 +104,18 @@
                         <p class="card-text">Accede a los expedientes de los docentes de la institución.</p>
                         <a th:href="@{/expedientedocente/plantadocente}" class="btn btn-primary mt-auto">Ir a
                             Sección</a>
+                    </div>
+                </div>
+            </div>
+            <div sec:authorize="hasRole('DOCENTE')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
+                <div class="card h-100">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-profesora_114360-2166.jpg?t=st=1718160385~exp=1718163985~hmac=3fa58e646075b5c92f473a982991838a352808b5a5a905a057a44fa7797e640c&w=826"
+                        class="card-img-top" alt="Expediente">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Expediente</h5>
+                        <p class="card-text">Edita los datos generales de tu expediente.</p>
+                        <a th:href="@{/expedientedocente/consultarexpediente/} + ${dui.duiDocente}"
+                            class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
                 </div>
             </div>

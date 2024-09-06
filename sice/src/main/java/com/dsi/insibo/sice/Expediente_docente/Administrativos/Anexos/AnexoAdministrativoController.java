@@ -48,7 +48,6 @@ public class AnexoAdministrativoController {
         model.addAttribute("duiPersonal", duiPersonal);
         model.addAttribute("titulo", "Documentos");
         model.addAttribute("enlace", "/expedienteadministrativo/Documentos/" + duiPersonal);
-        System.out.println("duiPersonal: " + duiPersonal); // Imprime el duiPersonal en la consola
         return "Expediente_docente/Administrativos/upload";
         //return "upload";
 
@@ -78,7 +77,7 @@ public class AnexoAdministrativoController {
         if (clave.equals("dui")) {
             if (file.isEmpty()) {
                 redirectAttributes.addFlashAttribute("success", "Por favor, seleccione un archivo para subir.");
-                return "redirect:/expedienteadministrativo/plantaadministrativa";
+                return "redirect:/expedienteadministrativo/Documentos/" + administrativo.getDuiPersonal();
             }
             try {
                 byte[] bytes = file.getBytes(); // Lee los bytes del archivo
@@ -102,7 +101,7 @@ public class AnexoAdministrativoController {
         else if (clave.equals("curriculum")) {
             if (file.isEmpty()) {
                 redirectAttributes.addFlashAttribute("success", "Por favor, seleccione un archivo para subir.");
-                return "redirect:/expedienteadministrativo/plantaadministrativa";
+                return "redirect:/expedienteadministrativo/Documentos/" + administrativo.getDuiPersonal();
             }
             try {
                 byte[] bytes = file.getBytes();
@@ -126,7 +125,7 @@ public class AnexoAdministrativoController {
         else if (clave.equals("nup")) {
             if (file.isEmpty()) {
                 redirectAttributes.addFlashAttribute("success", "Por favor, seleccione un archivo para subir.");
-                return "redirect:/expedienteadministrativo/plantaadministrativa";
+                return "redirect:/expedienteadministrativo/Documentos/" + administrativo.getDuiPersonal();
             }
             try {
                 byte[] bytes = file.getBytes();
