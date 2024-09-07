@@ -144,7 +144,7 @@
                       <label for="alumno" class="form-label">Alumno a entregar</label>
                       <select class="form-control" id="alumno" th:field="*{alumno}" required>
                         <option value="">Seleccione un alumno</option>
-                        <option th:each="alumno : ${alumnos}" th:value="${alumno.nie}" th:text="${alumno.nombreAlumno + ' ' + alumno.apellidoAlumno}"></option>
+                        <option th:each="alumno : ${alumnos}" th:value="${alumno.idAlumno}" th:text="${alumno.nombreAlumno + ' ' + alumno.apellidoAlumno}"></option>
                     </select>
                     </div>
                 </div>
@@ -159,7 +159,8 @@
                     </div>
                     <div class="col-md-6">
                       <label for="cantidad" class="form-label">Cantidad</label>
-                      <input type="number" class="form-control" id="cantidad" th:field="*{cantidadPrestamo}" required />
+                      <input type="number" class="form-control" id="cantidad" th:field="*{cantidadPrestamo}" min="1" step="1" required />
+                      
                   </div>
                 </div>
 
