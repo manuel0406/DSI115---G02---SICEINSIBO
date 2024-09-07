@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Crea el contenido HTML con la información filtrada
         var contenido = datosFiltrados.map(horario =>
-            `<span>${horario.codMateria} ${horario.nomMateria}<br>
-                ${horario.codigo + " - "} ${horario.grado + horario.seccion}</span>`
+            `<span>${horario.codMateria}<br>
+                ${horario.grado + "º "} ${horario.codigo + "-"+horario.seccion}</span>`
         ).join('<br>');
 
         contenedor.innerHTML = contenido;

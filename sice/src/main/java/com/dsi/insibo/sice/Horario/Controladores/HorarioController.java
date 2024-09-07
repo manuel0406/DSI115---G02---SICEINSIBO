@@ -146,6 +146,8 @@ public class HorarioController {
                     horarioService.obtenerHorasAsignadas(bachillerato.getCodigoBachillerato()));
 
             model.addAttribute("horasDeClase", horarioDTO != null ? horarioDTO : List.of());
+            model.addAttribute("totalElements", horarioDTO.size());
+
         } else if (formSubmitted) {
             // Mostrar alerta 'warning' si no se encontró el bachillerato tras filtrar
             model.addAttribute("warning", "Selecciona una sección válida");
