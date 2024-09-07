@@ -33,7 +33,7 @@
                         </h3>
                         <div class="d-flex gap-2">
                             <a class="btn btn-secondary"
-                                th:href="@{/ExpedienteAlumno/Sanciones/{nie}(nie=${alumno.nie}, format='pdf')}"
+                                th:href="@{/ExpedienteAlumno/Sanciones/{nie}(nie=${alumno.idAlumno}, format='pdf')}"
                                 data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual"
                                 target="_blank" onclick="openInPopup(this.href); return false;">
                                 <i class="bi bi-printer"></i> Imprimir listado
@@ -78,7 +78,7 @@
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                         <a class="btn btn-danger delete-btn"
-                                            th:href="@{/ExpedienteAlumno/eliminarSancion/}+${alumno.nie+'/'}+ ${sanciones.idSancion}"
+                                            th:href="@{/ExpedienteAlumno/eliminarSancion/}+${alumno.idAlumno+'/'}+ ${sanciones.idSancion}"
                                             data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
                                             <i class="bi bi-trash"></i>
                                         </a>
@@ -91,12 +91,10 @@
                                 </tr>
                             </tbody>
                         </table>
-
-                        <div class="text-start" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
-                            <a th:href="${btnRegresa}" class="btn btn-primary" th:text="'Regresar'"></a>
-                        </div>
-                        <div class="text-start" sec:authorize="hasRole('DOCENTE')">
-                            <a th:href="@{/AsignacionOrientador/seccionAsigada/}+${alumno.bachillerato.codigoBachillerato}" class="btn btn-primary" th:text="'Regresar'"></a>
+                        <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2"
+                            th:if="${#lists.isEmpty(listaSanciones)}">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <label th:text="${'¡No existen sanciones registradas!'}"></label>
                         </div>
                     </div>
                 </div>
@@ -115,7 +113,7 @@
                 </div>
                 <!-- Formulario de agregar nueva materia -->
                 <form th:object="${sancion}" class="needs-validation" id="formSancion" novalidate
-                    th:action="@{/ExpedienteAlumno/GuardarSancion/} + ${alumno.nie}" method="post">
+                    th:action="@{/ExpedienteAlumno/GuardarSancion/} + ${alumno.idAlumno}" method="post">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="tipoFalta" class="form-label fw-bold">Tipo de falta</label>
@@ -164,7 +162,7 @@
                 </div>
                 <!-- Formulario para editar sancion -->
                 <form th:object="${sancion}" class="needs-validation" id="formSancion" novalidate
-                    th:action="@{/ExpedienteAlumno/GuardarSancion/} + ${alumno.nie}" method="post">
+                    th:action="@{/ExpedienteAlumno/GuardarSancion/} + ${alumno.idAlumno}" method="post">
                     <div class="modal-body">
                         <input type="hidden" id="idSancion" name="idSancion">
                         <div class="mb-3">

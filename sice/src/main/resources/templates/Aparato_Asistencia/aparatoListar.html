@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asistencia | Listado de identificadores</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet"/>
+  </head>
+
+  <body>
+    <header th:replace="~{home :: header}"></header>
+    <div class="p-4 mt-5">
+      <h2 class="text-center">Listado números asignados</h2>
+      <div class="d-flex justify-content-end">
+        <a type="button" class="btn btn-outline-primary" th:href="@{/asistencias/seleccionInicio}">
+          Regresar
+        </a>
+      </div>
+      <div class="row g-2 d-flex justify-content-center">
+        <div class="col-auto">
+            <a type="button" class="btn btn-outline-primary" th:href="@{/aparato/asignarNumero}">
+              Asignar número Docente
+            </a>
+        </div>
+        <div class="col-auto">
+          <a type="button" class="btn btn-outline-primary" th:href="@{/aparato/asignarNumeroPersonal}">
+            Asignar número Administrativo
+          </a>
+        </div>
+      </div>
+      
+    </div>
+    </div>
+    <div class="w-75 mx-auto">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="table-dark">
+            <tr class="back-titulo">
+              <th>Área</th>
+              <th class="text-center">Nombre personal</th>
+              <th class="text-center">ID asistencia</th>
+              <th class="text-center">Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- LISTA DOCENTES APARATO -->
+            <tr th:each="ap:${aparatoDocente}">
+              <td>Docente</td>
+              <td th:text="${ap.docente?.nombreDocente ?: ''} + ' ' + ${ap.docente?.apellidoDocente ?: ''}"></td>
+              <td th:text="${ap.numeroAparatoDocente}"></td>
+              <td>
+                <a class="btn btn-primary btn-sm mx-1" th:href="@{/aparato/editarNumeroDocente/}+ ${ap.idDocenteAparato}"
+                  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                <a class="btn btn-danger btn-sm mx-1 delete-btn"
+                  th:href="@{/aparato/eliminarNumeroDocente/}+ ${ap.idDocenteAparato}" data-bs-toggle="tooltip"
+                  data-bs-placement="top" title="Eliminar">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+            <!-- LISTA PERSONAL ADMINISTRATIVO APARATO -->
+            <tr th:each="pp:${aparatoPersonal}">
+              <td>Personal Administrativo</td>
+              <td th:text="${pp.personal.nombrePersonal+ ' ' + pp.personal.apellidoPersonal}"></td>
+              <td th:text="${pp.numeroAparatoPersonal}"></td>
+              <td>
+                <a class="btn btn-primary btn-sm mx-1" th:href="@{/aparato/editarNumeroPersonal/}+ ${pp.idPersonalAparato}" data-bs-toggle="tooltip" data-bs-placement="top"
+                  title="Editar">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                <a class="btn btn-danger btn-sm mx-1 delete-btn" th:href="@{/aparato/eliminarNumeroAdmnistrativo/}+ ${pp.idPersonalAparato}" data-bs-toggle="tooltip" data-bs-placement="top"
+                  title="Eliminar">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ¿Estás seguro de eliminar el registro? Esta acción no puede deshacerse.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

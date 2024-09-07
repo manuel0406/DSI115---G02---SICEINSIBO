@@ -1,5 +1,6 @@
 package com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -25,8 +26,15 @@ public class BachilleratoService {
         return bachilleratoRepository.especialidad(carrera, seccion, grado);
     }
 
-    public List<Bachillerato> listaCarrera() {
-        List<Bachillerato> bachilleratos = bachilleratoRepository.findAll(); // tu lógica para obtener los
+    public List<Bachillerato> listaCarrera(boolean matricula) {
+
+        List<Bachillerato> bachilleratos= new ArrayList<>();
+        if (matricula) {
+           bachilleratos = bachilleratoRepository.findAll();
+        }else{
+            bachilleratos=bachilleratoRepository.findAllBachilleratos();
+        }
+        // tu lógica para obtener los
                                                                              // bachilleratos;
         Set<String> nombresUnicos = new HashSet<>();
 
