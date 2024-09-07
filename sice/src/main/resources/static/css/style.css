@@ -803,6 +803,25 @@ td {
   cursor: not-allowed;
 }
 
+/* ----------------------------------------------------------------------------------------- */
+/*                               ENTRADA DE ARCHIVOS (HORARIO) - Iván                        */
+/* ----------------------------------------------------------------------------------------- */
+.inputExcel{
+  background-color: #0261a0;
+}
+/* Agregar borde más notorio cuando se arrastra el archivo */
+.dragover {
+  border: 2px dashed #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.border-trazado {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+
 
 /* ----------------------------------------------------------------------------------------- */
 /*                               BARRA DE NAVEGACIÓN (HORARIO) - Bryan                       */

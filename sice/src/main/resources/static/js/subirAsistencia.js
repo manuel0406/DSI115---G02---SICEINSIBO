@@ -25,8 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
           const data = new Uint8Array(event.target.result);
           const workbook = XLSX.read(data, { type: "array" });
-          const output = document.getElementById("output");
-          output.innerHTML = "";
           const sheetNameToFind = "Estadísticas de anormalías"; // Hoja buscada
           if (workbook.SheetNames.includes(sheetNameToFind)) {
             const sheet = workbook.Sheets[sheetNameToFind];
@@ -118,16 +116,27 @@ document.addEventListener("DOMContentLoaded", function () {
             if (columnIndexID === -1) {
               console.log("No se encontró la columna 'ID'.");
             }
-  
-            output.innerHTML = JSON.stringify(results, null, 2);
-            enviarDatos(results); // Envia los datos al servidor
+              enviarDatos(results); // Envia los datos al servidor
           } else {
-            output.innerHTML = `<p>La hoja con el nombre "${sheetNameToFind}" no se encontró en el archivo.</p>`;
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Error de procesamiento.",
+              text: "La hoja con el nombre \"Estadísticas de anormalías\" no se encontró en el archivo.",
+              showConfirmButton: false,
+              timer: 5000
+            });
           }
         } catch (error) {
           console.error("Error al procesar el archivo:", error);
-          document.getElementById("output").innerText =
-            "Hubo un error al procesar el archivo. Por favor, inténtalo de nuevo.";
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error de procesamiento",
+            text: "Hubo un error al procesar el archivo. Por favor, inténtalo de nuevo.",
+            showConfirmButton: false,
+            timer: 5000
+          });
         }
       };
       reader.readAsArrayBuffer(selectedFile);
@@ -136,7 +145,14 @@ document.addEventListener("DOMContentLoaded", function () {
     function enviarDatos(datos) {
       const validDatos = datos.filter(dato => dato.Depart && dato.Depart.trim() !== "");
       if (validDatos.length === 0) {
-        alert("No hay datos válidos para enviar.");
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error de archivo",
+          text: "No hay datos válidos para enviar.",
+          showConfirmButton: false,
+          timer: 5000
+        });
         return;
       }
 
@@ -163,9 +179,113 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         error: function (xhr, status, error) {
           console.error("Error al enviar datos:", error);
-          alert("Error al enviar datos.");
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error de procesamiento",
+            text: "Error al enviar datos.",
+            showConfirmButton: false,
+            timer: 5000
+          });
         }
       });
     }
   });
-  
+
+// ARCHIVO DROPEADO
+// Referencias
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('input-excel');
+const fileInfo = document.getElementById('file-info');
+const fileName = document.getElementById('file-name');
+const fileUploadedIcon = document.getElementById('file-uploaded-icon');
+const removeFileButton = document.getElementById('remove-file');
+const inputExcelDiv = document.getElementById('inputExcel'); // Referencia al div inputExcel
+
+// Tipos de archivos válidos (solo archivos de Excel)
+const validFileTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
+
+// Función para validar tipo de archivo
+function isValidFileType(file) {
+    return validFileTypes.includes(file.type);
+}
+
+// Función para resetear el input de archivo
+function resetFileInput() {
+    fileInput.value = ''; // Vaciar el input de archivos
+    fileInfo.classList.add('d-none'); // Ocultar la información del archivo cargado
+    fileUploadedIcon.style.display = 'none'; // Ocultar la imagen de Excel
+    inputExcelDiv.style.display = 'block'; // Mostrar el div inputExcel de nuevo
+}
+
+// Manejar el evento de cambio del input file
+fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+
+        // Validar si es un archivo de Excel
+        if (isValidFileType(file)) {
+            // Mostrar el nombre del archivo
+            fileName.innerHTML = `<b>Archivo seleccionado:</b> ${file.name}`;            
+            // Mostrar la imagen
+            fileUploadedIcon.style.display = 'block';
+            // Mostrar la sección de información del archivo
+            fileInfo.classList.remove('d-none');
+            // Ocultar el div inputExcel
+            inputExcelDiv.style.display = 'none';
+        } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Error de archivo",
+              text: "Por favor, arrastra un archivo Excel válido (.xls o .xlsx)",
+              showConfirmButton: false,
+              timer: 5000
+            });
+            // Limpiar el input si no es un archivo válido
+            resetFileInput();
+        }
+    }
+});
+
+// Manejador de archivos soltados
+dropzone.addEventListener('drop', (event) => {
+    event.preventDefault();
+    dropzone.classList.remove('dragover'); // Remover clase cuando se suelta el archivo
+
+    const files = event.dataTransfer.files;
+    if (files.length > 0) {
+        const file = files[0];
+
+        // Validar si es un archivo de Excel
+        if (isValidFileType(file)) {
+            fileInput.files = files;
+            fileInput.dispatchEvent(new Event('change')); // Disparar el evento 'change' manualmente
+        } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Error de archivo",
+              text: "Por favor, arrastra un archivo Excel válido (.xls o .xlsx)",
+              showConfirmButton: false,
+              timer: 5000
+            });
+        }
+    }
+});
+
+// Manejador del botón para eliminar el archivo cargado
+removeFileButton.addEventListener('click', () => {
+    resetFileInput(); // Resetear el input de archivos y la interfaz
+});
+
+// Previene el comportamiento por defecto para permitir el drop
+dropzone.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    dropzone.classList.add('dragover'); // Agregar clase para cambiar estilo al hacer drag
+});
+
+// Remueve la clase cuando el archivo no está sobre el área
+dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('dragover');
+});
