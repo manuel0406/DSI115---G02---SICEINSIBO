@@ -207,6 +207,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <script type="text/javascript" src="/js/horariosEditar.js"></script>
                         </div>
                     </div>
                 </div>
@@ -346,9 +348,21 @@
             <footer th:replace="~{home :: footer}"></footer>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
             <script type="text/javascript" src="/js/validacionRequired.js"></script>
-            <script type="text/javascript" src="/js/horariosEditar.js"></script>
             <script type="text/javascript" src="/js/modalEliminacion.js"></script>
             <script type="text/javascript" src="/js/tooltip.js"></script>
+            <script>
+                var button = document.getElementById('botonNav');
+
+                // Inicializa el tooltip usando el atributo title, solo al pasar el cursor (hover)
+                new bootstrap.Tooltip(button, {
+                    placement: 'top',
+                    title: function () {
+                        return button.getAttribute('title');
+                    },
+                    delay: { show: 600, hide: 100 },
+                    trigger: 'hover'
+                });
+            </script>
         </div>
 </body>
 
