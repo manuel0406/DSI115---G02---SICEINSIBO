@@ -24,7 +24,6 @@ public class MateriaController {
     @Autowired
     private MateriasService materiasService;
 
-    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/GestionMaterias")
     public String gestionarMaterias(
             @RequestParam(value = "tipo", defaultValue = "") String tipo,
@@ -83,7 +82,7 @@ public class MateriaController {
         materia.setNomMateria(nombre);
         materia.setTipoMateria(tipo);
         materiasService.guardarMateria(materia);
-        redirectAttributes.addFlashAttribute("success", "Materia guardada exitosamente.");
+        redirectAttributes.addFlashAttribute("msjAccion", "Su nueva materia se ha guardado con éxito.");
         return "redirect:/GestionMaterias";
     }
 
@@ -103,7 +102,7 @@ public class MateriaController {
         materia.setNomMateria(nombre);
         materia.setTipoMateria(tipo);
         materiasService.guardarMateria(materia);
-        redirectAttributes.addFlashAttribute("success", "Materia actualizada exitosamente.");
+        redirectAttributes.addFlashAttribute("msjAccion", "Su materia se ha actualizado con éxito.");
         return "redirect:/GestionMaterias";
     }
 
@@ -116,7 +115,7 @@ public class MateriaController {
             return "redirect:/GestionMaterias";
         }
         materiasService.eliminarMateria(materia);
-        redirectAttributes.addFlashAttribute("success", "Materia eliminada exitosamente.");
+        redirectAttributes.addFlashAttribute("msjAccion", "Su materia se ha eliminado con éxito..");
         return "redirect:/GestionMaterias";
     }
 }

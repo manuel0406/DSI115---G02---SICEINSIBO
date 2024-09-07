@@ -3,6 +3,7 @@ package com.dsi.insibo.sice.Horario.Controladores;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/horarios")
+@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SUBDIRECTORA', 'DIRECTOR')")
 public class HorarioController {
 
     @Autowired
@@ -72,14 +74,15 @@ public class HorarioController {
         }
 
         if (bachillerato != null && bachillerato.getCodigoBachillerato() != 0) {
+            // Obtener la carga academica de un bachillerato
             listaAsignaciones = asignacionService
                     .listarAsignacionesCodigoBachillerato(bachillerato.getCodigoBachillerato());
-            // Obtener el horario y convertirlo a DTO
+            // Obtener el horario y filtrarlo a una DTO
             List<HorarioDTO> horarioDTO = horarioService.obtenerHorasAsignadasDTO(
                     horarioService.obtenerHorasAsignadas(bachillerato.getCodigoBachillerato()));
 
             try {
-                // Convertir el horario a JSON y agregar al modelo
+                // Convertir el horarioDTO a JSON y agregar al modelo
                 String horasDeClaseJson = new ObjectMapper().writeValueAsString(horarioDTO);
                 model.addAttribute("horasDeClaseJson", horasDeClaseJson);
                 model.addAttribute("horarioDTO", horarioDTO);
@@ -94,6 +97,7 @@ public class HorarioController {
         }
 
         // Añadir atributos al modelo para su uso en la vista
+        model.addAttribute("titulo", "Asignar Horas");
         model.addAttribute("bachilleratos", listaCarreras);
         model.addAttribute("carrera", carrera);
         model.addAttribute("grado", grado);
@@ -149,6 +153,7 @@ public class HorarioController {
         }
 
         // Añadir atributos al modelo para su uso en la vista
+        model.addAttribute("titulo", "Editar Horas");
         model.addAttribute("bachilleratos", listaCarreras);
         model.addAttribute("carrera", carrera);
         model.addAttribute("grado", grado);
@@ -210,6 +215,7 @@ public class HorarioController {
         }
 
         // Añadir atributos al modelo para su uso en la vista
+        model.addAttribute("titulo", "Horario Sección");
         model.addAttribute("bachilleratos", listaCarreras);
         model.addAttribute("carrera", carrera);
         model.addAttribute("grado", grado);
@@ -268,6 +274,7 @@ public class HorarioController {
             model.addAttribute("horarioDTO", List.of()); // Lista vacía si no hay duiDocente
         }
 
+        model.addAttribute("titulo", "Horario Docente");
         model.addAttribute("duiDocente", duiDocente);
         model.addAttribute("docentes", docentes);
         model.addAttribute("formSubmitted", formSubmitted);
@@ -280,6 +287,7 @@ public class HorarioController {
             @RequestParam("codigoBachillerato") String idBachillerato,
             @RequestParam("dia") String nombreDia,
             @RequestParam("horaBase") String horaDia,
+            @RequestParam("duiDocente") String duiDocente,
             @RequestParam(value = "carrera", required = false) String carrera,
             @RequestParam(value = "grado", required = false) String grado,
             @RequestParam(value = "seccion", required = false) String seccion,
@@ -292,60 +300,86 @@ public class HorarioController {
         List<AsignacionHorario> horario = horarioService.obtenerHorasAsignadas(Integer.parseInt(idBachillerato));
         Integer horasExistentes = horario.size();
 
+        List<HorarioDTO> horasDelDocente = horarioService.obtenerHorasAsignadasDTO(
+                horarioService.obtenerHorasAsignadasDocente(duiDocente));
+
+        boolean encontrado = horasDelDocente.stream()
+                .anyMatch(hora -> hora.getIdHorarioBase().equals(String.valueOf(horarioBaseID)));
+
+        HorarioDTO horaEncontrada = horasDelDocente.stream()
+                .filter(horaDTO -> horaDTO.getIdHorarioBase().equals(String.valueOf(horarioBaseID)))
+                .findFirst()
+                .orElse(null);
+
         // Si el grado es 1º o 2º
         if (Integer.parseInt(grado) <= 2) {
             // Limita las horas de clase que puede tener una sección
             if (horasExistentes != null && horasExistentes <= 46) {
-                // Verifica que no se formen bloques de mas de 2 horas de clase seguidas de una
-                // materia básica
+                // Evita bloques de mas de 2 horas de clase de una materia básica
                 if (!horarioService.existeBloqueDeDosHoras(Integer.parseInt(idBachillerato), nombreDia,
                         Integer.parseInt(horaDia), asignacionID)) {
-                    AsignacionHorario hora = new AsignacionHorario();
-                    Asignacion asignacion = new Asignacion();
-                    HorarioBase horarioBase = new HorarioBase();
 
-                    asignacion.setIdAsignacion(asignacionID);
-                    horarioBase.setIdHorarioBase(horarioBaseID);
+                    // Verifica que el docente tenga libre esa hora
+                    if (!encontrado) {
+                        AsignacionHorario hora = new AsignacionHorario();
+                        Asignacion asignacion = new Asignacion();
+                        HorarioBase horarioBase = new HorarioBase();
 
-                    hora.setHorarioBase(horarioBase);
-                    hora.setAsignacion(asignacion);
+                        asignacion.setIdAsignacion(asignacionID);
+                        horarioBase.setIdHorarioBase(horarioBaseID);
 
-                    horarioService.guardarHoraAsignacion(hora);
-                    redirectAttributes.addFlashAttribute("success", "Hora agregada");
+                        hora.setHorarioBase(horarioBase);
+                        hora.setAsignacion(asignacion);
+
+                        horarioService.guardarHoraAsignacion(hora);
+                        redirectAttributes.addFlashAttribute("success", "Hora agregada");
+                    } else {
+                        redirectAttributes.addFlashAttribute("warning", "El docente "
+                                + horaEncontrada.getNombreDocente() + " "
+                                + horaEncontrada.getApellidoDocente() +
+                                " ya tiene una clase asignada en ese horario. Por favor, selecciona otro docente o horario.");
+                    }
                 } else {
                     redirectAttributes.addFlashAttribute("warning",
-                            "No puedes asignar bloques de más de 2 horas para una misma materia de tipo básica");
+                            "Las materias básicas no pueden tener bloques de más de 2 horas.");
                 }
             } else {
                 redirectAttributes.addFlashAttribute("warning",
-                        "No puedes agregar mas horas de clase. Los 1º y 2º años tienen un máximo de 47 horas de clase");
+                        "No se pueden añadir más horas de clase. Los estudiantes de primer y segundo año tienen un límite máximo de 47 horas.");
             }
         } else {
             // Limita las horas de clase que puede tener una sección
             if (horasExistentes != null && horasExistentes <= 29) {
-                // Verifica que no se formen bloques de mas de 2 horas de clase seguidas de una
-                // materia básica
+                // Evita bloques de mas de 2 horas de clase de una materia básica
                 if (!horarioService.existeBloqueDeDosHoras(Integer.parseInt(idBachillerato), nombreDia,
                         Integer.parseInt(horaDia), asignacionID)) {
-                    AsignacionHorario hora = new AsignacionHorario();
-                    Asignacion asignacion = new Asignacion();
-                    HorarioBase horarioBase = new HorarioBase();
+                    // Verifica que el docente tenga libre esa hora
+                    if (!encontrado) {
+                        AsignacionHorario hora = new AsignacionHorario();
+                        Asignacion asignacion = new Asignacion();
+                        HorarioBase horarioBase = new HorarioBase();
 
-                    asignacion.setIdAsignacion(asignacionID);
-                    horarioBase.setIdHorarioBase(horarioBaseID);
+                        asignacion.setIdAsignacion(asignacionID);
+                        horarioBase.setIdHorarioBase(horarioBaseID);
 
-                    hora.setHorarioBase(horarioBase);
-                    hora.setAsignacion(asignacion);
+                        hora.setHorarioBase(horarioBase);
+                        hora.setAsignacion(asignacion);
 
-                    horarioService.guardarHoraAsignacion(hora);
-                    redirectAttributes.addFlashAttribute("success", "Hora agregada");
+                        horarioService.guardarHoraAsignacion(hora);
+                        redirectAttributes.addFlashAttribute("success", "Hora agregada");
+                    } else {
+                        redirectAttributes.addFlashAttribute("warning", "El docente "
+                                + horaEncontrada.getNombreDocente() + " "
+                                + horaEncontrada.getApellidoDocente() +
+                                " ya tiene una clase asignada en ese horario. Por favor, selecciona otro docente o horario.");
+                    }
                 } else {
                     redirectAttributes.addFlashAttribute("warning",
-                            "No puedes asignar bloques de más de 2 horas para una misma materia de tipo básica");
+                            "Las materias básicas no pueden tener bloques de más de 2 horas.");
                 }
             } else {
                 redirectAttributes.addFlashAttribute("warning",
-                        "No puedes agregar mas horas de clase. Los 3º años tienen un máximo de 30 horas de clase");
+                        "No se pueden añadir más horas de clase. Los estudiantes de tercer año tienen un límite máximo de 30 horas.");
             }
         }
 
@@ -360,6 +394,7 @@ public class HorarioController {
             @RequestParam("codigoBachillerato") String idBachillerato,
             @RequestParam("dia") String nombreDia,
             @RequestParam("horaBase") String horaDia,
+            @RequestParam("duiDocente") String duiDocente,
             @RequestParam(value = "carrera", required = false) String carrera,
             @RequestParam(value = "grado", required = false) String grado,
             @RequestParam(value = "seccion", required = false) String seccion,
@@ -369,25 +404,45 @@ public class HorarioController {
         grado = extraerPrimerValor(grado);
         seccion = extraerPrimerValor(seccion);
 
-        // Verifica que no se formen bloques de mas de 2 horas seguidas de una materia
-        // básica
+        List<HorarioEditarDTO> horasDelDocente = horarioService.obtenerHorasAsignadasEditarDTO(
+                horarioService.obtenerHorasAsignadasDocente(duiDocente));
+
+        boolean encontrado = horasDelDocente.stream()
+                .anyMatch(horaDTO -> horaDTO.getIdHorarioBase().equals(String.valueOf(horarioBaseID)) &&
+                        !horaDTO.getIdAsignacionHorario().equals(String.valueOf(asignacionHorarioID)));
+
+        HorarioEditarDTO horaEncontrada = horasDelDocente.stream()
+                .filter(horaDTO -> horaDTO.getIdHorarioBase().equals(String.valueOf(horarioBaseID)) &&
+                        !horaDTO.getIdAsignacionHorario().equals(String.valueOf(asignacionHorarioID)))
+                .findFirst()
+                .orElse(null);
+
+        // Evita bloques de mas de 2 horas de clase de una materia básica
         if (!horarioService.existeBloqueDeDosHoras(Integer.parseInt(idBachillerato), nombreDia,
                 Integer.parseInt(horaDia), asignacionID)) {
-            AsignacionHorario hora = horarioService.obtenerHoraAsignacionPorId(asignacionHorarioID);
-            Asignacion asignacion = new Asignacion();
-            HorarioBase horarioBase = new HorarioBase();
 
-            asignacion.setIdAsignacion(asignacionID);
-            horarioBase.setIdHorarioBase(horarioBaseID);
+            // Verifica que el docente tenga libre esa hora
+            if (!encontrado) {
+                AsignacionHorario hora = horarioService.obtenerHoraAsignacionPorId(asignacionHorarioID);
+                Asignacion asignacion = new Asignacion();
+                HorarioBase horarioBase = new HorarioBase();
 
-            hora.setHorarioBase(horarioBase);
-            hora.setAsignacion(asignacion);
+                asignacion.setIdAsignacion(asignacionID);
+                horarioBase.setIdHorarioBase(horarioBaseID);
 
-            horarioService.guardarHoraAsignacion(hora);
-            redirectAttributes.addFlashAttribute("success", "Hora actualizada");
+                hora.setHorarioBase(horarioBase);
+                hora.setAsignacion(asignacion);
+
+                horarioService.guardarHoraAsignacion(hora);
+                redirectAttributes.addFlashAttribute("success", "Hora actualizada");
+            } else {
+                redirectAttributes.addFlashAttribute("warning", "El docente " + horaEncontrada.getNombreDocente() + " "
+                        + horaEncontrada.getApellidoDocente() +
+                        " ya tiene una clase asignada en ese horario. Por favor, selecciona otro docente o horario.");
+            }
         } else {
             redirectAttributes.addFlashAttribute("warning",
-                    "No puedes asignar bloques de más de 2 horas para una misma materia de tipo básica");
+                    "Las materias básicas no pueden tener bloques de más de 2 horas.");
         }
 
         agregarParametrosRedireccion(redirectAttributes, carrera, grado, seccion);
@@ -412,8 +467,26 @@ public class HorarioController {
         return "redirect:/horarios/editarHoras";
     }
 
-    // Agrega parámetros a los RedirectAttributes para mantener el contexto en las
-    // redirecciones
+    @PostMapping("/eliminarHoras")
+    public String eliminarHoras(@RequestParam("ids") List<Integer> ids,
+            @RequestParam(value = "carrera", required = false) String carrera,
+            @RequestParam(value = "grado", required = false) String grado,
+            @RequestParam(value = "seccion", required = false) String seccion,
+            RedirectAttributes redirectAttributes) {
+
+        carrera = extraerPrimerValor(carrera);
+        grado = extraerPrimerValor(grado);
+        seccion = extraerPrimerValor(seccion);
+
+        horarioService.eliminarHorasAsignacion(ids);
+
+        redirectAttributes.addFlashAttribute("warning", "Las horas de clase seleccionadas se eliminaron");
+        agregarParametrosRedireccion(redirectAttributes, carrera, grado, seccion);
+
+        return "redirect:/horarios/editarHoras";
+    }
+
+    // Agrega parámetros para mantener el contexto en las redirecciones
     private void agregarParametrosRedireccion(RedirectAttributes redirectAttributes, String carrera, String grado,
             String seccion) {
         redirectAttributes.addAttribute("carrera", carrera);
