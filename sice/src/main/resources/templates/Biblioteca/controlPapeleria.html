@@ -95,8 +95,13 @@
                 </tbody>
               </table>
 
-              <!-- Maneja la paginacion  -->
-              <nav aria-label="...">
+            <!-- Mensaje cuando no hay datos -->
+            <div th:if="${page.totalElements == 0}" class="alert alert-warning alert-dismissible fade show mt-1 mx-2 text-center">
+                <label>No se encuentran registros de entregas realizadas</label>
+            </div>
+
+            <!-- Maneja la paginación -->
+            <nav th:if="${page.totalElements > 0}" aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
                     <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
                         <a class="page-link"
@@ -125,15 +130,21 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form th:action="@{/Biblioteca/Papeleria/Control/entrega}" method="post" th:object="${nuevaEntrega}" id="formNuevaEntrega">
+                <form th:action="@{/Biblioteca/Papeleria/Control/entrega}" method="post" th:object="${nuevaEntrega}" id="formNuevaEntrega" novalidate>
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="entregaFecha" class="form-label">Fecha de Entrega</label>
-                            <input type="date" class="form-control" id="entregaFecha" th:field="*{entregaFecha}" required>
+                            <input type="date" class="form-control" id="entregaFecha" th:field="*{entregaFecha}" required />
+                            <div class="invalid-feedback">
+                                La fecha de entrega debe ser seleccionada.
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label for="entregaPersona" class="form-label">Persona que Recibe</label>
-                            <input type="text" class="form-control" id="entregaPersona" th:field="*{entregaPersona}" required>
+                            <input type="text" class="form-control" id="entregaPersona" th:field="*{entregaPersona}" required />
+                            <div class="invalid-feedback">
+                                Por favor, ingrese el nombre de la persona que recibe.
+                            </div>
                         </div>
                     </div>
                 
@@ -144,10 +155,16 @@
                                 <option value="">Seleccione un producto</option>
                                 <option th:each="producto : ${productos}" th:value="${producto.idArticulo}" th:text="${producto.nombreArticulo}"></option>
                             </select>
+                            <div class="invalid-feedback">
+                                Por favor, seleccione un producto.
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label for="entregaCantidad" class="form-label">Cantidad</label>
-                            <input type="number" class="form-control" th:field="*{entregaCantidad}" required>
+                            <input type="number" class="form-control" th:field="*{entregaCantidad}" min="1" required />
+                            <div class="invalid-feedback">
+                                La cantidad debe ser mayor a 0.
+                            </div>
                         </div>
                     </div>
                 
@@ -218,6 +235,61 @@
                 modalFecha.value = fecha;
                 modalCantidad.value = cantidad;
                 modalPersona.value = persona;
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Establecer la fecha actual en el campo de fecha de entrega
+            var fechaCampo = document.getElementById("entregaFecha");
+            var hoy = new Date().toISOString().split('T')[0];
+            fechaCampo.value = hoy;
+
+            var form = document.getElementById("formNuevaEntrega");
+
+            form.addEventListener("submit", function (event) {
+                var isValid = true;
+
+                // Validar fecha (siempre debe estar llena ya que es proporcionada por el sistema)
+                if (!fechaCampo.value) {
+                    fechaCampo.classList.add("is-invalid");
+                    isValid = false;
+                } else {
+                    fechaCampo.classList.remove("is-invalid");
+                }
+
+                // Validar persona
+                var persona = form.querySelector("#entregaPersona");
+                if (!persona.value.trim()) {
+                    persona.classList.add("is-invalid");
+                    isValid = false;
+                } else {
+                    persona.classList.remove("is-invalid");
+                }
+
+                // Validar selección de producto
+                var producto = form.querySelector("[name='inventarioPapeleria']");
+                if (producto.value === "") {
+                    producto.classList.add("is-invalid");
+                    isValid = false;
+                } else {
+                    producto.classList.remove("is-invalid");
+                }
+
+                // Validar cantidad
+                var cantidad = form.querySelector("#entregaCantidad");
+                if (cantidad.value <= 0) {
+                    cantidad.classList.add("is-invalid");
+                    isValid = false;
+                } else {
+                    cantidad.classList.remove("is-invalid");
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    form.classList.add("was-validated");
+                }
             });
         });
     </script>

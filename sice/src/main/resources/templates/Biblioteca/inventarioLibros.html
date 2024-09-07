@@ -76,8 +76,11 @@
             </tbody>
         </table>
 
-        <!-- Maneja la paginacion  -->
-        <nav aria-label="...">
+        <div th:if="${page.totalElements == 0}" class="alert alert-warning alert-dismissible fade show mt-1 mx-2 text-center">
+            <label>No se encuentran libros registrados</label>
+        </div>
+        
+        <nav th:if="${page.totalElements > 0}" aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
                     <a class="page-link"
@@ -107,54 +110,65 @@
               </div>
               <div class="modal-body">
                   <!-- Formulario para agregar un nuevo artículo -->
-                  <form th:action="@{/Biblioteca/InventarioLibros}" th:object="${nuevoLibro}" method="post">
-                      <!-- Campo oculto para idArticulo (deja que Spring Boot lo maneje automáticamente) -->
-                      <input type="hidden" th:field="*{idInventarioLibros}" />
-  
-                      <!-- Campo nombreArticulo -->
-                      <div class="mb-3">
-                          <label for="tituloLibro" class="form-label">Titulo del Libro:</label>
-                          <input type="text" th:field="*{tituloLibro}" class="form-control" required />
-                      </div>
-  
-                      <!-- Campo descripcionArticulo -->
-                      <div class="mb-3">
-                          <label for="autorLibro" class="form-label">Autor:</label>
-                          <input type="text" th:field="*{autorLibro}" class="form-control" required />
-                      </div>
-
-                      <div class="mb-3">
-                          <label for="tipoLibro" class="form-label">Tipo:</label>
-                          <input type="text" th:field="*{tipoLibro}" class="form-control" required />
-                      </div>
-
-                      <div class="mb-3">
-                          <label for="precioLibro" class="form-label">Precio:</label>
-                          <input type="number" th:field="*{precioUnitario}" class="form-control" required />
-                      </div>
-  
-                      <!-- Campo existenciaArticulo -->
-                      <div class="mb-3">
-                          <label for="existenciaLibro" class="form-label">Cantidad:</label>
-                          <input type="number" th:field="*{existenciaLibro}" class="form-control" required/>
-                      </div>
-
-                      <div class="mb-3">
-                          <label for="fechaIngreso" class="form-label">Fecha:</label>
-                          <input type="date" th:field="*{fechaIngreso}" class="form-control" required />
-                      </div>
-
-                      <div class="mb-3">
-                          <label for="cantidadMalEstado" class="form-label">Cantidad en Mal Estado:</label>
-                          <input type="number" th:field="*{cantidadMalEstado}" class="form-control" required />
-                      </div>
-  
-                      <!-- Botones del modal -->
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                          <button type="submit" class="btn btn-primary">Guardar</button>
-                      </div>
-                  </form>
+                  <form id="formInventarioLibro" th:action="@{/Biblioteca/InventarioLibros}" th:object="${nuevoLibro}" method="post" novalidate>
+                    <!-- Campo oculto para idArticulo -->
+                    <input type="hidden" th:field="*{idInventarioLibros}" />
+                  
+                    <!-- Campo tituloLibro -->
+                    <div class="mb-3">
+                        <label for="tituloLibro" class="form-label">Titulo del Libro:</label>
+                        <input type="text" th:field="*{tituloLibro}" class="form-control" id="tituloLibro" required />
+                        <div class="invalid-feedback">El título es obligatorio.</div>
+                    </div>
+                
+                    <!-- Campo autorLibro -->
+                    <div class="mb-3">
+                        <label for="autorLibro" class="form-label">Autor:</label>
+                        <input type="text" th:field="*{autorLibro}" class="form-control" id="autorLibro" required />
+                        <div class="invalid-feedback">El autor es obligatorio.</div>
+                    </div>
+                
+                    <!-- Campo tipoLibro -->
+                    <div class="mb-3">
+                        <label for="tipoLibro" class="form-label">Tipo:</label>
+                        <input type="text" th:field="*{tipoLibro}" class="form-control" id="tipoLibro" required />
+                        <div class="invalid-feedback">El tipo es obligatorio.</div>
+                    </div>
+                
+                    <!-- Campo precioLibro -->
+                    <div class="mb-3">
+                        <label for="precioLibro" class="form-label">Precio:</label>
+                        <input type="number" step="0.01" th:field="*{precioUnitario}" class="form-control" id="precioLibro" required min="0.01" />
+                        <div class="invalid-feedback">El precio debe ser mayor a 0 y puede contener decimales.</div>
+                    </div>
+                
+                    <!-- Campo existenciaLibro -->
+                    <div class="mb-3">
+                        <label for="existenciaLibro" class="form-label">Cantidad:</label>
+                        <input type="number" th:field="*{existenciaLibro}" class="form-control" id="existenciaLibro" required min="1" />
+                        <div class="invalid-feedback">La cantidad debe ser mayor a 0.</div>
+                    </div>
+                                
+                    <!-- Campo fechaIngreso -->
+                    <div class="mb-3">
+                        <label for="fechaIngreso" class="form-label">Fecha de Ingreso:</label>
+                        <input type="date" th:field="*{fechaIngreso}" class="form-control" id="fechaIngreso" required readonly />
+                        <div class="invalid-feedback">Debe ingresar una fecha válida.</div>
+                    </div>
+                
+                    <!-- Campo cantidadMalEstado -->
+                    <div class="mb-3">
+                        <label for="cantidadMalEstado" class="form-label">Cantidad en Mal Estado:</label>
+                        <input type="number" th:field="*{cantidadMalEstado}" class="form-control" id="cantidadMalEstado" required min="0" />
+                        <div class="invalid-feedback">La cantidad en mal estado debe ser menor o igual a la cantidad total.</div>
+                    </div>
+                
+                    <!-- Botones del modal -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
               </div>
           </div>
       </div>
@@ -164,41 +178,63 @@
     <div class="modal fade" id="editarLibroModal" tabindex="-1" aria-labelledby="editarLibroModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form id="formEditarLibro" th:action="@{/Biblioteca/InventarioLibros/update}" method="post">
+                <form id="formEditarLibro" th:action="@{/Biblioteca/InventarioLibros/update}" method="post" novalidate>
                     <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                
                     <div class="modal-header">
                         <h5 class="modal-title" id="editarLibroModalLabel">Editar Libro</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="idInventarioLibrosEdit" name="idInventarioLibros">
+                        
+                        <!-- Campo título del libro -->
                         <div class="mb-3">
                             <label for="tituloLibroEdit" class="form-label">Título del Libro</label>
-                            <input type="text" class="form-control" id="tituloLibroEdit" name="tituloLibro">
+                            <input type="text" class="form-control" id="tituloLibroEdit" name="tituloLibro" required />
+                            <div class="invalid-feedback">El título es obligatorio.</div>
                         </div>
+                
+                        <!-- Campo autor del libro -->
                         <div class="mb-3">
                             <label for="autorLibroEdit" class="form-label">Autor del Libro</label>
-                            <input type="text" class="form-control" id="autorLibroEdit" name="autorLibro">
+                            <input type="text" class="form-control" id="autorLibroEdit" name="autorLibro" required />
+                            <div class="invalid-feedback">El autor es obligatorio.</div>
                         </div>
+                
+                        <!-- Campo tipo de libro -->
                         <div class="mb-3">
                             <label for="tipoLibroEdit" class="form-label">Tipo de Libro</label>
-                            <input type="text" class="form-control" id="tipoLibroEdit" name="tipoLibro">
+                            <input type="text" class="form-control" id="tipoLibroEdit" name="tipoLibro" required />
+                            <div class="invalid-feedback">El tipo es obligatorio.</div>
                         </div>
+                
+                        <!-- Campo precio unitario -->
                         <div class="mb-3">
                             <label for="precioUnitarioEdit" class="form-label">Precio Unitario</label>
-                            <input type="text" class="form-control" id="precioUnitarioEdit" name="precioUnitario">
+                            <input type="number" step="0.01" class="form-control" id="precioUnitarioEdit" name="precioUnitario" required min="0.01" />
+                            <div class="invalid-feedback">El precio debe ser mayor a 0 y puede contener decimales.</div>
                         </div>
+                
+                        <!-- Campo existencia -->
                         <div class="mb-3">
                             <label for="existenciaLibroEdit" class="form-label">Existencia</label>
-                            <input type="number" class="form-control" id="existenciaLibroEdit" name="existenciaLibro">
+                            <input type="number" class="form-control" id="existenciaLibroEdit" name="existenciaLibro" required min="1" />
+                            <div class="invalid-feedback">La cantidad debe ser mayor a 0.</div>
                         </div>
+                
+                        <!-- Campo fecha de ingreso -->
                         <div class="mb-3">
                             <label for="fechaIngresoEdit" class="form-label">Fecha de Ingreso</label>
-                            <input type="date" class="form-control" id="fechaIngresoEdit" name="fechaIngreso">
+                            <input type="date" class="form-control" id="fechaIngresoEdit" name="fechaIngreso" required readonly />
+                            <div class="invalid-feedback">Debe ingresar una fecha válida.</div>
                         </div>
+                
+                        <!-- Campo cantidad en mal estado -->
                         <div class="mb-3">
                             <label for="cantidadMalEstadoEdit" class="form-label">Cantidad en Mal Estado</label>
-                            <input type="number" class="form-control" id="cantidadMalEstadoEdit" name="cantidadMalEstado">
+                            <input type="number" class="form-control" id="cantidadMalEstadoEdit" name="cantidadMalEstado" required min="0" />
+                            <div class="invalid-feedback">La cantidad en mal estado debe ser menor o igual a la cantidad total.</div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -269,6 +305,132 @@
         var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
         deleteModal.show();
         }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("formInventarioLibro");
+            const cantidadField = document.getElementById("existenciaLibro");
+            const cantidadMalEstadoField = document.getElementById("cantidadMalEstado");
+            const precioField = document.getElementById("precioLibro");
+            const fechaIngresoField = document.getElementById("fechaIngreso");
+
+            // Obtener la fecha actual del sistema
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript van de 0 a 11
+            const year = today.getFullYear();
+
+            // Formatear la fecha como yyyy-mm-dd
+            const todayFormatted = `${year}-${month}-${day}`;
+
+            // Establecer la fecha en el campo de fechaIngreso
+            fechaIngresoField.value = todayFormatted;
+
+            form.addEventListener("submit", function (event) {
+                let isValid = true;
+
+                // Validar que el precio sea mayor a 0
+                const precio = parseFloat(precioField.value);
+                if (isNaN(precio) || precio <= 0) {
+                    precioField.setCustomValidity("El precio debe ser mayor a 0 y puede tener decimales.");
+                    isValid = false;
+                } else {
+                    precioField.setCustomValidity(""); // Limpiar el mensaje de error
+                }
+
+                // Validar que la cantidad sea mayor a 0
+                const cantidad = parseInt(cantidadField.value, 10);
+                if (isNaN(cantidad) || cantidad < 1) {
+                    cantidadField.setCustomValidity("La cantidad debe ser mayor a cero.");
+                    isValid = false;
+                } else {
+                    cantidadField.setCustomValidity(""); // Limpiar el mensaje de error
+                }
+
+                // Validar que la cantidad en mal estado no sea mayor que la cantidad total
+                const cantidadMalEstado = parseInt(cantidadMalEstadoField.value, 10);
+                if (isNaN(cantidadMalEstado) || cantidadMalEstado > cantidad) {
+                    cantidadMalEstadoField.setCustomValidity("La cantidad en mal estado no puede ser mayor que la cantidad total.");
+                    isValid = false;
+                } else {
+                    cantidadMalEstadoField.setCustomValidity(""); // Limpiar el mensaje de error
+                }
+
+                // Validar que la fecha de ingreso no sea futura
+                const fechaIngreso = new Date(fechaIngresoField.value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // Quitar horas, minutos, segundos
+                if (isNaN(fechaIngreso.getTime()) || fechaIngreso > today) {
+                    fechaIngresoField.setCustomValidity("La fecha de ingreso no puede ser futura.");
+                    isValid = false;
+                } else {
+                    fechaIngresoField.setCustomValidity(""); // Limpiar el mensaje de error
+                }
+
+                // Si alguna validación no es válida, evitar el envío del formulario
+                if (!form.checkValidity() || !isValid) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add("was-validated");
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        // Establecer la fecha del sistema en el campo de fecha de ingreso del formulario de edición
+        const fechaIngresoFieldEdit = document.getElementById("fechaIngresoEdit");
+
+        if (fechaIngresoFieldEdit) {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            const todayFormatted = `${year}-${month}-${day}`;
+            fechaIngresoFieldEdit.value = todayFormatted;
+        }
+
+        // Función para validar el formulario
+        function validateForm(form) {
+            const precio = form.querySelector('#precioUnitarioEdit');
+            const existencia = form.querySelector('#existenciaLibroEdit');
+            const cantidadMalEstado = form.querySelector('#cantidadMalEstadoEdit');
+
+            // Limpiar validaciones previas
+            form.querySelectorAll('.form-control').forEach(input => {
+                input.classList.remove('is-invalid');
+            });
+
+            let isValid = true;
+
+            if (parseFloat(precio.value) <= 0 || isNaN(parseFloat(precio.value))) {
+                precio.classList.add('is-invalid');
+                isValid = false;
+            }
+
+            if (parseInt(existencia.value) <= 0 || isNaN(parseInt(existencia.value))) {
+                existencia.classList.add('is-invalid');
+                isValid = false;
+            }
+
+            if (parseInt(cantidadMalEstado.value) > parseInt(existencia.value) || isNaN(parseInt(cantidadMalEstado.value))) {
+                cantidadMalEstado.classList.add('is-invalid');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        const formEdit = document.getElementById('formEditarLibro');
+        if (formEdit) {
+            formEdit.addEventListener('submit', function (event) {
+                if (!validateForm(formEdit)) {
+                    event.preventDefault();
+                }
+            });
+        }
+    });
     </script>
 </body>
 </html>

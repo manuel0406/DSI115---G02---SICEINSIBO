@@ -69,8 +69,13 @@
         </table>
 
         
-        <!-- Maneja la paginacion  -->
-        <nav aria-label="...">
+        <!-- Mensaje cuando no hay datos -->
+        <div th:if="${page.totalElements == 0}" class="alert alert-warning alert-dismissible fade show mt-1 mx-2 text-center">
+            <label>No se encuentran articulos de papelería disponibles</label>
+        </div>
+
+        <!-- Maneja la paginación -->
+        <nav th:if="${page.totalElements > 0}" aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
                     <a class="page-link"
@@ -100,34 +105,43 @@
               </div>
               <div class="modal-body">
                   <!-- Formulario para agregar un nuevo artículo -->
-                  <form th:action="@{/Biblioteca/Papeleria/InventarioPapeleria}" th:object="${nuevoProducto}" method="post">
-                      <!-- Campo oculto para idArticulo (deja que Spring Boot lo maneje automáticamente) -->
-                      <input type="hidden" th:field="*{idArticulo}" />
-  
-                      <!-- Campo nombreArticulo -->
-                      <div class="mb-3">
-                          <label for="nombreArticulo" class="form-label">Nombre de Producto:</label>
-                          <input type="text" th:field="*{nombreArticulo}" class="form-control" required />
-                      </div>
-  
-                      <!-- Campo descripcionArticulo -->
-                      <div class="mb-3">
-                          <label for="descripcionArticulo" class="form-label">Detalle:</label>
-                          <input type="text" th:field="*{descripcionArticulo}" class="form-control" required />
-                      </div>
-  
-                      <!-- Campo existenciaArticulo -->
-                      <div class="mb-3">
-                          <label for="existenciaArticulo" class="form-label">Cantidad:</label>
-                          <input type="number" th:field="*{existenciaArticulo}" class="form-control" required/>
-                      </div>
-  
-                      <!-- Botones del modal -->
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                          <button type="submit" class="btn btn-primary">Guardar</button>
-                      </div>
-                  </form>
+                  <form th:action="@{/Biblioteca/Papeleria/InventarioPapeleria}" th:object="${nuevoProducto}" method="post" id="formNuevoProducto" novalidate>
+                    <!-- Campo oculto para idArticulo -->
+                    <input type="hidden" th:field="*{idArticulo}" />
+                
+                    <!-- Campo nombreArticulo -->
+                    <div class="mb-3">
+                        <label for="nombreArticulo" class="form-label">Nombre de Producto:</label>
+                        <input type="text" th:field="*{nombreArticulo}" class="form-control" id="nombreArticulo" required />
+                        <div class="invalid-feedback">
+                            Por favor, ingrese el nombre del producto.
+                        </div>
+                    </div>
+                
+                    <!-- Campo descripcionArticulo -->
+                    <div class="mb-3">
+                        <label for="descripcionArticulo" class="form-label">Detalle:</label>
+                        <input type="text" th:field="*{descripcionArticulo}" class="form-control" id="descripcionArticulo" required />
+                        <div class="invalid-feedback">
+                            Por favor, ingrese el detalle del producto.
+                        </div>
+                    </div>
+                
+                    <!-- Campo existenciaArticulo -->
+                    <div class="mb-3">
+                        <label for="existenciaArticulo" class="form-label">Cantidad:</label>
+                        <input type="number" th:field="*{existenciaArticulo}" class="form-control" id="existenciaArticulo" min="1" required />
+                        <div class="invalid-feedback">
+                            La cantidad debe ser mayor a 0.
+                        </div>
+                    </div>
+                
+                    <!-- Botones del modal -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
               </div>
           </div>
       </div>
@@ -137,7 +151,7 @@
     <div class="modal fade" id="editarArticuloModal" tabindex="-1" aria-labelledby="editarArticuloModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form id="formEditarArticulo" th:action="@{/Biblioteca/Papeleria/InventarioPapeleria/update}" method="post">
+                <form id="formEditarArticulo" th:action="@{/Biblioteca/Papeleria/InventarioPapeleria/update}" method="post" novalidate>
                     <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
                     <div class="modal-header">
                         <h5 class="modal-title" id="editModalLabel">Editar Artículo</h5>
@@ -145,17 +159,29 @@
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="idArticuloEdit" name="idArticulo">
+                
                         <div class="mb-3">
                             <label for="nombreArticuloEdit" class="form-label">Nombre del Artículo</label>
-                            <input type="text" class="form-control" id="nombreArticuloEdit" name="nombreArticulo">
+                            <input type="text" class="form-control" id="nombreArticuloEdit" name="nombreArticulo" required />
+                            <div class="invalid-feedback">
+                                Por favor, ingrese el nombre del artículo.
+                            </div>
                         </div>
+                
                         <div class="mb-3">
                             <label for="descripcionArticuloEdit" class="form-label">Descripción del Artículo</label>
-                            <input type="text" class="form-control" id="descripcionArticuloEdit" name="descripcionArticulo">
+                            <input type="text" class="form-control" id="descripcionArticuloEdit" name="descripcionArticulo" required />
+                            <div class="invalid-feedback">
+                                Por favor, ingrese la descripción del artículo.
+                            </div>
                         </div>
+                
                         <div class="mb-3">
                             <label for="existenciaArticuloEdit" class="form-label">Existencia del Artículo</label>
-                            <input type="number" class="form-control" id="existenciaArticuloEdit" name="existenciaArticulo">
+                            <input type="number" class="form-control" id="existenciaArticuloEdit" name="existenciaArticulo" min="1" required />
+                            <div class="invalid-feedback">
+                                La cantidad debe ser mayor a 0.
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -224,5 +250,89 @@
     }
   </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var form = document.getElementById("formNuevoProducto");
+
+        form.addEventListener("submit", function (event) {
+            var isValid = true;
+
+            // Validar nombre de producto
+            var nombre = form.querySelector("#nombreArticulo");
+            if (!nombre.value.trim()) {
+                nombre.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                nombre.classList.remove("is-invalid");
+            }
+
+            // Validar detalle del producto
+            var detalle = form.querySelector("#descripcionArticulo");
+            if (!detalle.value.trim()) {
+                detalle.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                detalle.classList.remove("is-invalid");
+            }
+
+            // Validar cantidad
+            var cantidad = form.querySelector("#existenciaArticulo");
+            if (cantidad.value <= 0) {
+                cantidad.classList.add("is-invalid");
+                isValid = false;
+            } else {
+                cantidad.classList.remove("is-invalid");
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+                event.stopPropagation();
+                form.classList.add("was-validated");
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    var form = document.getElementById("formEditarArticulo");
+
+    form.addEventListener("submit", function (event) {
+        var isValid = true;
+
+        // Validar nombre del artículo
+        var nombre = form.querySelector("#nombreArticuloEdit");
+        if (!nombre.value.trim()) {
+            nombre.classList.add("is-invalid");
+            isValid = false;
+        } else {
+            nombre.classList.remove("is-invalid");
+        }
+
+        // Validar descripción del artículo
+        var descripcion = form.querySelector("#descripcionArticuloEdit");
+        if (!descripcion.value.trim()) {
+            descripcion.classList.add("is-invalid");
+            isValid = false;
+        } else {
+            descripcion.classList.remove("is-invalid");
+        }
+
+        // Validar existencia del artículo
+        var existencia = form.querySelector("#existenciaArticuloEdit");
+        if (existencia.value <= 0) {
+            existencia.classList.add("is-invalid");
+            isValid = false;
+        } else {
+            existencia.classList.remove("is-invalid");
+        }
+
+        if (!isValid) {
+            event.preventDefault();
+            event.stopPropagation();
+            form.classList.add("was-validated");
+        }
+    });
+});
+</script>
 </body>
 </html>

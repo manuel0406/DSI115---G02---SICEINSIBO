@@ -107,22 +107,34 @@
             </tbody>
           </table>
 
-          <!-- Manejo de la paginación -->
-          <nav aria-label="Page navigation">
+      <!-- Mostrar mensaje de alerta si no hay préstamos pendientes -->
+      <div th:if="${page.totalElements == 0}" class="alert alert-warning alert-dismissible fade show mt-1 mx-2 text-center">
+        <label>No hay préstamos pendientes</label>
+    </div>
+
+      <!-- Mostrar la paginación solo si hay datos y más de una página -->
+      <div th:if="${page.totalElements > 0 and page.totalPages > 1}">
+        <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
+                <!-- Botón de anterior -->
                 <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
                     <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${page.number - 1}}">Anterior</a>
                 </li>
+
+                <!-- Páginas numeradas -->
                 <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
                     th:classappend="${page.number == i} ? 'active'">
                     <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${i}}"
                         th:text="${i + 1}">1</a>
                 </li>
+
+                <!-- Botón de siguiente -->
                 <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
                     <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${page.number + 1}}">Siguiente</a>
                 </li>
             </ul>
         </nav>
+      </div>
     </div>
   
       <!-- Modal Nuevo Prestamo -->
@@ -134,43 +146,45 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form  action="#" th:action="@{/Biblioteca/Prestamos/registrar}" th:object="${nuevoPrestamo}" method="post">
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="fechaPrestamo" class="form-label">Fecha de Entrega</label>
-                        <input type="date" class="form-control" id="fechaPrestamo" th:field="*{fechaPrestamo}" readonly>
-                    </div>
-                    <div class="col-md-6">
+            <form action="#" th:action="@{/Biblioteca/Prestamos/registrar}" th:object="${nuevoPrestamo}" class="needs-validation" id="formPrestamo" method="post" novalidate>
+              <div class="row mb-3">
+                  <div class="col-md-6">
+                      <label for="fechaPrestamo" class="form-label">Fecha de Entrega</label>
+                      <input type="date" class="form-control" id="fechaPrestamo" th:field="*{fechaPrestamo}" readonly>
+                  </div>
+                  <div class="col-md-6">
                       <label for="alumno" class="form-label">Alumno a entregar</label>
                       <select class="form-control" id="alumno" th:field="*{alumno}" required>
-                        <option value="">Seleccione un alumno</option>
-                        <option th:each="alumno : ${alumnos}" th:value="${alumno.idAlumno}" th:text="${alumno.nombreAlumno + ' ' + alumno.apellidoAlumno}"></option>
-                    </select>
-                    </div>
-                </div>
-            
-                <div class="row mb-3">
-                    <div class="col-md-6">
+                          <option value="">Seleccione un alumno</option>
+                          <option th:each="alumno : ${alumnos}" th:value="${alumno.idAlumno}" th:text="${alumno.nombreAlumno + ' ' + alumno.apellidoAlumno}"></option>
+                      </select>
+                      <div class="invalid-feedback">Debe seleccionar un alumno.</div>
+                  </div>
+              </div>
+          
+              <div class="row mb-3">
+                  <div class="col-md-6">
                       <label for="libro" class="form-label">Libro</label>
                       <select class="form-control" id="libro" th:field="*{inventarioLibro}" required>
                           <option value="">Seleccione un libro</option>
                           <option th:each="libro : ${libros}" th:value="${libro.idInventarioLibros}" th:text="${libro.tituloLibro}"></option>
                       </select>
-                    </div>
-                    <div class="col-md-6">
+                      <div class="invalid-feedback">Debe seleccionar un libro.</div>
+                  </div>
+                  <div class="col-md-6">
                       <label for="cantidad" class="form-label">Cantidad</label>
                       <input type="number" class="form-control" id="cantidad" th:field="*{cantidadPrestamo}" min="1" step="1" required />
-                      
+                      <div class="invalid-feedback">Debe ingresar una cantidad válida.</div>
                   </div>
-                </div>
-
-                <input type="hidden" id="estado" name="estadoPrestamo" th:value="'Pendiente'" />
-            
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Registrar</button>
-                </div>
-            </form>
+              </div>
+          
+              <input type="hidden" id="estado" name="estadoPrestamo" th:value="'Pendiente'" />
+          
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-primary">Registrar</button>
+              </div>
+          </form>
           </div>
         </div>
       </div>
@@ -241,6 +255,20 @@
         }
       });
     });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("formPrestamo");
+
+    form.addEventListener("submit", function (event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        form.classList.add("was-validated");
+    });
+});
   </script>
 </body>
 

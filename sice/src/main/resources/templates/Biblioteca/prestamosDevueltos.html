@@ -85,8 +85,13 @@
             </tbody>
         </table>
 
+        <!-- Mensaje cuando no hay datos -->
+        <div th:if="${page.totalElements == 0}" class="alert alert-warning alert-dismissible fade show mt-1 mx-2 text-center">
+            <label>No hay préstamos devueltos registrados</label>
+        </div>
+
         <!-- Manejo de la paginación -->
-        <nav aria-label="Page navigation">
+        <nav th:if="${page.totalElements > 0}" aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
                     <a class="page-link" th:href="@{'/Biblioteca/Prestamos/Devueltos?page=' + ${page.number - 1}}">Anterior</a>
