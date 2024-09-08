@@ -79,9 +79,6 @@
                                 </li>
                             </ul>
                         </li>
-
-
-
                     </ul>
                     <form class="d-flex" th:action="@{/logout}" method="post">
                         <button class="btn btn-outline-danger text-white" type="submit" th:href="@{/logout}">
@@ -95,16 +92,13 @@
 
     <div class="container mt-3 my-5 py-5">
         <!-- Jumbotron -->
-        <div class="jumbotron  mb-3 bg-light rounded-3">
-            <div class="container py-5 text-center">
+        <div class="jumbotron mb-3 bg-light rounded-3 px-3 py-3">
+            <div class="container text-center">
                 <h1 class="display-5 fw-bold">Bienvenido a SICE</h1>
-                <p class="col-md-12 fs-5">Accede a toda la información y herramientas necesarias para una gestión
-                    eficiente y efectiva.
-                </p>
-
+                <p class="fs-5">Accede a toda la información y herramientas necesarias para una gestión eficiente y
+                    efectiva.</p>
             </div>
         </div>
-
         <!-- Cards -->
         <div class="row mb-3 justify-content-center">
             <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
@@ -112,8 +106,8 @@
                 <div class="card h-100">
                     <img th:src="@{/Imagenes/docente.jpg}" class="card-img-top" alt="Docentes">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Docentes</h5>
-                        <p class="card-text">Accede a los expedientes de los docentes de la institución.</p>
+                        <h5 class="card-title fs-6">Docentes</h5>
+                        <p class="card-text fs-6">Accede a los expedientes de los docentes de la institución.</p>
                         <a th:href="@{/expedientedocente/plantadocente}" class="btn btn-primary mt-auto">Ir a
                             Sección</a>
                     </div>
@@ -123,8 +117,8 @@
                 <div class="card h-100">
                     <img th:src="@{/Imagenes/docente.jpg}" class="card-img-top" alt="Expediente">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Expediente</h5>
-                        <p class="card-text">Edita los datos generales de tu expediente.</p>
+                        <h5 class="card-title fs-6">Expediente</h5>
+                        <p class="card-text fs-6">Edita los datos generales de tu expediente.</p>
                         <a th:href="@{/expedientedocente/consultarexpediente/} + ${dui.duiDocente}"
                             class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
@@ -135,8 +129,8 @@
                 <div class="card h-100">
                     <img th:src="@{/Imagenes/administrativo.jpg}" class="card-img-top" alt="Administrativos">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Administrativos</h5>
-                        <p class="card-text">Consulta la información de los empleados administrativos.</p>
+                        <h5 class="card-title fs-6">Administrativos</h5>
+                        <p class="card-text fs-6">Consulta la información de los empleados administrativos.</p>
                         <a th:href="@{/expedienteadministrativo/plantaadministrativa}"
                             class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
@@ -147,21 +141,19 @@
                 <div class="card h-100">
                     <img th:src="@{/Imagenes/alumnos.jpg}" class="card-img-top" alt="Alumnos">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Alumnos</h5>
-                        <p class="card-text">Accede a los expedientes de los alumnos de la institución.</p>
+                        <h5 class="card-title fs-6">Alumnos</h5>
+                        <p class="card-text fs-6">Accede a los expedientes de los alumnos de la institución.</p>
                         <a th:href="@{/ExpedienteAlumno/ver}" class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
                 </div>
-
             </div>
-
             <div sec:authorize="hasAnyRole('ADMINISTRADOR','DOCENTE','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
                 class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
                 <div class="card h-100">
                     <img th:src="@{/Imagenes/nota.jpg}" class="card-img-top" alt="Notas">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Notas</h5>
-                        <p class="card-text">Accede a las calificaciones de los alumnos de la institución.</p>
+                        <h5 class="card-title fs-6">Notas</h5>
+                        <p class="card-text fs-6">Accede a las calificaciones de los alumnos de la institución.</p>
                         <a href="#" class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
                 </div>
@@ -170,20 +162,20 @@
                 <div th:if="${activo != false}" class="card h-100">
                     <img th:src="@{/Imagenes/alumnos.jpg}" class="card-img-top" alt="Alumnos">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Alumnos</h5>
-                        <p class="card-text">Accede a los expedientes de los alumnos de la institución.</p>
+                        <h5 class="card-title fs-6">Alumnos</h5>
+                        <p class="card-text fs-6">Accede a los expedientes de los alumnos de la institución.</p>
                         <a class="btn btn-primary mt-auto Agregar-btn">Ir a Sección</a>
                     </div>
                 </div>
-
             </div>
             <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
                 class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
                 <div class="card h-100">
                     <img th:src="@{/Imagenes/asistencia.jpg}" class="card-img-top" alt="Asistencia">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Asistencia</h5>
-                        <p class="card-text">Accede a la asistencia de docentes de los alumnos de la institución.</p>
+                        <h5 class="card-title fs-6">Asistencia</h5>
+                        <p class="card-text fs-6">Accede a la asistencia de docentes de los alumnos de la institución.
+                        </p>
                         <a th:href="@{/asistencias/seleccionInicio}" class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
                 </div>
@@ -193,8 +185,8 @@
                 <div class="card h-100">
                     <img th:src="@{/Imagenes/administracion.jpg}" class="card-img-top" alt="Administración">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Administración</h5>
-                        <p class="card-text">Gestiona la administración de la institución.</p>
+                        <h5 class="card-title fs-6">Administración</h5>
+                        <p class="card-text fs-6">Gestiona la administración de la institución.</p>
                         <a th:href="@{/administracion}" class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
                 </div>
@@ -211,7 +203,6 @@
                     <h5 class="modal-title" id="confirAgregarModalLabel">Elija la sección que desea consultar</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-
                 <div class="modal-body">
                     <div class="table-responsive py-2 table-sm">
                         <table class="table table-hover ">
@@ -233,7 +224,6 @@
                                             th:href="@{/AsignacionOrientador/seccionAsigada/}+${bachillerato.codigoBachillerato}">
                                             <i class="bi bi-eye"></i>
                                         </a>
-
                                     </td>
                                 </tr>
                             </tbody>
@@ -243,16 +233,12 @@
             </div>
         </div>
     </div>
-
-
     <footer th:fragment="footer">
         <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
     </footer>
     <script type="text/javascript" th:src="@{/js/home.js}"></script>
-
-
 </body>
 
 </html>

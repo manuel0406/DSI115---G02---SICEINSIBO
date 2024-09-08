@@ -77,7 +77,7 @@
           </tbody>
         </table>
         <!-- Se mostrara cuando se le mande una lista de asignaciones vacias -->
-        <div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2"
+        <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2"
                     th:if="${totalElements == 0}">
                     <i class="bi bi-exclamation-triangle"></i>
                     <label th:text="${'¡No hay asignaciones registrados!'}"></label>
@@ -168,10 +168,11 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form th:object="${orientador}" class="needs-validation" id="formOrientador" novalidate method="post"
-          th:action="@{/AsignacionOrientador/guardarOrientacion}">
+          th:action="@{/AsignacionOrientador/actualizarOrientacion}">
           <div class="modal-body">
             <div class="mb-3">
-              <input type="hidden" id="idOrientador" name="idOrientador">
+              <input type="text" id="idOrientador" name="idOrientador">
+               <input type="text" id="EditBachillerato" name="bachillerato">
               <label for="docente" class="form-label fw-bold">Docente:</label>
               <select th:field="*{docente}" class="form-select border-secondary border-opacity-75" id="EditDocente"
                 required>
@@ -181,7 +182,7 @@
               </select>
               <div class="invalid-feedback">Es necesario seleccionar el docente</div>
             </div>
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label for="exampleInputPassword1" class="form-label fs-6">Especialidad del bachillerato:</label>
               <select th:field="*{bachillerato}" class="form-select border-secondary border-opacity-75"
                 aria-label="Default select example" id="EditBachillerato" required>
@@ -191,7 +192,7 @@
                 </option>
               </select>
               <div class="invalid-feedback">Es necesario seleccionar una especialidad</div>
-            </div>
+            </div> -->
           </div>
           <div class="modal-footer text-center">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"

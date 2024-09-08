@@ -47,7 +47,6 @@ public class OrientadorController {
 
         Orientador orientador = new Orientador();
         List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
-
         List<Orientador> listaOrientadores = orientadorService.listaOrientador();
 
         // Crear una estructura de paginado manualmente
@@ -82,6 +81,22 @@ public class OrientadorController {
             attributes.addFlashAttribute("error", "¡Está sección ya fue asignada!");
             return "redirect:/AsignacionOrientador/Asignar";
         }
+        orientadorService.guardarOrientador(orientador);
+        attributes.addFlashAttribute("success", "¡Registro guardado con exito!");
+
+        return "redirect:/AsignacionOrientador/Asignar";
+    }
+    @PostMapping("/actualizarOrientacion")
+    public String actualizarorientador(@ModelAttribute Orientador orientador, RedirectAttributes attributes) {
+
+        Orientador existe = null;
+
+        // existe = orientadorService.existe(orientador.getBachillerato().getCodigoBachillerato());
+        
+        // if (existe.getDocente().getDuiDocente() != orientador.getDocente().getDuiDocente()) {
+        //     attributes.addFlashAttribute("error", "¡Está sección ya fue asignada!");
+        //     return "redirect:/AsignacionOrientador/Asignar";
+        // }
         orientadorService.guardarOrientador(orientador);
         attributes.addFlashAttribute("success", "¡Registro guardado con exito!");
 
