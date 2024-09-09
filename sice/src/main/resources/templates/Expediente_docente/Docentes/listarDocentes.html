@@ -26,9 +26,9 @@
                     onclick="openInPopup(this.href); return false;">
                     <i class="bi bi-printer"></i> Imprimir
                 </a>
-                <a class="btn btn-primary" th:href="@{/expedientedocente/formulario}" 
-                   data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar un nuevo docente">
-                   <i class="bi bi-person-plus"></i> Agregar
+                <a class="btn btn-primary" th:href="@{/expedientedocente/formulario}" data-bs-toggle="tooltip"
+                    data-bs-placement="top" title="Agregar un nuevo docente">
+                    <i class="bi bi-person-plus"></i> Agregar
                 </a>
             </div>
         </div>
@@ -79,7 +79,6 @@
                                     <i class="bi bi-trash"></i>
                                 </a>
                                 <a th:href="@{/expedientedocente/consultarexpediente/{id}(id=${docenteDTO.docente.duiDocente}, format='pdf')}"
-
                                     class="btn btn-secondary btn-sm mx-1" data-bs-toggle="tooltip"
                                     data-bs-placement="top" title="Imprimir" target="_blank"
                                     onclick="openInPopup(this.href); return false;">
@@ -91,24 +90,32 @@
                 </tbody>
             </table>
 
+            <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${totalElements == 0}">
+                <i class="bi bi-exclamation-triangle"></i>
+                <label th:text="${'¡No hay alumnos registrados!'}"></label>
+            </div>
+
             <!-- Maneja la paginacion  -->
-            <nav aria-label="...">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
-                        <a class="page-link"
-                            th:href="@{'/expedientedocente/plantadocente?page=' + ${page.number - 1}}">Anterior</a>
-                    </li>
-                    <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
-                        th:classappend="${page.number == i} ? 'active'">
-                        <a class="page-link" th:href="@{'/expedientedocente/plantadocente?page=' + ${i}}"
-                            th:text="${i + 1}">1</a>
-                    </li>
-                    <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
-                        <a class="page-link"
-                            th:href="@{'/expedientedocente/plantadocente?page=' + ${page.number + 1}}">Siguiente</a>
-                    </li>
-                </ul>
-            </nav>
+            <div th:if="${totalPages != 0}">
+                <nav aria-label="...">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
+                            <a class="page-link"
+                                th:href="@{'/expedientedocente/plantadocente?page=' + ${page.number - 1}}">Anterior</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                            th:classappend="${page.number == i} ? 'active'">
+                            <a class="page-link" th:href="@{'/expedientedocente/plantadocente?page=' + ${i}}"
+                                th:text="${i + 1}">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
+                            <a class="page-link"
+                                th:href="@{'/expedientedocente/plantadocente?page=' + ${page.number + 1}}">Siguiente</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
         </div>
     </div>
 

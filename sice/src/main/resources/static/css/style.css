@@ -824,7 +824,7 @@ td {
 
 
 /* ----------------------------------------------------------------------------------------- */
-/*                               BARRA DE NAVEGACIÓN (HORARIO) - Bryan                       */
+/*                                      HORARIO - Bryan                                      */
 /* ----------------------------------------------------------------------------------------- */
 
 .custom-navbar2 {
@@ -841,7 +841,6 @@ td {
     position: sticky;
     top: 0;
 }
-
 
 /* Estilo básico del checkbox */
 .custom-checkbox-section .form-check-input {
@@ -866,5 +865,13 @@ td {
   transition: background-color 0.3s ease-in-out;
 }
 
+/* Hace que las celdas de la tabla sean uniformes */
+.table-uniform td, .table-uniform th {
+  width: 14.28%; 
+  min-height: 50px; 
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
 
 
