@@ -11,6 +11,6 @@ import com.dsi.insibo.sice.entity.Sancion;
 @Repository
 public interface SancionesRepository extends JpaRepository<Sancion, Integer>{
     
-    @Query("SELECT s FROM Sancion s WHERE s.alumno.nie=:nie")
+    @Query("SELECT s FROM Sancion s WHERE s.alumno.idAlumno=:nie")
     public List<Sancion> findAll(@Param("nie") int nie);
 }

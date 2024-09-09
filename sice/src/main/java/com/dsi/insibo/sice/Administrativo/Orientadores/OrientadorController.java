@@ -47,7 +47,6 @@ public class OrientadorController {
 
         Orientador orientador = new Orientador();
         List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
-
         List<Orientador> listaOrientadores = orientadorService.listaOrientador();
 
         // Crear una estructura de paginado manualmente
@@ -82,6 +81,22 @@ public class OrientadorController {
             attributes.addFlashAttribute("error", "¡Está sección ya fue asignada!");
             return "redirect:/AsignacionOrientador/Asignar";
         }
+        orientadorService.guardarOrientador(orientador);
+        attributes.addFlashAttribute("success", "¡Registro guardado con exito!");
+
+        return "redirect:/AsignacionOrientador/Asignar";
+    }
+    @PostMapping("/actualizarOrientacion")
+    public String actualizarorientador(@ModelAttribute Orientador orientador, RedirectAttributes attributes) {
+
+        Orientador existe = null;
+
+        // existe = orientadorService.existe(orientador.getBachillerato().getCodigoBachillerato());
+        
+        // if (existe.getDocente().getDuiDocente() != orientador.getDocente().getDuiDocente()) {
+        //     attributes.addFlashAttribute("error", "¡Está sección ya fue asignada!");
+        //     return "redirect:/AsignacionOrientador/Asignar";
+        // }
         orientadorService.guardarOrientador(orientador);
         attributes.addFlashAttribute("success", "¡Registro guardado con exito!");
 
@@ -125,7 +140,7 @@ public class OrientadorController {
         Page<Alumno> pageAlumnos = new PageImpl<>(listaAlumnos.subList(start, end), pageRequest, listaAlumnos.size());
 
         // Obtener la lista de carreras (bachilleratos)
-        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
 
         // Agregar atributos al modelo para ser utilizados en la vista
         model.addAttribute("titulo", "Alumnos");
@@ -142,6 +157,10 @@ public class OrientadorController {
         int baseIndex = (page - 1) * size;// sirve para mantener la base de la numeración de lo alumnos cuando cambia de
                                           // pagina
         model.addAttribute("baseIndex", baseIndex);
+        model.addAttribute("urlBtnEditar", "/ExpedienteAlumno/editar/");
+		model.addAttribute("urlBtnVer", "/ExpedienteAlumno/Alumno/");
+		model.addAttribute("urlBtnEli", "/ExpedienteAlumno/delete/");
+		model.addAttribute("navMatriculados", false);
 
         // Retornar el nombre de la vista a ser renderizada
         return "Expediente_alumno/verAlumno";
@@ -164,7 +183,7 @@ public class OrientadorController {
         List<Alumno> listaAlumnos = alumnoService.listarAlumnos(bachillerato.getNombreCarrera(),
                 String.valueOf(bachillerato.getGrado()), bachillerato.getSeccion(), genero);
         // Obtener la lista de carreras (bachilleratos)
-        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
 
         carrera = bachillerato.getNombreCarrera();
 		grado = String.valueOf(bachillerato.getGrado());
@@ -214,7 +233,7 @@ public class OrientadorController {
         seccion = alumno.getBachillerato().getSeccion();
 
         // Si el alumno existe, obtiene la lista de bachilleratos para el formulario
-        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
         model.addAttribute("titulo", "Editar");
         model.addAttribute("alumno", alumno);
         model.addAttribute("bachilleratos", listaCarreras);
