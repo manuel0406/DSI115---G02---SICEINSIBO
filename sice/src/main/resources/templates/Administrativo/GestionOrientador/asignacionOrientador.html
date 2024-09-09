@@ -171,8 +171,8 @@
           th:action="@{/AsignacionOrientador/actualizarOrientacion}">
           <div class="modal-body">
             <div class="mb-3">
-              <input type="text" id="idOrientador" name="idOrientador">
-               <input type="text" id="EditBachillerato" name="bachillerato">
+              <input type="hidden" id="idOrientador" name="idOrientador">
+               <input type="hidden" id="EditBachillerato" name="bachillerato">
               <label for="docente" class="form-label fw-bold">Docente:</label>
               <select th:field="*{docente}" class="form-select border-secondary border-opacity-75" id="EditDocente"
                 required>
