@@ -57,7 +57,7 @@ public class HorarioController {
         seccion = normalizarParametro(seccion);
 
         // Obtener la lista de carreras disponibles
-        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
 
         // Variables para almacenar los datos necesarios
         Bachillerato bachillerato = null;
@@ -122,7 +122,7 @@ public class HorarioController {
         seccion = normalizarParametro(seccion);
 
         // Obtener la lista de carreras disponibles
-        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
 
         // Variables para almacenar los datos necesarios
         Bachillerato bachillerato = null;
@@ -177,7 +177,7 @@ public class HorarioController {
         seccion = normalizarParametro(seccion);
 
         // Obtener la lista de carreras disponibles
-        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
 
         // Variables para almacenar los datos necesarios
         Bachillerato bachillerato = null;

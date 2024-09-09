@@ -76,6 +76,12 @@
             </tr>
           </tbody>
         </table>
+        <!-- Se mostrara cuando se le mande una lista de asignaciones vacias -->
+        <div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2"
+                    th:if="${totalElements == 0}">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <label th:text="${'¡No hay asignaciones registrados!'}"></label>
+                </div>
       </div>
     </div>
     <!-- Contenedor de navegación para la paginación -->
