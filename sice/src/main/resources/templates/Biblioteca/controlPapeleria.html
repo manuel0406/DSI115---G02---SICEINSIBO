@@ -35,8 +35,8 @@
                   </a>
               </div>
                 
-              <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Buscar " aria-label="Buscar">
+              <form class="d-flex" role="search" method="get" th:action="@{/Biblioteca/Papeleria/Control}">
+                <input class="form-control me-2" type="search" name="query" placeholder="Buscar Persona" aria-label="Buscar">
                 <button class="btn btn-primary" type="submit">Buscar</button>
               </form>
             </div>

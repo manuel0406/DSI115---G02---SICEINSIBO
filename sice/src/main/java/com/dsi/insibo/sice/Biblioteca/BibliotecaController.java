@@ -24,10 +24,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
 import com.dsi.insibo.sice.Biblioteca.Service.InventarioLibroService;
 import com.dsi.insibo.sice.Biblioteca.Service.PrestamoLibroService;
 import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
 import com.dsi.insibo.sice.entity.Alumno;
+import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.EntregaPapeleria;
 import com.dsi.insibo.sice.entity.InventarioLibro;
 import com.dsi.insibo.sice.entity.InventarioPapeleria;
@@ -54,6 +56,9 @@ public class BibliotecaController {
     private PrestamoLibroService prestamoLibroService;
     @Autowired
     private AlumnoService alumnoService;
+    
+    @Autowired
+    BachilleratoService bachilleratoService;
 
     // @GetMapping("/InventarioLibros")
     // public String inventarioLibros(Model model){
@@ -156,6 +161,8 @@ public class BibliotecaController {
         List<PrestamoLibro> listadoPrestamos = prestamoLibroService.listarPrestamos().stream()
             .filter(prestamo -> "Pendiente".equals(prestamo.getEstadoPrestamo()))
             .collect(Collectors.toList());
+
+        List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
     
         // Filtrar por nombre del alumno si se proporciona un término de búsqueda
         if (nombreAlumno != null && !nombreAlumno.trim().isEmpty()) {
@@ -195,6 +202,7 @@ public class BibliotecaController {
         model.addAttribute("prestamos", pagePrestamos.getContent());
         model.addAttribute("libros", listadoLibros);
         model.addAttribute("alumnos", listadoAlumnos);
+        model.addAttribute("bachilleratos", listaBachilleratos);
         model.addAttribute("nuevoPrestamo", new PrestamoLibro());
         model.addAttribute("page", pagePrestamos);
     
@@ -360,6 +368,22 @@ public class BibliotecaController {
 
         ModelAndView modelAndView = new ModelAndView("Biblioteca/verInventarioPdf");
         modelAndView.addObject("libros", listadoLibros);
+        return modelAndView;
+    }
+
+    @GetMapping(value = "/verPrestamosPorGrado", produces = "application/pdf")
+    public ModelAndView verPrestamosPorGradoPdf(@RequestParam("codigoBachillerato") String codigoBachillerato) {
+        List<PrestamoLibro> listaPrestamos = prestamoLibroService.listarPrestamos();
+        
+        // Filtrar los préstamos que tienen estado "Pendiente" y el bachillerato correcto
+        List<PrestamoLibro> listaPrestamosPendientes = listaPrestamos.stream()
+        .filter(prestamo -> "Pendiente".equals(prestamo.getEstadoPrestamo())
+                         && codigoBachillerato.equals(
+                             String.valueOf(prestamo.getAlumno().getBachillerato().getCodigoBachillerato())))
+        .collect(Collectors.toList());
+
+        ModelAndView modelAndView = new ModelAndView("Biblioteca/verPrestamosPdf");
+        modelAndView.addObject("prestamos", listaPrestamosPendientes);
         return modelAndView;
     }
 }

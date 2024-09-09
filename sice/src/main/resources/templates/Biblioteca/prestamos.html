@@ -7,9 +7,9 @@
 
     <!--Indicación de la ubicación de la página actual-->
     <div class="container mt-5 py-4 ">
-        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a th:href="@{/Biblioteca/}">Biblioteca</a></li>
+              <li class="breadcrumb-item active"><a th:href="@{/Biblioteca/}">Biblioteca</a></li>
               <li class="breadcrumb-item active" aria-current="page">Control de Prestamos</li>
             </ol>
           </nav>
@@ -26,15 +26,24 @@
     <!--Botones y Barra de busqueda de alumnos-->
     <div class="navbar">
         <div class="container">
-          <div class="d-grid gap-2 d-md-block">
+          <div class="d-flex gap-2">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#NuevoPrestamoModal">Nuevo Prestamo</button>
-            <a th:href="@{/Biblioteca/InventarioLibros}" class="btn btn-secondary field" >Gestionar Inventario</a>
-            <a th:href="@{/Biblioteca/Prestamos/Devueltos}" class="btn btn-secondary">
+            
+            <a th:href="@{/Biblioteca/InventarioLibros}" class="btn btn-secondary me-2">Gestionar Inventario</a>
+            
+            <a th:href="@{/Biblioteca/Prestamos/Devueltos}" class="btn btn-secondary me-2">
               <i class="bi bi-clock-history"></i> <!-- Ícono de historial de Bootstrap Icons -->
             </a>
-            <a th:href="@{/Biblioteca/verPrestamos}" class="btn btn-secondary" target="_blank">
-              <i class="bi bi-printer"></i> <!-- Ícono de impresión de Bootstrap Icons -->
-            </a>
+            
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-printer"></i>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" th:href="@{/Biblioteca/verPrestamos}" target="_blank">Ver General</a></li>
+                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#verPorGradoModal">Ver por Grado</a></li>
+              </ul>
+            </div>
           </div>
           <form class="d-flex" role="search" th:action="@{/Biblioteca/Prestamos}" method="get">
             <input class="form-control me-2" type="search" name="nombreAlumno" placeholder="Buscar Alumno" aria-label="Buscar Alumno" th:value="${param.nombreAlumno}">
@@ -113,7 +122,7 @@
     </div>
 
       <!-- Mostrar la paginación solo si hay datos y más de una página -->
-      <div th:if="${page.totalElements > 0 and page.totalPages > 1}">
+      <div th:if="${page.totalElements > 0 and page.totalPages > 0}">
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <!-- Botón de anterior -->
@@ -204,6 +213,38 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             <button type="button" class="btn btn-primary" id="confirmDevolverBtn">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para seleccionar grado-->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="verPorGradoModal" tabindex="-1" aria-labelledby="verPorGradoModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="verPorGradoModalLabel">Reporte de préstamos pendientes por Sección</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form th:action="@{/Biblioteca/verPrestamosPorGrado}" method="get">
+              <div class="mb-3">
+                <label for="selectBachillerato" class="form-label">Especialidad del bachillerato:</label>
+                <select name="codigoBachillerato" class="form-select border-secondary border-opacity-75" aria-label="Seleccione una especialidad" id="selectBachillerato" required>
+                  <option value="" selected>Seleccionar</option>
+                  <option th:each="bachillerato : ${bachilleratos}" th:value="${bachillerato.codigoBachillerato}"
+                    th:text="${bachillerato.grado + '° ' + bachillerato.nombreCarrera + ' - Sección ' + bachillerato.seccion}">
+                  </option>
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Aceptar</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

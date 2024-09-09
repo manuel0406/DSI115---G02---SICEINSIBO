@@ -138,26 +138,34 @@ public class PapeleriaController {
 
     @GetMapping("/Control")
     public String ControlPapeleria(Model model,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "8") int size) {
-
+                @RequestParam(defaultValue = "0") int page,
+                @RequestParam(defaultValue = "8") int size,
+                @RequestParam(value = "query", required = false) String query) {
+    
         // Obtener la lista completa de entregas
         List<EntregaPapeleria> listadoEntregas = entregaPapeleriaService.listarEntregas();
-
+        
+        // Filtrar las entregas si se proporciona un query
+        if (query != null && !query.trim().isEmpty()) {
+            listadoEntregas = listadoEntregas.stream()
+                .filter(entrega -> entrega.getEntregaPersona().toLowerCase().contains(query.toLowerCase()))
+                .collect(Collectors.toList());
+        }
+    
         // Calcular el rango para la página actual
         int start = page * size;
         int end = Math.min((start + size), listadoEntregas.size());
-
+    
         if (start > listadoEntregas.size()) {
             start = listadoEntregas.size() - size;
             if (start < 0) {
                 start = 0;
             }
         }
-
+    
         // Crear una sublista para la página actual
         List<EntregaPapeleria> pagedEntregas = listadoEntregas.subList(start, end);
-
+    
         // Crear el objeto Page para pasar a la vista
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<EntregaPapeleria> pageEntregas = new PageImpl<>(
@@ -165,16 +173,16 @@ public class PapeleriaController {
                 pageRequest,
                 listadoEntregas.size()
         );
-
+    
         // Obtener la lista de productos sin paginación
         List<InventarioPapeleria> listadoProductos = inventarioPapeleriaService.listarProductos();
-
+    
         model.addAttribute("titulo", "Entrega de Papelería");
         model.addAttribute("entregas", pageEntregas.getContent());
         model.addAttribute("productos", listadoProductos);
         model.addAttribute("nuevaEntrega", new EntregaPapeleria());
         model.addAttribute("page", pageEntregas);
-
+    
         return "/Biblioteca/controlPapeleria.html";
     }
 
