@@ -111,25 +111,4 @@ document
     });
 
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Obtener todos los botones de consulta
-        const consultarButtons = document.querySelectorAll('.btn-success.editar-btn');
-    
-        consultarButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                // Obtener los datos del atributo data
-                const tipo = this.getAttribute('data-tip');
-                const descripcion = this.getAttribute('data-des');
-                const accionCorrectiva = this.getAttribute('data-aco');
-                const fecha = this.getAttribute('data-fec');
-    
-                // Asignar los datos al modal
-                document.getElementById('consultaTipo').textContent = tipo;
-                document.getElementById('consultaDescripcion').textContent = descripcion;
-                document.getElementById('consultaAccionCorrectiva').textContent = accionCorrectiva;
-                document.getElementById('consultaFechaCreacion').textContent = fecha;
-            });
-        });
-    });
-    
     
