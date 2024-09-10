@@ -145,6 +145,7 @@ public class AdministrativoController {
         model.addAttribute("Administrativos", listadoAdministrativos);
         // Hace el envio de la estructura con paginación a la vista
         model.addAttribute("page", pageAdministrativos);
+        model.addAttribute("totalPages", pageAdministrativos.getTotalPages());
 
         return "Expediente_docente/Administrativos/listarAdministrativos";
     }
@@ -161,6 +162,7 @@ public class AdministrativoController {
         }
 
         model.addAttribute("administrativo", administrativo);
+        model.addAttribute("titulo", "Expediente");
         return "Expediente_docente/Administrativos/fichaAdministrativoConsult";
     }
 
@@ -177,6 +179,7 @@ public class AdministrativoController {
 
         model.addAttribute("administrativo", administrativo);
         model.addAttribute("editar", true); // Deshabilita el campo DUI
+        model.addAttribute("titulo", "Editar administrativo");
         return "Expediente_docente/Administrativos/fichaAdministrativo";
     }
 

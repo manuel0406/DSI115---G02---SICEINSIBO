@@ -803,9 +803,28 @@ td {
   cursor: not-allowed;
 }
 
+/* ----------------------------------------------------------------------------------------- */
+/*                               ENTRADA DE ARCHIVOS (HORARIO) - Iván                        */
+/* ----------------------------------------------------------------------------------------- */
+.inputExcel{
+  background-color: #0261a0;
+}
+/* Agregar borde más notorio cuando se arrastra el archivo */
+.dragover {
+  border: 2px dashed #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.border-trazado {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+
 
 /* ----------------------------------------------------------------------------------------- */
-/*                               BARRA DE NAVEGACIÓN (HORARIO) - Bryan                       */
+/*                                      HORARIO - Bryan                                      */
 /* ----------------------------------------------------------------------------------------- */
 
 .custom-navbar2 {
@@ -822,7 +841,6 @@ td {
     position: sticky;
     top: 0;
 }
-
 
 /* Estilo básico del checkbox */
 .custom-checkbox-section .form-check-input {
@@ -847,5 +865,13 @@ td {
   transition: background-color 0.3s ease-in-out;
 }
 
+/* Hace que las celdas de la tabla sean uniformes */
+.table-uniform td, .table-uniform th {
+  width: 14.28%; 
+  min-height: 50px; 
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
 
 
