@@ -176,7 +176,7 @@ public class ControllerBachilleratos {
         }
         Bachillerato bachillerato = new Bachillerato();
         List<Bachillerato> listadoOfertas = bachilleratoService.listadOfertaPorAnio(idAnio);
-        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+        List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
         String grado = "";
 
         model.addAttribute("titulo", "Oferta");

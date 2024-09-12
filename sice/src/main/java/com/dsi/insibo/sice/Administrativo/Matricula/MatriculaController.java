@@ -106,7 +106,7 @@ public class MatriculaController {
 		seccion = alumno.getBachillerato().getSeccion();
 
 		// Si el alumno existe, obtiene la lista de bachilleratos para el formulario
-		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(true);
 		model.addAttribute("titulo", "Ficha Matricula");
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachilleratos", listaCarreras);
@@ -195,7 +195,7 @@ public class MatriculaController {
 		Page<Alumno> pageAlumnos = new PageImpl<>(listaAlumnos.subList(start, end), pageRequest, listaAlumnos.size());
 
 		// Obtener la lista de carreras (bachilleratos)
-		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(true);
 
 		// Agregar atributos al modelo para ser utilizados en la vista
 		model.addAttribute("titulo", "Matriculados");
@@ -259,7 +259,7 @@ public class MatriculaController {
 		}
 
 		// Obtener la lista de carreras (bachilleratos)
-		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(true);
 
 		// Crear un objeto ModelAndView con la vista "Expediente_alumno/verAlumnoPdf"
 		ModelAndView modelAndView = new ModelAndView("Expediente_alumno/verAlumnoPdf");
@@ -305,7 +305,7 @@ public class MatriculaController {
 		seccion = alumno.getBachillerato().getSeccion();
 
 		// Si el alumno existe, obtiene la lista de bachilleratos para el formulario
-		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera();
+		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(true);
 		model.addAttribute("titulo", "Editar");
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachilleratos", listaCarreras);

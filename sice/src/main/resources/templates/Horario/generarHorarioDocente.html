@@ -100,7 +100,7 @@
 
                                     <div class="table-responsive rounded">
                                         <table
-                                            class="table table-bordered table-hover      border border-secondary table-sm align-middle"
+                                            class="table table-bordered table-hover border border-secondary table-sm align-middle table-uniform"
                                             style="--bs-border-opacity: .8;">
                                             <thead class="table-dark">
                                                 <tr>
@@ -285,12 +285,9 @@
     <footer th:replace="~{home :: footer}"></footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script type="text/javascript" src="/js/validacionRequired.js"></script>
-    <script type="text/javascript" src="/js/tooltip.js"></script>
-    <script th:inline="javascript">
-        var horasDeClase = JSON.parse(/*[[${horasDeClaseJson}]]*/ '[]');
-    </script>
     <script type="text/javascript" src="/js/horarioDocente.js"></script>
-
+    <script type="text/javascript" src="/js/tooltip.js"></script>
+    <script th:inline="javascript">var horasDeClase = JSON.parse(/*[[${horasDeClaseJson}]]*/ '[]');</script>
     </div>
 </body>
 

@@ -171,6 +171,7 @@ public class DocenteController {
 
         model.addAttribute("titulo", "Planta Docente");
         model.addAttribute("Docentes", listadoDocentes);
+        model.addAttribute("totalPages", pagedocentes.getTotalPages());
         // Hace el envio de la estructura con paginación a la vista
         model.addAttribute("page", pagedocentes);
         return "Expediente_docente/Docentes/listarDocentes"; // Vista HTML
@@ -188,7 +189,8 @@ public class DocenteController {
         }
 
         model.addAttribute("profesor", profesor);
-        model.addAttribute("editar", true); // Indica que se está editando un docente
+        model.addAttribute("editar", true);
+        model.addAttribute("titulo", "Expediente");
         return "Expediente_docente/Docentes/fichaDocenteConsult";
     }
 
@@ -206,6 +208,7 @@ public class DocenteController {
 
         model.addAttribute("profesor", profesor);
         model.addAttribute("editar", true); // Indica que se está editando un docente
+        model.addAttribute("titulo", "Editar docente");
         return "Expediente_docente/Docentes/fichaDocente";
     }
 
@@ -220,6 +223,7 @@ public class DocenteController {
         }
 
         model.addAttribute("profesor", profesor);
+        model.addAttribute("titulo", "Editar mi expediente");
         return "Expediente_docente/Docentes/fichaDocenteLimitada";
     }
 

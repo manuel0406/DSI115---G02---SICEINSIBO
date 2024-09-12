@@ -67,7 +67,7 @@ public class SiceApplication {
 
 		AnioAcademico matriculaActiva = anioService.activoMatricula();
 		if (matriculaActiva ==null) {
-			System.out.println("No hay matricula activa");
+			// System.out.println("No hay matricula activa");
 		}
 
 		model.addAttribute("titulo", "Administración");
