@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -108,10 +109,19 @@ public class PapeleriaController {
 
 
     @GetMapping("/InventarioPapeleria/delete/{idArticulo}")
-    public String eliminarProducto(@PathVariable("idArticulo") int idArticulo, RedirectAttributes attribute){
-
-        inventarioPapeleriaService.eliminar(idArticulo);
-        attribute.addFlashAttribute("success", "El registro se ha eliminado éxitosamente");
+    public String eliminarProducto(@PathVariable("idArticulo") int idArticulo, RedirectAttributes attribute) {
+        try {
+            // Intenta eliminar el artículo
+            inventarioPapeleriaService.eliminar(idArticulo);
+            // Si la eliminación es exitosa, agrega un mensaje de éxito
+            attribute.addFlashAttribute("success", "El registro se ha eliminado exitosamente");
+        } catch (DataIntegrityViolationException e) {
+            // Si ocurre una excepción, agrega un mensaje de error
+            attribute.addFlashAttribute("warning", "No se puede eliminar el registro porque ya hay registros guardados relacionados.");
+        } catch (Exception e) {
+            // Captura cualquier otra excepción
+            attribute.addFlashAttribute("error", "Ocurrió un error al intentar eliminar el registro.");
+        }
         return "redirect:/Biblioteca/Papeleria/InventarioPapeleria";
     }
 
@@ -251,13 +261,20 @@ public class PapeleriaController {
     }
 
     @GetMapping(value = "/verEntregasPdf", produces = "application/pdf")
-    public ModelAndView verEntregasPdf() {
+    public ModelAndView verEntregasPdf(@RequestParam(value = "query", required = false) String query) {
         List<EntregaPapeleria> listadoEntregas = entregaPapeleriaService.listarEntregas();
-
-        // Crear la vista para el PDF
+    
+        // Filtrar las entregas si se proporciona una consulta de búsqueda
+        if (query != null && !query.trim().isEmpty()) {
+            listadoEntregas = listadoEntregas.stream()
+                .filter(entrega -> entrega.getEntregaPersona().toLowerCase().contains(query.toLowerCase()))
+                .collect(Collectors.toList());
+        }
+    
+        // Crear la vista para el PDF con los resultados filtrados
         ModelAndView modelAndView = new ModelAndView("Biblioteca/verEntregasPdf");
         modelAndView.addObject("entregas", listadoEntregas);
-
+    
         return modelAndView;
     }
 }

@@ -8,9 +8,9 @@
     
     <!--Indicación de la ubicación de la página actual-->
     <div class="container mt-5 py-4 ">
-        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a th:href="@{/Biblioteca/}">Biblioteca</a></li>
+              <li class="breadcrumb-item"><a th:href="@{/Biblioteca/}" class="text-secondary text-decoration-none">Biblioteca</a></li>
               <li class="breadcrumb-item active" aria-current="page">Control de Papelería</li>
             </ol>
           </nav>
@@ -30,9 +30,9 @@
               <div class="d-grid gap-2 d-md-block">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#NuevaEntregaModal">Nueva entrega</button>
                 <a th:href="@{/Biblioteca/Papeleria/InventarioPapeleria}" class="btn btn-secondary field" >Gestionar Inventario</a>
-                <a th:href="@{/Biblioteca/Papeleria/verEntregasPdf}" class="btn btn-secondary" target="_blank">
-                    <i class="bi bi-printer"></i> <!-- Ícono de impresión de Bootstrap Icons -->
-                  </a>
+                <a th:href="@{/Biblioteca/Papeleria/verEntregasPdf(query=${param.query})}" class="btn btn-secondary" target="_blank">
+                    <i class="bi bi-printer"></i> 
+                </a>
               </div>
                 
               <form class="d-flex" role="search" method="get" th:action="@{/Biblioteca/Papeleria/Control}">
@@ -96,7 +96,7 @@
               </table>
 
             <!-- Mensaje cuando no hay datos -->
-            <div th:if="${page.totalElements == 0}" class="alert alert-warning alert-dismissible fade show mt-1 mx-2 text-center">
+            <div th:if="${page.totalElements == 0}" class="alert alert-primary alert-dismissible fade show mt-1 mx-2 text-center">
                 <label>No se encuentran registros de entregas realizadas</label>
             </div>
 

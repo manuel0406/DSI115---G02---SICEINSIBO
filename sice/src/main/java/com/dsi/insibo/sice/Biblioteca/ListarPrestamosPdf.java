@@ -33,6 +33,9 @@ public class ListarPrestamosPdf extends AbstractPdfView {
     @NonNull HttpServletRequest request, @NonNull HttpServletResponse response) throws Exception {
 
         @SuppressWarnings("unchecked")
+        // Obtener los valores pasados desde el controlador
+        String codigoBachillerato = (String) model.get("codigoBachillerato");
+        String nombreCarrera = (String) model.get("nombreCarrera");
         List<PrestamoLibro> listarPrestamos = (List<PrestamoLibro>) model.get("prestamos");
 
         document.setPageSize(PageSize.LETTER.rotate());
@@ -97,6 +100,23 @@ public class ListarPrestamosPdf extends AbstractPdfView {
         headerTable.addCell(titleCell);
 
         document.add(headerTable);
+
+        // Añadir información de la carrera
+        // Verificar si nombreCarrera no es null ni vacío antes de añadirlo
+        if (nombreCarrera != null && !nombreCarrera.trim().isEmpty()) {
+            Paragraph infoCarrera = new Paragraph();
+
+            // Añadir "Carrera:" en negrita
+            infoCarrera.add(new Phrase("Carrera: ", titleFont2));
+
+            // Añadir el nombre de la carrera en fuente normal
+            infoCarrera.add(new Phrase(nombreCarrera, titleFont));
+            infoCarrera.add(new Paragraph("\n"));
+
+            infoCarrera.setAlignment(Element.ALIGN_LEFT);
+            document.add(infoCarrera);
+        }
+
 
         PdfPTable tablaPrestamos = new PdfPTable(5); // Cambiar a 5 columnas para los datos del préstamo
         tablaPrestamos.setWidthPercentage(100);

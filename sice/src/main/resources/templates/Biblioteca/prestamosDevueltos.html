@@ -7,10 +7,11 @@
 
     <!--Indicación de la ubicación de la página actual-->
     <div class="container mt-5 py-4 ">
-        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a th:href="@{/Biblioteca/}">Biblioteca</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Control de Prestamos</li>
+              <li class="breadcrumb-item"><a th:href="@{/Biblioteca/}" class="text-secondary text-decoration-none">Biblioteca</a></li>
+              <li class="breadcrumb-item"><a th:href="@{/Biblioteca/Prestamos}" class="text-secondary text-decoration-none">Control de Prestamos</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Prestamos Devueltos</li>
             </ol>
           </nav>
     </div>
@@ -86,7 +87,7 @@
         </table>
 
         <!-- Mensaje cuando no hay datos -->
-        <div th:if="${page.totalElements == 0}" class="alert alert-warning alert-dismissible fade show mt-1 mx-2 text-center">
+        <div th:if="${page.totalElements == 0}" class="alert alert-primary alert-dismissible fade show mt-1 mx-2 text-center">
             <label>No hay préstamos devueltos registrados</label>
         </div>
 

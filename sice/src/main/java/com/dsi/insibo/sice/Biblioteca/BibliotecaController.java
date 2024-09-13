@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -127,9 +128,19 @@ public class BibliotecaController {
     }
     
     @GetMapping("/InventarioLibros/delete/{idInventarioLibros}")
-    public String eliminarLibro(@PathVariable("idInventarioLibros") int idInventarioLibros, RedirectAttributes attribute){
-        inventarioLibroService.eliminar(idInventarioLibros);
-        attribute.addFlashAttribute("success", "El registro se ha eliminado éxitosamente");
+    public String eliminarLibro(@PathVariable("idInventarioLibros") int idInventarioLibros, RedirectAttributes attribute) {
+        try {
+            // Intenta eliminar el libro
+            inventarioLibroService.eliminar(idInventarioLibros);
+            // Si la eliminación es exitosa, agrega un mensaje de éxito
+            attribute.addFlashAttribute("success", "El registro se ha eliminado exitosamente");
+        } catch (DataIntegrityViolationException e) {
+            // Si ocurre una excepción, agrega un mensaje de error
+            attribute.addFlashAttribute("warning", "No se puede eliminar el registro porque ya hay registros guardados relacionados.");
+        } catch (Exception e) {
+            // Captura cualquier otra excepción
+            attribute.addFlashAttribute("error", "Ocurrió un error al intentar eliminar el registro.");
+        }
         return "redirect:/Biblioteca/InventarioLibros";
     }
 
@@ -382,8 +393,17 @@ public class BibliotecaController {
                              String.valueOf(prestamo.getAlumno().getBachillerato().getCodigoBachillerato())))
         .collect(Collectors.toList());
 
+        // Obtener el nombre de la carrera del primer préstamovvvvvvvvvv                                                                                                                                                                                                       
+        String nombreCarrera = listaPrestamosPendientes.isEmpty() 
+        ? "" 
+        : listaPrestamosPendientes.get(0).getAlumno().getBachillerato().getGrado() + "° " 
+        + listaPrestamosPendientes.get(0).getAlumno().getBachillerato().getNombreCarrera() + " " 
+        + listaPrestamosPendientes.get(0).getAlumno().getBachillerato().getSeccion();
+
         ModelAndView modelAndView = new ModelAndView("Biblioteca/verPrestamosPdf");
         modelAndView.addObject("prestamos", listaPrestamosPendientes);
+        modelAndView.addObject("codigoBachillerato", codigoBachillerato);
+        modelAndView.addObject("nombreCarrera", nombreCarrera);
         return modelAndView;
     }
 }

@@ -6,9 +6,9 @@
     <header th:replace="home :: header"></header>
 
     <div class="container mt-5 py-4 ">
-        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a th:href="@{/Biblioteca/}">Biblioteca</a></li>
+              <li class="breadcrumb-item"><a th:href="@{/Biblioteca/}" class="text-secondary text-decoration-none">Biblioteca</a></li>
               <li class="breadcrumb-item active" aria-current="page">Inventario Libros</li>
             </ol>
           </nav>
@@ -37,6 +37,25 @@
         </form>
         </div>
     </div>
+
+        <!--Mensajes-->
+        <div class="container">
+            <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
+                <label th:text="${success}"></label>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+                    
+            <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
+                <label th:text="${error}"></label>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
+                <label th:text="${warning}"></label>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+         </div>
+
     
         <!--Tabla de datos-->
     <div class="container">
@@ -76,7 +95,7 @@
             </tbody>
         </table>
 
-        <div th:if="${page.totalElements == 0}" class="alert alert-warning alert-dismissible fade show mt-1 mx-2 text-center">
+        <div th:if="${page.totalElements == 0}" class="alert alert-primary alert-dismissible fade show mt-1 mx-2 text-center">
             <label>No se encuentran libros registrados</label>
         </div>
         
