@@ -1,110 +1,112 @@
 package com.dsi.insibo.sice.Calificaciones;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
-import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
+import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
+
+import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
 import com.dsi.insibo.sice.entity.Actividad;
+import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Periodo;
-import com.dsi.insibo.sice.entity.Materia;
-import com.dsi.insibo.sice.entity.Actividad;
-
-
 import org.springframework.ui.Model;
 
 @Controller
+@RequestMapping("/Actividad")
 public class actividadesController {
-/* 
-	@Autowired
-	private BachilleratoService bachilleratoService;
+
 	@Autowired
 	private PeriodoService periodoService;
-	@Autowired
-	private MateriaService materiaService;
+
 	@Autowired
 	private ActividadService actividadService;
-
-	//@Autowired
-   // private ActividadRepository actividadRepository;
 	@Autowired
-    private MateriaBachilleratoRepository materiaBachilleratoRepository;
+	BachilleratoService bachilleratosService;
 
-    @GetMapping("/Actividades")
-	public String verActividades(Model model){
+	@Autowired
+	SessionService sesion;
+	@Autowired
+	AsignacionService asignacionService;
 
-		List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
-		model.addAttribute("grados", listaBachilleratos);
+	@GetMapping("/{codigoBachillerato}")
+	public String verActividades(Model model, @PathVariable("codigoBachillerato") int codigoBachillerato,
+			RedirectAttributes attributes) {
 
-		List<Periodo> listaPeriodos = periodoService.listaPeriodos();
-		model.addAttribute("periodos", listaPeriodos);
+		Bachillerato bachillerato = null;
 
-		List<Materia> listaMaterias = materiaService.listaMaterias();
-		model.addAttribute("materias", listaMaterias);
+		if (codigoBachillerato > 0) {
+			// Busca al bachillerato por su codigo
+			bachillerato = bachilleratosService.bachilleratoPorId(codigoBachillerato);
 
-		//List<Actividad> listaActividads = actividadService.listaActividades();
-		//model.addAttribute("actividades", listaActividads);
+			// Verifica que el bachillerato exista
+			if (bachillerato == null) {
+				System.out.println("Error: ¡El código ingresado no existe");
+				attributes.addFlashAttribute("error", "Error: ¡El código ingresado no existe");
+				return "redirect:/";
+			}
 
-		model.addAttribute("actividad", new Actividad());
-		
+		} else {
+			// Maneja el caso donde el codigo no es válido
+			System.out.println("Error: ¡El código ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El código ingresado no es válido!");
+			return "redirect:/";
+		}
+		// Se extra el listado de periodos existentes
+		List<Periodo> periodos = periodoService.listaPeriodos();
+		// Objecto activada nuevo
+		Actividad actividad = new Actividad();
+
+		// Acá se obtienen el objeto asignación correspondiente al docente y
+		// bachillerato
+		String dui = sesion.duiSession();
+		System.out.println(dui + " " + codigoBachillerato);
+		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, codigoBachillerato);
+		// Listado de las actividaes que ha creado un docente por bachillerato
+		List<Actividad> listadoActividades = actividadService.listaActividades(dui, codigoBachillerato);
+
+		System.out.println(asignacion.getIdAsignacion());
+		model.addAttribute("actividad", actividad);
+		model.addAttribute("periodos", periodos);
+		model.addAttribute("listadoActividades", listadoActividades);
+		model.addAttribute("asignacion", asignacion);
 
 		return "Calificaciones/vistaActividades";
 	}
 
-	@PostMapping("/Actividades/add")
-    public String addActividadFromModal(@ModelAttribute Actividad actividad, Model model,RedirectAttributes redirectAttributes) {
-        actividadRepository.save(actividad);
-		redirectAttributes.addFlashAttribute("successMessage", "Actividad agregada exitosamente.");
+	@PostMapping("/add")
+	public String addActividadFromModal(@ModelAttribute Actividad actividad, RedirectAttributes redirectAttributes) {
 
-        return "redirect:/Actividades";
-    }
+		float totalPoderación = 0;
+		List<Actividad> listadoActividades = actividadService.listaActividades(
+				actividad.getAsignacion().getDocente().getDuiDocente(),
+				actividad.getAsignacion().getBachillerato().getCodigoBachillerato());
 
-	@GetMapping("/Actividades/delete/{idActividad}")
-	public String deleteActividad(@PathVariable Integer idActividad,RedirectAttributes redirectAttributes) {
-		try {
-			//actividadRepository.deleteById(idActividad);
-			//redirectAttributes.addFlashAttribute("successMessage", "Actividad eliminada exitosamente.");
-		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("errorMessage", "La actividad ya cuenta con calificaciones registradas, asegurese de eliminar las calificaciones para poder eliminar esta actividad.");
+		for (Actividad actividad2 : listadoActividades) {
+			if (actividad2.getIdActividad() != actividad.getIdActividad()) {
+				totalPoderación += actividad2.getPonderacionActividad();
+			}
 		}
-		return "redirect:/Actividades";
+
+		totalPoderación += actividad.getPonderacionActividad();
+		System.out.println("Suma pondereación: " + totalPoderación);
+		if (totalPoderación <= 100) {
+			actividadService.guardarActividad(actividad);
+			redirectAttributes.addFlashAttribute("success",
+					"Actividad agregada exitosamente.");
+		} else {
+			redirectAttributes.addFlashAttribute("error",
+					"La suma de poderaciones no debe de superar el 100%. Por verificar los porcentajes ya ha asignados.");
+		}
+		return "redirect:/Actividad/" + actividad.getAsignacion().getBachillerato().getCodigoBachillerato();
 	}
 
-	@GetMapping("/Actividades/edit/{idActividad}")
-	@ResponseBody
-	//public Actividad getActividad(@PathVariable Integer idActividad) {
-		//return actividadRepository.findById(idActividad).orElse(null);
-	//}
-
-	@PostMapping("/Actividades/edit")
-	//public String editActividad(@ModelAttribute Actividad actividad) {
-		//actividadRepository.save(actividad);
-	////	return "redirect:/Actividades";
-	}
-
-	@GetMapping("Actividades/materiasPorBachillerato")
-    @ResponseBody
-    public List<Materia> getMateriasPorBachillerato(@RequestParam String codigoBachillerato) {
-        List<MateriaBachillerato> materiaBachilleratoList = materiaBachilleratoRepository.findByBachilleratoCodigoBachillerato(codigoBachillerato);
-        return materiaBachilleratoList.stream().map(MateriaBachillerato::getMateria).collect(Collectors.toList());
-    }
-
-	*/
 }

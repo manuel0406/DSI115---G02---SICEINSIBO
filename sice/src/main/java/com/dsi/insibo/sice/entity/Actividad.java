@@ -13,12 +13,10 @@ public class Actividad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idActividad;
-
     @ManyToOne
     private Periodo periodo;
     @ManyToOne
     private Asignacion asignacion;
-
     private String nombreActividad;
     private float ponderacionActividad;
     private String descripcionActividad;

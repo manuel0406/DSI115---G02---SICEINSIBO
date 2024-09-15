@@ -15,54 +15,54 @@
 
     <div class="container my-4 py-5">
 
-        <form class="row g-3 needs-validation" novalidate th:action="${url}" th:object="${alumno}"
-            method="post" id="formulario">
+        <form class="row g-3 needs-validation" novalidate th:action="${url}" th:object="${alumno}" method="post"
+            id="formulario">
 
-            <div class="row g-3 align-items-center text-center" >
+            <div class="row g-3 align-items-center text-center">
                 <h3 class="text-center custom-h2">
                     IDENTIFICACION DEL CENTRO EDUCATIVO
                 </h3> <input type="hidden" id="idAlumno" name="idAlumno" th:field="*{idAlumno}">
                 <div class="col-12 col-md-4">
                     <label for="carrera" class="form-label fs-6">Carrera:</label>
-                    <select id="carrera" name="carrera" class="form-select" aria-label="Default select example"  th:disabled="${editarO}" required>
+                    <select id="carrera" name="carrera" class="form-select" aria-label="Default select example"
+                        th:disabled="${editarO}" required>
                         <option value="" th:if="${carrera == null}" selected>Seleccione</option>
-                        <option th:each="bachillerato : ${bachilleratos}"
-                                th:value="${bachillerato.nombreCarrera}"
-                                th:text="${bachillerato.nombreCarrera}"
-                                th:selected="${bachillerato.nombreCarrera == carrera}">
+                        <option th:each="bachillerato : ${bachilleratos}" th:value="${bachillerato.nombreCarrera}"
+                            th:text="${bachillerato.nombreCarrera}"
+                            th:selected="${bachillerato.nombreCarrera == carrera}">
                         </option>
                     </select>
-                    
+
                     <div class="invalid-feedback">
                         Es necesario agregar la especialidad
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
                     <label for="grado" class="form-label fs-6">Año:</label>
-                    <select id="grado" name="grado" class="form-select"  th:disabled="${editarO}" required>
+                    <select id="grado" name="grado" class="form-select" th:disabled="${editarO}" required>
                         <option value="" th:if="${grado == null}" selected>Seleccione</option>
                         <option value="1" th:selected="${grado == '1'}">1</option>
                         <option value="2" th:selected="${grado == '2'}">2</option>
                         <option value="3" th:selected="${grado == '3'}">3</option>
                     </select>
-                    
+
                     <div class="invalid-feedback">
                         Es necesario agregar el año
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
                     <label for="seccion" class="form-label fs-6">Sección:</label>
-                    <select id="seccion" name="seccion" class="form-select"  th:disabled="${editarO}" required>
+                    <select id="seccion" name="seccion" class="form-select" th:disabled="${editarO}" required>
                         <option value="" th:if="${seccion == null}" selected>Seleccione</option>
                         <option th:value="${seccion}" th:text="${seccion}" th:selected="true"></option>
                     </select>
-                    
-                    
+
+
                     <div class="invalid-feedback">
                         Es necesario agregar la seccion
                     </div>
                 </div>
-                
+
             </div>
 
             <div class="row">
@@ -335,11 +335,13 @@
                     <button type="submit" class="btn btn-primary my-2">Guardar</button>
                 </div>
 
-                <div class="col-auto" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
+                <div class="col-auto"
+                    sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
                     <a class="btn btn-danger my-2" th:href="${btnCancelar}" th:text="Cancelar"></a>
                 </div>
                 <div class="col-auto" sec:authorize="hasAnyRole('DOCENTE')">
-                    <a class="btn btn-danger my-2" th:href="@{/AsignacionOrientador/seccionAsigada/}+${id}" th:text="Cancelar"></a>
+                    <a class="btn btn-danger my-2" th:href="@{/AsignacionOrientador/seccionAsigada/}+${id}"
+                        th:text="Cancelar"></a>
                 </div>
             </div>
         </form>
@@ -379,7 +381,7 @@
 </body>
 
 <footer th:replace="~{home ::footer}">
-    
+
 </footer>
 
 </html>

@@ -12,214 +12,221 @@
 </head>
 
 <body>
-    <!--Esto es el fragmento de la barra de navegación superior-->
-    <header th:replace="~{home :: header}"></header>
+
     <div class="container-fluid my-2 py-5">
         <div class="row">
             <!--Barra Lateral-->
-            <aside class="barra-lateral col-12 col-sm-auto p-0">
-                <div class="logo">
-                    <h2 class="py-4 m-0">Año 2024</h2>
-                </div>
-                <nav class="menu d-flex d-sm-block justify-content-center flex-wrap">
-                    <a href="/Actividades">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-check" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
-                            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
-                            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
-                          </svg>
-                        Gestor de Actividades
-                    </a>
-                    <a href="/calificaciones">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-x" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M6.146 6.146a.5.5 0 0 1 .708 0L8 7.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 8l1.147 1.146a.5.5 0 0 1-.708.708L8 8.707 6.854 9.854a.5.5 0 0 1-.708-.708L7.293 8 6.146 6.854a.5.5 0 0 1 0-.708"/>
-                            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
-                            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
-                          </svg>
-                        Gestor de Calificaciones
-                    </a>
+            <div>
+                <nav class="col-md-2 d-none d-md-block custom-navbar min-vh-100 navbar navbar-expand-lg fixed-top">
+                    <!-- Contenido del menú lateral -->
+                    <div class="custom-navbar py-5">
+                        <ul class="nav nav-pills flex-column mt-2">
+                            <li class="nav-item py-2 py-sm-0 my-2 bg-primary">
+                                <div class="text-center text-white">
+                                    <h2>Año 2024</h2>
+                                </div>
+                            </li>
+                            <li class="nav-item py-2 py-sm-0 my-2">
+                                <a class="nav-link text-white" th:href="@{/Actividad/}+${asignacion.bachillerato.codigoBachillerato}">
+                                    <i class="bi bi-journal-check"></i>
+                                    <span class="fs-6 ms-2 d-none d-sm-inline">Gestor de actividades</span>
+                                </a>
+                            </li>
+                            <li class="nav-item py-2 py-sm-0 my-2">
+                                <a class="nav-link text-white">
+                                    <i class="bi bi-journal-text"></i>
+                                    <span class="fs-6 ms-2 d-none d-sm-inline">Gestor de calificaciones </span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
                 </nav>
-            </aside>
-            
-            <main class="main col">
-                <div class="row">
-                    <div class="widget registrar">
-                        <fieldset class="border p-2">
-                            <legend class="float-none w-auto">Registro de Actividades</legend>
-                            <form th:action="@{/Actividades/add}" th:object="${actividad}" method="post">
-                                <div class="row">
-                                    <div class="columna col-6">
-                                        <label for="inputPassword6" class="col-form-label">Seleccione Grado:</label>
-                                        <select id="grado" class="form-select" aria-label="Default select example" required onchange="actualizarMaterias()">
-                                            <option value="">Seleccione Carrera</option>
-                                            <option th:each="bachillerato : ${grados}"
-                                                th:value="${bachillerato.codigoBachillerato}"
-                                                th:text="${bachillerato.grado +'° '+ bachillerato.nombreCarrera  + ' - Sección ' + bachillerato.seccion}">
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="columna col-6">
-                                        <label for="materia" class="col-form-label">Seleccione Materia:</label>
-                                            <select id="materia" th:field="*{materia.codMateria}" class="form-select" aria-label="Default select example" onchange="filtrarTabla()">
-                                                <option value="">Todas las Materias</option>
-                                                <option th:each="materia : ${materias}" th:value="${materia.codMateria}" th:text="${materia.nomMateria}"></option>
-                                            </select>
-                                                            
-                                        <label for="periodo" class="col-form-label">Seleccione Periodo:</label>
-                                            <select id="periodo" th:field="*{periodo.idPeriodo}" class="form-select" aria-label="Default select example" required>
-                                                <option th:each="periodo : ${periodos}"
-                                                    th:value="${periodo.idPeriodo}"
-                                                    th:text="${periodo.numeroPeriodo == 1 ? 'Primer periodo' : periodo.numeroPeriodo == 2 ? 'Segundo periodo' : periodo.numeroPeriodo == 3 ? 'Tercer periodo' : periodo.numeroPeriodo == 4 ? 'Cuarto Periodo' : periodo.numeroPeriodo == 5 ? 'Periodo Extraordinario' : periodo.numeroPeriodo}"
-                                                    th:selected="${periodo.idPeriodo == actividad.periodo?.idPeriodo}">
-                                                </option>
-                                            </select>
-                                    </div>
-                                </div>
-                        
-                                    <!-- Botón para abrir modal de nueva actividad -->
-                                <div class="row mt-3">
-                                    <div class="col-12">
-                                        <button type="button" class="btn btn-success btn btn-success btn-fixed-bottom-right" data-bs-toggle="modal" data-bs-target="#AgregarActividad" data-bs-whatever="@mdo">Agregar Actividad</button>
-                                    </div>
-                                </div>
-            
-                                <!-- Modal para agregar nueva actividad -->
-                                <div class="modal fade" id="AgregarActividad" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar nueva actividad</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                                
-                                            <div class="modal-body">
-                                                <!-- Formulario dentro del modal -->
-                                                <form th:action="@{/Actividades/add}" th:object="${actividad}" method="post" onsubmit="handleFormSubmit(event)">
-                                                    <div class="mb-3">
-                                                        <label for="nombreActividadModal" class="col-form-label">Nombre de la Actividad:</label>
-                                                        <input type="text" class="form-control" id="nombreActividadModal" th:field="*{nombreActividad}" required/>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="col-form-label" for="descripcionActividadModal">Descripción:</label>
-                                                        <textarea class="form-control" id="descripcionActividadModal" th:field="*{descripcionActividad}" required></textarea>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="fechaActividadModal" class="col-form-label">Fecha de la Actividad:</label>
-                                                        <input type="date" class="form-control" id="fechaActividadModal" th:field="*{fechaActividad}" required/>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="ponderacionActividadModal" class="col-form-label">Ponderación:</label>
-                                                        <input type="number" class="form-control" id="ponderacionActividadModal" th:field="*{ponderacionActividad}" required/>
-                                                    </div>
-                                                    
-                                                    <!-- Botones del modal -->
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                        <button type="submit" class="btn btn-primary">Agregar</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Fin del Modal para agregar nueva actividad -->
-                            </form>
-                        </fieldset>
+            </div>
+            <div class=" col-md-10 offset-md-2">
+                <header th:replace="~{home :: header}"></header>
 
-                    <!-- Mensajes de error y éxito -->
-                    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-                        <span th:text="${errorMessage}"></span>
+                <div class="container-fluid py-2 my-2">
+                    <!--Mensajes-->
+                    <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2"
+                        th:if="${success != null}">
+                        <label th:text="${success}"></label>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <div th:if="${successMessage}" class="alert alert-success" role="alert">
-                        <span th:text="${successMessage}"></span>
+                    <div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2"
+                        th:if="${error != null}">
+                        <label th:text="${error}"></label>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
+                        <h3 class="text-start col-lg-9" th:text="${'Actividades de '+asignacion.materia.nomMateria + ': '+asignacion.bachillerato.grado+ '° '+ asignacion.bachillerato.nombreCarrera+ ' ' + asignacion.bachillerato.seccion}"></h3>
+                        <div class="d-flex gap-2">
 
-                    <!-- Tabla para mostrar las actividades -->
-                    <table class="table table-hover" id=""tablaNotas>
-                        <thead>
-                            <tr>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">Descripción</th>
-                                <th scope="col">Fecha</th>
-                                <th scope="col">Ponderación</th>
-                                <th scope="col">Materia</th>
-                                <th scope="col">Periodo</th>
-                                <th scope="col">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Iterar sobre las actividades y mostrar cada una -->
-                            <tr th:each="actividad : ${actividades}" class="filaActividad">
-                                <td th:text="${actividad.nombreActividad}"></td>
-                                <td th:text="${actividad.descripcionActividad}"></td>
-                                <td th:text="${actividad.fechaActividad}"></td>
-                                <td th:text="${actividad.ponderacionActividad + ' %'}"></td>
-                                <td th:text="${actividad.materia?.nomMateria}"></td>
-                                <td th:text="${actividad.periodo?.numeroPeriodo == 1 ? 'Primer periodo' : actividad.periodo?.numeroPeriodo == 2 ? 'Segundo periodo' : actividad.periodo?.numeroPeriodo == 3 ? 'Tercer periodo' : actividad.periodo?.numeroPeriodo == 4 ? 'Cuarto Periodo' : actividad.periodo?.numeroPeriodo == 5 ? 'Periodo Extraordinario' : actividad.periodo?.numeroPeriodo}"></td>
-                                <td>
-                                    <!-- Botón para editar -->
-                                    <button type="button" class="btn btn-primary btn-sm" th:onclick="'showEditModal(' + ${actividad.idActividad} + ')'">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
-                                        </svg>
-                                    </button>
-                                    <!-- Enlace para eliminar -->
-                                    <a class="btn btn-danger btn-sm mx-1 delete-btn"
-                                        th:href="@{/Actividades/delete/{idActividad}(idActividad=${actividad.idActividad})}"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Fin de la tabla de actividades -->
-                </div> 
-            </main>
+                            <a class="btn btn-primary Agregar-btn" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Agregar Sancion" th:text="'Agregar actividad'"></a>
+                        </div>
+                    </div>
+                    <div class="col-12 table-responsive">
+                        <table class="table table-hover table-sm">
+                            <thead class="thead table-dark text-start">
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Ponderación</th>
+                                    <th scope="col">Periodo</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="fs-6">
+                                <!-- Iterar sobre la lista de sanciones -->
+                                <tr th:each="actividad, stat: ${listadoActividades}">
+                                    <th scope="row" th:text="${stat.index + 1}"></th>
+                                    <td th:text="${actividad.nombreActividad}"></td>
+                                    <td th:text="${actividad.descripcionActividad}"></td>
+                                    <td th:text="${#dates.format(actividad.fechaActividad,'dd/MM/yyyy')}"></td>
+                                    
+                                    <td th:text="${actividad.ponderacionActividad +'%'}"></td>
+                                    <td th:text="${actividad.periodo.numeroPeriodo}"></td>
+                                    <td>
+                                        <a class="btn btn-primary editar-btn" data-bs-toggle="modal"
+                                            data-bs-target="#EditarActividadModal" data-bs-placement="top"
+                                            title="Editar" th:data-id="${actividad.idActividad}"
+                                            th:data-non="${actividad.nombreActividad}"
+                                            th:data-des="${actividad.descripcionActividad}"
+                                            th:data-fec="${actividad.fechaActividad}"
+                                            th:data-pon="${actividad.ponderacionActividad}"
+                                            th:data-per="${actividad.periodo.idPeriodo}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a class="btn btn-danger delete-btn" th:href="@{/}" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="modal fade" id="EditarActividadModal" tabindex="-1" aria-labelledby="EditarActividadLabel" aria-hidden="true">
+    <!-- Modal agregar -->
+    <div class="modal fade" id="agregarActividadModal" tabindex="-1" aria-labelledby="AgregarActividadLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="EditarActividadLabel">Editar actividad</h1>
+                    <h1 class="modal-title fs-5" id="AgregarActividadLabel">Crear actividad</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!-- Formulario dentro del modal -->
-                    <form th:action="@{/Actividades/edit}" th:object="${actividad}" method="post">
-                        <input type="hidden" id="idActividadEdit" th:field="*{idActividad}" />                             
+                    <form th:object="${actividad}" method="post" id="formActividad" class="needs-validation"
+                        th:action="@{/Actividad/add}" novalidate>
+                        <input type="hidden" id="idAsignacion" name="asignacion" th:value="${asignacion.idAsignacion}">
+                        <div class="mb-3">
+                            <label for="periodo" class="form-label fw-bold">Periodo</label>
+                            <select th:field="*{periodo}" class="form-select border-secondary border-opacity-75"
+                                id="periodo" required>
+                                <option value="" selected>Selecciona </option>
+                                <option th:each="period : ${periodos}" th:value="${period.idPeriodo}"
+                                    th:text="${period.numeroPeriodo}">Leve</option>
+                            </select>
+                            <div class="invalid-feedback">Es necesario seleccionar el tipo de falta</div>
+                        </div>
                         <div class="mb-3">
                             <label for="nombreActividadEditModal" class="col-form-label">Nombre de la Actividad:</label>
-                            <input type="text" class="form-control" id="nombreActividadEditModal" th:field="*{nombreActividad}" />
+                            <input type="text" class="form-control" id="nombreActividadEditModal"
+                                th:field="*{nombreActividad}" />
                         </div>
                         <div class="mb-3">
                             <label class="col-form-label" for="descripcionActividadEditModal">Descripción:</label>
-                            <textarea class="form-control" id="descripcionActividadEditModal" th:field="*{descripcionActividad}"></textarea>
+                            <textarea class="form-control" id="descripcionActividadEditModal"
+                                th:field="*{descripcionActividad}"></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="fechaActividadEditModal" class="col-form-label">Fecha de la Actividad:</label>
-                            <input type="date" class="form-control" id="fechaActividadEditModal" th:field="*{fechaActividad}" />
+                            <input type="date" class="form-control" id="fechaActividadEditModal"
+                                th:field="*{fechaActividad}" />
                         </div>
                         <div class="mb-3">
                             <label for="ponderacionActividadEditModal" class="col-form-label">Ponderación:</label>
-                            <input type="number" class="form-control" id="ponderacionActividadEditModal" th:field="*{ponderacionActividad}" />
+                            <input type="number" class="form-control" id="ponderacionActividadEditModal"
+                                th:field="*{ponderacionActividad}" />
                         </div>
-                        <!-- Aquí agregamos los campos ocultos para materia y periodo -->
-                        <input type="hidden" id="materiaEdit" th:field="*{materia.codMateria}" />
-                        <input type="hidden" id="periodoEdit" th:field="*{periodo.idPeriodo}" />
                         <!-- Botones del modal -->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                id="cancelarSancion">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" id="agregarModalButton">Guardar</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <!--Aca Termina-->
+
+    <!-- Modal Editar -->
+    <div class="modal fade" id="EditarActividadModal" tabindex="-1" aria-labelledby="EditarActividadModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="EditarActividadLabel">Crear actividad</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario dentro del modal -->
+                    <form th:object="${actividad}" method="post" id="formActividad" class="needs-validation"
+                        th:action="@{/Actividad/add}" novalidate>
+                        <input type="hidden" id="idActividad" name="idActividad" >
+                        <input type="hidden" id="idAsignacion" name="asignacion" th:value="${asignacion.idAsignacion}">
+                        <div class="mb-3">
+                            <label for="periodo" class="form-label fw-bold">Periodo</label>
+                            <select th:field="*{periodo}" class="form-select border-secondary border-opacity-75"
+                                id="editPeriodo"  required>
+                                <option value="" selected>Selecciona </option>
+                                <option th:each="period : ${periodos}" th:value="${period.idPeriodo}"
+                                    th:text="${period.numeroPeriodo}">Leve</option>
+                            </select>
+                            <div class="invalid-feedback">Es necesario seleccionar el tipo de falta</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombreActividadEditModal" class="col-form-label">Nombre de la Actividad:</label>
+                            <input type="text" class="form-control" id="editNombre" name="editNombre"
+                                th:field="*{nombreActividad}" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="col-form-label" for="descripcionActividadEditModal">Descripción:</label>
+                            <textarea class="form-control no-resize " id="editDescripcion" rows="3"
+                                th:field="*{descripcionActividad}"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaActividadEditModal" class="col-form-label">Fecha de la Actividad:</label>
+                            <input type="date" class="form-control" id="editFechaCreacion"
+                                th:field="*{fechaActividad}" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="ponderacionActividadEditModal" class="col-form-label">Ponderación:</label>
+                            <input type="number" class="form-control" id="editPonderacion"
+                                th:field="*{ponderacionActividad}" />
+                        </div>
+                        <!-- Botones del modal -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                id="cancelarSancion">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" id="agregarModalButton">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Modal de Confirmación -->
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
         aria-hidden="true">
@@ -241,77 +248,9 @@
     </div>
 
 
+    <footer th:replace="~{home :: footer}"></footer>
     <script type="text/javascript" src="/js/modalEliminacion.js"></script>
-    
-    <script>
-        function openInPopup(url) {
-            window.open(url, 'popup', 'width=800,height=600');
-        }
-    </script>
-    <script>
-        function filtrarTabla() {
-            var select = document.getElementById("materia");
-            var filtro = select.options[select.selectedIndex].text.toUpperCase();
-            var filas = document.getElementsByClassName("filaActividad");
-
-            for (var i = 0; i < filas.length; i++) {
-                var columnaMateria = filas[i].getElementsByTagName("td")[4].innerText.toUpperCase();
-                if (filtro === "" || columnaMateria.includes(filtro)) {
-                    filas[i].style.display = "";
-                } else {
-                    filas[i].style.display = "none";
-                }
-            }
-        }
-
-         // Llamar a la función filtrarTabla al cargar la página para mostrar la tabla vacía inicialmente
-         window.onload = function() {
-            filtrarTabla();
-        }
-    </script>
-    <script th:inline="javascript">
-        function actualizarMaterias() {
-            var codigoBachillerato = document.getElementById("grado").value;
-            fetch(`/Actividades/materiasPorBachillerato?codigoBachillerato=${codigoBachillerato}`)
-                .then(response => response.json())
-                .then(data => {
-                    var materiaSelect = document.getElementById("materia");
-                    materiaSelect.innerHTML = '<option value="">Todas las Materias</option>';
-                    data.forEach(materia => {
-                        var option = document.createElement("option");
-                        option.value = materia.codMateria;
-                        option.text = materia.nomMateria;
-                        materiaSelect.appendChild(option);
-                    });
-                });
-        }
-
-        function showEditModal(idActividad) {
-            fetch('/Actividades/edit/' + idActividad)
-                .then(response => response.json())
-                .then(data => {
-                    // Asigna los datos recibidos a los campos del modal de edición
-                    document.getElementById('idActividadEdit').value = data.idActividad;
-                    document.getElementById('nombreActividadEditModal').value = data.nombreActividad;
-                    document.getElementById('descripcionActividadEditModal').value = data.descripcionActividad;
-                    document.getElementById('fechaActividadEditModal').value = data.fechaActividad;
-                    document.getElementById('ponderacionActividadEditModal').value = data.ponderacionActividad;
-            
-                    // Aquí asignamos los valores de materia y periodo
-                    document.getElementById('materiaEdit').value = data.materia.codMateria;
-                    document.getElementById('periodoEdit').value = data.periodo.idPeriodo;
-
-                    // Muestra el modal de edición
-                    var myModal = new bootstrap.Modal(document.getElementById('EditarActividadModal'));
-                    myModal.show();
-                })
-                .catch(error => {
-                    console.error('Error al obtener los datos de la actividad:', error);
-            // Maneja el error de manera adecuada según tu aplicación
-                });
-        }
-    </script>
+    <script type="text/javascript" th:src="@{/js/GestionActividades.js}"></script>
 </body>
 
-<footer th:replace="~{home :: footer}"></footer>
 </html>
