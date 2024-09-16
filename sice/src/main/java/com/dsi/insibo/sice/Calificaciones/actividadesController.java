@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
-
 import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
 import com.dsi.insibo.sice.entity.Actividad;
 import com.dsi.insibo.sice.entity.Asignacion;
@@ -68,16 +66,16 @@ public class actividadesController {
 		// Acá se obtienen el objeto asignación correspondiente al docente y
 		// bachillerato
 		String dui = sesion.duiSession();
-		System.out.println(dui + " " + codigoBachillerato);
+		// System.out.println(dui + " " + codigoBachillerato);
 		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, codigoBachillerato);
 		// Listado de las actividaes que ha creado un docente por bachillerato
 		List<Actividad> listadoActividades = actividadService.listaActividades(dui, codigoBachillerato);
 
-		System.out.println(asignacion.getIdAsignacion());
 		model.addAttribute("actividad", actividad);
 		model.addAttribute("periodos", periodos);
 		model.addAttribute("listadoActividades", listadoActividades);
 		model.addAttribute("asignacion", asignacion);
+		model.addAttribute("titulo", "Actividades");
 
 		return "Calificaciones/vistaActividades";
 	}
@@ -107,6 +105,33 @@ public class actividadesController {
 					"La suma de poderaciones no debe de superar el 100%. Por verificar los porcentajes ya ha asignados.");
 		}
 		return "redirect:/Actividad/" + actividad.getAsignacion().getBachillerato().getCodigoBachillerato();
+	}
+
+	@GetMapping("/{codigoBachillerato}/delete/{idActividad}")
+	public String eliminarAlumno(@PathVariable("codigoBachillerato") int codigoBachillerato,
+			@PathVariable("idActividad") int idActividad, RedirectAttributes attributes) {
+
+		Actividad actividad = null;
+		if (idActividad > 0) {
+			// Busca al bachillerato por su codigo
+			actividad = actividadService.buscarActividadPorId(idActividad);
+
+			// Verifica que el bachillerato exista
+			if (actividad == null) {
+				// System.out.println("Error: ¡No exite este idActividad no existe");
+				attributes.addFlashAttribute("error", "Error: ¡El idActividad ingresado no existe");
+				return "redirect:/Actividad/" + codigoBachillerato;
+			}
+		} else {
+			// Maneja el caso donde el codigo no es válido
+			// System.out.println("Error: ¡El idActividad ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El idActividad ingresado no es válido!");
+			return "redirect:/Actividad/" + codigoBachillerato;
+		}
+		// Elimina el registro
+		actividadService.eliminarActividad(idActividad);
+		attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");
+		return "redirect:/Actividad/" + codigoBachillerato;
 	}
 
 }

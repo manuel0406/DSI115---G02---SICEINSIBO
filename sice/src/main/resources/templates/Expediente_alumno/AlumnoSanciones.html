@@ -34,11 +34,11 @@
                         <div class="d-flex gap-2">
                             <a class="btn btn-secondary"
                                 th:href="@{/ExpedienteAlumno/Sanciones/{nie}(nie=${alumno.idAlumno}, format='pdf')}"
-                                data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual"
+                                data-bs-t="tooltip" data-bs-placement="top" title="Imprimir listado actual"
                                 target="_blank" onclick="openInPopup(this.href); return false;">
                                 <i class="bi bi-printer"></i> Imprimir listado
                             </a>
-                            <a class="btn btn-primary Agregar-btn" data-bs-toggle="tooltip" data-bs-placement="top"
+                            <a class="btn btn-primary Agregar-btn" data-bs-t="tooltip" data-bs-placement="top"
                                 title="Agregar Sancion" th:text="'Agregar Sancion'"></a>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                                     <td class="text-center fs-6"
                                         th:text="${#dates.format(sanciones.fechaSancion,'dd/MM/yyyy')}"></td>
                                     <td class="text-center">
-                                        <a class="btn btn-success editar-btn" data-bs-toggle="modal"
+                                        <a class="btn btn-success editar-btn" data-bs-t="tooltip" data-bs-toggle="modal"
                                             data-bs-target="#consultarSancionModal" data-bs-placement="top"
                                             title="Consultar" th:data-id="${sanciones.idSancion}"
                                             th:data-des="${sanciones.descripcionSancion}"
@@ -69,7 +69,7 @@
                                             th:data-fec="${#dates.format(sanciones.fechaSancion,'dd/MM/yyyy')}">
                                             <i class="bi bi-file-earmark-text"></i>
                                         </a>
-                                        <a class="btn btn-primary editar-btn" data-bs-toggle="modal"
+                                        <a class="btn btn-primary editar-btn" data-bs-t="tooltip" data-bs-toggle="modal"
                                             data-bs-target="#actualizarSancionModal" data-bs-placement="top"
                                             title="Editar" th:data-id="${sanciones.idSancion}"
                                             th:data-des="${sanciones.descripcionSancion}"
@@ -79,10 +79,10 @@
                                         </a>
                                         <a class="btn btn-danger delete-btn"
                                             th:href="@{/ExpedienteAlumno/eliminarSancion/}+${alumno.idAlumno+'/'}+ ${sanciones.idSancion}"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                            data-bs-t="tooltip" data-bs-placement="top" title="Eliminar">
                                             <i class="bi bi-trash"></i>
                                         </a>
-                                        <a th:href="@{/} " class="btn btn-secondary " data-bs-toggle="tooltip"
+                                        <a th:href="@{/} " class="btn btn-secondary " data-bs-t="tooltip"
                                             data-bs-placement="top" title="Imprimir" target="_blank"
                                             onclick="openInPopup(this.href); return false;">
                                             <i class="bi bi-printer"></i>

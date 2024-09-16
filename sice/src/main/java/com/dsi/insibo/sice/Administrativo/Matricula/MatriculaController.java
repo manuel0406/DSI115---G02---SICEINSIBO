@@ -2,7 +2,9 @@ package com.dsi.insibo.sice.Administrativo.Matricula;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,17 +54,18 @@ public class MatriculaController {
 
 		List<Alumno> listado = new ArrayList<>();
 
+		// Crear un Set para almacenar los NIEs de los alumnos matriculados
+		Set<Integer> nieMatriculadosSet = new HashSet<>();
+
+		// Llenar el Set con los NIEs de los alumnos matriculados
+		for (Alumno alumnoM : listadoMatriculado) {
+			nieMatriculadosSet.add(alumnoM.getNie());
+		}
+
+		// Iterar sobre la lista de búsqueda
 		for (Alumno alumnoB : busqueda) {
-			boolean existeEnMatriculados = false;
-
-			for (Alumno alumnoM : listadoMatriculado) {
-				if (alumnoB.getNie() == alumnoM.getNie()) {
-					existeEnMatriculados = true;
-					break;
-				}
-			}
-
-			if (!existeEnMatriculados) {
+			// Verificar si el NIE del alumnoB no está en el Set
+			if (!nieMatriculadosSet.contains(alumnoB.getNie())) {
 				listado.add(alumnoB);
 				// System.out.println("Alumno añadido: " + alumnoB.getNombreAlumno()); //
 				// Opcional, para verificar
@@ -271,7 +274,6 @@ public class MatriculaController {
 		modelAndView.addObject("carrera", carrera);
 		modelAndView.addObject("grado", grado);
 		modelAndView.addObject("seccion", seccion);
-		
 
 		// Retornar el objeto ModelAndView que contiene la vista y los datos
 		return modelAndView;
@@ -337,6 +339,7 @@ public class MatriculaController {
 		// Redirige a la vista de listado de alumnos
 		return "redirect:/matriculados";
 	}
+
 	@GetMapping("/matriculados/Alumno/{nie}")
 	public String informacionAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -368,7 +371,7 @@ public class MatriculaController {
 		model.addAttribute("urlDoc", "/matriculados/Documentos/");
 		model.addAttribute("sanciones", false);
 		model.addAttribute("btnRegresa", "/matriculados");
-		
+
 		// model.addAttribute("bachillerato", bachillerato);
 
 		// Retornar el nombre de la vista a ser renderizada
@@ -485,6 +488,7 @@ public class MatriculaController {
 
 		return "Expediente_alumno/AlumnoDocumentos";
 	}
+
 	@GetMapping("/matriculados/delete/{nie}")
 	public String eliminarAlumno(@PathVariable("nie") int nie, RedirectAttributes attributes) {
 
@@ -509,7 +513,7 @@ public class MatriculaController {
 		// Elimino primero los anexos relacionados al alumno encontrado
 		anexoAlumnoService.eliminarAnexoAlumno(nie);
 		// Se eliminan las notas relacionadas a ese alumno
-		//notaService.deleteNotasByAlumnoNie(nie);
+		// notaService.deleteNotasByAlumnoNie(nie);
 		// Elimina el registro del alumno y añade un mensaje de confirmación
 		alumnoService.eliminar(nie);
 		attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");

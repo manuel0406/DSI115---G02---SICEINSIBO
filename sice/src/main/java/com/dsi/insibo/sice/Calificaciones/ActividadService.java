@@ -21,4 +21,10 @@ public class ActividadService {
         return (List<Actividad>) actividadRepository.actividadesPorEspecialidad(dui, codigoBachillerato);
     }
 
+    public void eliminarActividad(int idActividad){
+         actividadRepository.deleteById(idActividad);
+    }
+    public Actividad buscarActividadPorId(int idActividad){
+        return actividadRepository.findById(idActividad).orElse(null);
+    }
 }

@@ -120,6 +120,7 @@ public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
      * param codigoBachillerato Código del bachillerato.
      * return Lista de alumnos que cumplen con los criterios de búsqueda.
      */
+    @Query("SELECT a FROM Alumno a WHERE a.bachillerato.codigoBachillerato=:codigoBachillerato")
     List<Alumno> findByBachilleratoCodigoBachillerato(int codigoBachillerato);
 
     // Métodos de consulta paginados

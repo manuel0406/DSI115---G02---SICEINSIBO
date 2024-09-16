@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{home :: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container-fluid my-2 py-5">
+        <div th:replace="~{Calificaciones\vistaActividades :: barraCalificaciones}">
+        </div>
+        <div class=" col-md-10 offset-md-2">
+            <header th:replace="~{home :: header}"></header>
+
+            <div class="container-fluid py-2 my-2">
+                <!--Mensajes-->
+                <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${success != null}">
+                    <label th:text="${success}"></label>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${error != null}">
+                    <label th:text="${error}"></label>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
+                    <h3 class="text-start col-lg-9"
+                        th:text="${'Actividad de '+asignacion.materia.nomMateria + ': '+asignacion.bachillerato.grado+ '° '+ asignacion.bachillerato.nombreCarrera+ ' ' + asignacion.bachillerato.seccion}">
+                    </h3>
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-primary Agregar-btn" data-bs-t="tooltip" data-bs-placement="top"
+                            title="Agregar Sancion" th:text="'Agregar actividad'"></a>
+                    </div>
+                </div>
+                <div class="col-12 table-responsive-sm">
+                    <table class="table table-hover table-bordered table-sm">
+                        <thead class="thead table-dark text-start">
+                            <tr>
+                                <th scope="col">N°</th>
+                                <th scope="col">NIE</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Nota</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tBody>
+                            <tr th:each="nota, stat: ${listadoNotas}">
+                                <th scope="row" th:text="${stat.index + 1}"></th>
+                                <td th:text="${nota.alumno.nie}"></td>
+                                <td class="text-start"
+                                    th:text="${nota.alumno.apellidoAlumno +' '+nota.alumno.nombreAlumno}"></td>
+                                <td th:text="${nota.notaObtenida}"></td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm editar-btn" data-bs-t="tooltip"
+                                        data-bs-placement="top" title="Editar" data-bs-toggle="modal"
+                                        data-bs-target="#EditarNotadModal" th:data-id="${nota.idNota}"
+                                        th:data-al="${nota.alumno.idAlumno}" th:data-ac="${nota.actividad.idActividad}"
+                                        th:data-not="${nota.notaObtenida}"> <i class="bi bi-pencil-square"></i></a>
+                                </td>
+                            </tr>
+                        </tBody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal editar nota -->
+    <div class="modal fade" id="EditarNotadModal" tabindex="-1" aria-labelledby="EditarNotaModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="EditarNotaModalLabel">Editar nota</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario dentro del modal -->
+                    <form th:object="${nota}" method="post" id="formNota" class="needs-validation"
+                        th:action="@{/Calificaciones/registro/add}" novalidate>
+                        <input type="hidden" id="idNota" name="idNota">
+                        <input type="hidden" id="idAlumno" name="alumno">
+                        <input type="hidden" id="idActividad" name="actividad">
+
+                        <div class="mb-3">
+                            <label for="notaObtenida" class="col-form-label">Nota:</label>
+                            <input type="number" class="form-control" id="notaObtenida" th:field="*{notaObtenida}"
+                                min="0" max="10" required />
+                            <div class="invalid-feedback">La ponderación debe de ser mayor a 0 y menor a 10.1</div>
+                        </div>
+                        <!-- Botones del modal -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                id="cancelarSancion">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" id="agregarModalButton">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer th:replace="~{home :: footer}"></footer>
+    <!-- <script type="text/javascript" src="/js/modalEliminacion.js"></script> -->
+    <script type="text/javascript" th:src="@{/js/GestionCalificaciones.js}"></script>
+</body>
+
+</html>

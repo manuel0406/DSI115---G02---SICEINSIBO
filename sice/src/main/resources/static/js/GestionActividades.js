@@ -1,5 +1,5 @@
 var tooltipTriggerList = [].slice.call(
-    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    document.querySelectorAll('[data-bs-t="tooltip"]')
 );
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
     var consultarButton = document.querySelectorAll(".consultar-btn");
     var confirmConsultarModal = new bootstrap.Modal(document.getElementById("consultarModal"));
-    var confirmConsultarModalButton = document.getElementById("consultarModalButton");    
+    var confirmConsultarModalButton = document.getElementById("consultarModalButton");
 
     consultarButton.forEach(function (button) {
         button.addEventListener("click", function (event) {
@@ -60,14 +60,35 @@ document.addEventListener("DOMContentLoaded", function () {
     Array.from(forms).forEach((form) => {
         // Añade un listener para el evento "submit" en cada formulario
         form.addEventListener(
-            "submit",
-            (event) => {
+            "submit", (event) => {
+                // Campo de ponderación en el formulario de creación
+                const ponderacionInput = form.querySelector("#ponderacionActividad");
+                // Campo de ponderación en el formulario de edición (opcional)
+                const ponderacionInputEdit = form.querySelector("#editPonderacion");
+
+                // Validación de la ponderación de creación (mayor a 0)
+                if (ponderacionInput) {
+                    const ponderacionValue = parseFloat(ponderacionInput.value);
+                    if (isNaN(ponderacionValue) || ponderacionValue <= 0) {
+                        ponderacionInput.setCustomValidity("La ponderación debe ser mayor a 0.");
+                    } else {
+                        ponderacionInput.setCustomValidity("");
+                    }
+                }
+                // Validación de la ponderación de edición (mayor a 0) - Si existe el campo de edición
+                if (ponderacionInputEdit) {
+                    const ponderacionEditValue = parseFloat(ponderacionInputEdit.value);
+                    if (isNaN(ponderacionEditValue) || ponderacionEditValue <= 0) {
+                        ponderacionInputEdit.setCustomValidity("La ponderación debe ser mayor a 0.");
+                    } else {
+                        ponderacionInputEdit.setCustomValidity("");
+                    }
+                }
                 // Verifica si el formulario es válido
                 if (!form.checkValidity()) {
                     // Si no es válido, previene el envío del formulario
                     event.preventDefault();
                     event.stopPropagation();
-
                     // Encuentra el primer elemento inválido en el formulario
                     const firstInvalidElement = form.querySelector(":invalid");
                     if (firstInvalidElement) {
@@ -80,7 +101,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         firstInvalidElement.focus();
                     }
                 }
-
                 // Añade la clase "was-validated" al formulario
                 form.classList.add("was-validated");
             },
@@ -88,6 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
     });
 })();
+
 
 document
     .getElementById("cancelarSancion")
@@ -97,45 +118,21 @@ document
         form.classList.remove("was-validated"); // Eliminar la clase de validación
     });
 
-    $(document).ready(function() {
-        $('.editar-btn').on('click', function() {
-            var idActividad = $(this).data('id');
-            var nombre = $(this).data('non');
-            var descripcion = $(this).data('des');
-            var fecha = $(this).data('fec');
-            var ponderacion = $(this).data('pon'); 
-            var periodo = $(this).data('per'); 
-    
-            $('#idActividad').val(idActividad);
-            $('#editNombre').val(nombre);
-            $('#editDescripcion').text(descripcion);
-            $('#editFechaCreacion').val(fecha);
-            $('#editPonderacion').val(ponderacion);
-            $('#editPeriodo').val(periodo);
-           
-        });
-    });
+$(document).ready(function () {
+    $('.editar-btn').on('click', function () {
+        var idActividad = $(this).data('id');
+        var nombre = $(this).data('non');
+        var descripcion = $(this).data('des');
+        var fecha = $(this).data('fec');
+        var ponderacion = $(this).data('pon');
+        var periodo = $(this).data('per');
 
+        $('#idActividad').val(idActividad);
+        $('#editNombre').val(nombre);
+        $('#editDescripcion').text(descripcion);
+        $('#editFechaCreacion').val(fecha);
+        $('#editPonderacion').val(ponderacion);
+        $('#editPeriodo').val(periodo);
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Obtener todos los botones de consulta
-        const consultarButtons = document.querySelectorAll('.btn-success.editar-btn');
-    
-        consultarButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                // Obtener los datos del atributo data
-                const tipo = this.getAttribute('data-tip');
-                const descripcion = this.getAttribute('data-des');
-                const accionCorrectiva = this.getAttribute('data-aco');
-                const fecha = this.getAttribute('data-fec');
-    
-                // Asignar los datos al modal
-                document.getElementById('consultaTipo').textContent = tipo;
-                document.getElementById('consultaDescripcion').textContent = descripcion;
-                document.getElementById('consultaAccionCorrectiva').textContent = accionCorrectiva;
-                document.getElementById('consultaFechaCreacion').textContent = fecha;
-            });
-        });
     });
-    
-    
+});

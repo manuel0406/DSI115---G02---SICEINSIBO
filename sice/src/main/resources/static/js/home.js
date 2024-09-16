@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
-    var agregarButton = document.querySelectorAll(".alumnno-btn");
+    var agregarButton = document.querySelectorAll(".abrir-btn");
     var confirmAgregarModal = new bootstrap.Modal(
-        document.getElementById("AlumnoModal")
+        document.getElementById("abrirModal")
     );
 
     agregarButton.forEach(function (button) {
