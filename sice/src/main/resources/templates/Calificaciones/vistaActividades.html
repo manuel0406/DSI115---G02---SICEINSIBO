@@ -40,25 +40,7 @@
                 <header th:replace="~{home :: header}"></header>
                 <div class="container-fluid py-2 my-2">
                     <!--Mensajes-->
-                    <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2"
-                        th:if="${success != null}">
-                        <label th:text="${success}"></label>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${error != null}">
-                        <label th:text="${error}"></label>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
-                        <h3 class="text-start col-lg-9"
-                            th:text="${'Actividades de '+asignacion.materia.nomMateria + ': '+asignacion.bachillerato.grado+ '° '+ asignacion.bachillerato.nombreCarrera+ ' ' + asignacion.bachillerato.seccion}">
-                        </h3>
-                        <div class="d-flex gap-2">
-
-                            <a class="btn btn-primary Agregar-btn" data-bs-t="tooltip" data-bs-placement="top"
-                                title="Agregar Sancion" th:text="'Agregar actividad'"></a>
-                        </div>
-                    </div>
+                    <div th:replace="~{alertas::alertas}"></div>
                     <div class="col-12 table-responsive-sm">
                         <table class="table table-hover table-bordered table-sm">
                             <thead class="thead table-dark text-start">
