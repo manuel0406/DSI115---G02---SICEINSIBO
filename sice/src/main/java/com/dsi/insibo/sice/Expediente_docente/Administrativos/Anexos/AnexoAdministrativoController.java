@@ -73,6 +73,12 @@ public class AnexoAdministrativoController {
             archivo = new AnexoPersonalAdministrativo();
         }
 
+        if (!file.getContentType().equals("application/pdf")) {
+            redirectAttributes.addFlashAttribute("message", "Solo se permiten archivos PDF.");
+            redirectAttributes.addFlashAttribute("warning", "Error, el archivo a subir debe ser PDF.");
+            return "redirect:/expedienteadministrativo/Documentos/" + administrativo.getDuiPersonal();
+        }
+
         // Cuando la clave es DUI
         if (clave.equals("dui")) {
             if (file.isEmpty()) {

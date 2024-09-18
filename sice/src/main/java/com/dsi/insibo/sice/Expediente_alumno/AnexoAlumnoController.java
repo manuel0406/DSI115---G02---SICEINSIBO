@@ -102,6 +102,12 @@ public class AnexoAlumnoController {
             archivo = new AnexoAlumno();
         }
 
+        if (!file.getContentType().equals("application/pdf")) {
+            redirectAttributes.addFlashAttribute("message", "Solo se permiten archivos PDF.");
+            redirectAttributes.addFlashAttribute("warning", "Error, el archivo a subir debe ser PDF.");
+            return "redirect:/ExpedienteAlumno/Documentos/" + alumno.getIdAlumno();
+        }
+
         // Verifica si la clave es "dui"
         if (clave.equals("dui")) {
             // Verifica si el archivo está vacío
