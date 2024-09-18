@@ -25,13 +25,21 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
-                    <h3 class="text-start col-lg-9"
-                        th:text="${'Actividad de '+asignacion.materia.nomMateria + ': '+asignacion.bachillerato.grado+ '° '+ asignacion.bachillerato.nombreCarrera+ ' ' + asignacion.bachillerato.seccion}">
+                    <h3 class="text-start col-lg-9" th:text="${'Actividad: ' + actividad.nombreActividad + '  -  ' + 
+                        actividad.asignacion.bachillerato.grado + '° ' + 
+                        (actividad.asignacion.bachillerato.nombreCarrera == 'Electrónica' ? 'ECA' :
+                        actividad.asignacion.bachillerato.nombreCarrera == 'Atención Primaria en Salud' ? 'APS' :
+                        actividad.asignacion.bachillerato.nombreCarrera == 'Sistemas Eléctricos' ? 'SE' :
+                        actividad.asignacion.bachillerato.nombreCarrera == 'Desarrollo de Software' ? 'DS' :
+                        actividad.asignacion.bachillerato.nombreCarrera == 'Administrativo Contable' ? 'AC' :
+                        actividad.asignacion.bachillerato.nombreCarrera) + ' ' + 
+                        actividad.asignacion.bachillerato.seccion + ' '}">
                     </h3>
-                    <div class="d-flex gap-2">
-                        <a class="btn btn-primary Agregar-btn" data-bs-t="tooltip" data-bs-placement="top"
-                            title="Agregar Sancion" th:text="'Agregar actividad'"></a>
-                    </div>
+
+                    <!-- <h3 class="text-start col-lg-9"
+                        th:text="${actividad.asignacion.bachillerato.grado+'° '+actividad.asignacion.bachillerato.nombreCarrera+' '+ actividad.asignacion.bachillerato.seccion}">
+                    </h3> -->
+
                 </div>
                 <div class="col-12 table-responsive-sm">
                     <table class="table table-hover table-bordered table-sm">
@@ -61,6 +69,12 @@
                             </tr>
                         </tBody>
                     </table>
+                    <!-- Alerta que se muestra solo cuando se le manda una lista vacia de alumnos -->
+                    <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2"
+                        th:if="${#lists.isEmpty(listadoNotas)}">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <label th:text="${'¡No hay alumnos registrados!'}"></label>
+                    </div>
                 </div>
             </div>
         </div>

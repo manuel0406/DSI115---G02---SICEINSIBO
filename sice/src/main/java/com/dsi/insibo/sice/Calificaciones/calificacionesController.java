@@ -1,10 +1,14 @@
 package com.dsi.insibo.sice.Calificaciones;
 
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 // import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
 import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
+import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
 import com.dsi.insibo.sice.entity.Actividad;
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Asignacion;
@@ -19,7 +24,6 @@ import com.dsi.insibo.sice.entity.Nota;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 
 @Controller
 @RequestMapping("/Calificaciones")
@@ -38,33 +42,55 @@ public class calificacionesController {
 	ActividadService actividadService;
 	@Autowired
 	AsignacionService asignacionService;
+	@Autowired
+	SessionService sesion;
 
 	// @Autowired
 	// private MateriaBachilleratoRepository materiaBachilleratoRepository;
 
-	@GetMapping("/calificaciones")
-	public String verCalificaciones(Model model) {
+	@GetMapping("/{codigoBachillerato}")
+	public String verCalificaciones(Model model, @PathVariable("codigoBachillerato") int codigoBachillerato) {
+		String dui = sesion.duiSession();
+		// System.out.println(dui + " " + codigoBachillerato);
+		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, codigoBachillerato);
+		List<Actividad> listadoActividades = actividadService.listaActividades(asignacion.getDocente().getDuiDocente(),
+				asignacion.getBachillerato().getCodigoBachillerato());
+		List<Nota> listaNotas = notaService.listaNotaActividadBachillerato(asignacion.getDocente().getDuiDocente(),
+				asignacion.getBachillerato().getCodigoBachillerato());
+		List<Alumno> listaAlumnos = alumnoService
+				.alumnosPorBachilerato(asignacion.getBachillerato().getCodigoBachillerato());
 
-		// List<Bachillerato> listaBachilleratos =
-		// bachilleratoService.listaBachilleratos();
-		// model.addAttribute("grados", listaBachilleratos);
+		// Crear un mapa para almacenar las notas por alumno y actividad
+		Map<Integer, Map<Integer, Nota>> notasPorAlumno = new HashMap<>();
+		// Crear un mapa para almacenar el total de notas por alumno
+		Map<Integer, Double> totalNotasPorAlumno = new HashMap<>();
 
-		// List<Periodo> listaPeriodos = periodoService.listaPeriodos();
-		// model.addAttribute("periodos", listaPeriodos);
+		// Organizar las notas por alumno y actividad
+		for (Nota nota : listaNotas) {
+			int idAlumno = nota.getAlumno().getIdAlumno();
+			int idActividad = nota.getActividad().getIdActividad();
 
-		// List<Alumno> alumnos =
-		// alumnoService.obtenerAlumnosPorMateriaYPeriodo(codMateria, idPeriodo);
+			notasPorAlumno
+					.computeIfAbsent(idAlumno, k -> new HashMap<>())
+					.put(idActividad, nota);
 
-		// List<Materia> listaMaterias = materiaService.listaMaterias();
-		// model.addAttribute("materias", listaMaterias);
-		// model.addAttribute("materias", new ArrayList<Materia>());
-		// model.addAttribute("alumnos", new ArrayList<Alumno>());
-		List<Actividad> listadoActividades = actividadService.listaActividades("33333333-3", 14);
+			// Calcular el total de notas por alumno
+			BigDecimal notafinal = new BigDecimal(
+					(double) (nota.getNotaObtenida()) * (nota.getActividad().getPonderacionActividad() / 100));
+			notafinal = notafinal.setScale(2, RoundingMode.HALF_UP);
+			totalNotasPorAlumno.merge(idAlumno, notafinal.doubleValue(), Double::sum);
+		}
+
 		model.addAttribute("listadoActividades", listadoActividades);
+		model.addAttribute("listaAlumnos", listaAlumnos);
+		model.addAttribute("notasPorAlumno", notasPorAlumno);
+		model.addAttribute("totalNotasPorAlumno", totalNotasPorAlumno);
+		model.addAttribute("asignacion", asignacion);
 
 		return "Calificaciones/vistaCalificaciones";
 	}
 
+	@PreAuthorize("hasAnyRole('DOCENTE')")
 	@GetMapping("/registro/{idActividad}")
 	public String registro(Model model, @PathVariable("idActividad") int idActividad) {
 
@@ -97,24 +123,27 @@ public class calificacionesController {
 				notaService.guardarNota(nota);
 			}
 		}
-		Nota nota= new Nota();
-		listaNotas = notaService.notasPorBachilleratoActivdad(3);
+		Nota nota = new Nota();
+		listaNotas = notaService.notasPorBachilleratoActivdad(actividad.getIdActividad());
 
 		model.addAttribute("titulo", "Registro notas");
 		model.addAttribute("asignacion", asignacion);
+		model.addAttribute("actividad", actividad);
 		model.addAttribute("listadoNotas", listaNotas);
 		model.addAttribute("nota", nota);
 		return "Calificaciones/registroCalificaciones";
 	}
+
 	@PostMapping("/registro/add")
 	public String guardarCalificacion(@ModelAttribute Nota nota) {
-	
+
 		notaService.guardarNota(nota);
-		// System.out.println( "idNota "+ nota.getIdNota()+" idAlumno: "+nota.getAlumno().getIdAlumno()+ " idActividad: "+ nota.getActividad().getIdActividad()+" nota: "+nota.getNotaObtenida());
-		
-		return "redirect:/Calificaciones/registro/"+nota.getActividad().getIdActividad();
+		// System.out.println( "idNota "+ nota.getIdNota()+" idAlumno:
+		// "+nota.getAlumno().getIdAlumno()+ " idActividad: "+
+		// nota.getActividad().getIdActividad()+" nota: "+nota.getNotaObtenida());
+
+		return "redirect:/Calificaciones/registro/" + nota.getActividad().getIdActividad();
 	}
-	
 
 	/*
 	 * @GetMapping("calificaciones/materiasPorBachillerato")

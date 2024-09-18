@@ -2,6 +2,7 @@ package com.dsi.insibo.sice.Calificaciones;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,6 +36,7 @@ public class actividadesController {
 	@Autowired
 	AsignacionService asignacionService;
 
+	@PreAuthorize("hasAnyRole('DOCENTE')")
 	@GetMapping("/{codigoBachillerato}")
 	public String verActividades(Model model, @PathVariable("codigoBachillerato") int codigoBachillerato,
 			RedirectAttributes attributes) {
@@ -49,14 +51,14 @@ public class actividadesController {
 			if (bachillerato == null) {
 				System.out.println("Error: ¡El código ingresado no existe");
 				attributes.addFlashAttribute("error", "Error: ¡El código ingresado no existe");
-				return "redirect:/";
+				return "redirect:/Actividad/" + codigoBachillerato;
 			}
 
 		} else {
 			// Maneja el caso donde el codigo no es válido
 			System.out.println("Error: ¡El código ingresado no es válido!");
 			attributes.addFlashAttribute("error", "Error: ¡El código ingresado no es válido!");
-			return "redirect:/";
+			return "redirect:/Actividad/" + codigoBachillerato;
 		}
 		// Se extra el listado de periodos existentes
 		List<Periodo> periodos = periodoService.listaPeriodos();
@@ -80,6 +82,7 @@ public class actividadesController {
 		return "Calificaciones/vistaActividades";
 	}
 
+	@PreAuthorize("hasAnyRole('DOCENTE')")
 	@PostMapping("/add")
 	public String addActividadFromModal(@ModelAttribute Actividad actividad, RedirectAttributes redirectAttributes) {
 
@@ -107,6 +110,7 @@ public class actividadesController {
 		return "redirect:/Actividad/" + actividad.getAsignacion().getBachillerato().getCodigoBachillerato();
 	}
 
+	@PreAuthorize("hasAnyRole('DOCENTE')")
 	@GetMapping("/{codigoBachillerato}/delete/{idActividad}")
 	public String eliminarAlumno(@PathVariable("codigoBachillerato") int codigoBachillerato,
 			@PathVariable("idActividad") int idActividad, RedirectAttributes attributes) {

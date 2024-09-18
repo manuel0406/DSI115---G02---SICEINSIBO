@@ -25,5 +25,8 @@ public class NotaService {
     public List<Nota> notasPorBachilleratoActivdad(int idActividad){
         return notaRepository.notasActividad(idActividad);
     }
+    public List<Nota> listaNotaActividadBachillerato(String dui, int codigoBachillerato){
+        return notaRepository.findAll(dui, codigoBachillerato);
+    }
 }
  

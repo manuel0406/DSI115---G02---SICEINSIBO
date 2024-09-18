@@ -5,44 +5,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestión de Actividades</title>
-     <link rel="shortcut icon" type="image/x-icon" th:href="@{/Imagenes/INSIBO2.ico}">
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/Imagenes/INSIBO2.ico}">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
 <body>
-   
+
     <div class="container-fluid my-2 py-5">
         <div class="row">
-            <!--Barra Lateral-->
-            <div>
-                <nav class="col-md-2 d-none d-md-block custom-navbar min-vh-100 navbar navbar-expand-lg fixed-top">
-                    <!-- Contenido del menú lateral -->
-                    <div class="custom-navbar py-5">
-                        <ul class="nav nav-pills flex-column mt-2">
-                            <li class="nav-item py-2 py-sm-0 my-2 bg-primary">
-                                <div class="text-center text-white">
-                                    <h2>Año 2024</h2>
-                                </div>
-                            </li>
-                            <li class="nav-item py-2 py-sm-0 my-2">
-                                <a class="nav-link text-white"
-                                   >
-                                    <i class="bi bi-journal-check"></i>
-                                    <span class="fs-6 ms-2 d-none d-sm-inline">Gestor de actividades</span>
-                                </a>
-                            </li>
-                            <li class="nav-item py-2 py-sm-0 my-2">
-                                <a class="nav-link text-white">
-                                    <i class="bi bi-journal-text"></i>
-                                    <span class="fs-6 ms-2 d-none d-sm-inline">Gestor de calificaciones </span>
-                                </a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </nav>
+            <div th:replace="~{Calificaciones\vistaActividades :: barraCalificaciones}">
             </div>
             <div class=" col-md-10 offset-md-2">
                 <header th:replace="~{home :: header}"></header>
@@ -59,9 +32,15 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
-                        <h3 class="text-start col-lg-9"
-                           > calificaciones
-                        </h3>
+                        <h3 class="text-start col-lg-9" th:text="${'Cuadro de notas de la materia: '+asignacion.materia.nomMateria +' - '+
+                        asignacion.bachillerato.grado + '° ' + 
+                        (asignacion.bachillerato.nombreCarrera == 'Electrónica' ? 'ECA' :
+                        asignacion.bachillerato.nombreCarrera == 'Atención Primaria en Salud' ? 'APS' :
+                        asignacion.bachillerato.nombreCarrera == 'Sistemas Eléctricos' ? 'SE' :
+                        asignacion.bachillerato.nombreCarrera == 'Desarrollo de Software' ? 'DS' :
+                        asignacion.bachillerato.nombreCarrera == 'Administrativo Contable' ? 'AC' :
+                        asignacion.bachillerato.nombreCarrera) + ' ' + 
+                        asignacion.bachillerato.seccion + ' '}"></h3>
                         <div class="d-flex gap-2">
 
                             <!-- <a class="btn btn-primary Agregar-btn" data-bs-toggle="tooltip" data-bs-placement="top"
@@ -69,36 +48,47 @@
                         </div>
                     </div>
                     <div class="col-12 table-responsive">
-                        <table class="table table-hover table-sm">
+                        <table class="table table-hover table-sm table-bordered">
                             <thead class="thead table-dark text-start">
                                 <tr>
                                     <th scope="col"></th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
                                     <!-- Iterar sobre la lista de actividades para crear los encabezados -->
-                                    <th scope="col" th:each="actividad : ${listadoActividades}" th:text="${actividad.nombreActividad}"></th>
+                                    <th scope="col" th:each="actividad : ${listadoActividades}"
+                                        th:text="${actividad.nombreActividad}"></th>
                                     <th scope="col">Total</th>
                                 </tr>
                             </thead>
                             <thead class="thead table-dark text-start">
                                 <tr>
-                                    <th scope="col">Alumno</th>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">NIE</th>
+                                    <th scope="col">Nombre alumno</th>
                                     <!-- Mostrar la ponderación de cada actividad -->
-                                    <th scope="col" th:each="actividad : ${listadoActividades}" th:text="${actividad.ponderacionActividad} + '%'"></th>
+                                    <th scope="col" th:each="actividad : ${listadoActividades}"
+                                        th:text="${actividad.ponderacionActividad} + '%'"></th>
                                     <th scope="col">100%</th>
                                 </tr>
                             </thead>
                             <tbody class="fs-6">
-                                <!-- Aquí puedes iterar sobre una lista de alumnos -->
-                                <!-- <tr th:each="alumno : ${listadoAlumnos}">
-                                    <td th:text="${alumno.nombre}">Pedro</td>
-                                   
-                                    <td th:each="actividad : ${listadoActividades}">
-                                        <input type="text" th:value="10" class="form-control">
+                                <!-- Iterar sobre la lista de alumnos -->
+                                <tr th:each="alumno, stat : ${listaAlumnos}">
+                                    <th scope="row" th:text="${stat.index + 1}"></th>
+                                    <td th:text="${alumno.nie}"></td>
+                                    <td class="text-start" th:text="${alumno.apellidoAlumno+' '+alumno.nombreAlumno}">
                                     </td>
-                                    <td> </td>
-                                </tr> -->
+                                    <!-- Iterar sobre las actividades para cada alumno -->
+                                    <td th:each="actividad : ${listadoActividades}">
+                                        <!-- Acceder a la nota correspondiente al alumno y actividad -->
+                                        <span
+                                            th:text="${notasPorAlumno[alumno.idAlumno][actividad.idActividad]?.notaObtenida ?: '-'}"></span>
+                                    </td>
+                                    <!-- Mostrar el total de notas por alumno -->
+                                    <td th:text="${totalNotasPorAlumno[alumno.idAlumno]}"></td>
+                                </tr>
                             </tbody>
                         </table>
-                        
                     </div>
                 </div>
             </div>
@@ -106,7 +96,7 @@
     </div>
 
 
-    <footer th:replace="~{home :: footer}"></footer>   
+    <footer th:replace="~{home :: footer}"></footer>
 </body>
 
 </html>

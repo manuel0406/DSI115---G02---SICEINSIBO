@@ -25,7 +25,8 @@
                                 </a>
                             </li>
                             <li class="nav-item py-2 py-sm-0 my-2">
-                                <a class="nav-link text-white">
+                                <a class="nav-link text-white"
+                                th:href="@{/Calificaciones/}+${asignacion.bachillerato.codigoBachillerato}">
                                     <i class="bi bi-journal-text"></i>
                                     <span class="fs-6 ms-2 d-none d-sm-inline">Gestor de calificaciones </span>
                                 </a>
@@ -83,7 +84,8 @@
                                     <td th:text="${actividad.periodo.numeroPeriodo}"></td>
                                     <td>
                                         <a class="btn btn-success btn-sm" data-bs-t="tooltip" data-bs-placement="top"
-                                            title="Calificaciones" th:href="@{/Calificaciones/registro/}+${actividad.idActividad}">
+                                            title="Calificaciones"
+                                            th:href="@{/Calificaciones/registro/}+${actividad.idActividad}">
                                             <i class="bi bi-journal-text"></i>
                                         </a>
                                         <a class="btn btn-primary editar-btn btn-sm" data-bs-t="tooltip"
@@ -105,6 +107,12 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <!-- Alerta que se muestra solo cuando se le manda una lista vacia de alumnos -->
+                        <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2"
+                        th:if="${#lists.isEmpty(listadoActividades)}">
+                        <i class="bi bi-info-circle"></i>
+                        <label th:text="${'¡No hay actividades registradas!'}"></label>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -142,7 +150,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="col-form-label" for="descripcionActividadEditModal">Descripción:</label>
-                            <textarea class="form-control" id="descripcionActividad" th:field="*{descripcionActividad}"
+                            <textarea class="form-control" id="descripcionActividad" th:field="*{descripcionActividad}" maxlength="100"
                                 required></textarea>
                             <div class="invalid-feedback">Es necesario agregar una descripción</div>
                         </div>
@@ -204,7 +212,7 @@
                         <div class="mb-3">
                             <label class="col-form-label" for="descripcionActividadEditModal">Descripción:</label>
                             <textarea class="form-control no-resize " id="editDescripcion" rows="3"
-                                th:field="*{descripcionActividad}" required> </textarea>
+                                th:field="*{descripcionActividad}" maxlength="100" required> </textarea>
                             <div class="invalid-feedback">Es necesario agregar una descripción</div>
                         </div>
                         <div class="mb-3">
