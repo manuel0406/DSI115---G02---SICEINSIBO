@@ -76,7 +76,7 @@
                                 <!-- Iterar sobre la lista de sanciones -->
                                 <tr th:each="actividad, stat: ${listadoActividades}">
                                     <th scope="row" th:text="${stat.index + 1}"></th>
-                                    <td th:text="${actividad.nombreActividad}"></td>
+                                    <td class="text-start" th:text="${actividad.nombreActividad}"></td>
                                     <td th:text="${actividad.descripcionActividad}"></td>
                                     <td th:text="${#dates.format(actividad.fechaActividad,'dd/MM/yyyy')}"></td>
 
