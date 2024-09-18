@@ -24,7 +24,6 @@
                 <li class="breadcrumb-item active" aria-current="page" th:text="Matriculados"></li>
             </ol>
         </nav>
-
         <!--Mensajes-->
         <div th:replace="~{alertas::alertas}"></div>
 
@@ -38,8 +37,6 @@
                 'Listado de alumnos'}">
                 <!-- Si todas las variables son null, establece el texto como 'Listado de alumnos' -->
             </h3>
-
-
             <div class="d-flex gap-2">
                 <a th:if="${matricula ==false}"
                     sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
@@ -117,7 +114,6 @@
                                     <option value="" selected>Seleccione</option>
                                     <option value="M">M</option>
                                     <option value="F">F</option>
-
                                 </select>
                             </div>
                             <input type="submit" class="btn btn-primary" value="Filtrar">
@@ -139,10 +135,8 @@
                             <th scope="col">Genero</th>
                             <th scope="col">Acciones</th>
                         </tr>
-
                     </thead>
                     <tbody class="">
-
                         <!-- Iterar sobre la lista de alumnos -->
                         <tr th:each="alumno, stat : ${alumnos}">
                             <th scope="row" th:text="${baseIndex + stat.index + 1}">
@@ -192,7 +186,7 @@
                 <!-- Alerta que se muestra solo cuando se le manda una lista vacia de alumnos -->
                 <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2"
                     th:if="${totalElements == 0}">
-                    <i class="bi bi-exclamation-triangle"></i>
+                    <i class="bi bi-info-circle"></i> 
                     <label th:text="${'¡No hay alumnos registrados!'}"></label>
                 </div>
                 <!-- Contenedor de navegación para la paginación -->
