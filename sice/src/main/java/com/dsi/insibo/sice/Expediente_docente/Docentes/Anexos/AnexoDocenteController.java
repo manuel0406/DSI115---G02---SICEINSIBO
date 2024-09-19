@@ -49,7 +49,7 @@ public class AnexoDocenteController {
         model.addAttribute("titulo", "Documentos");
         model.addAttribute("enlace", "/expedientedocente/Documentos/" + duiDocente); // cambiar por el del controller
         return "Expediente_docente/Docentes/upload";
-        //return "upload";
+        // return "upload";
 
     }
 
@@ -71,6 +71,12 @@ public class AnexoDocenteController {
         // Si el anexo es nulo, crea uno nuevo
         if (archivo == null) {
             archivo = new AnexoDocente();
+        }
+
+        if (!file.getContentType().equals("application/pdf")) {
+            redirectAttributes.addFlashAttribute("message", "Solo se permiten archivos PDF.");
+            redirectAttributes.addFlashAttribute("warning", "Error, el archivo a subir debe ser PDF.");
+            return "redirect:/expedientedocente/Documentos/" + docente.getDuiDocente();
         }
 
         // Cuando la clave es DUI
@@ -190,7 +196,7 @@ public class AnexoDocenteController {
 
             return "redirect:/expedientedocente/Documentos/" + duiDocente;
         }
-        
+
         return "Expediente_docente/upload";
     }
 

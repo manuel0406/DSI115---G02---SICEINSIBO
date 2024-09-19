@@ -16,10 +16,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.AnioService;
+import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
 import com.dsi.insibo.sice.Administrativo.Orientadores.OrientadorService;
 import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteService;
 import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
 import com.dsi.insibo.sice.entity.AnioAcademico;
+import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Docente;
 
@@ -40,6 +42,8 @@ public class SiceApplication {
 	DocenteService docenteService;
 	@Autowired
 	AnioService anioService;
+	@Autowired
+	AsignacionService asignacionService;
 
 	@GetMapping("/")
 	public String holamundo(Model model) {
@@ -50,6 +54,8 @@ public class SiceApplication {
 		Docente doocente = docenteService.buscarPorIdDocente(dui);
 		List<Bachillerato> listaSecciones = orientadorService.listaSeccionesB(dui);
 
+		List<Asignacion> listaAsignaciones=asignacionService.buscarAsignacionDocente(dui);
+
 		if (listaSecciones.isEmpty()) {
 			secciones = false;
 		}
@@ -57,6 +63,7 @@ public class SiceApplication {
 		model.addAttribute("titulo", "Inicio");
 		model.addAttribute("dui", doocente);
 		model.addAttribute("listaSecciones", listaSecciones);
+		model.addAttribute("listadoAsignaciones", listaAsignaciones);
 		model.addAttribute("activo", secciones);
 
 		return "home";
