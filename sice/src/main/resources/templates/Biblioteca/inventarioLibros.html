@@ -67,7 +67,7 @@
                 <th scope="col">Tipo</th>
                 <th scope="col">Precio U</th>
                 <th scope="col">Existencia</th>
-                <th scope="col">Fecha</th>
+                <th scope="col">Fecha de Ingreso</th>
                 <th scope="col">Mal estado</th>
                 <th scope="col">Acciones</th>
               </tr>
@@ -99,7 +99,7 @@
             <label>No se encuentran libros registrados</label>
         </div>
         
-        <nav th:if="${page.totalElements > 0}" aria-label="Page navigation">
+        <nav th:if="${page.totalElements >= 10}" aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
                     <a class="page-link"
@@ -170,9 +170,7 @@
                                 
                     <!-- Campo fechaIngreso -->
                     <div class="mb-3">
-                        <label for="fechaIngreso" class="form-label">Fecha de Ingreso:</label>
-                        <input type="date" th:field="*{fechaIngreso}" class="form-control" id="fechaIngreso" required readonly />
-                        <div class="invalid-feedback">Debe ingresar una fecha válida.</div>
+                        <input type="hidden" th:field="*{fechaIngreso}" class="form-control" id="fechaIngreso" required readonly />
                     </div>
                 
                     <!-- Campo cantidadMalEstado -->

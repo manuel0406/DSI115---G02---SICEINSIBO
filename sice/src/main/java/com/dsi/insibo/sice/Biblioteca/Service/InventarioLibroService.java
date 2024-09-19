@@ -9,4 +9,5 @@ public interface InventarioLibroService {
     public void guardar(InventarioLibro inventarioLibro);
     public InventarioLibro buscarPorId(Integer idInventarioLibros);
     public void eliminar(Integer idInventarioLibros);
+    public boolean existePorTituloYAutor(String tituloLibro, String autorLibro);
 }

@@ -115,16 +115,27 @@ public class BibliotecaController {
     @PostMapping("/InventarioLibros")
     public String guardarLibro(Model model, @Validated @ModelAttribute("nuevoLibro") InventarioLibro nuevoLibro, BindingResult result, RedirectAttributes attributes) {
         List<InventarioLibro> listadoLibros = inventarioLibroService.listarLibros();
-
-        if (result.hasErrors()) {
-            model.addAttribute("titulo","Inventario de Libros");
-            model.addAttribute("libros", listadoLibros);
-            return "redirect:/Biblioteca/InventarioLibros";
+    
+        // Validación personalizada: Verificar si existe un libro con el mismo título y autor
+        if (inventarioLibroService.existePorTituloYAutor(nuevoLibro.getTituloLibro(), nuevoLibro.getAutorLibro())) {
+            attributes.addFlashAttribute("warning", "Ya existe un libro con el mismo título y autor.");
+            return "redirect:/Biblioteca/InventarioLibros";  // Redirigir y mostrar el mensaje de error
         }
-        
+    
+        // Si hay otros errores de validación
+        if (result.hasErrors()) {
+            attributes.addFlashAttribute("warning", "Hubo un problema con los datos ingresados.");
+            model.addAttribute("titulo", "Inventario de Libros");
+            model.addAttribute("libros", listadoLibros);
+            return "redirect:/Biblioteca/InventarioLibros";  // Redirigir y mostrar el mensaje de error
+        }
+    
+        // Si no hay errores, guardar el libro
         inventarioLibroService.guardar(nuevoLibro);
-        attributes.addFlashAttribute("success", "Libro Agregado con éxito");
-        return "redirect:/Biblioteca/InventarioLibros";
+        attributes.addFlashAttribute("success", "Libro agregado con éxito");
+        model.addAttribute("titulo", "Inventario de Libros");
+        model.addAttribute("libros", listadoLibros);
+        return "redirect:/Biblioteca/InventarioLibros";  // Redirigir y mostrar el mensaje de éxito
     }
     
     @GetMapping("/InventarioLibros/delete/{idInventarioLibros}")

@@ -33,4 +33,8 @@ public class InventarioLibroServiceImpl implements InventarioLibroService{
     public void eliminar(Integer idInventarioLibros){
         inventarioLibroRepository.deleteById(idInventarioLibros);
     }
+    @Override
+    public boolean existePorTituloYAutor(String tituloLibro, String autorLibro) {
+        return inventarioLibroRepository.existsByTituloLibroAndAutorLibro(tituloLibro, autorLibro);
+    }
 }
