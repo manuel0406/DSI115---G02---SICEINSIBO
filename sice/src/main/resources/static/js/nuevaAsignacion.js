@@ -22,6 +22,16 @@ $(document).ready(function() {
         return valid;
     }
 
+    function validateProfessorSelection() {
+        var valid = $('#profesor').val() !== "";
+        if (!valid) {
+            $('#profesor').addClass('is-invalid');
+        } else {
+            $('#profesor').removeClass('is-invalid').addClass('is-valid');
+        }
+        return valid;
+    }
+
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
@@ -57,10 +67,15 @@ $(document).ready(function() {
 
     // Validación adicional para al menos un checkbox seleccionado
     $(document).on('submit', 'form.needs-validation', function(event) {
-        if (!validateCheckboxes()) {
+        var checkboxesValid = validateCheckboxes();
+        var professorValid = validateProfessorSelection();
+
+        if (!checkboxesValid || !professorValid) {
             event.preventDefault();
             event.stopPropagation();
-            $('#error-message').show(); // Mostrar el mensaje de error si no hay selección
+            if (!checkboxesValid) {
+                $('#error-message').show(); // Mostrar el mensaje de error si no hay selección
+            }
         } else {
             $('#error-message').hide(); // Ocultar el mensaje de error si hay al menos una selección
         }
@@ -72,4 +87,9 @@ $(document).ready(function() {
     // Inicializar los bordes como no válidos
     $('.checkbox-group').removeClass('border-danger');
     $('.label-checkbox-group').removeClass('text-danger');
+
+    // Validar campo de selección de profesor al cambiar la selección
+    $('#profesor').on('change', function() {
+        validateProfessorSelection();
+    });
 });
