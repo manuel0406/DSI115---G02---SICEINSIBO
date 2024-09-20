@@ -1,32 +1,8 @@
 var tooltipTriggerList = [].slice.call(
-    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    document.querySelectorAll('[data-bs-t="tooltip"]')
 );
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    var agregarButton = document.querySelectorAll(".Agregar-btn");
-    var confirmAgregarModal = new bootstrap.Modal(
-        document.getElementById("agregarModal")
-    );
-    var confirmAgregarButton = document.getElementById("agregarModalButton");
-
-    agregarButton.forEach(function (button) {
-        button.addEventListener("click", function (event) {
-            event.preventDefault();
-            //currentHref = button.getAttribute('href');
-            confirmAgregarModal.show();
-        });
-    });
-    confirmAgregarButton.addEventListener("click", function () {
-        var form = document.getElementById("formSancion");
-        if (!form.checkValidity()) {
-            form.classList.add("was-validated");
-        } else {
-            form.submit();
-        }
-    });
 });
 
 (() => {
@@ -69,20 +45,24 @@ document.addEventListener("DOMContentLoaded", function () {
 document
     .getElementById("cancelarSancion")
     .addEventListener("click", function () {
-        var form = document.getElementById("formOrientador");
+        var form = document.getElementById("formNota");
         form.reset();
         form.classList.remove("was-validated"); // Eliminar la clase de validación
     });
 
 $(document).ready(function () {
     $('.editar-btn').on('click', function () {
-        var idOrientador = $(this).data('id');
-        var docente = $(this).data('doc');
-        var bachillerato = $(this).data('bac');
+        var idNota = $(this).data('id');
+        var idAlumno = $(this).data('al');
+        var idActividad = $(this).data('ac');
+        var notaObtenida = $(this).data('not');
+       
 
-        $('#idOrientador').val(idOrientador);
-        $('#EditDocente').val(docente);
-        $('#EditBachillerato').val(bachillerato);
+
+        $('#idNota').val(idNota);
+        $('#idAlumno').val(idAlumno);
+        $('#idActividad').val(idActividad);
+        $('#notaObtenida').val(notaObtenida);
 
     });
 });

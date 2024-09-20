@@ -9,21 +9,25 @@
 <body>
     <div th:fragment="alertas">
         <div class="alert alert-success alert-dismissible fade show mt-1 mr-2" th:if="${success != null}">
+            <i class="bi bi-check-circle"></i>
             <label th:text="${success}"></label>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
         <div class="alert alert-danger alert-dismissible fade show mt-1 mr-2" th:if="${error != null}">
+            <i class="bi bi-exclamation-triangle"></i>
             <label th:text="${error}"></label>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
         <div class="alert alert-warning alert-dismissible fade show mt-1 mr-2" th:if="${warning != null}">
+            <i class="bi bi-exclamation-triangle"></i>
             <label th:text="${warning}"></label>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
         <div class="alert alert-info alert-dismissible fade show mt-1 mr-2" th:if="${info != null}">
+            <i class="bi bi-info-circle"></i> 
             <label th:text="${info}"></label>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>

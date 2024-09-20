@@ -91,6 +91,11 @@
     </header>
 
     <div class="container mt-3 my-5 py-5">
+         <!--Mensajes-->
+        <div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${error != null}">
+            <label th:text="${error}"></label>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <!-- Jumbotron -->
         <div class="jumbotron mb-3 bg-light rounded-3 px-3 py-3">
             <div class="container text-center">
@@ -154,7 +159,7 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fs-6">Notas</h5>
                         <p class="card-text fs-6">Accede a las calificaciones de los alumnos de la institución.</p>
-                        <a href="#" class="btn btn-primary mt-auto">Ir a Sección</a>
+                        <a class="btn btn-primary mt-auto notas-btn">Ir a Sección</a>
                     </div>
                 </div>
             </div><!-- carta solo del docente -->
@@ -164,7 +169,7 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fs-6">Alumnos</h5>
                         <p class="card-text fs-6">Accede a los expedientes de los alumnos de la institución.</p>
-                        <a class="btn btn-primary mt-auto Agregar-btn">Ir a Sección</a>
+                        <a class="btn btn-primary mt-auto abrir-btn">Ir a Sección</a>
                     </div>
                 </div>
             </div>
@@ -194,8 +199,8 @@
         </div>
     </div>
 
-    <!-- Modal de agregar secciones -->
-    <div class="modal fade" id="agregarModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel"
+    <!-- Modal para ver los expediente de alumnos del lado del docente -->
+    <div class="modal fade" id="abrirModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -233,6 +238,45 @@
             </div>
         </div>
     </div>
+    <!-- Modal para ver los actividades de su materia asignada -->
+    <div class="modal fade" id="notasModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirAgregarModalLabel">Notas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive py-2 table-sm">
+                        <table class="table table-hover ">
+                            <thead class="tabla-c">
+                                <tr>
+                                    <th scope="col">Año</th>
+                                    <th scope="col">Especialidad</th>
+                                    <th scope="col">Sección</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="asignacion, stat : ${listadoAsignaciones}">
+                                    <td th:text="${asignacion.bachillerato.grado}"></td>
+                                    <td th:text="${asignacion.bachillerato.nombreCarrera}"></td>
+                                    <td th:text="${asignacion.bachillerato.seccion}"></td>
+                                    <td>
+                                        <a class="btn btn-success "
+                                            th:href="@{/Actividad/}+${asignacion.bachillerato.codigoBachillerato}">
+                                            <i class="bi bi-journal-check"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer th:fragment="footer">
         <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
