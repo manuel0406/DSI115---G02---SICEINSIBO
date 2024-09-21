@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://wwww.thymelead.org">
-<head th:replace="/home :: head">
+<head th:replace="~{home :: head}">
 </head>
 <body>
-    <header th:replace="home :: header"></header>
+    <header th:replace="~{home :: header}"></header>
 
     <div class="container mt-3 my-5 py-5">
 
@@ -57,6 +57,6 @@
         </div>
     </div>
 
-    <footer th:replace="home :: footer"></footer>
+    <footer th:replace="~{home :: footer}"></footer>
 </body>
 </html>

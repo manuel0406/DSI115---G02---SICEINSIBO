@@ -1,9 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://wwww.thymelead.org">
-<head th:replace="/home :: head">
+<head th:replace="~{home :: head}">
 </head>
+<style>
+    /* El contenedor del input necesita tener position: relative para que las sugerencias se posicionen correctamente */
+    .position-relative {
+        position: relative;
+    }
+
+    /* Estilo para las sugerencias que aparecen flotando */
+    .suggestions-dropdown {
+        position: absolute;
+        top: 100%; /* Aparecer justo debajo del input */
+        left: 0;
+        right: 0;
+        z-index: 1000; /* Para asegurar que aparezca sobre otros elementos */
+        background-color: white;
+        max-height: 200px;
+        overflow-y: auto;
+        box-shadow: 0 4px 8px rgba(212, 6, 6, 0);
+    }
+
+    /* Estilo para cada sugerencia individual */
+    .suggestions-dropdown li {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .suggestions-dropdown li:hover {
+        background-color: #f0f0f0;
+    }
+
+    /* Si no hay sugerencias, el dropdown no debería aparecer */
+    .suggestions-dropdown.hidden {
+        display: none;
+    }
+</style>
 <body>
-    <header th:replace="home :: header"></header>
+    <header th:replace="~{home :: header}"></header>
 
     
     <!--Indicación de la ubicación de la página actual-->
@@ -42,23 +76,10 @@
             </div>
         </div>
 
-        <!--Mensajes-->
-        <div class="container">
-            <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
-                <label th:text="${success}"></label>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        
-            <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
-                <label th:text="${error}"></label>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-
-            <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
-                <label th:text="${warning}"></label>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
+    <!--Alertas -->
+    <div class="container">
+        <div th:replace="~{alertas :: alertas}"></div>
+    </div>
 
     
         <!--Tabla de datos-->
@@ -96,7 +117,8 @@
               </table>
 
             <!-- Mensaje cuando no hay datos -->
-            <div th:if="${page.totalElements == 0}" class="alert alert-info alert-dismissible fade show mt-1 mx-2 text-center">
+            <div th:if="${page.totalElements == 0}" class="alert alert-info alert-dismissible fade show mt-1 mr-2">
+                <i class="bi bi-info-circle"></i>
                 <label>No se encuentran registros de entregas realizadas</label>
             </div>
 
@@ -139,9 +161,10 @@
                                 La fecha de entrega debe ser seleccionada.
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 position-relative">
                             <label for="entregaPersona" class="form-label">Persona que Recibe</label>
                             <input type="text" class="form-control" id="entregaPersona" th:field="*{entregaPersona}" required />
+                            <div id="suggestions" class="suggestions-dropdown"></div> <!-- Aquí se mostrarán las sugerencias -->
                             <div class="invalid-feedback">
                                 Por favor, ingrese el nombre de la persona que recibe.
                             </div>
@@ -169,7 +192,7 @@
                     </div>
                 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelarBtn">Cancelar</button>
                         <button type="submit" class="btn btn-primary">Registrar</button>
                     </div>
                 </form>
@@ -214,84 +237,7 @@
     </div>
     
 
-    <footer th:replace="home :: footer"></footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var editModal = document.getElementById('editModal');
-            editModal.addEventListener('show.bs.modal', function (event) {
-                var button = event.relatedTarget;
-                var id = button.getAttribute('data-id');
-                var fecha = button.getAttribute('data-fecha');
-                var cantidad = button.getAttribute('data-cantidad');
-                var persona = button.getAttribute('data-persona');
-                
-                var modalId = editModal.querySelector('#editId');
-                var modalFecha = editModal.querySelector('#editFecha');
-                var modalCantidad = editModal.querySelector('#editCantidad');
-                var modalPersona = editModal.querySelector('#editPersona');
-    
-                modalId.value = id;
-                modalFecha.value = fecha;
-                modalCantidad.value = cantidad;
-                modalPersona.value = persona;
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Establecer la fecha actual en el campo de fecha de entrega
-            var fechaCampo = document.getElementById("entregaFecha");
-            var hoy = new Date().toISOString().split('T')[0];
-            fechaCampo.value = hoy;
-
-            var form = document.getElementById("formNuevaEntrega");
-
-            form.addEventListener("submit", function (event) {
-                var isValid = true;
-
-                // Validar fecha (siempre debe estar llena ya que es proporcionada por el sistema)
-                if (!fechaCampo.value) {
-                    fechaCampo.classList.add("is-invalid");
-                    isValid = false;
-                } else {
-                    fechaCampo.classList.remove("is-invalid");
-                }
-
-                // Validar persona
-                var persona = form.querySelector("#entregaPersona");
-                if (!persona.value.trim()) {
-                    persona.classList.add("is-invalid");
-                    isValid = false;
-                } else {
-                    persona.classList.remove("is-invalid");
-                }
-
-                // Validar selección de producto
-                var producto = form.querySelector("[name='inventarioPapeleria']");
-                if (producto.value === "") {
-                    producto.classList.add("is-invalid");
-                    isValid = false;
-                } else {
-                    producto.classList.remove("is-invalid");
-                }
-
-                // Validar cantidad
-                var cantidad = form.querySelector("#entregaCantidad");
-                if (cantidad.value <= 0) {
-                    cantidad.classList.add("is-invalid");
-                    isValid = false;
-                } else {
-                    cantidad.classList.remove("is-invalid");
-                }
-
-                if (!isValid) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    form.classList.add("was-validated");
-                }
-            });
-        });
-    </script>
+    <footer th:replace="~{home :: footer}""home :: footer"></footer>
+    <script type="text/javascript" th:src="@{/js/ControlPapeleria.js}"></script>
 </body>
 </html>
