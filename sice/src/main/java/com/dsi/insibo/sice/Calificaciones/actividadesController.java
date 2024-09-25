@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
@@ -39,10 +40,13 @@ public class actividadesController {
 	@PreAuthorize("hasAnyRole('DOCENTE')")
 	@GetMapping("/{codigoBachillerato}")
 	public String verActividades(Model model, @PathVariable("codigoBachillerato") int codigoBachillerato,
-			RedirectAttributes attributes) {
+			RedirectAttributes attributes, @RequestParam(value = "pe", required = false) String pe) {
 
+		// System.out.println("el periodo es: " + pe);
 		Bachillerato bachillerato = null;
-
+		if (pe != null && pe.isEmpty()) {
+			pe = null;
+		}
 		if (codigoBachillerato > 0) {
 			// Busca al bachillerato por su codigo
 			bachillerato = bachilleratosService.bachilleratoPorId(codigoBachillerato);
@@ -71,25 +75,30 @@ public class actividadesController {
 		// System.out.println(dui + " " + codigoBachillerato);
 		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, codigoBachillerato);
 		// Listado de las actividaes que ha creado un docente por bachillerato
-		List<Actividad> listadoActividades = actividadService.listaActividades(dui, codigoBachillerato);
+		List<Actividad> listadoActividades = actividadService.listaActividades(dui, codigoBachillerato, pe);
 
 		model.addAttribute("actividad", actividad);
 		model.addAttribute("periodos", periodos);
 		model.addAttribute("listadoActividades", listadoActividades);
 		model.addAttribute("asignacion", asignacion);
 		model.addAttribute("titulo", "Actividades");
+		// System.out.println("periodo abajo: " + pe);
+		model.addAttribute("pe", pe);
 
 		return "Calificaciones/vistaActividades";
 	}
 
 	@PreAuthorize("hasAnyRole('DOCENTE')")
 	@PostMapping("/add")
-	public String addActividadFromModal(@ModelAttribute Actividad actividad, RedirectAttributes redirectAttributes) {
+	public String addActividadFromModal(@ModelAttribute Actividad actividad, RedirectAttributes redirectAttributes,
+			Model model) {
 
+		int pe = 0;
 		float totalPoderación = 0;
 		List<Actividad> listadoActividades = actividadService.listaActividades(
 				actividad.getAsignacion().getDocente().getDuiDocente(),
-				actividad.getAsignacion().getBachillerato().getCodigoBachillerato());
+				actividad.getAsignacion().getBachillerato().getCodigoBachillerato(),
+				String.valueOf(actividad.getPeriodo().getIdPeriodo()));
 
 		for (Actividad actividad2 : listadoActividades) {
 			if (actividad2.getIdActividad() != actividad.getIdActividad()) {
@@ -105,9 +114,13 @@ public class actividadesController {
 					"Actividad agregada exitosamente.");
 		} else {
 			redirectAttributes.addFlashAttribute("error",
-					"La suma de poderaciones no debe de superar el 100%. Por verificar los porcentajes ya ha asignados.");
+					"La suma de poderaciones no debe de superar el 100%. Por favor verificar los porcentajes ya ha asignados.");
 		}
-		return "redirect:/Actividad/" + actividad.getAsignacion().getBachillerato().getCodigoBachillerato();
+
+		pe = actividad.getPeriodo().getIdPeriodo();
+		System.out.println("viene periodo: " + pe);
+		return "redirect:/Actividad/" + actividad.getAsignacion().getBachillerato().getCodigoBachillerato() + "?pe="
+				+ pe;
 	}
 
 	@PreAuthorize("hasAnyRole('DOCENTE')")
@@ -135,7 +148,8 @@ public class actividadesController {
 		// Elimina el registro
 		actividadService.eliminarActividad(idActividad);
 		attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");
-		return "redirect:/Actividad/" + codigoBachillerato;
+		int pe = actividad.getPeriodo().getIdPeriodo();
+		return "redirect:/Actividad/" + codigoBachillerato+"?pe="+pe;
 	}
 
 }

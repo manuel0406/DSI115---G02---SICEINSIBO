@@ -20,4 +20,8 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
 
     @Query("SELECT n FROM Nota n WHERE n.actividad.asignacion.docente.duiDocente=:dui AND n.actividad.asignacion.bachillerato.codigoBachillerato=:codigoBachillerato ORDER BY n.actividad.periodo.numeroPeriodo ASC")
     List<Nota> findAll(@Param("dui") String dui, @Param("codigoBachillerato") int codigoBachillerato);
+
+    @Modifying
+    @Query("DELETE FROM Nota n WHERE n.actividad.idActividad = :idActividad ")
+    void deleteByActividad(int idActividad);
 }

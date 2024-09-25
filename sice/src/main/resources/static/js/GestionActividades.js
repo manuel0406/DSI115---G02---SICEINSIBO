@@ -129,7 +129,7 @@ $(document).ready(function () {
 
         $('#idActividad').val(idActividad);
         $('#editNombre').val(nombre);
-        $('#editDescripcion').text(descripcion);
+        $('#editDescripcion').val(descripcion);
         $('#editFechaCreacion').val(fecha);
         $('#editPonderacion').val(ponderacion);
         $('#editPeriodo').val(periodo);
