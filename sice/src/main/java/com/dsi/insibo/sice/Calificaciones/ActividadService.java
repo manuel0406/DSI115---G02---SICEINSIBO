@@ -21,13 +21,13 @@ public class ActividadService {
         actividadRepository.save(actividad);
     }
 
-    public List<Actividad> listaActividades(String dui, int codigoBachillerato, String periodo) {
-        return (List<Actividad>) actividadRepository.actividadesPorEspecialidadPeriodo(dui, codigoBachillerato,
+    public List<Actividad> listaActividades(String dui, int idMateria, String periodo) {
+        return (List<Actividad>) actividadRepository.actividadesPorEspecialidadPeriodo(dui, idMateria,
                 periodo);
     }
 
-    public List<Actividad> listaActividades(String dui, int codigoBachillerato) {
-        return (List<Actividad>) actividadRepository.actividadesPorEspecialidad(dui, codigoBachillerato);
+    public List<Actividad> listaActividades(String dui, int idMateria) {
+        return (List<Actividad>) actividadRepository.actividadesPorEspecialidad(dui, idMateria);
     }
 
     @Transactional

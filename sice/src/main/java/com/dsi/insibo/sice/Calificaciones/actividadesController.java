@@ -38,32 +38,32 @@ public class actividadesController {
 	AsignacionService asignacionService;
 
 	@PreAuthorize("hasAnyRole('DOCENTE')")
-	@GetMapping("/{codigoBachillerato}")
-	public String verActividades(Model model, @PathVariable("codigoBachillerato") int codigoBachillerato,
+	@GetMapping("/{idMateria}/{codigoBachillerato}")
+	public String verActividades(Model model, @PathVariable("idMateria") int idMateria, @PathVariable("codigoBachillerato") int codigoBachillerato,
 			RedirectAttributes attributes, @RequestParam(value = "pe", required = false) String pe) {
 
 		// System.out.println("el periodo es: " + pe);
-		Bachillerato bachillerato = null;
-		if (pe != null && pe.isEmpty()) {
-			pe = null;
-		}
-		if (codigoBachillerato > 0) {
-			// Busca al bachillerato por su codigo
-			bachillerato = bachilleratosService.bachilleratoPorId(codigoBachillerato);
+		// Bachillerato bachillerato = null;
+		// if (pe != null && pe.isEmpty()) {
+		// 	pe = null;
+		// }
+		// if (codigoBachillerato > 0) {
+		// 	// Busca al bachillerato por su codigo
+		// 	bachillerato = bachilleratosService.bachilleratoPorId(codigoBachillerato);
 
-			// Verifica que el bachillerato exista
-			if (bachillerato == null) {
-				System.out.println("Error: ¡El código ingresado no existe");
-				attributes.addFlashAttribute("error", "Error: ¡El código ingresado no existe");
-				return "redirect:/Actividad/" + codigoBachillerato;
-			}
+		// 	// Verifica que el bachillerato exista
+		// 	if (bachillerato == null) {
+		// 		System.out.println("Error: ¡El código ingresado no existe");
+		// 		attributes.addFlashAttribute("error", "Error: ¡El código ingresado no existe");
+		// 		return "redirect:/Actividad/" + codigoBachillerato;
+		// 	}
 
-		} else {
-			// Maneja el caso donde el codigo no es válido
-			System.out.println("Error: ¡El código ingresado no es válido!");
-			attributes.addFlashAttribute("error", "Error: ¡El código ingresado no es válido!");
-			return "redirect:/Actividad/" + codigoBachillerato;
-		}
+		// } else {
+		// 	// Maneja el caso donde el codigo no es válido
+		// 	System.out.println("Error: ¡El código ingresado no es válido!");
+		// 	attributes.addFlashAttribute("error", "Error: ¡El código ingresado no es válido!");
+		// 	return "redirect:/Actividad/" + codigoBachillerato;
+		// }
 		// Se extra el listado de periodos existentes
 		List<Periodo> periodos = periodoService.listaPeriodos();
 		// Objecto activada nuevo
@@ -73,9 +73,9 @@ public class actividadesController {
 		// bachillerato
 		String dui = sesion.duiSession();
 		// System.out.println(dui + " " + codigoBachillerato);
-		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, codigoBachillerato);
+		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, idMateria, codigoBachillerato);
 		// Listado de las actividaes que ha creado un docente por bachillerato
-		List<Actividad> listadoActividades = actividadService.listaActividades(dui, codigoBachillerato, pe);
+		List<Actividad> listadoActividades = actividadService.listaActividades(dui, idMateria, pe);
 
 		model.addAttribute("actividad", actividad);
 		model.addAttribute("periodos", periodos);

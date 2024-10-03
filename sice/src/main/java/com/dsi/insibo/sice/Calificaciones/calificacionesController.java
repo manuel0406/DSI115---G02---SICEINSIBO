@@ -2,6 +2,7 @@ package com.dsi.insibo.sice.Calificaciones;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,11 +48,11 @@ public class calificacionesController {
 	// @Autowired
 	// private MateriaBachilleratoRepository materiaBachilleratoRepository;
 
-	@GetMapping("/{codigoBachillerato}")
-	public String verCalificaciones(Model model, @PathVariable("codigoBachillerato") int codigoBachillerato) {
+	@GetMapping("/{idMateria}/{codigoBachillerato}")
+	public String verCalificaciones(Model model, @PathVariable("idMateria") int idMateria, @PathVariable("codigoBachillerato") int codigoBachillerato) {
 		String dui = sesion.duiSession();
 		// System.out.println(dui + " " + codigoBachillerato);
-		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, codigoBachillerato);
+		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, idMateria,codigoBachillerato);
 		List<Actividad> listadoActividades = actividadService.listaActividades(asignacion.getDocente().getDuiDocente(),
 				asignacion.getBachillerato().getCodigoBachillerato());
 		List<Nota> listaNotas = notaService.listaNotaActividadBachillerato(asignacion.getDocente().getDuiDocente(),
@@ -99,7 +100,7 @@ public class calificacionesController {
 		List<Nota> listaNotas = notaService.notasPorBachilleratoActivdad(actividad.getIdActividad());
 		Asignacion asignacion = asignacionService.asignacionParaActividad(
 				actividad.getAsignacion().getDocente().getDuiDocente(),
-				actividad.getAsignacion().getBachillerato().getCodigoBachillerato());
+				actividad.getAsignacion().getMateria().getIdMateria(), actividad.getAsignacion().getBachillerato().getCodigoBachillerato());
 
 		// se crea un Set para almacenar los IDs de alumnos que ya tienen notas
 		Set<Integer> idsAlumnosConNotas = new HashSet<>();
@@ -136,6 +137,7 @@ public class calificacionesController {
 	@PostMapping("/registro/add")
 	public String guardarCalificacion(@ModelAttribute Nota nota) {
 
+		nota.setFechaModificacion(new Date());
 		notaService.guardarNota(nota);
 		// System.out.println( "idNota "+ nota.getIdNota()+" idAlumno:
 		// "+nota.getAlumno().getIdAlumno()+ " idActividad: "+

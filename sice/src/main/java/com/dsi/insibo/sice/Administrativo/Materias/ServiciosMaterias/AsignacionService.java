@@ -66,8 +66,8 @@ public class AsignacionService {
         return asignacionRepository.findAllAsignaciones(pageable);
     }
 
-    public Asignacion asignacionParaActividad(String dui, int codigoBachillerato){
-        return  asignacionRepository.asignaciónDocenteBachillerato(dui, codigoBachillerato);
+    public Asignacion asignacionParaActividad(String dui, int idMateria, int codigoBachillerato){
+        return  asignacionRepository.asignaciónDocenteBachillerato(dui, idMateria,codigoBachillerato);
     }
 
     public List<Asignacion> buscarAsignacionDocente(String dui){

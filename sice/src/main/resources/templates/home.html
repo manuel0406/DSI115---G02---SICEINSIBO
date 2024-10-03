@@ -261,7 +261,7 @@
                                     <td th:text="${asignacion.bachillerato.seccion}"></td>
                                     <td>
                                         <a class="btn btn-success "
-                                            th:href="@{/Actividad/}+${asignacion.bachillerato.codigoBachillerato}">
+                                            th:href="@{/Actividad/}+${asignacion.materia.idMateria+'/'+ asignacion.bachillerato.codigoBachillerato}">
                                             <i class="bi bi-journal-check"></i>
                                         </a>
                                     </td>

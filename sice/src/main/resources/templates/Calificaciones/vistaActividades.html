@@ -46,7 +46,7 @@
                     <div class="card bg-light shadow-sm p-3">
                         <div class="container-fluid">
                             <form class="row gy-3 gx-4 align-items-center" id="formPeriodo"
-                                th:action="@{/Actividad/}+${asignacion.bachillerato.codigoBachillerato}">
+                                th:action="@{/Actividad/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
 
                                 <!-- Label for Periodo -->
                                 <div class="col-auto">
@@ -93,7 +93,7 @@
                                     <tr>
                                         <th scope="col">N°</th>
                                         <th scope="col">Nombre</th>
-                                        <th scope="col">Descripción</th>
+                                        <th scope="col">Tipo</th>
                                         <th scope="col">Fecha</th>
                                         <th scope="col">Ponderación</th>
                                         <th scope="col">Periodo</th>
@@ -105,9 +105,8 @@
                                     <tr th:each="actividad, stat: ${listadoActividades}">
                                         <th scope="row" th:text="${stat.index + 1}"></th>
                                         <td class="text-start" th:text="${actividad.nombreActividad}"></td>
-                                        <td th:text="${actividad.descripcionActividad}"></td>
+                                        <td th:text="${actividad.tipoActividad}"></td>
                                         <td th:text="${#dates.format(actividad.fechaActividad,'dd/MM/yyyy')}"></td>
-
                                         <td th:text="${actividad.ponderacionActividad +'%'}"></td>
                                         <td th:text="${actividad.periodo.numeroPeriodo}"></td>
                                         <td>
@@ -121,7 +120,7 @@
                                                 data-bs-placement="top" title="Editar"
                                                 th:data-id="${actividad.idActividad}"
                                                 th:data-non="${actividad.nombreActividad}"
-                                                th:data-des="${actividad.descripcionActividad}"
+                                                th:data-tip="${actividad.tipoActividad}"
                                                 th:data-fec="${actividad.fechaActividad}"
                                                 th:data-pon="${actividad.ponderacionActividad}"
                                                 th:data-per="${actividad.periodo.idPeriodo}">
@@ -183,8 +182,8 @@
                             <label class="col-form-label" for="descripcionActividadEditModal">Tipo:</label>
                             <!-- <textarea class="form-control" id="descripcionActividad" th:field="*{descripcionActividad}"
                                 maxlength="100" required></textarea> -->
-                            <select th:field="*{descripcionActividad}" class="form-select border-secondary border-opacity-75"
-                                id="descripcionActividad" required>
+                            <select th:field="*{tipoActividad}" class="form-select border-secondary border-opacity-75"
+                                id="tipoActividad" required>
                                 <option value="" selected>Selecciona </option>
                                 <option value="Actividad cotidiana" selected>Actividad cotidiana</option>
                                 <option value="Actividad integradora" selected>Actividad integradora</option>
@@ -192,7 +191,7 @@
                                 <option value="Heteroevaluación" selected>Heteroevaluación</option>
                                 <option value="Examen de periodo" selected>Examen de periodo</option>
                             </select>
-                            <div class="invalid-feedback">Es necesario agregar una descripción</div>
+                            <div class="invalid-feedback">Es necesario seleccionar un tipo</div>
                         </div>
                         <div class="mb-3">
                             <label for="fechaActividadEditModal" class="col-form-label">Fecha de la Actividad:</label>
@@ -251,11 +250,11 @@
                             <div class="invalid-feedback">Es necesario agregar un nombre.</div>
                         </div>
                         <div class="mb-3">
-                            <label class="col-form-label" for="descripcionActividadEditModal">Descripción:</label>
+                            <label class="col-form-label" for="tipoActividadEditModal">Tipo:</label>
                             <!-- <textarea class="form-control no-resize " id="editDescripcion" rows="3"
                                 th:field="*{descripcionActividad}" maxlength="100" required> </textarea> -->
-                                <select th:field="*{descripcionActividad}" class="form-select "
-                                id="editDescripcion" required>
+                                <select th:field="*{tipoActividad}" class="form-select "
+                                id="editTipoActividad" required>
                                 <option value="" selected>Selecciona </option>
                                 <option value="Actividad cotidiana" selected>Actividad cotidiana</option>
                                 <option value="Actividad integradora" selected>Actividad integradora</option>
@@ -263,7 +262,7 @@
                                 <option value="Heteroevaluación" selected>Heteroevaluación</option>
                                 <option value="Examen de periodo" selected>Examen de periodo</option>
                             </select>
-                            <div class="invalid-feedback">Es necesario agregar una descripción</div>
+                            <div class="invalid-feedback">Es necesario seleccionar un tipo</div>
                         </div>
                         <div class="mb-3">
                             <label for="fechaActividadEditModal" class="col-form-label">Fecha de la Actividad:</label>

@@ -43,16 +43,19 @@
                                 <th scope="col">NIE</th>
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Nota</th>
+                                <th scope="col">Fecha de modificación</th>
                                 <th scope="col">Acciones</th>
                             </tr>
                         </thead>
                         <tBody>
                             <tr th:each="nota, stat: ${listadoNotas}">
                                 <th scope="row" th:text="${stat.index + 1}"></th>
-                                <td th:text="${nota.alumno.nie}"></td>
+                                <td th:text="${nota.alumno.nie}"></td>                
+
                                 <td class="text-start"
                                     th:text="${nota.alumno.apellidoAlumno +' '+nota.alumno.nombreAlumno}"></td>
-                                <td th:text="${nota.notaObtenida}"></td>
+                                <td th:text="${nota.notaObtenida}"></td>                               
+                                <td th:text="${#dates.format(nota.fechaModificacion,'dd/MM/yyyy')}"></td>
                                 <td>
                                     <a class="btn btn-primary btn-sm editar-btn" data-bs-t="tooltip"
                                         data-bs-placement="top" title="Editar" data-bs-toggle="modal"
