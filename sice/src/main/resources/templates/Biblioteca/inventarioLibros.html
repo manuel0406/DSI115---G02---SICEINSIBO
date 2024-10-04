@@ -5,22 +5,24 @@
 <body>
     <header th:replace="~{home :: header}"></header>
 
+    <!--Ubicación de la pagína actual-->
     <div class="container mt-5 py-4 ">
         <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a th:href="@{/Biblioteca/}" class="text-secondary text-decoration-none">Biblioteca</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Inventario Libros</li>
+                <li class="breadcrumb-item"><a th:href="@{/Biblioteca/}" class="text-secondary text-decoration-none">Biblioteca</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Inventario Libros</li>
             </ol>
-          </nav>
+        </nav>
     </div>
 
+    <!--Título de la pagína actual-->
     <div class="container">
-      <div class="jumbotron  mb-3 bg-light rounded-3">
-          <div class="container py-5 text-center">
-              <h1 class="display-5 fw-bold "> Inventario Bibliografico Institucional</h1>
-          </div>
-      </div>
-  </div>
+        <div class="jumbotron  mb-3 bg-light rounded-3">
+            <div class="container py-5 text-center">
+                <h1 class="display-5 fw-bold "> Inventario Bibliografico Institucional</h1>
+            </div>
+        </div>
+    </div>
     
     <!--Botones y Barra de busqueda de alumnos-->
     <div class="navbar">
@@ -28,155 +30,152 @@
             <div class="d-grid gap-2 d-md-block">
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarLibro">Registrar Nuevo Libro</button>
                 <a th:href="@{/Biblioteca/verInventarioPdf}" class="btn btn-secondary" target="_blank">
-                    <i class="bi bi-printer"></i> <!-- Ícono de impresión de Bootstrap Icons -->
-                  </a>
+                    <i class="bi bi-printer"></i> <!-- Ícono de impresión -->
+                </a>
             </div>
-          <form class="d-flex" role="search" method="get" action="/Biblioteca/InventarioLibros">
-            <input class="form-control me-2" type="search" name="searchTerm"  placeholder="Buscar" aria-label="Buscar">
-            <button class="btn btn-primary" type="submit">Buscar</button>
-        </form>
+            
+            <!-- Barra de busqueda -->
+            <form class="d-flex" role="search" method="get" action="/Biblioteca/InventarioLibros">
+                <input class="form-control me-2" type="search" name="searchTerm"  placeholder="Buscar" aria-label="Buscar">
+                <button class="btn btn-primary" type="submit">Buscar</button>
+            </form>
         </div>
     </div>
 
-    <!--Alertas -->
+    <!--Mensajes de acción -->
     <div class="container">
         <div th:replace="~{alertas :: alertas}"></div>
     </div>
 
-    
-        <!--Tabla de datos-->
+    <!--Tabla de datos-->
     <div class="container">
         <table class="table">
             <thead class="table-dark">
-              <tr>
-                <th scope="col">Titulo</th>
-                <th scope="col">Autor</th>
-                <th scope="col">Tipo</th>
-                <th scope="col">Precio U</th>
-                <th scope="col">Existencia</th>
-                <th scope="col">Fecha de Ingreso</th>
-                <th scope="col">Mal estado</th>
-                <th scope="col">Acciones</th>
-              </tr>
+                <tr>
+                    <th scope="col">Titulo</th>
+                    <th scope="col">Autor</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Precio U</th>
+                    <th scope="col">Existencia</th>
+                    <th scope="col">Fecha de Ingreso</th>
+                    <th scope="col">Mal estado</th>
+                    <th scope="col">Acciones</th>
+                </tr>
             </thead>
             <tbody>
-              <tr th:each="inventario:${libros}">
-                <td th:text="${inventario.tituloLibro}"></td>
-                <td th:text="${inventario.autorLibro}"></td>
-                <td th:text="${inventario.tipoLibro}"></td>
-                <td th:text="'$ ' + ${inventario.precioUnitario}"></td>
-                <td th:text="${inventario.existenciaLibro}"></td>
-                <td th:text="${inventario.fechaIngreso}"></td>
-                <td th:text="${inventario.cantidadMalEstado}"></td>
-                <td>
-                    <button class="btn btn-primary" th:attr="onclick='showEditModal(' + ${inventario.idInventarioLibros} + ')'" >
-                        <i class="bi bi-pencil"></i>
-                    </button>
+                <tr th:each="inventario:${libros}">
+                    <td th:text="${inventario.tituloLibro}"></td>
+                    <td th:text="${inventario.autorLibro}"></td>
+                    <td th:text="${inventario.tipoLibro}"></td>
+                    <td th:text="'$ ' + ${inventario.precioUnitario}"></td>
+                    <td th:text="${inventario.existenciaLibro}"></td>
+                    <td th:text="${inventario.fechaIngreso}"></td>
+                    <td th:text="${inventario.cantidadMalEstado}"></td>
+                    <td>
+                        <!--Botón de editar -->
+                        <button class="btn btn-primary" th:attr="onclick='showEditModal(' + ${inventario.idInventarioLibros} + ')'" >
+                            <i class="bi bi-pencil"></i>
+                        </button>
 
-                    <a href="#" class="btn btn-danger" th:attr="onclick='showDeleteModal(' + ${inventario.idInventarioLibros} + ')'">
-                        <i class="bi bi-trash"></i>
-                    </a>
-                  
-                </td>
-              </tr>
+                        <!--Botón de eliminar -->
+                        <a href="#" class="btn btn-danger" th:attr="onclick='showDeleteModal(' + ${inventario.idInventarioLibros} + ')'">
+                            <i class="bi bi-trash"></i>
+                        </a>        
+                    </td>
+                </tr>
             </tbody>
         </table>
 
+        <!--Alerta en dado caso no existan o no se carguen los datos-->
         <div th:if="${page.totalElements == 0}" class="alert alert-info alert-dismissible fade show mt-1 mr-2">
             <i class="bi bi-info-circle"></i>
             <label>No se encuentran libros registrados</label>
         </div>
         
-        <nav th:if="${page.totalElements >= 10}" aria-label="Page navigation">
+        <nav th:if="${page.totalElements > 9}" aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
-                    <a class="page-link"
-                        th:href="@{'/Biblioteca/InventarioLibros?page=' + ${page.number - 1}}">Anterior</a>
+                    <a class="page-link" th:href="@{'/Biblioteca/InventarioLibros?page=' + ${page.number - 1}}">Anterior</a>
                 </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
-                    th:classappend="${page.number == i} ? 'active'">
-                    <a class="page-link" th:href="@{'/Biblioteca/InventarioLibros?page=' + ${i}}"
-                        th:text="${i + 1}">1</a>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:classappend="${page.number == i} ? 'active'">
+                    <a class="page-link" th:href="@{'/Biblioteca/InventarioLibros?page=' + ${i}}" th:text="${i + 1}">1</a>
                 </li>
                 <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
-                    <a class="page-link"
-                        th:href="@{'/Biblioteca/InventarioLibros?page=' + ${page.number + 1}}">Siguiente</a>
+                    <a class="page-link" th:href="@{'/Biblioteca/InventarioLibros?page=' + ${page.number + 1}}">Siguiente</a>
                 </li>
             </ul>
         </nav>
     </div>
 
-
-    <!-- Modal Agregar Producto -->
+    <!-- Modal para Registrar un Nuevo Libro -->
     <div class="modal fade" id="modalAgregarLibro" tabindex="-1" aria-labelledby="modalAgregarLibro" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Registrar Nuevo Libro | Biblioteca</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <!-- Formulario para agregar un nuevo artículo -->
-                  <form id="formInventarioLibro" th:action="@{/Biblioteca/InventarioLibros}" th:object="${nuevoLibro}" method="post" novalidate>
-                    <!-- Campo oculto para idArticulo -->
-                    <input type="hidden" th:field="*{idInventarioLibros}" />
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Registrar Nuevo Libro | Biblioteca</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario para agregar un nuevo libro -->
+                    <form id="formInventarioLibro" th:action="@{/Biblioteca/InventarioLibros}" th:object="${nuevoLibro}" method="post" novalidate>
+                        <input type="hidden" th:field="*{idInventarioLibros}" />
                   
-                    <!-- Campo tituloLibro -->
-                    <div class="mb-3">
-                        <label for="tituloLibro" class="form-label">Titulo del Libro:</label>
-                        <input type="text" th:field="*{tituloLibro}" class="form-control" id="tituloLibro" required />
-                        <div class="invalid-feedback">El título es obligatorio.</div>
-                    </div>
+                        <!-- Campo tituloLibro -->
+                        <div class="mb-3">
+                            <label for="tituloLibro" class="form-label">Titulo del Libro:</label>
+                            <input type="text" th:field="*{tituloLibro}" class="form-control" id="tituloLibro" required />
+                            <div class="invalid-feedback">El título es obligatorio.</div>
+                        </div>
                 
-                    <!-- Campo autorLibro -->
-                    <div class="mb-3">
-                        <label for="autorLibro" class="form-label">Autor:</label>
-                        <input type="text" th:field="*{autorLibro}" class="form-control" id="autorLibro" required />
-                        <div class="invalid-feedback">El autor es obligatorio.</div>
-                    </div>
+                        <!-- Campo autorLibro -->
+                        <div class="mb-3">
+                            <label for="autorLibro" class="form-label">Autor:</label>
+                            <input type="text" th:field="*{autorLibro}" class="form-control" id="autorLibro" required />
+                            <div class="invalid-feedback">El autor es obligatorio.</div>
+                        </div>
                 
-                    <!-- Campo tipoLibro -->
-                    <div class="mb-3">
-                        <label for="tipoLibro" class="form-label">Tipo:</label>
-                        <input type="text" th:field="*{tipoLibro}" class="form-control" id="tipoLibro" required />
-                        <div class="invalid-feedback">El tipo es obligatorio.</div>
-                    </div>
+                        <!-- Campo tipoLibro -->
+                        <div class="mb-3">
+                            <label for="tipoLibro" class="form-label">Tipo:</label>
+                            <input type="text" th:field="*{tipoLibro}" class="form-control" id="tipoLibro" required />
+                            <div class="invalid-feedback">El tipo es obligatorio.</div>
+                        </div>
                 
-                    <!-- Campo precioLibro -->
-                    <div class="mb-3">
-                        <label for="precioLibro" class="form-label">Precio:</label>
-                        <input type="number" step="0.01" th:field="*{precioUnitario}" class="form-control" id="precioLibro" required min="0.01" />
-                        <div class="invalid-feedback">El precio debe ser mayor a 0 y puede contener decimales.</div>
-                    </div>
+                        <!-- Campo precioLibro -->
+                        <div class="mb-3">
+                            <label for="precioLibro" class="form-label">Precio:</label>
+                            <input type="number" step="0.01" th:field="*{precioUnitario}" class="form-control" id="precioLibro" required min="0.01" />
+                            <div class="invalid-feedback">El precio debe ser mayor a 0 y puede contener decimales.</div>
+                        </div>
                 
-                    <!-- Campo existenciaLibro -->
-                    <div class="mb-3">
-                        <label for="existenciaLibro" class="form-label">Cantidad:</label>
-                        <input type="number" th:field="*{existenciaLibro}" class="form-control" id="existenciaLibro" required min="1" />
-                        <div class="invalid-feedback">La cantidad debe ser mayor a 0.</div>
-                    </div>
+                        <!-- Campo existenciaLibro -->
+                        <div class="mb-3">
+                            <label for="existenciaLibro" class="form-label">Cantidad:</label>
+                            <input type="number" th:field="*{existenciaLibro}" class="form-control" id="existenciaLibro" required min="1" />
+                            <div class="invalid-feedback">La cantidad debe ser mayor a 0.</div>
+                        </div>
                                 
-                    <!-- Campo fechaIngreso -->
-                    <div class="mb-3">
-                        <input type="hidden" th:field="*{fechaIngreso}" class="form-control" id="fechaIngreso" required readonly />
-                    </div>
+                        <!-- Campo fechaIngreso -->
+                        <div class="mb-3">
+                            <input type="hidden" th:field="*{fechaIngreso}" class="form-control" id="fechaIngreso" required readonly />
+                        </div>
                 
-                    <!-- Campo cantidadMalEstado -->
-                    <div class="mb-3">
-                        <label for="cantidadMalEstado" class="form-label">Cantidad en Mal Estado:</label>
-                        <input type="number" th:field="*{cantidadMalEstado}" class="form-control" id="cantidadMalEstado" required min="0" />
-                        <div class="invalid-feedback">La cantidad en mal estado debe ser menor o igual a la cantidad total.</div>
-                    </div>
+                        <!-- Campo cantidadMalEstado -->
+                        <div class="mb-3">
+                            <label for="cantidadMalEstado" class="form-label">Cantidad en Mal Estado:</label>
+                            <input type="number" th:field="*{cantidadMalEstado}" class="form-control" id="cantidadMalEstado" required min="0" />
+                            <div class="invalid-feedback">La cantidad en mal estado debe ser menor o igual a la cantidad total.</div>
+                        </div>
                 
-                    <!-- Botones del modal -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </div>
-                </form>
-              </div>
-          </div>
-      </div>
+                        <!-- Botones del modal -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal de edición de libro -->
@@ -254,22 +253,22 @@
     <!-- Modal de Confirmación -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que quieres eliminar este artículo?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" method="get" action="#">
+                        <input type="hidden" id="itemId" name="itemId" value=""/>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
             </div>
-            <div class="modal-body">
-            ¿Estás seguro de que quieres eliminar este artículo?
-            </div>
-            <div class="modal-footer">
-            <form id="deleteForm" method="get" action="#">
-                <input type="hidden" id="itemId" name="itemId" value=""/>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-danger">Eliminar</button>
-            </form>
-            </div>
-        </div>
         </div>
     </div>
 

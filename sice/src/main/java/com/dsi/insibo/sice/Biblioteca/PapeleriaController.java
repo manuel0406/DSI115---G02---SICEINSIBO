@@ -156,7 +156,7 @@ public class PapeleriaController {
     @GetMapping("/Control")
     public String ControlPapeleria(Model model,
                 @RequestParam(defaultValue = "0") int page,
-                @RequestParam(defaultValue = "8") int size,
+                @RequestParam(defaultValue = "9") int size,
                 @RequestParam(value = "query", required = false) String query) {
     
         // Obtener la lista completa de entregas

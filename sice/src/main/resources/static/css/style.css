@@ -876,3 +876,42 @@ td {
 }
 
 
+/* ----------------------------------------------------------------------------------------- */
+/*                                      BIBLIOTECA/PAPELERÍA - Arce                          */
+/* ----------------------------------------------------------------------------------------- */
+
+/* El contenedor del input necesita tener position: relative para que las sugerencias se posicionen correctamente */
+.position-relative {
+  position: relative;
+}
+
+/* Estilo para las sugerencias que aparecen flotando */
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%; /* Aparecer justo debajo del input */
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Para asegurar que aparezca sobre otros elementos */
+  background-color: white;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(212, 6, 6, 0);
+}
+
+/* Estilo para cada sugerencia individual */
+.suggestions-dropdown li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.suggestions-dropdown li:hover {
+  background-color: #f0f0f0;
+}
+
+/* Si no hay sugerencias, el dropdown no debería aparecer */
+.suggestions-dropdown.hidden {
+  display: none;
+}
+
+
+
