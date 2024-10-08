@@ -1,9 +1,10 @@
 package com.dsi.insibo.sice.Asistencia_personal.Aparato_Personal;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import com.dsi.insibo.sice.entity.PersonalAparato;
 
 @Service
@@ -15,8 +16,8 @@ public class AparatoPersonalService {
         return aparatoPersonalRepository.findByNumeroAparatoPersonal(numeroAparatoPersonal);
     }
     //Lista todos los numeros asignados en aparato
-    public List<PersonalAparato> aparatoTodosPersonal(){
-        return (List <PersonalAparato>) aparatoPersonalRepository.findAll();
+    public Page<PersonalAparato> aparatoTodosAdm(Pageable pageable) {
+        return aparatoPersonalRepository.findAll(pageable);
     }
     //Guarda el numero de aparato asignado
     public void guardarPersonalAparato(PersonalAparato aparato){

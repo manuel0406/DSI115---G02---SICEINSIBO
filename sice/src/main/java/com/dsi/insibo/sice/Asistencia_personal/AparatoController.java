@@ -1,6 +1,7 @@
 package com.dsi.insibo.sice.Asistencia_personal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,6 +21,7 @@ import com.dsi.insibo.sice.entity.Docente;
 import com.dsi.insibo.sice.entity.DocenteAparato;
 import com.dsi.insibo.sice.entity.PersonalAdministrativo;
 import com.dsi.insibo.sice.entity.PersonalAparato;
+import org.springframework.data.domain.Page;
 
 import jakarta.validation.Valid;
 
@@ -46,13 +48,25 @@ public class AparatoController {
 
 	// LISTAR LISTA TANTO DOCENTE COMO ADMINISTRATIVOS
 	@GetMapping("/listarAparato")
-	public String listarApartoDocente(Model model) {
-		// Personal docente
-		List<DocenteAparato> listadoAparatoDocente = aparatoDocenteService.aparatoTodos();
-		model.addAttribute("aparatoDocente", listadoAparatoDocente);
+	public String listarApartoDocente(@RequestParam(defaultValue = "0") int page, 
+									  @RequestParam(defaultValue = "10") int size,
+									  Model model) {
+		// Configurar paginacion
+		PageRequest pageable = PageRequest.of(page, size);
+		// Obtener la pagina de asistencias con filtros y paginacion
+		Page<DocenteAparato> listadoAparatoDocentePag = aparatoDocenteService.aparatoTodosDoc(pageable);
+		Page<PersonalAparato> listadoAparatoAdmiPag = aparatoPersonalService.aparatoTodosAdm(pageable);
+		// Personal docente paginado
+		model.addAttribute("aparatoDocente", listadoAparatoDocentePag);
+		// Personal administración paginado
+		model.addAttribute("aparatoPersonal", listadoAparatoAdmiPag);
+
+		// Consideraciones finales de paginado
+		model.addAttribute("currentPage", page);
+		model.addAttribute("size", size);
+		model.addAttribute("totalPages", listadoAparatoDocentePag.getTotalPages() >= listadoAparatoAdmiPag.getTotalPages() ? listadoAparatoDocentePag.getTotalPages() : listadoAparatoAdmiPag.getTotalPages());
+		
 		// Personal administrativo
-		List<PersonalAparato> aparatoPersonalTodos = aparatoPersonalService.aparatoTodosPersonal();
-		model.addAttribute("aparatoPersonal", aparatoPersonalTodos);
 		return "Aparato_Asistencia/aparatoListar";
 	}
 

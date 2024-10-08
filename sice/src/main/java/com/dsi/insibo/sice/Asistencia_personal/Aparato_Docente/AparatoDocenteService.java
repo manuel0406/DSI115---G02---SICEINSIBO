@@ -1,8 +1,9 @@
 package com.dsi.insibo.sice.Asistencia_personal.Aparato_Docente;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
 import com.dsi.insibo.sice.entity.DocenteAparato;
 
 @Service
@@ -13,10 +14,12 @@ public class AparatoDocenteService {
     public DocenteAparato obtenerPorNumeroAparatoDocente(int numeroAparatoDocente) {
         return aparatoDocenteRepository.findByNumeroAparatoDocente(numeroAparatoDocente);
     }
-    //Listar todos los numeros del aparato docente
-    public List<DocenteAparato> aparatoTodos(){
-        return (List <DocenteAparato>) aparatoDocenteRepository.findAll();
-    };
+
+    //Obtengo un paginado
+    public Page<DocenteAparato> aparatoTodosDoc(Pageable pageable) {
+        return aparatoDocenteRepository.findAll(pageable);
+    }
+
     //Guarda el numero del aparato docente
     public void guardarDocenteAparato(DocenteAparato aparato){
         aparatoDocenteRepository.save(aparato);
