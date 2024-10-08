@@ -11,16 +11,22 @@
 
   <body>
     <header th:replace="~{home :: header}"></header>
-      <!-- TITULO PRINCIPAL -->
-      <div class="container mt-4 d-flex justify-content-center mb-3 flex-wrap">
-        <h2 class="text-center mt-5"><b>Listado de números asignados</b></h2>
-      </div>
-    <div class="p-4">
-      <div class="d-flex justify-content-end">
-        <a type="button" class="btn btn-outline-primary" th:href="@{/asistencias/seleccionInicio}">
-          Regresar
-        </a>
-      </div>
+    <div class="py-4 my-3"></div>
+    <nav aria-label="breadcrumb" class="px-4 py-2 rounded">
+      <ol class="breadcrumb mb-2"> <!-- mb-2 reduce el espacio debajo del breadcrumb -->
+          <li class="breadcrumb-item">
+              <a th:href="@{/asistencias/seleccionInicio}" class="text-decoration-none">Asistencia</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+              Números asignados de aparato
+          </li>
+      </ol>
+    </nav>
+    <!-- TITULO PRINCIPAL -->
+    <div class="container d-flex justify-content-center flex-wrap">
+      <h1 class="h1 text-center"><b>Listado de números asignados</b></h1>
+    </div>
+    <div class="p-3">
       <div class="row g-2 d-flex justify-content-center">
         <div class="col-auto">
             <a type="button" class="btn btn-outline-primary" th:href="@{/aparato/asignarNumero}">
@@ -83,6 +89,12 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <!-- Alerta que se muestra solo cuando se le manda una lista vacia de alumnos -->
+      <div class="alert alert-info d-flex align-items-center" role="alert">
+        <div>
+          <i class="bi bi-exclamation-triangle"></i> ¡No se han encontrado asignaciones de identificador al aparato biometrico!
+        </div>
       </div>
     </div>
     </div>
