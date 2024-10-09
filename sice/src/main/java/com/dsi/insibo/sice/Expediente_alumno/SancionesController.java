@@ -65,10 +65,10 @@ public class SancionesController {
     }
 
     @PostMapping("/GuardarSancion/{nie}")
-    public String guardarSancion(@PathVariable("nie") int nie,@ModelAttribute Sancion sancion, RedirectAttributes attributes){
+    public String guardarSancion(@PathVariable("idAlumno") int idAlumno,@ModelAttribute Sancion sancion, RedirectAttributes attributes){
 
         //Buscar el alumno por su NIE
-        Alumno alumno =alumnoService.buscarPorIdAlumno(nie);
+        Alumno alumno =alumnoService.buscarPorIdAlumno(idAlumno);
         sancion.setAlumno(alumno);
         sancion.setFechaSancion(new Date());
         sancionesService.guardarSancion(sancion);

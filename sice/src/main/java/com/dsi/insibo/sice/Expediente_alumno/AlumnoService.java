@@ -148,8 +148,8 @@ public class AlumnoService {
      *
      * @param nie Número de identificación estudiantil del alumno a eliminar.
      */
-    public void eliminar(int nie) {
-        alumnoRepository.deleteById(nie);
+    public void eliminar(int idAlumno) {
+        alumnoRepository.deleteById(idAlumno);
     }
 
     /**

@@ -34,6 +34,15 @@ public class Sancion {
         this.accionCorrectiva = accionCorrectiva;
     }
 
+    public Sancion(Alumno alumno, String descripcionSancion, String tipoSancion, Date fechaSancion,
+            String accionCorrectiva) {
+        this.alumno = alumno;
+        this.descripcionSancion = descripcionSancion;
+        this.tipoSancion = tipoSancion;
+        this.fechaSancion = fechaSancion;
+        this.accionCorrectiva = accionCorrectiva;
+    }
+
     public int getIdSancion() {
         return idSancion;
     }
@@ -82,4 +91,12 @@ public class Sancion {
         this.accionCorrectiva = accionCorrectiva;
     }
 
+    @Override
+    public String toString() {
+        return "Sancion [idSancion=" + idSancion + ", alumno=" + alumno.getIdAlumno() + ", descripcionSancion=" + descripcionSancion
+                + ", tipoSancion=" + tipoSancion + ", fechaSancion=" + fechaSancion + ", accionCorrectiva="
+                + accionCorrectiva + "]";
+    }
+
+    
 }

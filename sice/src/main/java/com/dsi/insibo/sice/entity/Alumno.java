@@ -286,4 +286,20 @@ public class Alumno implements Serializable {
         this.zonaAlumno = zonaAlumno;
     }
 
+    @Override
+    public String toString() {
+        return "Alumno [idAlumno=" + idAlumno + ", nie=" + nie + ", nombreAlumno=" + nombreAlumno + ", apellidoAlumno="
+                + apellidoAlumno + ", sexoAlumno=" + sexoAlumno + ", fechaNacimientoAlumno=" + fechaNacimientoAlumno
+                + ", duiAlumno=" + duiAlumno + ", telefonoAlumno=" + telefonoAlumno + ", direccionAlumno="
+                + direccionAlumno + ", municipioAlumno=" + municipioAlumno + ", departamentoAlumno="
+                + departamentoAlumno + ", distritoAlumno=" + distritoAlumno + ", zonaAlumno=" + zonaAlumno
+                + ", correoAlumno=" + correoAlumno + ", viveCon=" + viveCon + ", medicamento=" + medicamento
+                + ", nombreEncargado=" + nombreEncargado + ", apellidoEncargado=" + apellidoEncargado
+                + ", formaMedicacion=" + formaMedicacion + ", telefonoEncargado=" + telefonoEncargado
+                + ", padecimientos=" + padecimientos + ", parentescoEncargado=" + parentescoEncargado
+                + ", lugarDeTrabajo=" + lugarDeTrabajo + ", correoEncargado=" + correoEncargado + ", duiEncargado="
+                + duiEncargado + ", bachillerato=" + bachillerato + "]";
+    }
+    
+
 }

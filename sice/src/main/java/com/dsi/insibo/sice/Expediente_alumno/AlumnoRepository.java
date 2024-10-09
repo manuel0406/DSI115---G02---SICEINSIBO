@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.dsi.insibo.sice.entity.Alumno;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
  * Utiliza Spring Data JPA y extiende JpaRepository para obtener métodos CRUD
  * básicos.
  */
+@Repository
 public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
 
     /**
@@ -29,7 +31,7 @@ public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
     @Query("SELECT a FROM Alumno a JOIN a.bachillerato b JOIN b.anioAcademico an  WHERE  b.nombreCarrera = :carrera AND b.grado = :grado AND b.seccion = :seccion AND an.activoAnio = true")
     public List<Alumno> findAllCarreraGradoSeccion(String carrera, String grado, String seccion);
 
-    @Query("SELECT a FROM Alumno a JOIN a.bachillerato b JOIN b.anioAcademico an WHERE b.nombreCarrera = :carrera AND b.grado = :grado AND b.seccion = :seccion AND a.sexoAlumno = :genero AND an.activoAnio = true")
+    @Query("SELECT a FROM Alumno a  WHERE a.bachillerato.nombreCarrera = :carrera AND a.bachillerato.grado = :grado AND a.bachillerato.seccion = :seccion AND a.sexoAlumno = :genero AND a.bachillerato.anioAcademico.activoAnio = true")
     public List<Alumno> findAll(String carrera, String grado, String seccion, String genero);
 
     @Query("SELECT a FROM Alumno a JOIN a.bachillerato b JOIN b.anioAcademico an WHERE an.activoAnio = true")
