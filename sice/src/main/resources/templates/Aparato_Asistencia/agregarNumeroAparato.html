@@ -25,7 +25,7 @@
       <div class="row row-cols-md-2 row-cols-1 d-flex justify-content-center my-3 gy-2">
         <div class="col">
           <label class="mb-2" for="idPersonal">Elegir persona a asignar</label>
-          <select name="idPersonal" id="idPersonal" th:field="*{docente}" class="form-select"
+          <select name="docente" id="docente" th:field="*{docente}" class="form-select"
             aria-label="Default select example">
             <option value="" selected>Seleccione un docente</option>
             <option th:each="docenteDTO : ${docentes}" th:value="${docenteDTO.docente.duiDocente}"
