@@ -1,16 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
-    var agregarButton = document.querySelectorAll(".Agregar-btn");
+    var agregarButton = document.querySelectorAll(".abrir-btn");
     var confirmAgregarModal = new bootstrap.Modal(
-        document.getElementById("agregarModal")
+        document.getElementById("abrirModal")
     );
-    var confirmAgregarButton = document.getElementById("agregarModalButton");
-    var currentHref = "";
 
     agregarButton.forEach(function (button) {
         button.addEventListener("click", function (event) {
-            event.preventDefault();            
+            event.preventDefault();
             confirmAgregarModal.show();
         });
     });
-    
+
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    var agregarButton = document.querySelectorAll(".notas-btn");
+    var confirmAgregarModal = new bootstrap.Modal(
+        document.getElementById("notasModal")
+    );
+
+    agregarButton.forEach(function (button) {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();
+            confirmAgregarModal.show();
+        });
+    });
+
 });

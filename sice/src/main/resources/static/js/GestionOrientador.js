@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("agregarModal")
     );
     var confirmAgregarButton = document.getElementById("agregarModalButton");
-    var currentHref = "";
 
     agregarButton.forEach(function (button) {
         button.addEventListener("click", function (event) {
@@ -22,28 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     confirmAgregarButton.addEventListener("click", function () {
         var form = document.getElementById("formSancion");
-        if (!form.checkValidity()) {
-            form.classList.add("was-validated");
-        } else {
-            form.submit();
-        }
-    });
-});
-document.addEventListener("DOMContentLoaded", function () {
-    var consultarButton = document.querySelectorAll(".consultar-btn");
-    var confirmConsultarModal = new bootstrap.Modal(document.getElementById("consultarModal"));
-    var confirmConsultarModalButton = document.getElementById("consultarModalButton");    
-
-    consultarButton.forEach(function (button) {
-        button.addEventListener("click", function (event) {
-            event.preventDefault();
-            //currentHref = button.getAttribute('href');
-            confirmConsultarModal.show();
-        });
-    });
-
-    confirmAgregarButton.addEventListener("click", function () {
-        var form = document.getElementById("formOrientador");
         if (!form.checkValidity()) {
             form.classList.add("was-validated");
         } else {
@@ -97,18 +74,15 @@ document
         form.classList.remove("was-validated"); // Eliminar la clase de validación
     });
 
-    $(document).ready(function() {
-        $('.editar-btn').on('click', function() {
-            var idOrientador = $(this).data('id');
-            var docente = $(this).data('doc');
-            var bachillerato = $(this).data('bac');           
-    
-            $('#idOrientador').val(idOrientador);
-            $('#EditDocente').val(docente);
-            $('#EditBachillerato').val(bachillerato);
-           
-        });
+$(document).ready(function () {
+    $('.editar-btn').on('click', function () {
+        var idOrientador = $(this).data('id');
+        var docente = $(this).data('doc');
+        var bachillerato = $(this).data('bac');
+
+        $('#idOrientador').val(idOrientador);
+        $('#EditDocente').val(docente);
+        $('#EditBachillerato').val(bachillerato);
+
     });
-
-
-    
+});

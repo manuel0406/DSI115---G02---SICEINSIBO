@@ -1,56 +1,118 @@
 <!DOCTYPE html>
-<html lang="es"
+<html
+  lang="es"
   xmlns:th="http://www.thymeleaf.org"
-  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Asistencia | Cargar asistencia</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
     <header th:replace="~{home :: header}"></header>
     <div class="p-4 mt-5">
-      <h2 class="text-center pb-4">Cargar archivo de asistencias</h2>
-      <div class="d-flex justify-content-end py-3">
-        <form
-          id="formulario"
-          method="post"
-          th:action="@{/asistencias/seleccionInicio}"
-        >
-          <a
-            type="button"
-            class="btn btn-outline-primary"
-            href="javascript:window.history.back()"
-          >
-            Regresar
-          </a>
-        </form>
+      <!-- TITULO PRINCIPAL -->
+      <div class="container mt-4 d-flex justify-content-center mb-3 flex-wrap">
+        <h3 class="text-center"><b>Cargar archivo de asistencias</b></h3>
       </div>
+
       <div class="w-75 mx-auto d-flex flex-column">
-        <input
-          class="form-control form-control-lg"
-          id="input-excel"
-          type="file"
-          accept=".xlsx,.xls"
-        />
+        <!-- Entrada de archivos -->
+        <div
+          class="p-3 inputExcel text-white text-center rounded"
+          id="inputExcel"
+        >
+          <div id="dropzone" class="border-trazado">
+            <h3 class="text-center pb-3"><b>Subir archivo Excel</b></h3>
+            <img
+              th:src="@{/Imagenes/ExcelIco.png}"
+              id="iconExcel"
+              alt="Excel Icon"
+              class="img-fluid pb-3"
+            />
+            <div class="p-2">
+              <input
+                class="d-none"
+                id="input-excel"
+                type="file"
+                accept=".xlsx,.xls"
+              />
+              <!-- Label que actúa como botón -->
+              <label for="input-excel" class="btn btn-light btn-lg">
+                <i class="bi bi-cloud-arrow-up"></i> Seleccionar archivo Excel
+              </label>
+              <div class="pt-3">
+                <span
+                  >Arrastra y suelta un archivo Excel aquí, o haz clic para
+                  seleccionar</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Icono de Excel y el nombre del archivo -->
+        <div class="pt-3 d-none text-center" id="file-info">
+          <!-- Contenedor para el contenido -->
+          <div class="d-flex flex-column align-items-center">
+            <!-- Botón para eliminar el archivo cargado -->
+            <button id="remove-file" class="btn btn-danger btn-sm mb-2">
+              <i class="bi bi-x-circle"></i> Anular archivo
+            </button>
+            <img
+              id="file-uploaded-icon"
+              th:src="@{/Imagenes/colorExcelLogo.png}"
+              alt="Archivo cargado"
+              class="img-fluid mb-3"
+              style="max-width: 300px"
+            />
+            <h4 id="file-name" class="mb-0"></h4>
+          </div>
+        </div>
         <div class="py-3 text-center">
-          <button class="btn btn-primary" id="idCarga">
-            Cargar Asistencias
-          </button>
+          <div class="d-flex justify-content-center gap-2">
+            <!-- Botón de carga con texto inicial -->
+            <button id="idCarga" class="btn btn-primary" type="button">
+              Cargar Archivo
+            </button>
+
+            <form
+              id="formulario"
+              method="post"
+              th:action="@{/asistencias/seleccionInicio}"
+            >
+              <a
+                type="button"
+                class="btn btn-secondary"
+                href="javascript:window.history.back()"
+              >
+                Regresar
+              </a>
+            </form>
+          </div>
         </div>
       </div>
     </div>
     <div>
       <div id="output" class=""></div>
     </div>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"
+    ></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script
+      type="text/javascript"
+      th:src="@{/js/bootstrap.bundle.min.js}"
+    ></script>
     <script type="text/javascript" th:src="@{/js/subirAsistencia.js}"></script>
   </body>
 </html>

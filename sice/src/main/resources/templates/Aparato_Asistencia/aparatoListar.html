@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,8 +11,11 @@
 
   <body>
     <header th:replace="~{home :: header}"></header>
-    <div class="p-4 mt-5">
-      <h2 class="text-center">Listado números asignados</h2>
+      <!-- TITULO PRINCIPAL -->
+      <div class="container mt-4 d-flex justify-content-center mb-3 flex-wrap">
+        <h2 class="text-center mt-5"><b>Listado de números asignados</b></h2>
+      </div>
+    <div class="p-4">
       <div class="d-flex justify-content-end">
         <a type="button" class="btn btn-outline-primary" th:href="@{/asistencias/seleccionInicio}">
           Regresar
