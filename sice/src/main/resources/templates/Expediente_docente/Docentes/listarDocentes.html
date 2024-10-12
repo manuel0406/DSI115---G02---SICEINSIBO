@@ -30,6 +30,10 @@
                     data-bs-placement="top" title="Agregar un nuevo docente">
                     <i class="bi bi-person-plus"></i> Agregar
                 </a>
+                <button class="btn btn-primary btn-sm mx-1 editar-btn" data-bs-toggle="modal"
+                data-bs-target="#docentesNoActivos">
+                <i class="bi bi-clock-history"></i> Inactivos
+            </button>
             </div>
         </div>
 
@@ -138,6 +142,49 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="docentesNoActivos" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Administrativos Inactivos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div th:each="docenteDTO : ${DocentesInactivos}"
+                        th:if="${!docenteDTO.docente.activo}" class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary"
+                                    th:text="${docenteDTO.docente.nombreDocente + ' ' + docenteDTO.docente.apellidoDocente}">
+                                </h5>
+                                <p class="card-text mb-1"><strong>DUI:</strong> <span
+                                        th:text="${docenteDTO.docente.duiDocente}"></span></p>
+                                <p class="card-text"><small class="text-muted">Estado: Inactivo</small></p>
+                                <div class="d-flex justify-content-between">
+                                    <a class="btn btn-primary btn-sm mx-1"
+                                        th:href="@{/expedientedocente/restaurarexpediente/} + ${docenteDTO.docente.duiDocente}"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Restaurar al docente">
+                                        <i class="bi bi-person-plus"></i> Restaurar
+                                    </a>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        data-bs-dismiss="modal">
+                                        <i class="bi bi-x-circle"></i> Cerrar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${#lists.isEmpty(DocentesInactivos)}">
+                    <p class="text-center text-muted">No hay administrativos inactivos en este momento.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
     <footer th:replace="~{home :: footer}"></footer>
     <script type="text/javascript" src="/js/modalEliminacion.js"></script>

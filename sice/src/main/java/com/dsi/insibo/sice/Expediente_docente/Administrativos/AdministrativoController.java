@@ -36,22 +36,13 @@ public class AdministrativoController {
     @Autowired
     private AnexoAdministrativoService anexoadministrativoService;
 
-    // Habilitando formulario de creación
-    @GetMapping("/formulario")
-    public String ficha(Model model) {
-        PersonalAdministrativo administrativo = new PersonalAdministrativo();
-
-        model.addAttribute("administrativo", administrativo);
-        model.addAttribute("titulo", "Nuevo usuario");
-        return "Expediente_docente/Administrativos/fichaAdministrativo";
-    }
-
-    // Creando
+    // CONTROLADORES CRUD
+    // Metodo destinado a guardar un empleado administrativo
     @PostMapping("/guardar")
     public String guardar(@Validated @ModelAttribute PersonalAdministrativo administrativo,
             @RequestParam("administrativoRol") String rolSeleccionado, BindingResult result,
             Model model, RedirectAttributes attribute) {
-        
+
         if (result.hasErrors()) {
             model.addAttribute("administrativo", administrativo);
             return "expedienteadministrativo/formulario";
@@ -65,17 +56,17 @@ public class AdministrativoController {
             attribute.addFlashAttribute("error", "Error: Este DUI ya esta siendo utilizado.");
             return "redirect:plantaadministrativa";
         } else {
-            
+
             // CREACIÓN DEL USUARIO
             Usuario usuario = new Usuario();
-            usuario.setPersonalAdministrativo(administrativo);      // DUI-DOCENTE
+            usuario.setPersonalAdministrativo(administrativo); // DUI-DOCENTE
             usuario.setCorreoUsuario(administrativo.getCorreoPersonal());// Correo
-            usuario.setEnabled(false);                      // Activo
-            usuario.setAccountLocked(true);           // Bloqueado  
-            usuario.setAccountNoExpired(true);     // Expirado
+            usuario.setEnabled(false); // Activo
+            usuario.setAccountLocked(true); // Bloqueado
+            usuario.setAccountNoExpired(true); // Expirado
             usuario.setCredentialNoExpired(true); // Credencial expirada
-            usuario.setPrimerIngreso(true);           // Primera vez
-            usuario.setContrasenaUsuario(" ");    // Contraseña
+            usuario.setPrimerIngreso(true); // Primera vez
+            usuario.setContrasenaUsuario(" "); // Contraseña
             Long idRol = 4L;
             switch (rolSeleccionado) {
                 case "Secretaria":
@@ -83,7 +74,7 @@ public class AdministrativoController {
                     break;
                 case "Bibliotecaria":
                     idRol = 7L;
-                    break;                              
+                    break;
                 default:
                     idRol = 4L;
                     break;
@@ -97,7 +88,7 @@ public class AdministrativoController {
         }
     }
 
-    // Actualizando
+    // Metodo destinado a actualizar un empleado administrativo
     @PostMapping("/actualizar")
     public String actualizar(@Validated @ModelAttribute PersonalAdministrativo administrativo,
             @RequestParam("administrativoRol") String rolSeleccionado, BindingResult result,
@@ -105,52 +96,27 @@ public class AdministrativoController {
 
         // Actualizamos el usuario
         Usuario usuario = usuarioService.buscarPorIdPersonal(administrativo.getDuiPersonal());
-        usuario.setCorreoUsuario(administrativo.getCorreoPersonal());   // Nuevo Correo
+        usuario.setCorreoUsuario(administrativo.getCorreoPersonal()); // Nuevo Correo
         usuario.getRolesUsuario().clear();
         Long idRol = 4L;
-        switch (rolSeleccionado) {                              // Nuevo Rol
+        switch (rolSeleccionado) { // Nuevo Rol
             case "Secretaria":
                 idRol = 3L;
-            break;
+                break;
             case "Bibliotecaria":
                 idRol = 7L;
-            break;                              
+                break;
             default:
                 idRol = 4L;
-            break;
+                break;
         }
-        usuarioService.asignarRol(usuario, idRol);          // Guardamos la actualización
+        usuarioService.asignarRol(usuario, idRol); // Guardamos la actualización
         administrativoService.guardarAdministrativo(administrativo);
         attribute.addFlashAttribute("success", "Expediente actualizado con exito!");
         return "redirect:plantaadministrativa";
     }
 
-    // Listando toda la planta administrativa
-    @GetMapping("/plantaadministrativa")
-    public String listarAdministrativos(Model model,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        // page indica el numero de pagina en el que se encontrara por defecto
-        // Size el numero de registros por pagina
-
-        // Hace la conversion de la estructura List a Page
-        PageRequest pageRequest = PageRequest.of(page, size);
-        List<AdministrativoDTO> listadoAdministrativos = administrativoService.listarAdministrativos();
-        Page<AdministrativoDTO> pageAdministrativos = new PageImpl<>(listadoAdministrativos.subList(
-                pageRequest.getPageNumber() * pageRequest.getPageSize(),
-                Math.min((pageRequest.getPageNumber() + 1) * pageRequest.getPageSize(), listadoAdministrativos.size())),
-                pageRequest, listadoAdministrativos.size());
-
-        model.addAttribute("titulo", "Planta Administrativa");
-        model.addAttribute("Administrativos", listadoAdministrativos);
-        // Hace el envio de la estructura con paginación a la vista
-        model.addAttribute("page", pageAdministrativos);
-        model.addAttribute("totalPages", pageAdministrativos.getTotalPages());
-
-        return "Expediente_docente/Administrativos/listarAdministrativos";
-    }
-
-    // Habilitando la consulta
+    // Metodo destinado a consultar un empleado administrativo
     @GetMapping("/consultarexpediente/{id}")
     public String consultarAdministrativo(@PathVariable("id") String idAdministrativo, Model model,
             RedirectAttributes attribute) {
@@ -166,7 +132,93 @@ public class AdministrativoController {
         return "Expediente_docente/Administrativos/fichaAdministrativoConsult";
     }
 
-    // Habilitando la edición
+    // Metodo destinado a listar todos los empleados administrativos
+    @GetMapping("/plantaadministrativa")
+    public String listarAdministrativos(Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        // page indica el numero de pagina en el que se encontrara por defecto
+        // Size el numero de registros por pagina
+
+        // Hace la conversion de la estructura List a Page
+        PageRequest pageRequest = PageRequest.of(page, size);
+        List<AdministrativoDTO> listadoAdministrativos = administrativoService.listarAdministrativos();
+        //List<AdministrativoDTO> listadoAdministrativosInactivos = administrativoService.listarAdministrativosInactivos();
+
+        Page<AdministrativoDTO> pageAdministrativos = new PageImpl<>(listadoAdministrativos.subList(
+                pageRequest.getPageNumber() * pageRequest.getPageSize(),
+                Math.min((pageRequest.getPageNumber() + 1) * pageRequest.getPageSize(), listadoAdministrativos.size())),
+                pageRequest, listadoAdministrativos.size());
+
+        model.addAttribute("titulo", "Planta Administrativa");
+        model.addAttribute("Administrativos", listadoAdministrativos);
+        //model.addAttribute("AdministrativosInactivos", listadoAdministrativosInactivos);
+
+        // Hace el envio de la estructura con paginación a la vista
+        //model.addAttribute("page", pageAdministrativos);
+        model.addAttribute("totalPages", pageAdministrativos.getTotalPages());
+
+        return "Expediente_docente/Administrativos/listarAdministrativos";
+    }
+
+    // Metodo destinado a eliminar un empleado administrativo
+    @GetMapping("/eliminarexpediente/{id}")
+    public String eliminarAdministrativo(@PathVariable("id") String idAdministrativo, RedirectAttributes attribute) {
+        PersonalAdministrativo administrativo = administrativoService.buscarPorIdAdministrativo(idAdministrativo);
+
+        // Controlando el ingreso de un id inexistente desde URL
+        if (administrativo == null) {
+            attribute.addFlashAttribute("error", "El expediente no existe");
+            return "redirect:/expedienteadministrativo/plantaadministrativa";
+        }
+
+        /* // Primero elimina los anexos
+        anexoadministrativoService.eliminarAnexoAdministrativo(idAdministrativo);
+        usuarioService.eliminarUsuarioPorPersonalId(idAdministrativo);
+        administrativoService.eliminar(idAdministrativo); */
+
+        // cuando un administrativo es "eliminado" este no se borra del sistema sino que pasa a un estado 'inactivo'
+        administrativo.setActivo(false);
+        administrativoService.guardarAdministrativo(administrativo);
+
+        attribute.addFlashAttribute("warning", "El administrativo " + administrativo.getNombrePersonal() + " "
+                + administrativo.getApellidoPersonal() + " ha sido eliminado de la planta administrativo");  
+        return "redirect:/expedienteadministrativo/plantaadministrativa";
+    }
+
+    @GetMapping("/restaurarexpediente/{id}")
+    public String restaurarAdministrativo(@PathVariable("id") String idAdministrativo, RedirectAttributes attribute) {
+        PersonalAdministrativo administrativo = administrativoService.buscarPorIdAdministrativo(idAdministrativo);
+
+        // Controlando el ingreso de un id inexistente desde URL
+        if (administrativo == null) {
+            attribute.addFlashAttribute("error", "El expediente no existe");
+            return "redirect:/expedienteadministrativo/plantaadministrativa";
+        }
+
+        // cuando un administrativo es "eliminado" este no se borra del sistema sino que pasa a un estado 'inactivo'
+        administrativo.setActivo(true);
+        administrativoService.guardarAdministrativo(administrativo);
+
+        attribute.addFlashAttribute("success", "El administrativo " + administrativo.getNombrePersonal() + " "
+                + administrativo.getApellidoPersonal() + " ha sido restaurado a la planta administrativo"); 
+        return "redirect:/expedienteadministrativo/plantaadministrativa";
+    }
+
+
+
+    // OTROS CONTROLADORES
+    // Metodo destinado a habilitar el formulario en modo "agregar un empleado administrativo"
+    @GetMapping("/formulario")
+    public String ficha(Model model) {
+        PersonalAdministrativo administrativo = new PersonalAdministrativo();
+
+        model.addAttribute("administrativo", administrativo);
+        model.addAttribute("titulo", "Nuevo usuario");
+        return "Expediente_docente/Administrativos/fichaAdministrativo";
+    }
+
+    // Metodo destinado a habilitar el formulario en modo "editar un empleado administrativo"
     @GetMapping("/editarexpediente/{id}")
     public String editarAdministrativo(@PathVariable("id") String idAdministrativo, Model model,
             RedirectAttributes attribute) {
@@ -183,25 +235,7 @@ public class AdministrativoController {
         return "Expediente_docente/Administrativos/fichaAdministrativo";
     }
 
-    // Eliminando
-    @GetMapping("/eliminarexpediente/{id}")
-    public String eliminarAdministrativo(@PathVariable("id") String idAdministrativo, RedirectAttributes attribute) {
-        PersonalAdministrativo administrativo = administrativoService.buscarPorIdAdministrativo(idAdministrativo);
-        // Por si ingresa un id inexistente desde URL
-        if (administrativo == null) {
-            attribute.addFlashAttribute("error", "El expediente no existe");
-            return "redirect:/expedienteadministrativo/plantaadministrativa";
-        }
-
-        // Primero elimina los anexos
-        anexoadministrativoService.eliminarAnexoAdministrativo(idAdministrativo);
-        usuarioService.eliminarUsuarioPorPersonalId(idAdministrativo);
-        administrativoService.eliminar(idAdministrativo);
-        attribute.addFlashAttribute("warning", "El expediente se elimino");
-        return "redirect:/expedienteadministrativo/plantaadministrativa";
-    }
-
-    // Gestionando anexos
+    // Metodo destinado a habilitar la sección de anexos de un empleado administrativo"
     @GetMapping("Documentos/{id}")
     public String administrativoDocumentos(@PathVariable("id") String idAdministrativo, Model model,
             RedirectAttributes attributes) {
