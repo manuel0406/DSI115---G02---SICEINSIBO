@@ -14,30 +14,31 @@ public class Alumno implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idAlumno;
-    private int nie;
-    private String nombreAlumno;
     private String apellidoAlumno;
-    private String sexoAlumno;
-    private Date fechaNacimientoAlumno;
-    private String duiAlumno;
-    private String telefonoAlumno;
-    private String direccionAlumno;
-    private String municipioAlumno;
+    private String apellidoEncargado;
+    private String correoAlumno;
+    private String correoEncargado;
     private String departamentoAlumno;
     private String distritoAlumno;
-    private String zonaAlumno;
-    private String correoAlumno;
-    private String viveCon;
-    private String medicamento;
-    private String nombreEncargado;
-    private String apellidoEncargado;
+    private String direccionAlumno;
+    private String duiAlumno;
+    private String duiEncargado;
+    private Date fechaNacimientoAlumno;
     private String formaMedicacion;
-    private String telefonoEncargado;
+    private String medicamento;
+    private String municipioAlumno;
+    private String nombreAlumno;
+    private String nombreEncargado;
     private String padecimientos;
     private String parentescoEncargado;
+    private String sexoAlumno;
+    private String telefonoAlumno;
+    private String telefonoEncargado;
     private String lugarDeTrabajo;
-    private String correoEncargado;
-    private String duiEncargado;
+    private String viveCon;
+    private int nie;
+    private String zonaAlumno;
+    
 
     @ManyToOne
     private Bachillerato bachillerato;

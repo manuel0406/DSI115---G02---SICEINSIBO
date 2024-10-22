@@ -58,7 +58,7 @@ public class ConfiguracionSeguridad {
                 // STATELESS =  No crea una sesión, pero utilizará una sesión existente si ya está presente.
                 // NEVER = La sesión solo se crea si es requerida.
                 // IF_REQUIERED = No crea ni utiliza sesiones HTTP en absoluto.
-                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> {
                     session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED); // Políticas de sesiones
                     session.maximumSessions(1).sessionRegistry(sessionRegistry()); // Número máximo de sesiones
@@ -72,8 +72,8 @@ public class ConfiguracionSeguridad {
                     http.requestMatchers(HttpMethod.GET, "/login").permitAll();
                     http.requestMatchers(HttpMethod.POST, "/login").permitAll();
 
-                    //http.anyRequest().permitAll();
-                    http.anyRequest().authenticated(); // AUTENTIFICACIÓN A TODOS
+                    http.anyRequest().permitAll();
+                    // http.anyRequest().authenticated(); // AUTENTIFICACIÓN A TODOS
                })
                 .formLogin(form -> form
                     .loginPage("/login")

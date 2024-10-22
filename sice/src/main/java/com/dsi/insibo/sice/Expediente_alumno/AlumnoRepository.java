@@ -126,7 +126,7 @@ public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
     List<Alumno> findByBachilleratoCodigoBachillerato(int codigoBachillerato);
 
     // Métodos de consulta paginados
-    @Query("SELECT a FROM Alumno a JOIN a.bachillerato b WHERE b.nombreCarrera = :carrera AND b.grado = :grado AND b.seccion = :seccion")
+    @Query("SELECT a FROM Alumno a JOIN a.bachillerato b WHERE b.nombreCarrera = :carrera AND b.grado = :grado AND b.seccion = :seccion AND a.bachillerato.anioAcademico.activoAnio=true")
     public Page<Alumno> findAll(String carrera, String grado, String seccion, Pageable pageable);
 
     @Query("SELECT a FROM Alumno a JOIN a.bachillerato b WHERE b.nombreCarrera = :carrera AND b.grado = :grado")

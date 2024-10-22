@@ -31,7 +31,7 @@ import com.dsi.insibo.sice.entity.Bachillerato;
  */
 @Controller
 @RequestMapping("/ExpedienteAlumno")
-@PreAuthorize("hasRole('ADMINISTRADOR')") // SOLO PARA DOCENTES
+// @PreAuthorize("hasRole('ADMINISTRADOR')") // SOLO PARA DOCENTES
 public class AlumnoController {
 
 	@Autowired
@@ -59,7 +59,7 @@ public class AlumnoController {
 	 * @return Una cadena que redirige a la vista de listado de alumnos.
 	 */
 	@PostMapping("/guardar")
-	public String guardarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes,
+	public String guardarAlumno(@ModelAttribute("alumno") Alumno alumno, RedirectAttributes attributes,
 			@RequestParam(value = "carrera", required = false) String carrera,
 			@RequestParam(value = "grado", required = false) String grado,
 			@RequestParam(value = "seccion", required = false) String seccion) {
@@ -86,15 +86,16 @@ public class AlumnoController {
 		}
 
 		if (bachillerato != null) {
-			System.out.println("bachillerato no nulo");
+			// System.out.println("bachillerato no nulo");
 			alumno.setBachillerato(bachillerato);
+			// Guarda el nuevo alumno
+			alumnoService.guardarAlumno(alumno);
+			attributes.addFlashAttribute("success", "¡Alumno guardado con éxito!");
+
+			// Redirige a la vista de listado de alumnos
+			return "redirect:/matriculados";
 		}
-
-		// Guarda el nuevo alumno
-		alumnoService.guardarAlumno(alumno);
-		attributes.addFlashAttribute("success", "¡Alumno guardado con éxito!");
-
-		// Redirige a la vista de listado de alumnos
+		attributes.addFlashAttribute("error", "¡Error no se puede guardar verificar que la matricula esté activa!");
 		return "redirect:/matriculados";
 	}
 
@@ -301,7 +302,7 @@ public class AlumnoController {
 	 *                predeterminado 10.
 	 * @return El nombre de la vista "Expediente_alumno/verAlumno".
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	// @PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
 	@GetMapping("/ver")
 	public String verAlumno(Model model,
 			@RequestParam(value = "carrera", required = false) String carrera,
@@ -324,7 +325,6 @@ public class AlumnoController {
 		if (genero != null && genero.isEmpty()) {
 			genero = null;
 		}
-
 		// Obtener la lista completa de alumnos filtrada por los parámetros
 		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion, genero);
 		// Ordenar la lista por "apellidoAlumno"
@@ -511,6 +511,7 @@ public class AlumnoController {
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoDatosResponsable";
 	}
+
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
 	@GetMapping("/Documentos/{idAlumno}")
 	public String alumnoDocumentos(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
@@ -606,7 +607,6 @@ public class AlumnoController {
 		modelAndView.addObject("carrera", carrera);
 		modelAndView.addObject("grado", grado);
 		modelAndView.addObject("seccion", seccion);
-		
 
 		// Retornar el objeto ModelAndView que contiene la vista y los datos
 		return modelAndView;
