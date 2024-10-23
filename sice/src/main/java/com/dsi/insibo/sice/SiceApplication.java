@@ -34,15 +34,15 @@ public class SiceApplication {
 		SpringApplication.run(SiceApplication.class, args);
 	}
 
-	@Autowired
+	@Autowired(required = false)
 	SessionService sesion;
-	@Autowired
+	@Autowired(required = false)
 	OrientadorService orientadorService;
-	@Autowired
+	@Autowired(required = false)
 	DocenteService docenteService;
-	@Autowired
+	@Autowired(required = false)
 	AnioService anioService;
-	@Autowired
+	@Autowired(required = false)
 	AsignacionService asignacionService;
 
 	@GetMapping("/")
@@ -82,7 +82,7 @@ public class SiceApplication {
 		return "Administrativo/homeAdministracion.html";
 	}
 
-	@Autowired
+	@Autowired(required = false)
 	private SessionRegistry sessionRegistry;
 
 	@GetMapping("/session")

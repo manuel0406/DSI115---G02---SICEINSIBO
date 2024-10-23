@@ -30,8 +30,53 @@ public class PersonalAdministrativo {
     private Date fechaEntregaPersonal;
     private Date fechaIngresoPersonal;
     
+    public PersonalAdministrativo() {
+    }
 
-    
+    @Override
+    public String toString() {
+        return "PersonalAdministrativo [duiPersonal=" + duiPersonal + ", nombrePersonal=" + nombrePersonal
+                + ", apellidoPersonal=" + apellidoPersonal + ", telefonoPersonal=" + telefonoPersonal
+                + ", profesionPersonal=" + profesionPersonal + ", fechaNacimientoP=" + fechaNacimientoP
+                + ", gradoAcademicoP=" + gradoAcademicoP + ", correoPersonal=" + correoPersonal
+                + ", departamentoPersonal=" + departamentoPersonal + ", municipioPersonal=" + municipioPersonal
+                + ", distritoPersonal=" + distritoPersonal + ", direccionPersonal=" + direccionPersonal
+                + ", zonaPersonal=" + zonaPersonal + ", nitPersonal=" + nitPersonal + ", nupPersonal=" + nupPersonal
+                + ", telefonoFijoPersonal=" + telefonoFijoPersonal + ", especialidadEnEstudioP="
+                + especialidadEnEstudioP + ", curriculumPersonal=" + curriculumPersonal + ", atestadosPersonal="
+                + atestadosPersonal + ", fechaEntregaPersonal=" + fechaEntregaPersonal + ", fechaIngresoPersonal="
+                + fechaIngresoPersonal + "]";
+    }
+
+    public PersonalAdministrativo(String duiPersonal, String nombrePersonal, String apellidoPersonal,
+            String telefonoPersonal, String profesionPersonal, Date fechaNacimientoP, String gradoAcademicoP,
+            String correoPersonal, String departamentoPersonal, String municipioPersonal, String distritoPersonal,
+            String direccionPersonal, String zonaPersonal, String nitPersonal, String nupPersonal,
+            String telefonoFijoPersonal, String especialidadEnEstudioP, boolean curriculumPersonal,
+            boolean atestadosPersonal, Date fechaEntregaPersonal, Date fechaIngresoPersonal) {
+        this.duiPersonal = duiPersonal;
+        this.nombrePersonal = nombrePersonal;
+        this.apellidoPersonal = apellidoPersonal;
+        this.telefonoPersonal = telefonoPersonal;
+        this.profesionPersonal = profesionPersonal;
+        this.fechaNacimientoP = fechaNacimientoP;
+        this.gradoAcademicoP = gradoAcademicoP;
+        this.correoPersonal = correoPersonal;
+        this.departamentoPersonal = departamentoPersonal;
+        this.municipioPersonal = municipioPersonal;
+        this.distritoPersonal = distritoPersonal;
+        this.direccionPersonal = direccionPersonal;
+        this.zonaPersonal = zonaPersonal;
+        this.nitPersonal = nitPersonal;
+        this.nupPersonal = nupPersonal;
+        this.telefonoFijoPersonal = telefonoFijoPersonal;
+        this.especialidadEnEstudioP = especialidadEnEstudioP;
+        this.curriculumPersonal = curriculumPersonal;
+        this.atestadosPersonal = atestadosPersonal;
+        this.fechaEntregaPersonal = fechaEntregaPersonal;
+        this.fechaIngresoPersonal = fechaIngresoPersonal;
+    }
+
     public String getNupPersonal() {
         return nupPersonal;
     }

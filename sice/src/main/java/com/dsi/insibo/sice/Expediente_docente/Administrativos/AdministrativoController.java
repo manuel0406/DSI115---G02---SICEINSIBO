@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.dsi.insibo.sice.Expediente_docente.Administrativos.Anexos.AnexoAdministrativoService;
+import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
 import com.dsi.insibo.sice.Seguridad.SeguridadService.UsuarioService;
 import com.dsi.insibo.sice.entity.AnexoPersonalAdministrativo;
 import com.dsi.insibo.sice.entity.PersonalAdministrativo;
@@ -35,6 +36,8 @@ public class AdministrativoController {
     private UsuarioService usuarioService;
     @Autowired
     private AnexoAdministrativoService anexoadministrativoService;
+    @Autowired
+    SessionService sesion;
 
     // Habilitando formulario de creación
     @GetMapping("/formulario")
@@ -51,7 +54,7 @@ public class AdministrativoController {
     public String guardar(@Validated @ModelAttribute PersonalAdministrativo administrativo,
             @RequestParam("administrativoRol") String rolSeleccionado, BindingResult result,
             Model model, RedirectAttributes attribute) {
-        
+
         if (result.hasErrors()) {
             model.addAttribute("administrativo", administrativo);
             return "expedienteadministrativo/formulario";
@@ -65,17 +68,17 @@ public class AdministrativoController {
             attribute.addFlashAttribute("error", "Error: Este DUI ya esta siendo utilizado.");
             return "redirect:plantaadministrativa";
         } else {
-            
+
             // CREACIÓN DEL USUARIO
             Usuario usuario = new Usuario();
-            usuario.setPersonalAdministrativo(administrativo);      // DUI-DOCENTE
+            usuario.setPersonalAdministrativo(administrativo); // DUI-DOCENTE
             usuario.setCorreoUsuario(administrativo.getCorreoPersonal());// Correo
-            usuario.setEnabled(false);                      // Activo
-            usuario.setAccountLocked(true);           // Bloqueado  
-            usuario.setAccountNoExpired(true);     // Expirado
+            usuario.setEnabled(false); // Activo
+            usuario.setAccountLocked(true); // Bloqueado
+            usuario.setAccountNoExpired(true); // Expirado
             usuario.setCredentialNoExpired(true); // Credencial expirada
-            usuario.setPrimerIngreso(true);           // Primera vez
-            usuario.setContrasenaUsuario(" ");    // Contraseña
+            usuario.setPrimerIngreso(true); // Primera vez
+            usuario.setContrasenaUsuario(" "); // Contraseña
             Long idRol = 4L;
             switch (rolSeleccionado) {
                 case "Secretaria":
@@ -83,7 +86,7 @@ public class AdministrativoController {
                     break;
                 case "Bibliotecaria":
                     idRol = 7L;
-                    break;                              
+                    break;
                 default:
                     idRol = 4L;
                     break;
@@ -105,21 +108,21 @@ public class AdministrativoController {
 
         // Actualizamos el usuario
         Usuario usuario = usuarioService.buscarPorIdPersonal(administrativo.getDuiPersonal());
-        usuario.setCorreoUsuario(administrativo.getCorreoPersonal());   // Nuevo Correo
+        usuario.setCorreoUsuario(administrativo.getCorreoPersonal()); // Nuevo Correo
         usuario.getRolesUsuario().clear();
         Long idRol = 4L;
-        switch (rolSeleccionado) {                              // Nuevo Rol
+        switch (rolSeleccionado) { // Nuevo Rol
             case "Secretaria":
                 idRol = 3L;
-            break;
+                break;
             case "Bibliotecaria":
                 idRol = 7L;
-            break;                              
+                break;
             default:
                 idRol = 4L;
-            break;
+                break;
         }
-        usuarioService.asignarRol(usuario, idRol);          // Guardamos la actualización
+        usuarioService.asignarRol(usuario, idRol); // Guardamos la actualización
         administrativoService.guardarAdministrativo(administrativo);
         attribute.addFlashAttribute("success", "Expediente actualizado con exito!");
         return "redirect:plantaadministrativa";

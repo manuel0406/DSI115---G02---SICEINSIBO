@@ -33,6 +33,41 @@ public class Docente {
     private Date fechaEntrega;
     
     
+    public Docente() {
+    }
+    
+    public Docente(String duiDocente, String nit, String nup, String nip, String telefonoFijoDocente,
+            String nombreDocente, String apellidoDocente, Date fechaNacimientoD, String direccionDocente,
+            String municipioD, String departamentoD, String distritoDocente, String correoDocente,
+            String telefonoDocente, String profesionDocente, Date fechaMineducyt, String zonaDocente,
+            String tituloDocente, String especialidadEnEstudio, boolean curriculumDocente, boolean atestadosDocente,
+            Date fechaEntrega) {
+        this.duiDocente = duiDocente;
+        this.nit = nit;
+        this.nup = nup;
+        this.nip = nip;
+        this.telefonoFijoDocente = telefonoFijoDocente;
+        this.nombreDocente = nombreDocente;
+        this.apellidoDocente = apellidoDocente;
+        this.fechaNacimientoD = fechaNacimientoD;
+        this.direccionDocente = direccionDocente;
+        this.municipioD = municipioD;
+        this.departamentoD = departamentoD;
+        this.distritoDocente = distritoDocente;
+        this.correoDocente = correoDocente;
+        this.telefonoDocente = telefonoDocente;
+        this.profesionDocente = profesionDocente;
+        this.fechaMineducyt = fechaMineducyt;
+        this.zonaDocente = zonaDocente;
+        this.tituloDocente = tituloDocente;
+        this.especialidadEnEstudio = especialidadEnEstudio;
+        this.curriculumDocente = curriculumDocente;
+        this.atestadosDocente = atestadosDocente;
+        this.fechaEntrega = fechaEntrega;
+    }
+
+
+
     public String getNip() {
         return nip;
     }
