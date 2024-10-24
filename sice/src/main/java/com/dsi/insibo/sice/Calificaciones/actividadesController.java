@@ -39,31 +39,32 @@ public class actividadesController {
 
 	@PreAuthorize("hasAnyRole('DOCENTE')")
 	@GetMapping("/{idMateria}/{codigoBachillerato}")
-	public String verActividades(Model model, @PathVariable("idMateria") int idMateria, @PathVariable("codigoBachillerato") int codigoBachillerato,
+	public String verActividades(Model model, @PathVariable("idMateria") int idMateria,
+			@PathVariable("codigoBachillerato") int codigoBachillerato,
 			RedirectAttributes attributes, @RequestParam(value = "pe", required = false) String pe) {
 
 		// System.out.println("el periodo es: " + pe);
-		// Bachillerato bachillerato = null;
-		// if (pe != null && pe.isEmpty()) {
-		// 	pe = null;
-		// }
-		// if (codigoBachillerato > 0) {
-		// 	// Busca al bachillerato por su codigo
-		// 	bachillerato = bachilleratosService.bachilleratoPorId(codigoBachillerato);
+		Bachillerato bachillerato = null;
+		if (pe != null && pe.isEmpty()) {
+			pe = null;
+		}
+		if (codigoBachillerato > 0) {
+			// Busca al bachillerato por su codigo
+			bachillerato = bachilleratosService.bachilleratoPorId(codigoBachillerato);
 
-		// 	// Verifica que el bachillerato exista
-		// 	if (bachillerato == null) {
-		// 		System.out.println("Error: ¡El código ingresado no existe");
-		// 		attributes.addFlashAttribute("error", "Error: ¡El código ingresado no existe");
-		// 		return "redirect:/Actividad/" + codigoBachillerato;
-		// 	}
+			// Verifica que el bachillerato exista
+			if (bachillerato == null) {
+				System.out.println("Error: ¡El código ingresado no existe");
+				attributes.addFlashAttribute("error", "Error: ¡El código ingresado no existe");
+				return "redirect:/Actividad/" + codigoBachillerato;
+			}
 
-		// } else {
-		// 	// Maneja el caso donde el codigo no es válido
-		// 	System.out.println("Error: ¡El código ingresado no es válido!");
-		// 	attributes.addFlashAttribute("error", "Error: ¡El código ingresado no es válido!");
-		// 	return "redirect:/Actividad/" + codigoBachillerato;
-		// }
+		} else {
+			// Maneja el caso donde el codigo no es válido
+			System.out.println("Error: ¡El código ingresado no es válido!");
+			attributes.addFlashAttribute("error", "Error: ¡El código ingresado no es válido!");
+			return "redirect:/Actividad/" + codigoBachillerato;
+		}
 		// Se extra el listado de periodos existentes
 		List<Periodo> periodos = periodoService.listaPeriodos();
 		// Objecto activada nuevo
@@ -77,6 +78,12 @@ public class actividadesController {
 		// Listado de las actividaes que ha creado un docente por bachillerato
 		List<Actividad> listadoActividades = actividadService.listaActividades(dui, idMateria, pe);
 
+		if (asignacion.getMateria().getTipoMateria().equals("Módulo")) {
+			pe="1";
+			System.out.println("entro");
+			
+		}
+		System.out.println(asignacion.getMateria().getTipoMateria());
 		model.addAttribute("actividad", actividad);
 		model.addAttribute("periodos", periodos);
 		model.addAttribute("listadoActividades", listadoActividades);
@@ -107,7 +114,7 @@ public class actividadesController {
 		}
 
 		totalPoderación += actividad.getPonderacionActividad();
-		System.out.println("Suma pondereación: " + totalPoderación);
+		// System.out.println("Suma pondereación: " + totalPoderación);
 		if (totalPoderación <= 100) {
 			actividadService.guardarActividad(actividad);
 			redirectAttributes.addFlashAttribute("success",
@@ -118,8 +125,9 @@ public class actividadesController {
 		}
 
 		pe = actividad.getPeriodo().getIdPeriodo();
-		System.out.println("viene periodo: " + pe);
-		return "redirect:/Actividad/" + actividad.getAsignacion().getBachillerato().getCodigoBachillerato() + "?pe="
+		// System.out.println("viene periodo: " + pe);
+		return "redirect:/Actividad/" + actividad.getAsignacion().getMateria().getIdMateria() + "/"
+				+ actividad.getAsignacion().getBachillerato().getCodigoBachillerato() + "?pe="
 				+ pe;
 	}
 
@@ -149,7 +157,7 @@ public class actividadesController {
 		actividadService.eliminarActividad(idActividad);
 		attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");
 		int pe = actividad.getPeriodo().getIdPeriodo();
-		return "redirect:/Actividad/" + codigoBachillerato+"?pe="+pe;
+		return "redirect:/Actividad/" + codigoBachillerato + "?pe=" + pe;
 	}
 
 }

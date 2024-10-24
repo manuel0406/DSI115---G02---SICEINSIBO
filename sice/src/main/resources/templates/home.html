@@ -248,6 +248,7 @@
                         <table class="table table-hover ">
                             <thead class="tabla-c">
                                 <tr>
+                                    <th scope="col">Materia</th>
                                     <th scope="col">Año</th>
                                     <th scope="col">Especialidad</th>
                                     <th scope="col">Sección</th>
@@ -256,6 +257,7 @@
                             </thead>
                             <tbody>
                                 <tr th:each="asignacion, stat : ${listadoAsignaciones}">
+                                    <td th:text="${asignacion.materia.nomMateria}"></td>
                                     <td th:text="${asignacion.bachillerato.grado}"></td>
                                     <td th:text="${asignacion.bachillerato.nombreCarrera}"></td>
                                     <td th:text="${asignacion.bachillerato.seccion}"></td>
