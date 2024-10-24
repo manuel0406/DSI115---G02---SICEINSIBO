@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <title th:text="${pageTitle}">Título por Defecto</title>
+    <title>Paquetes escolares</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 
@@ -17,12 +17,12 @@
     <div class="p-4 mt-5">
         <div>
             <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a th:href="@{/paquetes/inicio}">Inicio paquetes</a></li>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/paquetes/inicio}">Inicio paquetes</a></li>
                     <li class=" breadcrumb-item active" aria-current="page">Donaciones</li>
-              </ol>
+                </ol>
             </nav>
-          </div>
+        </div>
         <h2 class="text-center">Donaciones</h2>
         <div class="w-75 mx-auto p-4" id="prendas">
             <div class="d-flex flex-column py-2">
@@ -33,7 +33,7 @@
                 <div class="d-flex justify-content-end row-cols-2 mx-0">
                     <label for="search" class="form-label col-auto my-auto">Buscar: </label>
                     <div class="col-md-4 col-10">
-                        <input type="search" class="form-control ms-1 search">
+                        <input type="search" class="form-control ms-1 search" placeholder="Buscar tipo">
                     </div>
                 </div>
             </div>
@@ -70,18 +70,21 @@
                                     <a th:if="${don.cantidadPrenda >= 0}" class="btn btn-primary btn-sm mx-1"
                                         data-bs-toggle="modal"
                                         th:data-bs-target="'#exampleCantidad'+${don.idInventarioDonacion}"
-                                        th:attr="data-cantidad=${don.cantidadPrenda}">
+                                        th:attr="data-cantidad=${don.cantidadPrenda}" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Ingresar donación">
                                         <i class="bi bi-plus-lg"></i>
                                     </a>
                                     <a th:if="${don.cantidadPrenda > 0}" class="btn btn-danger btn-sm mx-1"
                                         data-bs-toggle="modal"
                                         th:data-bs-target="'#exampleMenos'+${don.idInventarioDonacion}"
-                                        th:attr="data-cantidad=${don.cantidadPrenda}">
+                                        th:attr="data-cantidad=${don.cantidadPrenda}" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Retirar donación">
                                         <i class="bi bi-dash-lg"></i>
                                     </a>
                                     <a th:if="${don.cantidadPrenda == 0}" class="btn btn-danger btn-sm mx-1"
                                         data-bs-toggle="modal"
-                                        th:data-bs-target="'#eliminarModal'+${don.idInventarioDonacion}">
+                                        th:data-bs-target="'#eliminarModal'+${don.idInventarioDonacion}"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar registro">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
@@ -97,7 +100,8 @@
                 tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
-                        <form th:action="@{/paquetes/modificarCantidad}" method="post" class="needs-validation" novalidate>
+                        <form th:action="@{/paquetes/modificarCantidad}" method="post" class="needs-validation"
+                            novalidate>
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="exampleModalCantidad">Agregar Cantidad</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -124,9 +128,9 @@
                                                 <div class="col">
                                                     <input type="number" class="form-control w-100" id="cantidad"
                                                         name="nuevaCantidad" min="1" required>
-                                                        <div class="invalid-feedback">
-                                                            Es necesario la cantidad
-                                                        </div>
+                                                    <div class="invalid-feedback">
+                                                        Es necesario la cantidad
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -149,7 +153,8 @@
                 tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
-                        <form th:action="@{/paquetes/modificarMenosCantidad}" method="post" class="needs-validation" novalidate>
+                        <form th:action="@{/paquetes/modificarMenosCantidad}" method="post" class="needs-validation"
+                            novalidate>
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="exampleModalCantidad">Eliminar Cantidad</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -175,10 +180,11 @@
                                                     disminuir:</label>
                                                 <div class="col">
                                                     <input type="number" class="form-control w-100" id="cantidad"
-                                                        name="nuevaCantidad" min="1" required style="color: red;" required>
-                                                        <div class="invalid-feedback">
-                                                            Es necesario la cantidad
-                                                        </div>
+                                                        name="nuevaCantidad" min="1" required style="color: red;"
+                                                        required>
+                                                    <div class="invalid-feedback">
+                                                        Es necesario la cantidad
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -274,13 +280,7 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-    <script>
-        var options = {
-            valueNames: ['tipo']
-        };
-
-        var userList = new List('prendas', options);
-    </script>
+    <script type="text/javascript" src="/js/donaciones.js"></script>
     <script type="text/javascript" src="/js/validacionRequired.js"></script>
 
 </body>
