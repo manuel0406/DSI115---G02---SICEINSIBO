@@ -195,7 +195,7 @@
                         .then(response => response.json())
                         .then(data => {
                             const fechaSelect = document.getElementById('fechaPaquete');
-                            fechaSelect.innerHTML = '<option value="0">Seleccionar fecha</option>'; // Reiniciar las opciones
+                            fechaSelect.innerHTML = '<option value="">Seleccionar fecha</option>'; // Reiniciar las opciones
                             data.forEach(function (fecha) {
                                 fechaSelect.innerHTML += `<option value="${fecha}">${fecha}</option>`;
                             });
