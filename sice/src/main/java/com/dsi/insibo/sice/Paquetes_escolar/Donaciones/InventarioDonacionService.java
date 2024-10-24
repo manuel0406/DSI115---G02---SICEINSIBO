@@ -28,14 +28,13 @@ public class InventarioDonacionService {
         inventarioDonacionRepository.save(donacion);
     }
 
-    // Metodo para obtener una donación por su ID
+    // Metodo para obtener una donacion por su ID
     public InventarioDonacion obtenerDonacionPorId(int id) {
         Optional<InventarioDonacion> donacion = inventarioDonacionRepository.findById(id);
         return donacion.orElse(null);
     }
 
     public int obtenerCantidadPorId(int donacionId) {
-        // Suponiendo que tienes un repositorio que accede a la base de datos
         return inventarioDonacionRepository.findCantidadById(donacionId);
     }
 
@@ -51,23 +50,12 @@ public class InventarioDonacionService {
         }
     }
 
-    public List<Integer> getGrados(String carrera) {
-        return inventarioDonacionRepository.findDistinctGrados(carrera);
-    }
-
-    public List<String> getSecciones(String carrera, int grado) {
-        return inventarioDonacionRepository.findDistinctSecciones(carrera, grado);
-    }
-
     // Metodo de eliminar donacion
     public void eliminarDonacion(int idInventarioDonacion) {
         inventarioDonacionRepository.deleteById(idInventarioDonacion);
     }
 
-
-
-    // Método para obtener los detalles del bachillerato por su código
-    // Método para obtener los detalles del bachillerato por su código
+    // Metodo para obtener los detalles del bachillerato por su código
     public Bachillerato obtenerDetallesBachilleratoPorCodigo(Integer codigoBachillerato) {
         return inventarioDonacionRepository.findBachilleratoByCodigo(codigoBachillerato);
     }
@@ -87,7 +75,7 @@ public class InventarioDonacionService {
     }
 
 
-     // Método para obtener el id del año académico activo
+     // Metodo para obtener el id del año académico activo
      public Integer obtenerAnioAcademicoActivo() {
         return inventarioDonacionRepository.findActiveAnioAcademicoId();
     }
@@ -97,13 +85,4 @@ public class InventarioDonacionService {
         return inventarioDonacionRepository.findBachilleratoByAnioAcademicoNoDTO(idAnioAcademico);
     }
 
-    // Método para obtener los grados por carrera
-    public List<Integer> obtenerGradosPorCarrera(String carrera) {
-        return inventarioDonacionRepository.findDistinctGrados(carrera);
-    }
-
-    // Método para obtener las secciones por carrera y grado
-    public List<String> obtenerSeccionesPorCarreraYGrado(String carrera, int grado) {
-        return inventarioDonacionRepository.findDistinctSecciones(carrera, grado);
-    }
 }

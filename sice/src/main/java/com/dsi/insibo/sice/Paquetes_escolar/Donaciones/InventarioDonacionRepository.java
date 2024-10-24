@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.InventarioDonacion;
 
@@ -20,15 +19,7 @@ public interface InventarioDonacionRepository extends JpaRepository<InventarioDo
     @Query("SELECT i.cantidadPrenda FROM InventarioDonacion i WHERE i.idInventarioDonacion = :donacionId")
     int findCantidadById(@Param("donacionId") int donacionId);
 
-    @Query("SELECT DISTINCT b.grado FROM Bachillerato b WHERE b.nombreCarrera = :nombreCarrera")
-    List<Integer> findDistinctGrados(@Param("nombreCarrera") String nombreCarrera);
-
-    @Query("SELECT DISTINCT b.seccion FROM Bachillerato b WHERE b.nombreCarrera = :nombreCarrera AND b.grado = :grado")
-    List<String> findDistinctSecciones(@Param("nombreCarrera") String nombreCarrera, @Param("grado") int grado);
-
-
-    // Consulta para obtener los detalles del bachillerato basados en su código
-    // Método para encontrar Bachillerato por código de tipo Integer
+    // Consulta para obtener los detalles del bachillerato basados en su codigo
     @Query("SELECT b FROM Bachillerato b WHERE b.codigoBachillerato = :codigo")
     Bachillerato findBachilleratoByCodigo(@Param("codigo") Integer codigoBachillerato);
 
@@ -37,13 +28,11 @@ public interface InventarioDonacionRepository extends JpaRepository<InventarioDo
             "FROM public.alumno WHERE bachillerato_codigo_bachillerato = :codigoBachillerato", nativeQuery = true)
     List<Object[]> findAlumnosByCodigoBachillerato(@Param("codigoBachillerato") Integer codigoBachillerato);
 
-
-    //Obtener año academico activo
+    // Obtener año academico activo
     @Query("SELECT a.idAnioAcademico FROM AnioAcademico a WHERE a.activoAnio = true")
     Integer findActiveAnioAcademicoId();
 
-    // Opción si prefieres usar Object[] 
-    @Query("SELECT b.codigoBachillerato, b.grado, b.nombreCarrera, b.seccion " +
-           "FROM Bachillerato b WHERE b.anioAcademico.idAnioAcademico = :idAnioAcademico")
+    @Query(value = "SELECT codigo_bachillerato, grado, nombre_carrera, seccion FROM public.bachillerato WHERE anio_academico_id_anio_academico = :idAnioAcademico", nativeQuery = true)
     List<Object[]> findBachilleratoByAnioAcademicoNoDTO(@Param("idAnioAcademico") Integer idAnioAcademico);
+
 }

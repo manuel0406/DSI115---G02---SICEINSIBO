@@ -3,13 +3,12 @@ package com.dsi.insibo.sice.Paquetes_escolar;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +17,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.awt.Color;
+import java.io.IOException;
+import java.net.URL;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
 import com.dsi.insibo.sice.Administrativo.Orientadores.OrientadorService;
@@ -28,11 +44,13 @@ import com.dsi.insibo.sice.Paquetes_escolar.Utiles.UtilesService;
 import com.dsi.insibo.sice.Paquetes_escolar.Zapatos.ZapatosService;
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Bachillerato;
+import com.dsi.insibo.sice.entity.Uniforme;
 import com.dsi.insibo.sice.entity.UtilesEscolares;
+import com.dsi.insibo.sice.entity.Zapatos;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -67,6 +85,7 @@ public class EntregasController {
         model.addAttribute("bachillerato", bachillerato);
         model.addAttribute("id", id); // Pasar el ID del bachillerato
         model.addAttribute("tipoPaquete", tipoPaquete); // Paquete seleccionado
+        model.addAttribute("pageTitle", "Paquetes escolares");
 
         return "Paquetes_escolares/generarListado";
     }
@@ -99,8 +118,23 @@ public class EntregasController {
         model.addAttribute("alumnos", listaAlumnos); // Lista de alumnos
         model.addAttribute("tipoPaquete", tipoPaquete); // Tipo de paquete seleccionado
         model.addAttribute("id", id); // ID del bachillerato
+        model.addAttribute("pageTitle", "Paquetes escolares");
 
         return "Paquetes_escolares/generarListado";
+    }
+
+    @GetMapping("/fechasPaquetesContar/{idBachillerato}")
+    public ResponseEntity<Map<String, Integer>> obtenerConteoPaquetes(@PathVariable int idBachillerato) {
+        int countZapatos = zapatosService.obtenerFechasPorBachillerato(idBachillerato).size();
+        int countUtiles = utilesEscolaresService.obtenerFechasPorBachillerato(idBachillerato).size();
+        int countUniformes = uniformeService.obtenerFechasPorBachillerato(idBachillerato).size();
+
+        Map<String, Integer> conteos = new HashMap<>();
+        conteos.put("zapatos", countZapatos);
+        conteos.put("utiles", countUtiles);
+        conteos.put("uniformes", countUniformes);
+
+        return ResponseEntity.ok(conteos);
     }
 
     @PostMapping("/entregarPaquete")
@@ -145,65 +179,334 @@ public class EntregasController {
                     zapatosService.saveZapatos(alumno, tallaZapato, fueEntregado);
                 }
             }
-            // Mensaje de éxito
+            // Mensaje de exito
             redirectAttributes.addFlashAttribute("success", "Paquetes entregados con éxito.");
         } catch (Exception e) {
             // Mensaje de error
             redirectAttributes.addFlashAttribute("error", "Ocurrió un error al entregar los paquetes.");
         }
-
-        // Redirigir a la misma URL (vista del formulario)
         return "redirect:/entregasPaquetes/seccion/" + request.getParameter("id");
     }
 
-    @GetMapping("/reportesEntrega/{id}")
-    public String generarReporte(
-            @RequestParam(required = false) String tipoPaquete, // Tipo de paquete (zapatos, útiles, uniformes)
-            @RequestParam(required = false) String estadoEntrega, // Estado de entrega (entregado, no entregado, todos)
-            @PathVariable int id, // ID del bachillerato o sección para filtrar alumnos
-            Model model) {
+    @GetMapping("/imprimirListado/{id}")
+    public void imprimirListado(HttpServletResponse response,
+            @PathVariable("id") int id,
+            @RequestParam("tipoPaquete") String tipoPaquete) throws IOException, DocumentException {
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "inline; filename=Listado_Paquetes.pdf");
 
-        // Si no se ha seleccionado un estado de entrega, por defecto se usan todos
-        // ("todos")
-        if (estadoEntrega == null || estadoEntrega.isEmpty()) {
-            estadoEntrega = "todos";
+        // Obtener datos: bachillerato, alumnos, etc.
+        Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(id);
+        List<Alumno> alumnos = alumnoService.listarAlumnos(bachillerato.getNombreCarrera(),
+                String.valueOf(bachillerato.getGrado()),
+                bachillerato.getSeccion(), null);
+
+        String paquete = "";
+
+        // Verificar el tipo de paquete
+        if (tipoPaquete.equals("paqueteUniforme")) {
+            paquete = "Paquetes de Uniforme Escolar";
+        } else if (tipoPaquete.equals("paqueteUtiles")) {
+            paquete = "Paquetes de Útiles Escolares";
+        } else if (tipoPaquete.equals("paqueteZapatos")) {
+            paquete = "Paquetes de Zapatos";
+        } else {
+            paquete = "";
         }
 
-        // Obtener la lista de alumnos filtrados por el ID del bachillerato o sección
-        // Aquí puedes ajustar el método de obtención de alumnos según lo necesites
-        List<Alumno> alumnos = alumnoService.findAlumnosByBachilleratoCodigoBachillerato(id);
+        Document document = new Document(PageSize.LETTER.rotate());
+        PdfWriter.getInstance(document, response.getOutputStream());
+        document.open();
 
-        // Filtrar los alumnos según el estado de entrega (entregado, no entregado,
-        // todos)
-        List<Alumno> alumnosFiltrados = entregasService.filtrarPorEstadoEntrega(alumnos, estadoEntrega);
+        // Crear la tabla de encabezado con 2 columnas
+        PdfPTable headerTable = new PdfPTable(2);
+        headerTable.setWidthPercentage(100);
+        headerTable.setWidths(new float[] { 0.55f, 3 });
 
-        // Pasar los datos al modelo para la vista
-        model.addAttribute("alumnos", alumnosFiltrados); // Lista de alumnos filtrados
-        model.addAttribute("estadoEntrega", estadoEntrega); // Estado de entrega seleccionado
-        model.addAttribute("tipoPaquete", tipoPaquete); // Tipo de paquete seleccionado
-        model.addAttribute("id", id); // ID del bachillerato o sección
+        // Añadir el logo
+        URL logoUrl = getClass().getResource("/static/Imagenes/LogoINSIBO.jpg");
+        if (logoUrl != null) {
+            try {
+                Image img = Image.getInstance(logoUrl);
+                float aspectRatio = img.getWidth() / (float) img.getHeight();
+                float newWidth = 60;
+                float newHeight = newWidth / aspectRatio;
+                img.scaleToFit(newWidth, newHeight);
+                img.setAlignment(Image.ALIGN_RIGHT);
 
-        // Devolver el nombre de la vista para mostrar los resultados
+                PdfPCell logoCell = new PdfPCell(img);
+                logoCell.setBorder(PdfPCell.NO_BORDER);
+                logoCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                logoCell.setPaddingTop(4); // Ajustar la posición vertical si es necesario
+
+                headerTable.addCell(logoCell);
+            } catch (Exception e) {
+                System.err.println("Error al cargar o redimensionar la imagen: " + e.getMessage());
+                PdfPCell emptyCell = new PdfPCell();
+                emptyCell.setBorder(PdfPCell.NO_BORDER);
+                headerTable.addCell(emptyCell);
+            }
+        } else {
+            System.err.println("Logo no encontrado en la ruta: /static/Imagenes/LogoINSIBO.jpg");
+            PdfPCell emptyCell = new PdfPCell();
+            emptyCell.setBorder(PdfPCell.NO_BORDER);
+            headerTable.addCell(emptyCell);
+        }
+
+        // Definir fuentes para los titulos
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
+        Font titleFont2 = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
+        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE); // Texto Blanco
+        Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.BLACK); // Texto Negro
+
+        // Crear los parrafos para los titulos
+        Paragraph title = new Paragraph("INSTITUTO NACIONAL SIMON BOLIVAR\nCODIGO 11694 SANTO TOMAS", titleFont);
+        Paragraph title2 = new Paragraph("PROGRAMA DE DOTACION DE PAQUETES ESCOLARES\n\n", titleFont2);
+        title.setAlignment(Element.ALIGN_LEFT);
+        title2.setAlignment(Element.ALIGN_LEFT);
+
+        // Crear una celda para los titulos y añadir los párrafos
+        PdfPCell titleCell = new PdfPCell();
+        titleCell.setBorder(PdfPCell.NO_BORDER);
+        titleCell.addElement(title);
+        titleCell.addElement(title2);
+        headerTable.addCell(titleCell);
+
+        // Añadir la tabla de encabezado al documento
+        document.add(headerTable);
+
+        // Definir la fuente para el subtítulo
+        Font fontSubTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10);
+
+        // En una sola línea
+        String info = "Fecha: " + LocalDate.now().toString() + " | " +
+                "Bachillerato: " + bachillerato.getNombreCarrera() + " | " +
+                "Año: " + bachillerato.getGrado() + "° Sección: " + bachillerato.getSeccion();
+
+        // Añadir al documento
+        document.add(new Paragraph(info, fontSubTitle));
+
+        // Tipo de paquete
+        document.add(new Paragraph("Tipo: " + paquete, fontSubTitle));
+        document.add(new Paragraph(" ")); // Línea vacia
+
+        // Crear la tabla para los alumnos con 7 columnas
+        PdfPTable table = new PdfPTable(8);
+        table.setWidthPercentage(100);
+        table.setWidths(new int[] { 1, 2, 2, 2, 1, 3, 3, 3 });
+        // Definir la fuente para la tabla de alumnos
+
+        // Añadir encabezado a la tabla utilizando el método auxiliar
+        addTableHeader(table, "N°", headerFont);
+        addTableHeader(table, "NIE", headerFont);
+        addTableHeader(table, "Apellido", headerFont);
+        addTableHeader(table, "Nombre", headerFont);
+        addTableHeader(table, "Género", headerFont);
+        addTableHeader(table, "Nombre de quien recibe", headerFont);
+        addTableHeader(table, "DUI o NIE de quien recibe", headerFont);
+        addTableHeader(table, "Firma", headerFont);
+        // Añadir los datos de los alumnos utilizando el método auxiliar
+        int index = 1;
+        for (Alumno alumno : alumnos) {
+            addTableCell(table, String.valueOf(index++), bodyFont, Element.ALIGN_CENTER, Element.ALIGN_MIDDLE); // Número
+                                                                                                                // de
+                                                                                                                // registro
+
+            addTableCell(table, String.valueOf(alumno.getNie()), bodyFont, Element.ALIGN_LEFT, Element.ALIGN_MIDDLE); // NIE
+            addTableCell(table, alumno.getApellidoAlumno(), bodyFont,
+                    Element.ALIGN_LEFT, Element.ALIGN_MIDDLE); // Nombre completo alineado a la izquierda
+            addTableCell(table, alumno.getNombreAlumno(), bodyFont,
+                    Element.ALIGN_LEFT, Element.ALIGN_MIDDLE); // Nombre completo alineado a la izquierda
+            addTableCell(table, alumno.getSexoAlumno(), bodyFont, Element.ALIGN_CENTER, Element.ALIGN_MIDDLE); // Género
+            addTableCell(table, "", bodyFont, Element.ALIGN_LEFT, Element.ALIGN_MIDDLE); // Nombre de quien recibe
+                                                                                         // (celda vacia)
+            addTableCell(table, "", bodyFont, Element.ALIGN_LEFT, Element.ALIGN_MIDDLE); // DUI o NIE de quien recibe
+                                                                                         // (celda vacia)
+            addTableCell(table, "", bodyFont, Element.ALIGN_LEFT, Element.ALIGN_MIDDLE); // Firma (celda vacia)
+        }
+        // Añadir la tabla al documento
+        document.add(table);
+
+        // Cerrar el documento
+        document.close();
+
+    }
+
+    /**
+     * Método auxiliar para añadir encabezados a la tabla de alumnos.
+     *
+     * @param table       La tabla a la que se añadirá el encabezado.
+     * @param headerTitle El texto del encabezado.
+     * @param font        La fuente a aplicar (debe ser texto blanco).
+     */
+    private void addTableHeader(PdfPTable table, String headerTitle, Font font) {
+        PdfPCell header = new PdfPCell(new Phrase(headerTitle, font));
+        header.setBackgroundColor(new Color(0, 51, 102)); // Azul oscuro
+        header.setHorizontalAlignment(Element.ALIGN_CENTER);
+        header.setVerticalAlignment(Element.ALIGN_CENTER);
+        header.setPadding(5);
+        table.addCell(header);
+    }
+
+    /**
+     * Método auxiliar para añadir celdas de datos a la tabla de alumnos.
+     *
+     * @param table               La tabla a la que se añadirá la celda.
+     * @param text                El texto de la celda.
+     * @param font                La fuente a aplicar (debe ser texto negro).
+     * @param horizontalAlignment La alineación horizontal del texto en la celda.
+     * @param verticalAlignment   La alineación vertical del texto en la celda.
+     */
+    private void addTableCell(PdfPTable table, String text, Font font, int horizontalAlignment, int verticalAlignment) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setPadding(5);
+        cell.setHorizontalAlignment(horizontalAlignment);
+        cell.setVerticalAlignment(verticalAlignment);
+        table.addCell(cell);
+    }
+
+    @GetMapping("/reportesEntrega/{id}")
+    public String generarReporte(@PathVariable("id") int id, Model model) {
+        model.addAttribute("id", id);
+        model.addAttribute("pageTitle", "Paquetes escolares");
         return "Paquetes_escolares/reporteEntrega";
     }
 
-    // @GetMapping("/reportesEntrega/fechas/{id}")
-    // @ResponseBody
-    // public List<String> obtenerFechasPorTipoPaquete(
-    //         @PathVariable int id,
-    //         @RequestParam String tipoPaquete) {
+    @GetMapping("/fechasPaquete")
+    @ResponseBody
+    public List<String> obtenerFechasPaquete(@RequestParam("tipoPaquete") String tipoPaquete,
+            @RequestParam("idBachillerato") int idBachillerato) {
+        List<String> fechas = new ArrayList<>();
+        switch (tipoPaquete) {
+            case "paqueteZapatos":
+                fechas = zapatosService.obtenerFechasPorBachillerato(idBachillerato);
+                break;
+            case "paqueteUniforme":
+                fechas = uniformeService.obtenerFechasPorBachillerato(idBachillerato);
+                break;
+            case "paqueteUtiles":
+                fechas = utilesEscolaresService.obtenerFechasPorBachillerato(idBachillerato);
+                break;
+            default:
+                break;
+        }
+        return fechas;
+    }
 
-    //     List<String> fechas = new ArrayList<>();
+    //
 
-    //     if ("paqueteZapatos".equals(tipoPaquete)) {
-    //         fechas = entregasService.obtenerFechasZapatos(id); // Implementa este método en tu servicio
-    //     } else if ("paqueteUtiles".equals(tipoPaquete)) {
-    //         fechas = entregasService.obtenerFechasUtiles(id); // Implementa este método en tu servicio
-    //     } else if ("paqueteUniforme".equals(tipoPaquete)) {
-    //         fechas = entregasService.obtenerFechasUniforme(id); // Implementa este método en tu servicio
-    //     }
+    @GetMapping("/reporteEntrega/{id}")
+    public String filtrarEntregas(
+            @PathVariable("id") int idBachillerato,
+            @RequestParam(value = "tipoPaquete", required = false) String tipoPaquete,
+            @RequestParam(value = "fechaPaquete", required = false) String fechaPaquete,
+            @RequestParam(value = "estadoEntrega", required = false) String estadoEntrega,
+            Model model) {
 
-    //     return fechas; // Devuelve la lista de fechas en formato JSON
-    // }
+        List<Object[]> resultados;
+
+        // Validaciones
+        if (tipoPaquete == null || fechaPaquete == null || estadoEntrega == null) {
+            model.addAttribute("error",
+                    "Por favor, selecciona un tipo de paquete, una fecha y un estado de entrega válidos.");
+            Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(idBachillerato);
+            model.addAttribute("bachillerato", bachillerato);
+            model.addAttribute("id", idBachillerato);
+            return "Paquetes_escolares/reporteEntrega";
+        }
+
+        // Convertir el estado de entrega
+        Boolean estado = null;
+        if ("entregado".equals(estadoEntrega)) {
+            estado = true;
+        } else if ("no_entregado".equals(estadoEntrega)) {
+            estado = false;
+        }
+
+        // Consulta según el tipo de paquete
+        if ("paqueteUniforme".equals(tipoPaquete)) {
+            if (estado == null) {
+                resultados = entregasService.filtrarPorUniformeSinEstado(idBachillerato, fechaPaquete);
+            } else {
+                resultados = entregasService.filtrarPorUniforme(idBachillerato, fechaPaquete, estado);
+            }
+        } else if ("paqueteUtiles".equals(tipoPaquete)) {
+            if (estado == null) {
+                resultados = entregasService.filtrarPorUtilesSinEstado(idBachillerato, fechaPaquete);
+            } else {
+                resultados = entregasService.filtrarPorUtiles(idBachillerato, fechaPaquete, estado);
+            }
+        } else if ("paqueteZapatos".equals(tipoPaquete)) {
+            if (estado == null) {
+                resultados = entregasService.filtrarPorZapatosSinEstado(idBachillerato, fechaPaquete);
+            } else {
+                resultados = entregasService.filtrarPorZapatos(idBachillerato, fechaPaquete, estado);
+            }
+        } else {
+            resultados = new ArrayList<>();
+        }
+
+        // Verificar si la lista de resultados está vacía
+        if (resultados.isEmpty()) {
+            model.addAttribute("warning", "No hay datos a mostrar para la selección realizada.");
+        }
+
+        // Obtener la información del Bachillerato
+        Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(idBachillerato);
+
+        // Añadir atributos al modelo
+        model.addAttribute("bachillerato", bachillerato);
+        model.addAttribute("tipoPaquete", tipoPaquete);
+        model.addAttribute("resultados", resultados);
+        model.addAttribute("id", idBachillerato);
+        model.addAttribute("pageTitle", "Paquetes escolares");
+
+        return "Paquetes_escolares/reporteEntrega";
+    }
+
+    @PostMapping("/editarEntrega")
+    public String editarEntrega(@RequestParam("id_entrega") Integer idEntrega,
+            @RequestParam("entregado") boolean entregado,
+            @RequestParam("tipoPaquete") String tipoPaquete,
+            @RequestParam("id") Integer id,
+            RedirectAttributes redirectAttributes) {
+
+        boolean success = false;
+        String message = "";
+
+        // Buscar y actualizar en función del tipo de paquete
+        if ("paqueteZapatos".equalsIgnoreCase(tipoPaquete)) {
+            Zapatos zapatos = zapatosService.findById(idEntrega);
+            if (zapatos != null) {
+                zapatos.setZapataloEntregado(entregado);
+                zapatosService.save(zapatos);
+                success = true;
+                message = "Estado de entrega de zapatos actualizado con éxito.";
+            }
+        } else if ("paqueteUniforme".equalsIgnoreCase(tipoPaquete)) {
+            Uniforme uniforme = uniformeService.findById(idEntrega);
+            if (uniforme != null) {
+                uniforme.setUniformeEntegado(entregado);
+                uniformeService.save(uniforme);
+                success = true;
+                message = "Estado de entrega de uniforme actualizado con éxito.";
+            }
+        } else if ("paqueteUtiles".equalsIgnoreCase(tipoPaquete)) {
+            UtilesEscolares utiles = utilesEscolaresService.findById(idEntrega);
+            if (utiles != null) {
+                utiles.setEntregado(entregado);
+                utilesEscolaresService.save(utiles);
+                success = true;
+                message = "Estado de entrega de útiles actualizado con éxito.";
+            }
+        }
+
+        if (success) {
+            redirectAttributes.addFlashAttribute("success", message);
+        } else {
+            redirectAttributes.addFlashAttribute("error", "No se pudo actualizar el estado de entrega.");
+        }
+        return "redirect:/entregasPaquetes/reporteEntrega/" + id; 
+    }
 
 }

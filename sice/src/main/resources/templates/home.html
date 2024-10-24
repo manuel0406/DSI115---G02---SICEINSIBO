@@ -194,18 +194,18 @@
             <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA')"
                 class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
                 <div class="card h-100">
-                    <img src="https://img.freepik.com/free-vector/new-entries-concept-illustration_114360-28019.jpg"
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-entrega_114360-2094.jpg?t=st=1729738140~exp=1729741740~hmac=98c5c43a5bf1c0670f82392f4a9529c72ac2295452f4532b67e7bed5cd7a230d&w=740"
                         class="card-img-top" alt="Notas">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fs-6">Paquetes escolares</h5>
-                        <p class="card-text">Accede al inventario de donaciones.</p>
+                        <p class="card-text">Accede al inventario de donaciones y reporte de entrega de paquetes.</p>
                         <a th:href="@{/paquetes/inicio}" class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
                 </div>
             </div>
             <div sec:authorize="hasAnyRole('DOCENTE')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
                 <div th:if="${activo != false}" class="card h-100">
-                    <img src="https://img.freepik.com/free-vector/new-entries-concept-illustration_114360-28019.jpg"
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-entrega_114360-2094.jpg?t=st=1729738140~exp=1729741740~hmac=98c5c43a5bf1c0670f82392f4a9529c72ac2295452f4532b67e7bed5cd7a230d&w=740"
                         class="card-img-top" alt="Notas">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fs-6">Entrega paquetes</h5>
@@ -238,7 +238,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="bachillerato, stat : ${listaSecciones}">
+                                <tr class="align-middle" th:each="bachillerato, stat : ${listaSecciones}">
                                     <td th:text="${bachillerato.grado}"></td>
                                     <td th:text="${bachillerato.nombreCarrera}"></td>
                                     <td th:text="${bachillerato.seccion}"></td>

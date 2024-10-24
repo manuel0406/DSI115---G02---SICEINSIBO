@@ -12,19 +12,12 @@
 <body>
   <header th:replace="~{home :: header}"></header>
   <div class="p-4 mt-5">
-    <div>
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a th:href="@{/paquetes/inicio}">Inicio paquetes</a></li>
-              <li class=" breadcrumb-item active" aria-current="page">Reportes entrega</li>
-        </ol>
-      </nav>
+    <h2 class="text-center">Generar Listados impresión</h2>
+    <div class="d-flex justify-content-end py-3">
+      <a th:href="@{/paquetes/inicio}" class="btn btn-outline-primary">Regresar</a>
     </div>
-    <h2 class="text-center">Generar Reportes Entregas</h2>
     <div class="row row-cols-lg-2 row-cols-1 gy-3">
       <div class="col-lg-3 col card pt-2">
-        <!-- <form id="formulario" method="get" th:action="@{/paquetes/reporteEntregas(id=${idBachilleratoInput.value}, tipoPaquete=${paquetes.value}, fechaPaquete=${fechaPaquete.value}, estadoEntrega=${estadoEntrega.value})}"> -->
-        <!-- <form id="formulario" method="get" th:action="@{/paquetes/reporteEntregas(id=${idBachillerato})}"> -->
         <form id="formulario" method="get" th:action="@{/paquetes/reporteEntregas}">
 
           <div class="row row-cols-1 g-3">
@@ -48,21 +41,6 @@
                 <option value="paqueteUniforme">Paquete Uniforme</option>
               </select>
             </div>
-            <div class="col">
-              <label for="fechaPaquete">Seleccionar fecha</label>
-              <select name="fechaPaquete" id="fechaPaquete" class="form-select" disabled>
-                <option value="0">Seleccionar fecha</option>
-              </select>
-            </div>
-            <div class="col">
-              <label for="estadoEntrega">Seleccionar Estado entrega</label>
-              <select name="estadoEntrega" id="estadoEntrega" class="form-select" disabled>
-                <option value="0">Seleccionar Estado entrega</option>
-                <option value="todos">Todos</option>
-                <option value="no_entregado">No Entregados</option>
-                <option value="entregado">Entregados</option>
-              </select>
-            </div>
           </div>
           <div class="d-flex justify-content-center py-4">
             <button type="submit" class="btn btn-success" id="btn-sub" disabled>Generar</button>
@@ -70,19 +48,24 @@
         </form>
       </div>
       <div class="col-lg-9 col">
-
+        <!-- Mensajes -->
+        <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
+          <i class="bi bi-check-circle"></i>
+          <label th:text="${success}"></label>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
+          <i class="bi bi-exclamation-triangle"></i>
+          <label th:text="${error}"></label>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
+          <i class="bi bi-info-circle"></i>
+          <label th:text="${warning}"></label>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <!-- Mensajes -->
         <div class="table-responsive w-100" th:if="${resultados != null}">
-          <div class="d-flex justify-content-end pb-2">
-            <input type="hidden" name="id" th:value="${bachillerato.codigoBachillerato}" />
-            <input type="hidden" name="tipoPaquete" th:value="${tipoPaquete}" />
-            <input type="hidden" name="estadoEntrega" th:value="${estadoEntrega}" />
-            <input type="hidden" name="fechaPaquete" th:value="${fechaPaquete}" />
-            <a th:href="@{/paquetes/imprimirEntregas(tipoPaquete=${tipoPaquete}, fechaPaquete=${fechaPaquete}, estadoEntrega=${estadoEntrega}, idBachillerato=${id})}"
-              class="btn btn-secondary me-2" target="_blank" onclick="openInPopup(this.href); return false;">
-              <i class="bi bi-printer"></i> Imprimir Entregas
-            </a>
-
-          </div>
           <table class="table table-bordered">
             <tbody>
               <tr class="align-middle">
@@ -118,8 +101,8 @@
             <tbody>
               <tr th:each="resultado : ${resultados}">
                 <td th:text="${resultado[2]}">NIE</td>
-                <td th:text="${resultado[1]}">Apellido</td>
-                <td th:text="${resultado[3]}">Nombre</td>
+                <td th:text="${resultado[3]}">Apellido</td>
+                <td th:text="${resultado[1]}">Nombre</td>
                 <td th:if="${tipoPaquete != 'paqueteUtiles'}" th:text="${resultado[6]}">Talla</td>
                 <td th:text="${resultado[5] != null && resultado[5] == true ? 'Entregado' : 'No entregado'}">
                   Estado</td>
@@ -127,23 +110,6 @@
             </tbody>
           </table>
         </div>
-        <!-- Mensajes -->
-        <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
-          <i class="bi bi-check-circle"></i>
-          <label th:text="${success}"></label>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
-          <i class="bi bi-exclamation-triangle"></i>
-          <label th:text="${error}"></label>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
-          <i class="bi bi-info-circle"></i>
-          <label th:text="${warning}"></label>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <!-- Mensajes -->
       </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -252,33 +218,7 @@
         }
       });
 
-      document.addEventListener("DOMContentLoaded", function () {
-        if (localStorage.getItem('carrera')) {
-          carreraSelect.value = localStorage.getItem('carrera');
-          paquetesSelect.disabled = false;
-          cargarFechas();
-        }
 
-        if (localStorage.getItem('paquete')) {
-          paquetesSelect.value = localStorage.getItem('paquete');
-        }
-
-        if (localStorage.getItem('fecha')) {
-          fechaPaqueteSelect.value = localStorage.getItem('fecha');
-        }
-
-        if (localStorage.getItem('estado')) {
-          estadoEntregaSelect.value = localStorage.getItem('estado');
-        }
-
-        checkButtonState();
-      });
-
-    </script>
-    <script>
-      function openInPopup(url) {
-        window.open(url, 'popup', 'width=800,height=600');
-      }
     </script>
   </div>
   <footer th:replace="~{home :: footer}"></footer>
