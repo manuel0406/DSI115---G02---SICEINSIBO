@@ -91,7 +91,7 @@
     </header>
 
     <div class="container mt-3 my-5 py-5">
-         <!--Mensajes-->
+        <!--Mensajes-->
         <div class="alert alert-danger alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${error != null}">
             <label th:text="${error}"></label>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -196,12 +196,35 @@
                     </div>
                 </div>
             </div>
+            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA')"
+                class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
+                <div class="card h-100">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-entrega_114360-2094.jpg?t=st=1729738140~exp=1729741740~hmac=98c5c43a5bf1c0670f82392f4a9529c72ac2295452f4532b67e7bed5cd7a230d&w=740"
+                        class="card-img-top" alt="Notas">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fs-6">Paquetes escolares</h5>
+                        <p class="card-text">Accede al inventario de donaciones y reporte de entrega de paquetes.</p>
+                        <a th:href="@{/paquetes/inicio}" class="btn btn-primary mt-auto">Ir a Sección</a>
+                    </div>
+                </div>
+            </div>
+            <div sec:authorize="hasAnyRole('DOCENTE')" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 my-2">
+                <div th:if="${activo != false}" class="card h-100">
+                    <img src="https://img.freepik.com/vector-gratis/ilustracion-concepto-entrega_114360-2094.jpg?t=st=1729738140~exp=1729741740~hmac=98c5c43a5bf1c0670f82392f4a9529c72ac2295452f4532b67e7bed5cd7a230d&w=740"
+                        class="card-img-top" alt="Notas">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fs-6">Entrega paquetes</h5>
+                        <p class="card-text">Accede a la entrega de paquetes escolares.</p>
+                        <button class="btn btn-primary mt-auto" data-bs-toggle="modal"
+                            data-bs-target="#paquetesModal">Ir a Sección</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Modal para ver los expediente de alumnos del lado del docente -->
-    <div class="modal fade" id="abrirModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="abrirModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -220,7 +243,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="bachillerato, stat : ${listaSecciones}">
+                                <tr class="align-middle" th:each="bachillerato, stat : ${listaSecciones}">
                                     <td th:text="${bachillerato.grado}"></td>
                                     <td th:text="${bachillerato.nombreCarrera}"></td>
                                     <td th:text="${bachillerato.seccion}"></td>
@@ -272,11 +295,53 @@
                             </tbody>
                         </table>
                     </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal paquetes secciones -->
+    <div class="modal fade" id="paquetesModal" tabindex="-1" aria-labelledby="paquetesModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="paquetesModalLabel">Entrega Paquetes</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="fw-bolder">Seleccione la sección a entregar paquetes</p>
+                    <div class="table-responsive table-sm"></div>
+                    <table class="table table-hover ">
+                        <thead class="tabla-c">
+                            <tr>
+                                <th scope="col">Año</th>
+                                <th scope="col">Especialidad</th>
+                                <th scope="col">Sección</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="bachillerato, stat : ${listaSecciones}">
+                                <td th:text="${bachillerato.grado}"></td>
+                                <td th:text="${bachillerato.nombreCarrera}"></td>
+                                <td th:text="${bachillerato.seccion}"></td>
+                                <td>
+                                    <a class="btn btn-success"
+                                        th:href="@{/entregasPaquetes/seccionAsigada/{id}(id=${bachillerato.codigoBachillerato})}">
+                                        <i class="bi bi-clipboard"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
+
+    <!--fin modal paquetes secciones -->
     <footer th:fragment="footer">
         <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

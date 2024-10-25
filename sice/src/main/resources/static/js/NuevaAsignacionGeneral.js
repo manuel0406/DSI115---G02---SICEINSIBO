@@ -203,14 +203,15 @@ function restoreTextoAnosText(cbx) {
     if (cbxTexto) {
         if (cbx == 'cbxTodosPrimeros') {
             cbxTexto.textContent = "No se encuentran primeros años por asignar.";
-
+            limpiarCbxPrimeros();
         } 
         else if (cbx == 'cbxTodosSegundos') {
             cbxTexto.textContent = "No se encuentran segundos años por asignar.";
-
+            limpiarCbxSegundos();
         }
         else if (cbx == 'cbxTodosTerceros') {
             cbxTexto.textContent = "No se encuentran terceros años por asignar.";
+            limpiarCbxTerceros(); 
         }
         
     }
@@ -222,5 +223,29 @@ function restoreProfesorSelect() {
         profesorSelect.innerHTML = `
             <option value="">Seleccionar docente...</option
         `;
+    }
+}
+
+// Función para limpiar los cbx de primer año
+function limpiarCbxPrimeros() {
+    var contenedorP = document.getElementById('cbxPrimeros');
+    if (contenedorP) {
+        contenedorP.innerHTML = ''; // Limpiar el contenido del contenedor de primeros años
+    }
+}
+
+// Función para limpiar los cbx de segundo año
+function limpiarCbxSegundos() {
+    var contenedorS = document.getElementById('cbxSegundos');
+    if (contenedorS) {
+        contenedorS.innerHTML = ''; // Limpiar el contenido del contenedor de segundos años
+    }
+}
+
+// Función para limpiar los cbx de tercer año
+function limpiarCbxTerceros() {
+    var contenedorT = document.getElementById('cbxTerceros');
+    if (contenedorT) {
+        contenedorT.innerHTML = ''; // Limpiar el contenido del contenedor de terceros años
     }
 }
