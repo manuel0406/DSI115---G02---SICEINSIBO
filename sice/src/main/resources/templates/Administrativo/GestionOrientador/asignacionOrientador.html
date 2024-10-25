@@ -8,11 +8,19 @@
 <body>
   <header th:replace="~{home :: header}"></header>
   <div class="py-5"></div>
+
   <div class="container">
 
     <!--Mensajes-->
     <div th:replace="~{alertas::alertas}"></div>
-
+    <nav class="px-4"  aria-label="breadcrumb">
+      <ol class="breadcrumb mb-3">
+        <li class="breadcrumb-item">
+          <a th:href="@{/administracion}" class="text-decoration-none text-secondary">Administración</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Asignaciones de orientador</li>
+      </ol>
+    </nav>
     <div class="py-4 bg-light">
       <h1 class="text-center">Asignaciones de orientador</h1>
     </div>
@@ -26,7 +34,6 @@
             title="Agregar Asignación" th:text="'Agregar asignación'"></a>
         </div>
       </div>
-
 
       <div class="table-responsive py-2">
         <table class="table table-hover">
