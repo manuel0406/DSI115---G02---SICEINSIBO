@@ -86,6 +86,7 @@ public class EntregasController {
         model.addAttribute("id", id); // Pasar el ID del bachillerato
         model.addAttribute("tipoPaquete", tipoPaquete); // Paquete seleccionado
         model.addAttribute("pageTitle", "Paquetes escolares");
+        model.addAttribute("info", "Selecciona un tipo de paquete para comenzar");
 
         return "Paquetes_escolares/generarListado";
     }
