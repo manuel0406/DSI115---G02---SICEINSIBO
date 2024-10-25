@@ -113,6 +113,7 @@ public class AdministrativoController {
                 break;
         }
         usuarioService.asignarRol(usuario, idRol); // Guardamos la actualización
+        administrativo.setActivo(true);
         administrativoService.guardarAdministrativo(administrativo);
         attribute.addFlashAttribute("success", "Expediente actualizado con exito!");
         return "redirect:plantaadministrativa";
@@ -222,6 +223,7 @@ public class AdministrativoController {
         PersonalAdministrativo administrativo = new PersonalAdministrativo();
 
         model.addAttribute("administrativo", administrativo);
+        model.addAttribute("formAction", "/expedienteadministrativo/guardar"); // Acción de creación
         model.addAttribute("titulo", "Nuevo usuario");
         return "Expediente_docente/Administrativos/fichaAdministrativo";
     }
@@ -239,7 +241,7 @@ public class AdministrativoController {
 
         model.addAttribute("administrativo", administrativo);
         model.addAttribute("editar", true); // Deshabilita el campo DUI
-        model.addAttribute("titulo", "Editar administrativo");
+        model.addAttribute("formAction", "/expedienteadministrativo/actualizar"); // Acción de edición
         return "Expediente_docente/Administrativos/fichaAdministrativo";
     }
 

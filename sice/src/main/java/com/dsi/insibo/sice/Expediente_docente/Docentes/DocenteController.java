@@ -128,6 +128,7 @@ public class DocenteController {
                 break;
         }
         usuarioService.asignarRol(usuario, idRol);          // Guardamos la actualización
+        docente.setActivo(true);
         docenteService.guardarDocente(docente);
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
         return "redirect:plantadocente";
@@ -140,6 +141,7 @@ public class DocenteController {
             @RequestParam("docenteRol") String rolSeleccionado, BindingResult result, Model model,
             RedirectAttributes attribute) {
 
+        docente.setActivo(true);
         docenteService.guardarDocente(docente);
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
         return "redirect:miexpediente";
