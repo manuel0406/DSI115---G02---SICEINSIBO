@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://wwww.thymelead.org">
-<head th:replace="/home :: head">
+<head th:replace="~{home :: head}">
 </head>
 <body>
-    <header th:replace="home :: header"></header>
+    <header th:replace="~{home :: header}"></header>
 
     <!--Indicación de la ubicación de la página actual-->
     <div class="container mt-5 py-4 ">
@@ -41,23 +41,10 @@
         </div>
     </div>
 
-            <!--Mensajes-->
-            <div class="container">
-              <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
-                  <label th:text="${success}"></label>
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-          
-              <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
-                  <label th:text="${error}"></label>
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-  
-              <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
-                  <label th:text="${warning}"></label>
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-          </div>
+    <!--Alertas -->
+    <div class="container">
+        <div th:replace="~{alertas :: alertas}"></div>
+    </div>
 
     <!--Tabla de datos-->
     <!--Tabla de datos de préstamos devueltos-->
@@ -87,7 +74,8 @@
         </table>
 
         <!-- Mensaje cuando no hay datos -->
-        <div th:if="${page.totalElements == 0}" class="alert alert-primary alert-dismissible fade show mt-1 mx-2 text-center">
+        <div th:if="${page.totalElements == 0}" class="alert alert-info alert-dismissible fade show mt-1 mr-2">
+            <i class="bi bi-info-circle"></i>
             <label>No hay préstamos devueltos registrados</label>
         </div>
 
@@ -109,6 +97,6 @@
         </nav>
     </div>
 
-    <footer th:replace="home :: footer"></footer>
+    <footer th:replace="~{home :: footer}"></footer>
 </body>
 </html>

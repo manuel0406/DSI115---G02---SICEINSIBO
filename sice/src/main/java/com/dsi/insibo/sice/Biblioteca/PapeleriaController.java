@@ -1,5 +1,6 @@
 package com.dsi.insibo.sice.Biblioteca;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,7 +9,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,8 +25,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Biblioteca.Service.EntregaPapeleriaService;
 import com.dsi.insibo.sice.Biblioteca.Service.InventarioPapeleriaService;
+import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
+import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteService;
+import com.dsi.insibo.sice.entity.Alumno;
+import com.dsi.insibo.sice.entity.Docente;
 import com.dsi.insibo.sice.entity.EntregaPapeleria;
-import com.dsi.insibo.sice.entity.InventarioLibro;
 import com.dsi.insibo.sice.entity.InventarioPapeleria;
 
 
@@ -38,6 +41,10 @@ public class PapeleriaController {
     private InventarioPapeleriaService inventarioPapeleriaService;
     @Autowired
     private EntregaPapeleriaService entregaPapeleriaService;
+    @Autowired
+    private AlumnoService alumnoService;
+    @Autowired
+    private DocenteService docenteService;
 
     // @GetMapping("/InventarioPapeleria")
     // public String inventarioPapeleria(Model model){
@@ -149,7 +156,7 @@ public class PapeleriaController {
     @GetMapping("/Control")
     public String ControlPapeleria(Model model,
                 @RequestParam(defaultValue = "0") int page,
-                @RequestParam(defaultValue = "8") int size,
+                @RequestParam(defaultValue = "9") int size,
                 @RequestParam(value = "query", required = false) String query) {
     
         // Obtener la lista completa de entregas
@@ -276,5 +283,23 @@ public class PapeleriaController {
         modelAndView.addObject("entregas", listadoEntregas);
     
         return modelAndView;
+    }
+
+    @GetMapping("/buscarPersonas")
+    @ResponseBody
+    public List<String> buscarPersonas(@RequestParam("term") String term) {
+        List<String> resultados = new ArrayList<>();
+        
+        // Obtener alumnos y docentes que coincidan con el término de búsqueda
+        List<Alumno> alumnos = alumnoService.buscarPorNombre(term);
+        List<Docente> docentes = docenteService.buscarPorNombre(term);
+    
+        // Concatenar nombre y apellido para los alumnos
+        alumnos.forEach(alumno -> resultados.add(alumno.getNombreAlumno() + " " + alumno.getApellidoAlumno()));
+    
+        // Concatenar nombre y apellido para los docentes
+        docentes.forEach(docente -> resultados.add(docente.getNombreDocente() + " " + docente.getApellidoDocente()));
+    
+        return resultados;
     }
 }

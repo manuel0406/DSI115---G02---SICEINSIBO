@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.dsi.insibo.sice.Biblioteca.Repository.InventarioLibroRepository;
 import com.dsi.insibo.sice.entity.InventarioLibro;
-import com.dsi.insibo.sice.entity.InventarioPapeleria;
 
 @Service
 public class InventarioLibroServiceImpl implements InventarioLibroService{

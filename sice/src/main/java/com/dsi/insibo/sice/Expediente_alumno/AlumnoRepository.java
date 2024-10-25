@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.dsi.insibo.sice.entity.Alumno;
+import com.dsi.insibo.sice.entity.Docente;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -151,5 +153,7 @@ public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
 
     @Query("SELECT a FROM Alumno a JOIN a.bachillerato b JOIN b.anioAcademico an WHERE  an.activoMatricula=true")
     List<Alumno> yaMatriculado();
+
+    List<Alumno> findByNombreAlumnoContainingIgnoreCase(String nombre);
 
 }

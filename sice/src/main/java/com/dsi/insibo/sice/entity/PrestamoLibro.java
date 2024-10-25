@@ -105,12 +105,10 @@ public class PrestamoLibro {
     }
 
     public String getGradoSeccion() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getGradoSeccion'");
     }
 
     public String getNombreLibro() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getNombreLibro'");
     }
 
