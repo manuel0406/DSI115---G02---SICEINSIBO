@@ -26,7 +26,6 @@ public class actividadesController {
 
 	@Autowired
 	private PeriodoService periodoService;
-
 	@Autowired
 	private ActividadService actividadService;
 	@Autowired
@@ -36,6 +35,8 @@ public class actividadesController {
 	SessionService sesion;
 	@Autowired
 	AsignacionService asignacionService;
+	@Autowired
+	private NotaService notaService;
 
 	@PreAuthorize("hasAnyRole('DOCENTE')")
 	@GetMapping("/{idMateria}/{codigoBachillerato}")
@@ -75,15 +76,16 @@ public class actividadesController {
 		String dui = sesion.duiSession();
 		// System.out.println(dui + " " + codigoBachillerato);
 		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, idMateria, codigoBachillerato);
-		// Listado de las actividaes que ha creado un docente por bachillerato
-		List<Actividad> listadoActividades = actividadService.listaActividades(dui, idMateria, pe);
 
 		if (asignacion.getMateria().getTipoMateria().equals("Módulo")) {
-			pe="1";
-			System.out.println("entro");
-			
+			pe = "1";
+			System.out.println("entro: "+pe);
+
 		}
-		System.out.println(asignacion.getMateria().getTipoMateria());
+		// Listado de las actividaes que ha creado un docente por bachillerato
+		List<Actividad> listadoActividades = actividadService.listaActividades(dui, idMateria, pe, codigoBachillerato);
+
+		// System.out.println(asignacion.getMateria().getTipoMateria());
 		model.addAttribute("actividad", actividad);
 		model.addAttribute("periodos", periodos);
 		model.addAttribute("listadoActividades", listadoActividades);
@@ -97,45 +99,45 @@ public class actividadesController {
 
 	@PreAuthorize("hasAnyRole('DOCENTE')")
 	@PostMapping("/add")
-	public String addActividadFromModal(@ModelAttribute Actividad actividad, RedirectAttributes redirectAttributes,
-			Model model) {
+	public String guardarActividad(@ModelAttribute Actividad actividad, RedirectAttributes redirectAttributes) {
 
-		int pe = 0;
-		float totalPoderación = 0;
-		List<Actividad> listadoActividades = actividadService.listaActividades(
-				actividad.getAsignacion().getDocente().getDuiDocente(),
-				actividad.getAsignacion().getBachillerato().getCodigoBachillerato(),
-				String.valueOf(actividad.getPeriodo().getIdPeriodo()));
+		int periodoId = actividad.getPeriodo().getIdPeriodo();
+		float totalPonderacion = actividadService.calcularTotalPonderacion(actividad);
+		float actividadCotidiana = actividadService.calcularPonderacionPorTipo(actividad, "Actividad cotidiana");
+		float actividadIntegradora = actividadService.calcularPonderacionPorTipo(actividad, "Actividad integradora");
 
-		for (Actividad actividad2 : listadoActividades) {
-			if (actividad2.getIdActividad() != actividad.getIdActividad()) {
-				totalPoderación += actividad2.getPonderacionActividad();
-			}
+		// Validar si la ponderación de actividades cotidianas o integradoras supera el
+		// límite
+		if (actividadCotidiana > 30) {
+			redirectAttributes.addFlashAttribute("error",
+					"¡Error: la suma de ponderaciones de actividades cotidianas no debe superar el 30%!");
+			return generarRedirect(actividad, periodoId);
 		}
 
-		totalPoderación += actividad.getPonderacionActividad();
-		// System.out.println("Suma pondereación: " + totalPoderación);
-		if (totalPoderación <= 100) {
+		if (actividadIntegradora > 30) {
+			redirectAttributes.addFlashAttribute("error",
+					"¡Error: la suma de ponderaciones de actividades integradoras no debe superar el 30%!");
+			return generarRedirect(actividad, periodoId);
+		}
+
+		// Validar si la ponderación total supera el 100%
+		if (totalPonderacion <= 100) {
 			actividadService.guardarActividad(actividad);
-			redirectAttributes.addFlashAttribute("success",
-					"Actividad agregada exitosamente.");
+			redirectAttributes.addFlashAttribute("success", "Actividad agregada exitosamente.");
 		} else {
 			redirectAttributes.addFlashAttribute("error",
-					"La suma de poderaciones no debe de superar el 100%. Por favor verificar los porcentajes ya ha asignados.");
+					"La suma de ponderaciones no debe superar el 100%. Por favor, verifique los porcentajes asignados.");
 		}
 
-		pe = actividad.getPeriodo().getIdPeriodo();
-		// System.out.println("viene periodo: " + pe);
-		return "redirect:/Actividad/" + actividad.getAsignacion().getMateria().getIdMateria() + "/"
-				+ actividad.getAsignacion().getBachillerato().getCodigoBachillerato() + "?pe="
-				+ pe;
+		return generarRedirect(actividad, periodoId);
 	}
 
 	@PreAuthorize("hasAnyRole('DOCENTE')")
-	@GetMapping("/{codigoBachillerato}/delete/{idActividad}")
-	public String eliminarAlumno(@PathVariable("codigoBachillerato") int codigoBachillerato,
+	@GetMapping("/{idMateria}/{codigoBachillerato}/delete/{idActividad}")
+	public String eliminarActividad(@PathVariable("idMateria") int idMateria,
+			@PathVariable("codigoBachillerato") int codigoBachillerato,
 			@PathVariable("idActividad") int idActividad, RedirectAttributes attributes) {
-
+		int pe = 0;
 		Actividad actividad = null;
 		if (idActividad > 0) {
 			// Busca al bachillerato por su codigo
@@ -145,19 +147,28 @@ public class actividadesController {
 			if (actividad == null) {
 				// System.out.println("Error: ¡No exite este idActividad no existe");
 				attributes.addFlashAttribute("error", "Error: ¡El idActividad ingresado no existe");
-				return "redirect:/Actividad/" + codigoBachillerato;
+				return "redirect:/Actividad/" + idMateria + "/" + codigoBachillerato;
 			}
+			// Si la actividad existe, obtener el periodo
+			pe = actividad.getPeriodo().getIdPeriodo();
 		} else {
 			// Maneja el caso donde el codigo no es válido
 			// System.out.println("Error: ¡El idActividad ingresado no es válido!");
 			attributes.addFlashAttribute("error", "Error: ¡El idActividad ingresado no es válido!");
-			return "redirect:/Actividad/" + codigoBachillerato;
+			return "redirect:/Actividad/" + idMateria + "/" + codigoBachillerato;
 		}
 		// Elimina el registro
+		notaService.deleteNotaActividad(idActividad);
 		actividadService.eliminarActividad(idActividad);
 		attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");
-		int pe = actividad.getPeriodo().getIdPeriodo();
-		return "redirect:/Actividad/" + codigoBachillerato + "?pe=" + pe;
+
+		return "redirect:/Actividad/" + idMateria + "/" + codigoBachillerato + "?pe=" + pe;
+	}
+
+	// Método para generar la URL de redirección
+	private String generarRedirect(Actividad actividad, int periodoId) {
+		return "redirect:/Actividad/" + actividad.getAsignacion().getMateria().getIdMateria() + "/"
+				+ actividad.getAsignacion().getBachillerato().getCodigoBachillerato() + "?pe=" + periodoId;
 	}
 
 }

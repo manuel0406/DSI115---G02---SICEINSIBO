@@ -237,32 +237,34 @@
     </div>
     <!-- Modal para ver los actividades de su materia asignada -->
     <div class="modal fade" id="notasModal" tabindex="-1" aria-labelledby="confirmAgregarModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirAgregarModalLabel">Notas</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="table-responsive py-2 table-sm">
+                    <div class="table-responsive py-2 table-sm ">
                         <table class="table table-hover ">
-                            <thead class="tabla-c">
+                            <thead class="fs-6">
                                 <tr>
                                     <th scope="col">Materia</th>
+                                    <th scope="col">Tipo</th>
                                     <th scope="col">Año</th>
                                     <th scope="col">Especialidad</th>
                                     <th scope="col">Sección</th>
                                     <th scope="col">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="fs-6">
                                 <tr th:each="asignacion, stat : ${listadoAsignaciones}">
                                     <td th:text="${asignacion.materia.nomMateria}"></td>
+                                    <td  th:text="${asignacion.materia.tipoMateria}"></td>
                                     <td th:text="${asignacion.bachillerato.grado}"></td>
                                     <td th:text="${asignacion.bachillerato.nombreCarrera}"></td>
                                     <td th:text="${asignacion.bachillerato.seccion}"></td>
                                     <td>
-                                        <a class="btn btn-success "
+                                        <a class="btn btn-success btn-sm "
                                             th:href="@{/Actividad/}+${asignacion.materia.idMateria+'/'+ asignacion.bachillerato.codigoBachillerato}">
                                             <i class="bi bi-journal-check"></i>
                                         </a>

@@ -30,6 +30,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/Calificaciones")
@@ -68,7 +69,7 @@ public class calificacionesController {
 		}
 		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, idMateria, codigoBachillerato);
 		List<Actividad> listadoActividades = actividadService.listaActividades(dui,
-				asignacion.getMateria().getIdMateria(), pe);
+				asignacion.getMateria().getIdMateria(), pe, codigoBachillerato);
 		List<Nota> listaNotas = notaService.listaNotaActividadBachillerato(asignacion.getDocente().getDuiDocente(),
 				asignacion.getBachillerato().getCodigoBachillerato(), pe);
 		List<Alumno> listaAlumnos = alumnoService
@@ -101,9 +102,9 @@ public class calificacionesController {
 		// }
 		// Obtén tipos únicos
 		if (asignacion.getMateria().getTipoMateria().equals("Módulo")) {
-			pe="1";
+			pe = "1";
 			System.out.println("entro");
-			
+
 		}
 		// Contar las actividades por tipo
 		Map<String, Long> conteoPorTipo = listadoActividades.stream()
@@ -116,7 +117,7 @@ public class calificacionesController {
 
 		// Agregar la lista al modelo
 		model.addAttribute("actividadDTOList", actividadDTOList);
-		
+
 		List<Periodo> periodos = periodoService.listaPeriodos();
 		model.addAttribute("periodos", periodos);
 		model.addAttribute("listadoActividades", listadoActividades);
@@ -153,7 +154,7 @@ public class calificacionesController {
 		for (Alumno alumno : listaAlumno) {
 			// Verificar si el alumno ya tiene una nota
 			if (!idsAlumnosConNotas.contains(alumno.getIdAlumno())) {
-				System.out.println("Se puede guardar: " + alumno.getNombreAlumno());
+				//System.out.println("Se puede guardar: " + alumno.getNombreAlumno());
 				// Al no ecnontrar registro se crea una nueva nota
 				Nota nota = new Nota();
 				nota.setNotaObtenida(0);
@@ -174,14 +175,12 @@ public class calificacionesController {
 	}
 
 	@PostMapping("/registro/add")
-	public String guardarCalificacion(@ModelAttribute Nota nota) {
+	public String guardarCalificacion(@ModelAttribute Nota nota, RedirectAttributes redirectAttributes) {
 
 		nota.setFechaModificacion(new Date());
 		notaService.guardarNota(nota);
-		// System.out.println( "idNota "+ nota.getIdNota()+" idAlumno:
-		// "+nota.getAlumno().getIdAlumno()+ " idActividad: "+
-		// nota.getActividad().getIdActividad()+" nota: "+nota.getNotaObtenida());
 
+		redirectAttributes.addFlashAttribute("success", "Calificación actualizada exitosamente.");
 		return "redirect:/Calificaciones/registro/" + nota.getActividad().getIdActividad();
 	}
 
