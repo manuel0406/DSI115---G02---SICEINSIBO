@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.dsi.insibo.sice.entity.Alumno;
-import com.dsi.insibo.sice.entity.Docente;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

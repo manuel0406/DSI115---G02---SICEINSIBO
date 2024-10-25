@@ -346,6 +346,7 @@ public class AlumnoController {
 		model.addAttribute("carrera", carrera);
 		model.addAttribute("grado", grado);
 		model.addAttribute("seccion", seccion);
+		model.addAttribute("genero", genero);
 		model.addAttribute("page", page);
 		model.addAttribute("totalPages", pageAlumnos.getTotalPages());
 		model.addAttribute("totalElements", listaAlumnos.size());
@@ -576,7 +577,7 @@ public class AlumnoController {
 			@RequestParam(value = "carrera", required = false) String carrera,
 			@RequestParam(value = "grado", required = false) String grado,
 			@RequestParam(value = "seccion", required = false) String seccion,
-			@RequestParam(value = "seccion", required = false) String genero) {
+			@RequestParam(value = "genero", required = false) String genero) {
 		// Convertir cadenas vacías a null para los parámetros opcionales
 		if (carrera != null && carrera.isEmpty()) {
 			carrera = null;
@@ -596,6 +597,10 @@ public class AlumnoController {
 		// Obtener la lista de carreras (bachilleratos)
 		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
 
+		if (listaAlumnos.isEmpty()) {
+			System.out.println("vacia");
+		}
+		
 		// Crear un objeto ModelAndView con la vista "Expediente_alumno/verAlumnoPdf"
 		ModelAndView modelAndView = new ModelAndView("Expediente_alumno/verAlumnoPdf");
 
@@ -606,6 +611,7 @@ public class AlumnoController {
 		modelAndView.addObject("carrera", carrera);
 		modelAndView.addObject("grado", grado);
 		modelAndView.addObject("seccion", seccion);
+		
 		
 
 		// Retornar el objeto ModelAndView que contiene la vista y los datos
