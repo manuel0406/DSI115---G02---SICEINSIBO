@@ -11,20 +11,7 @@
   <div class="container">
 
     <!--Mensajes-->
-    <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
-      <label th:text="${success}"></label>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
-      <label th:text="${error}"></label>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
-      <label th:text="${warning}"></label>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    <div th:replace="~{alertas::alertas}"></div>
 
     <div class="py-4 bg-light">
       <h1 class="text-center">Asignaciones de orientador</h1>
@@ -77,11 +64,10 @@
           </tbody>
         </table>
         <!-- Se mostrara cuando se le mande una lista de asignaciones vacias -->
-        <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2"
-                    th:if="${totalElements == 0}">
-                    <i class="bi bi-exclamation-triangle"></i>
-                    <label th:text="${'¡No hay asignaciones registrados!'}"></label>
-                </div>
+        <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${totalElements == 0}">
+          <i class="bi bi-info-circle"></i>
+          <label th:text="${'¡No hay asignaciones registrados!'}"></label>
+        </div>
       </div>
     </div>
     <!-- Contenedor de navegación para la paginación -->
@@ -120,7 +106,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="confirmAgregarModalLabel">Agregar sanción</h5>
+          <h5 class="modal-title" id="confirmAgregarModalLabel">Agregar asingnación</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form th:object="${orientador}" class="needs-validation" id="formOrientador" novalidate method="post"
@@ -137,7 +123,7 @@
               <div class="invalid-feedback">Es necesario seleccionar el docente</div>
             </div>
             <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label fs-6">Especialidad del bachillerato:</label>
+              <label for="exampleInputPassword1" class="form-label fs-6 fw-bold">Especialidad del bachillerato:</label>
               <select th:field="*{bachillerato}" class="form-select border-secondary border-opacity-75"
                 aria-label="Default select example" id="bachillerato" required>
                 <option value="" selected>Seleccione</option>
@@ -172,7 +158,7 @@
           <div class="modal-body">
             <div class="mb-3">
               <input type="hidden" id="idOrientador" name="idOrientador">
-               <input type="hidden" id="EditBachillerato" name="bachillerato">
+              <input type="hidden" id="EditBachillerato" name="bachillerato">
               <label for="docente" class="form-label fw-bold">Docente:</label>
               <select th:field="*{docente}" class="form-select border-secondary border-opacity-75" id="EditDocente"
                 required>

@@ -19,17 +19,7 @@
 
                 <div class="container-fluid" style="padding-top: 56px;">
                     <!--Mensajes-->
-                    <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2"
-                        th:if="${success != null}">
-                        <label th:text="${success}"></label>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div class="alert alert-warning alert-dismissible fade show mt-1 ms-2 mr-2"
-                        th:if="${warning != null}">
-                        <label th:text="${warning}"></label>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-
+                    <div th:replace="~{alertas::alertas}"></div>
                     <h2 class="my-2  ">Documentos</h2>
                     <div class="col-12 col-lg-7 my-4">
                         <table class="table align-middle table-hover">
@@ -38,7 +28,6 @@
                                     <th scope="col">Tipo</th>
                                     <th scope="col">Fecha</th>
                                     <th scope="col">Archivo</th>
-
                                 </tr>
                             </thead>
                             <tbody class="">
@@ -75,7 +64,6 @@
                                         </a>
                                     </td>
                                 </tr>
-
                                 <tr>
                                     <th class="text-start">Partida de nacimiento</th>
                                     <!-- Verifica si anexos es null -->
@@ -89,7 +77,8 @@
 
                                     <!-- Aquí empieza la sección de subida y visualización de documentos -->
                                     <td th:if="${anexos == null || anexos.nombrePartidaNacimiento == null}">
-                                        <a class="btn btn-primary" th:href="@{/Subir/PartidaNacimiento/}+${alumno.idAlumno}"
+                                        <a class="btn btn-primary"
+                                            th:href="@{/Subir/PartidaNacimiento/}+${alumno.idAlumno}"
                                             data-bs-toggle="tooltip" data-bs-placement="top" title="Adjuntar documento">
                                             <i class="bi bi-upload"></i>
                                         </a>
@@ -112,43 +101,35 @@
                                         </a>
                                     </td>
                                 </tr>
-
                             </tbody>
                         </table>
-
                     </div>
-                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de eliminar este documento? Esta acción no puede deshacerse.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
                 </div>
             </div>
         </div>
     </div>
 
-
+    <footer th:replace="~{home :: footer}"></footer>
+    <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
 
 </body>
-
-<!-- Modal de Confirmación -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                ¿Estás seguro de eliminar este documento? Esta acción no puede deshacerse.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<footer th:replace="~{home :: footer}"></footer>
-<script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
-
-
 </html>

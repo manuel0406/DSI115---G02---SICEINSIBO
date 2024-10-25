@@ -2,18 +2,21 @@ package com.dsi.insibo.sice.Calificaciones;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-// import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
 import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
 import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
@@ -21,9 +24,13 @@ import com.dsi.insibo.sice.entity.Actividad;
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.Nota;
+import com.dsi.insibo.sice.entity.Periodo;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/Calificaciones")
@@ -39,24 +46,32 @@ public class calificacionesController {
 	@Autowired
 	private NotaService notaService;
 	@Autowired
-	ActividadService actividadService;
+	private ActividadService actividadService;
 	@Autowired
-	AsignacionService asignacionService;
+	private AsignacionService asignacionService;
 	@Autowired
-	SessionService sesion;
+	private SessionService sesion;
+	@Autowired
+	private PeriodoService periodoService;
 
 	// @Autowired
 	// private MateriaBachilleratoRepository materiaBachilleratoRepository;
 
-	@GetMapping("/{codigoBachillerato}")
-	public String verCalificaciones(Model model, @PathVariable("codigoBachillerato") int codigoBachillerato) {
+	@GetMapping("/{idMateria}/{codigoBachillerato}")
+	public String verCalificaciones(Model model, @PathVariable("idMateria") int idMateria,
+			@PathVariable("codigoBachillerato") int codigoBachillerato,
+			@RequestParam(value = "pe", required = false) String pe) {
 		String dui = sesion.duiSession();
 		// System.out.println(dui + " " + codigoBachillerato);
-		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, codigoBachillerato);
-		List<Actividad> listadoActividades = actividadService.listaActividades(asignacion.getDocente().getDuiDocente(),
-				asignacion.getBachillerato().getCodigoBachillerato());
+
+		if (pe != null && pe.isEmpty()) {
+			pe = null;
+		}
+		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, idMateria, codigoBachillerato);
+		List<Actividad> listadoActividades = actividadService.listaActividades(dui,
+				asignacion.getMateria().getIdMateria(), pe, codigoBachillerato);
 		List<Nota> listaNotas = notaService.listaNotaActividadBachillerato(asignacion.getDocente().getDuiDocente(),
-				asignacion.getBachillerato().getCodigoBachillerato());
+				asignacion.getBachillerato().getCodigoBachillerato(), pe);
 		List<Alumno> listaAlumnos = alumnoService
 				.alumnosPorBachilerato(asignacion.getBachillerato().getCodigoBachillerato());
 
@@ -80,12 +95,37 @@ public class calificacionesController {
 			notafinal = notafinal.setScale(2, RoundingMode.HALF_UP);
 			totalNotasPorAlumno.merge(idAlumno, notafinal.doubleValue(), Double::sum);
 		}
+		// if (listadoActividades.size() == 0) {
+		// System.out.println("La lista está vacía.");
+		// } else if (listadoActividades.size() >= 0) {
+		// System.out.println("La lista tiene elementos.");
+		// }
+		// Obtén tipos únicos
+		if (asignacion.getMateria().getTipoMateria().equals("Módulo")) {
+			pe = "1";
+			System.out.println("entro");
 
+		}
+		// Contar las actividades por tipo
+		Map<String, Long> conteoPorTipo = listadoActividades.stream()
+				.collect(Collectors.groupingBy(Actividad::getTipoActividad, Collectors.counting()));
+
+		// Convertir el mapa a una lista de ActividadDTO
+		List<ActividadDTO> actividadDTOList = conteoPorTipo.entrySet().stream()
+				.map(entry -> new ActividadDTO(entry.getKey(), entry.getValue().intValue()))
+				.collect(Collectors.toList());
+
+		// Agregar la lista al modelo
+		model.addAttribute("actividadDTOList", actividadDTOList);
+
+		List<Periodo> periodos = periodoService.listaPeriodos();
+		model.addAttribute("periodos", periodos);
 		model.addAttribute("listadoActividades", listadoActividades);
 		model.addAttribute("listaAlumnos", listaAlumnos);
 		model.addAttribute("notasPorAlumno", notasPorAlumno);
 		model.addAttribute("totalNotasPorAlumno", totalNotasPorAlumno);
 		model.addAttribute("asignacion", asignacion);
+		model.addAttribute("pe", pe);
 
 		return "Calificaciones/vistaCalificaciones";
 	}
@@ -100,6 +140,7 @@ public class calificacionesController {
 		List<Nota> listaNotas = notaService.notasPorBachilleratoActivdad(actividad.getIdActividad());
 		Asignacion asignacion = asignacionService.asignacionParaActividad(
 				actividad.getAsignacion().getDocente().getDuiDocente(),
+				actividad.getAsignacion().getMateria().getIdMateria(),
 				actividad.getAsignacion().getBachillerato().getCodigoBachillerato());
 
 		// se crea un Set para almacenar los IDs de alumnos que ya tienen notas
@@ -109,12 +150,11 @@ public class calificacionesController {
 		for (Nota nota : listaNotas) {
 			idsAlumnosConNotas.add(nota.getAlumno().getIdAlumno());
 		}
-
 		// Iterar sobre la lista de alumnos
 		for (Alumno alumno : listaAlumno) {
 			// Verificar si el alumno ya tiene una nota
 			if (!idsAlumnosConNotas.contains(alumno.getIdAlumno())) {
-				System.out.println("Se puede guardar: " + alumno.getNombreAlumno());
+				//System.out.println("Se puede guardar: " + alumno.getNombreAlumno());
 				// Al no ecnontrar registro se crea una nueva nota
 				Nota nota = new Nota();
 				nota.setNotaObtenida(0);
@@ -135,13 +175,12 @@ public class calificacionesController {
 	}
 
 	@PostMapping("/registro/add")
-	public String guardarCalificacion(@ModelAttribute Nota nota) {
+	public String guardarCalificacion(@ModelAttribute Nota nota, RedirectAttributes redirectAttributes) {
 
+		nota.setFechaModificacion(new Date());
 		notaService.guardarNota(nota);
-		// System.out.println( "idNota "+ nota.getIdNota()+" idAlumno:
-		// "+nota.getAlumno().getIdAlumno()+ " idActividad: "+
-		// nota.getActividad().getIdActividad()+" nota: "+nota.getNotaObtenida());
 
+		redirectAttributes.addFlashAttribute("success", "Calificación actualizada exitosamente.");
 		return "redirect:/Calificaciones/registro/" + nota.getActividad().getIdActividad();
 	}
 

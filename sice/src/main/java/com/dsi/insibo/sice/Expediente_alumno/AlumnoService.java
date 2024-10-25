@@ -170,4 +170,8 @@ public class AlumnoService {
     public List<Alumno> yaMatriculado(){
         return alumnoRepository.yaMatriculado();
     }
+
+    public List<Alumno> buscarPorNombre(String nombre) {
+        return alumnoRepository.findByNombreAlumnoContainingIgnoreCase(nombre);
+    }
 }

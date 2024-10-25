@@ -8,20 +8,7 @@
     <div class="py-5"></div>
     <div class="container">
         <!--Mensajes-->
-        <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
-            <label th:text="${success}"></label>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
-        <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
-            <label th:text="${error}"></label>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
-        <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
-            <label th:text="${warning}"></label>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+        <div th:replace="~{alertas::alertas}"></div>
 
         <div class="py-4 bg-light">
             <h1 class="text-center" th:text="${'Oferta academica '+ anioAcademico.anio}"></h1>
@@ -74,7 +61,8 @@
                     <h5 class="modal-title" id="confirmAgregarModalLabel">Agregar bachillerato</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form th:object="${bachillerato}" class="needs-validation" id="formBachillerato" novalidate th:action="@{/Bachillerato/guardarBachillerato/}+${anioAcademico.idAnioAcademico}" method="post">
+                <form th:object="${bachillerato}" class="needs-validation" id="formBachillerato" novalidate
+                    th:action="@{/Bachillerato/guardarBachillerato/}+${anioAcademico.idAnioAcademico}" method="post">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="carrera" class="form-label fs-6">Carrera:</label>
@@ -95,7 +83,7 @@
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                             </select>
-                            
+
                             <div class="invalid-feedback">Es necesario seleccionar una especialidad</div>
                         </div>
                         <div class="mb-3">
@@ -119,10 +107,30 @@
             </div>
         </div>
     </div>
-
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de eliminar este registro? Esta acción no puede deshacerse.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <footer th:replace="~{home :: footer}"></footer>
+
     <script type="text/javascript" th:src="@{/js/gestionBachillerato.js}"></script>
-    
+    <script type="text/javascript" th:src="@{/js/modalEliminacion.js}"></script>
+
 </body>
 
 </html>

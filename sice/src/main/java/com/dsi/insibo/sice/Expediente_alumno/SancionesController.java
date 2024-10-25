@@ -26,17 +26,17 @@ public class SancionesController {
     @Autowired
     private SancionesService sancionesService;
 
-    @GetMapping("/Sanciones/{nie}")
-    public String sancionesAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+    @GetMapping("/Sanciones/{idAlumno}")
+    public String sancionesAlumno(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
         Alumno alumno = null;
-        if (nie > 0) {
+        if (idAlumno > 0) {
             // Busca al alumno por su número de identificación estudiantil (NIE)
-            alumno = alumnoService.buscarPorIdAlumno(nie);
+            alumno = alumnoService.buscarPorIdAlumno(idAlumno);
 
             // Verifica que el alumno exista
             if (alumno == null) {
-                System.out.println("Error: ¡El NIE ingresado no existe!");
-                attributes.addFlashAttribute("error", "Error: ¡El NIE ingresado no existe!");
+                System.out.println("Error: ¡El Id ingresado no existe!");
+                attributes.addFlashAttribute("error", "Error: ¡El id ingresado no existe!");
                 return "redirect:/ExpedienteAlumno/ver";
             }
 
@@ -47,7 +47,7 @@ public class SancionesController {
             return "redirect:/ExpedienteAlumno/ver";
         }
 
-        List<Sancion> listaSanciones= sancionesService.buscarSancionAlumno(nie);
+        List<Sancion> listaSanciones= sancionesService.buscarSancionAlumno(idAlumno);
         Sancion sancion= new Sancion();
 
         // Agregar atributos al modelo para ser utilizados en la vista
@@ -65,10 +65,10 @@ public class SancionesController {
     }
 
     @PostMapping("/GuardarSancion/{nie}")
-    public String guardarSancion(@PathVariable("nie") int nie,@ModelAttribute Sancion sancion, RedirectAttributes attributes){
+    public String guardarSancion(@PathVariable("idAlumno") int idAlumno,@ModelAttribute Sancion sancion, RedirectAttributes attributes){
 
-        //Buscar el alumno por su NIE
-        Alumno alumno =alumnoService.buscarPorIdAlumno(nie);
+        //Buscar el alumno por su id
+        Alumno alumno =alumnoService.buscarPorIdAlumno(idAlumno);
         sancion.setAlumno(alumno);
         sancion.setFechaSancion(new Date());
         sancionesService.guardarSancion(sancion);

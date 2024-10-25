@@ -65,4 +65,8 @@ public class DocenteService {
         return (List<Docente>) docenteRepository.findAll();
     }
 
+    public List<Docente> buscarPorNombre(String nombre) {
+        return docenteRepository.findByNombreDocenteContainingIgnoreCase(nombre);
+    }
+
 }
