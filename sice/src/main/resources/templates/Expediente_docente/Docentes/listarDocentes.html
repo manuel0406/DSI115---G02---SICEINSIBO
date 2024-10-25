@@ -30,7 +30,7 @@
                     data-bs-placement="top" title="Agregar un nuevo docente">
                     <i class="bi bi-person-plus"></i> Agregar
                 </a>
-<!--                 <button class="btn btn-primary btn-sm mx-1 editar-btn" data-bs-toggle="modal"
+                <!--                 <button class="btn btn-primary btn-sm mx-1 editar-btn" data-bs-toggle="modal"
                     data-bs-target="#docentesNoActivos">
                     <i class="bi bi-clock-history"></i> Inactivos
                 </button> -->
@@ -101,25 +101,43 @@
 
             <!-- Maneja la paginacion  -->
             <div th:if="${totalPages != 0}">
-                <nav aria-label="...">
+                <nav aria-label="Paginación">
                     <ul class="pagination justify-content-center">
+
+                        <!-- Botón "Anterior" -->
                         <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
                             <a class="page-link"
-                                th:href="@{'/expedientedocente/plantadocente?page=' + ${page.number - 1}}">Anterior</a>
+                                th:href="@{'/expedientedocente/plantadocente?page=' + ${page.number - 1}}"
+                                tabindex="-1">Anterior</a>
                         </li>
-                        <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+
+                        <!-- Si hay más de 5 páginas, ajustar la secuencia -->
+                        <li class="page-item" th:if="${page.number > 2}">
+                            <span class="page-link">...</span>
+                        </li>
+
+                        <!-- Páginas con límite de visualización -->
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence((page.number - 2) > 0 ? (page.number - 2) : 0, (page.number + 2) < page.totalPages - 1 ? (page.number + 2) : page.totalPages - 1)}"
                             th:classappend="${page.number == i} ? 'active'">
                             <a class="page-link" th:href="@{'/expedientedocente/plantadocente?page=' + ${i}}"
                                 th:text="${i + 1}">1</a>
                         </li>
+
+                        <!-- Indica más páginas si la última página visible no es la final -->
+                        <li class="page-item" th:if="${page.number + 3 < page.totalPages}">
+                            <span class="page-link">...</span>
+                        </li>
+
+                        <!-- Botón "Siguiente" -->
                         <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
                             <a class="page-link"
                                 th:href="@{'/expedientedocente/plantadocente?page=' + ${page.number + 1}}">Siguiente</a>
                         </li>
+
                     </ul>
                 </nav>
             </div>
-
         </div>
     </div>
 
@@ -144,7 +162,7 @@
     </div>
 
     <!-- Modal con los docentes no activos, es decir "eliminados" -->
-<!--     <div class="modal fade" id="docentesNoActivos" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+    <!--     <div class="modal fade" id="docentesNoActivos" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

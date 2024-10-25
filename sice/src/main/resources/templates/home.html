@@ -73,7 +73,7 @@
                                 <li><a class="dropdown-item" th:href="@{/AsignacionMateria}">Asignación materias</a>
                                 </li>
                                 <li><a class="dropdown-item" th:href="@{/Bachillerato/anio}">Bachilleratos</a></li>
-                                <li><a class="dropdown-item" th:href="@{/horarios/asignarHoras}">Horarios</a></li>
+                                <li><a class="dropdown-item" sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA')" th:href="@{/horarios/asignarHoras}">Horarios</a></li>
                                 <li><a class="dropdown-item" th:href="@{/GestionMaterias}">Materias</a></li>
                                 <li><a class="dropdown-item" th:href="@{/AsignacionOrientador/Asignar}">Orientadores</a>
                                 </li>
@@ -124,7 +124,7 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fs-6">Expediente</h5>
                         <p class="card-text fs-6">Edita los datos generales de tu expediente.</p>
-                        <a th:href="@{/expedientedocente/consultarexpediente/} + ${dui.duiDocente}"
+                        <a th:href="@{/expedientedocente/miexpediente}"
                             class="btn btn-primary mt-auto">Ir a Sección</a>
                     </div>
                 </div>

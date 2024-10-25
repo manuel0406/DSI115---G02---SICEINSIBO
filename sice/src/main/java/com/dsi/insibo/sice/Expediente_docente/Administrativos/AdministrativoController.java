@@ -90,7 +90,7 @@ public class AdministrativoController {
         }
     }
 
-    // Actualizar un empleado administrativo
+    // Actualizar un empleado administrativo (Si actualiza rol)
     @PostMapping("/actualizar")
     public String actualizar(@Validated @ModelAttribute PersonalAdministrativo administrativo,
             @RequestParam("administrativoRol") String rolSeleccionado, BindingResult result,
@@ -145,7 +145,8 @@ public class AdministrativoController {
         // Hace la conversion de la estructura List a Page
         PageRequest pageRequest = PageRequest.of(page, size);
         List<AdministrativoDTO> listadoAdministrativos = administrativoService.listarAdministrativos();
-        //List<AdministrativoDTO> listadoAdministrativosInactivos = administrativoService.listarAdministrativosInactivos();
+        // List<AdministrativoDTO> listadoAdministrativosInactivos =
+        // administrativoService.listarAdministrativosInactivos();
 
         Page<AdministrativoDTO> pageAdministrativos = new PageImpl<>(listadoAdministrativos.subList(
                 pageRequest.getPageNumber() * pageRequest.getPageSize(),
@@ -154,7 +155,8 @@ public class AdministrativoController {
 
         model.addAttribute("titulo", "Planta Administrativa");
         model.addAttribute("Administrativos", listadoAdministrativos);
-        // model.addAttribute("AdministrativosInactivos", listadoAdministrativosInactivos);
+        // model.addAttribute("AdministrativosInactivos",
+        // listadoAdministrativosInactivos);
 
         // Hace el envio de la estructura con paginación a la vista
         model.addAttribute("page", pageAdministrativos);
@@ -163,7 +165,7 @@ public class AdministrativoController {
         return "Expediente_docente/Administrativos/listarAdministrativos";
     }
 
-    // Eliminar un empleado administrativo
+    // Eliminar un empleado administrativo (Pasa a estado inactivo)
     @GetMapping("/eliminarexpediente/{id}")
     public String eliminarAdministrativo(@PathVariable("id") String idAdministrativo, RedirectAttributes attribute) {
         PersonalAdministrativo administrativo = administrativoService.buscarPorIdAdministrativo(idAdministrativo);
@@ -181,7 +183,8 @@ public class AdministrativoController {
          * administrativoService.eliminar(idAdministrativo);
          */
 
-        // cuando un administrativo es "eliminado" este no se borra del sistema sino que pasa a un estado 'inactivo'
+        // cuando un administrativo es "eliminado" este no se borra del sistema sino que
+        // pasa a un estado 'inactivo'
         administrativo.setActivo(false);
         administrativoService.guardarAdministrativo(administrativo);
 
@@ -190,7 +193,8 @@ public class AdministrativoController {
         return "redirect:/expedienteadministrativo/plantaadministrativa";
     }
 
-    @GetMapping("/restaurarexpediente/{id}")
+    // Restaurar un administrativo
+/*     @GetMapping("/restaurarexpediente/{id}")
     public String restaurarAdministrativo(@PathVariable("id") String idAdministrativo, RedirectAttributes attribute) {
         PersonalAdministrativo administrativo = administrativoService.buscarPorIdAdministrativo(idAdministrativo);
 
@@ -209,6 +213,7 @@ public class AdministrativoController {
                 + administrativo.getApellidoPersonal() + " ha sido restaurado a la planta administrativa");
         return "redirect:/expedienteadministrativo/plantaadministrativa";
     }
+ */
 
     // OTROS CONTROLADORES
     // Habilitar el formulario en modo 'agregar'

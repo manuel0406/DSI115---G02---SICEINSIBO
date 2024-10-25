@@ -86,30 +86,48 @@
                 </tbody>
             </table>
 
-
-
             <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2" th:if="${totalPages == 0}">
                 <i class="bi bi-exclamation-triangle"></i>
                 <label th:text="${'¡No hay administrativos registrados!'}"></label>
             </div>
 
+            <!-- Maneja la paginacion  -->
             <div th:if="${totalPages != 0}">
-                <nav aria-label="...">
+                <nav aria-label="Paginación">
                     <ul class="pagination justify-content-center">
+
+                        <!-- Botón "Anterior" -->
                         <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
                             <a class="page-link"
-                                th:href="@{'/expedienteadministrativo/plantaadministrativa?page=' + ${page.number - 1}}">Anterior</a>
+                                th:href="@{'/expedienteadministrativo/plantaadministrativa?page=' + ${page.number - 1}}"
+                                tabindex="-1">Anterior</a>
                         </li>
-                        <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+
+                        <!-- Si hay más de 5 páginas, agregar marcador "..." antes -->
+                        <li class="page-item" th:if="${page.number > 2}">
+                            <span class="page-link">...</span>
+                        </li>
+
+                        <!-- Páginas limitadas a un rango visible de 5 alrededor de la página actual -->
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence((page.number - 2) > 0 ? (page.number - 2) : 0, (page.number + 2) < page.totalPages - 1 ? (page.number + 2) : page.totalPages - 1)}"
                             th:classappend="${page.number == i} ? 'active'">
                             <a class="page-link"
                                 th:href="@{'/expedienteadministrativo/plantaadministrativa?page=' + ${i}}"
                                 th:text="${i + 1}">1</a>
                         </li>
+
+                        <!-- Si hay más páginas después del rango visible, agregar marcador "..." -->
+                        <li class="page-item" th:if="${page.number + 3 < page.totalPages}">
+                            <span class="page-link">...</span>
+                        </li>
+
+                        <!-- Botón "Siguiente" -->
                         <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
                             <a class="page-link"
                                 th:href="@{'/expedienteadministrativo/plantaadministrativa?page=' + ${page.number + 1}}">Siguiente</a>
                         </li>
+
                     </ul>
                 </nav>
             </div>
@@ -138,7 +156,7 @@
     </div>
 
     <!-- Modal con los administrativos no activos, es decir "eliminados" -->
-<!--     <div class="modal fade" id="administrativosNoActivos" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+    <!--     <div class="modal fade" id="administrativosNoActivos" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
