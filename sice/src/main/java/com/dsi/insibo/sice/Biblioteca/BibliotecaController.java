@@ -1,8 +1,6 @@
 package com.dsi.insibo.sice.Biblioteca;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +8,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,13 +27,10 @@ import com.dsi.insibo.sice.Biblioteca.Service.PrestamoLibroService;
 import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Bachillerato;
-import com.dsi.insibo.sice.entity.EntregaPapeleria;
 import com.dsi.insibo.sice.entity.InventarioLibro;
-import com.dsi.insibo.sice.entity.InventarioPapeleria;
 import com.dsi.insibo.sice.entity.PrestamoLibro;
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -416,5 +409,12 @@ public class BibliotecaController {
         modelAndView.addObject("codigoBachillerato", codigoBachillerato);
         modelAndView.addObject("nombreCarrera", nombreCarrera);
         return modelAndView;
+    }
+
+    @GetMapping("/buscarAlumnos")
+    @ResponseBody
+    public List<Alumno> buscarAlumnos(@RequestParam("term") String term) {
+        // Aquí debes obtener la lista de alumnos que coincidan con el término de búsqueda
+        return alumnoService.buscarPorNombre(term);
     }
 }

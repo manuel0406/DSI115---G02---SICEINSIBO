@@ -19,7 +19,7 @@
 
             <!-- Titulo -->
             <h2 class="text-start col-lg-6"
-            th:text="${'Documentos de ' + docente.nombreDocente + ' ' + docente.apellidoDocente}"></h2>
+                th:text="${'Documentos de ' + docente.nombreDocente + ' ' + docente.apellidoDocente}"></h2>
         </div>
         <header th:replace="~{alertas :: alertas}"></header>
 
@@ -147,7 +147,11 @@
             </table>
         </div>
         <div class="text-start">
-            <a th:href="@{/expedientedocente/consultarexpediente/} + ${docente.duiDocente}" class="btn btn-primary "
+            <a sec:authorize="hasRole('DOCENTE')"
+                th:href="@{/expedientedocente/miexpediente}" class="btn btn-primary "
+                th:text="'Regresar'"> </a>
+            <a sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
+                th:href="@{/expedientedocente/consultarexpediente/} + ${docente.duiDocente}" class="btn btn-primary "
                 th:text="'Regresar'"> </a>
         </div>
     </div>

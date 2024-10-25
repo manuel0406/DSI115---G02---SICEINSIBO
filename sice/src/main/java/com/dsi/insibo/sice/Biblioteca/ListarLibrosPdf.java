@@ -113,8 +113,6 @@ public class ListarLibrosPdf extends AbstractPdfView {
         addTableHeader(tablaInventario, "Existencia", headerFont);
         addTableHeader(tablaInventario, "Mal Estado", headerFont);
 
-        // Datos del inventario
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
         // Iniciar contador en 1 para el número correlativo
         int correlativo = 1;

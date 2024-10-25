@@ -32,10 +32,9 @@ public class ListarPrestamosPdf extends AbstractPdfView {
     protected void buildPdfDocument(@NonNull Map<String, Object> model,@NonNull Document document,@NonNull PdfWriter writer,
     @NonNull HttpServletRequest request, @NonNull HttpServletResponse response) throws Exception {
 
-        @SuppressWarnings("unchecked")
         // Obtener los valores pasados desde el controlador
-        String codigoBachillerato = (String) model.get("codigoBachillerato");
         String nombreCarrera = (String) model.get("nombreCarrera");
+        @SuppressWarnings("unchecked")
         List<PrestamoLibro> listarPrestamos = (List<PrestamoLibro>) model.get("prestamos");
 
         document.setPageSize(PageSize.LETTER.rotate());
@@ -44,7 +43,6 @@ public class ListarPrestamosPdf extends AbstractPdfView {
 
         // Fuentes
         Font titleFont2 = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.BLACK);
-        Font titleFont3 = FontFactory.getFont(FontFactory.HELVETICA, 11, Font.UNDERLINE,Color.BLACK);
         Font titleFont = FontFactory.getFont(FontFactory.HELVETICA, 11, Color.BLACK);
         Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE);
         Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.BLACK);

@@ -41,7 +41,6 @@ public class ListarDevueltosPdf extends AbstractPdfView {
 
         // Fuentes
         Font titleFont2 = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.BLACK);
-        Font titleFont3 = FontFactory.getFont(FontFactory.HELVETICA, 11, Font.UNDERLINE,Color.BLACK);
         Font titleFont = FontFactory.getFont(FontFactory.HELVETICA, 11, Color.BLACK);
         Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE);
         Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.BLACK);
