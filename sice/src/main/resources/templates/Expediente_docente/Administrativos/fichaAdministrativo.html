@@ -22,7 +22,8 @@
       <div class="card-body">
 
         <form class="row g-3 needs-validation" novalidate th:object="${administrativo}"
-          th:action="@{/expedienteadministrativo/guardar}" method="post">
+        th:action="@{${formAction}}"
+          method="post">
           <!-- Datos Personales -->
           <div class="col-12">
             <h4 class="text-center">Datos Personales</h4>
@@ -312,7 +313,7 @@
     <script type="text/javascript" src="/js/direccion.js"></script>
     <script type="text/javascript" src="/js/validacionRequired.js"></script>
     <script type="text/javascript" src="/js/mascarasAdministrativos.js"></script>
-      <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
 </body>
 

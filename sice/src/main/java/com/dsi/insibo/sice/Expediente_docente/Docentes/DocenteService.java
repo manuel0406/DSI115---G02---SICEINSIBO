@@ -14,11 +14,24 @@ public class DocenteService {
     @Autowired
     private DocenteRepository docenteRepository;
 
+    // Filtra solo a los administrativos activos
     public List<DocenteDTO> listarDocentes() {
         List<Docente> docentes = (List<Docente>) docenteRepository.findAll();
         return docentes.stream()
+                .filter(Docente::isActivo)
                 .sorted(Comparator.comparing(Docente::getNombreDocente)
-                        .thenComparing(Docente::getApellidoDocente)) 
+                        .thenComparing(Docente::getApellidoDocente))
+                .map(DocenteDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    // Filtra solo a los administrativos inactivos
+    public List<DocenteDTO> listarDocentesInactivos() {
+        List<Docente> docentes = (List<Docente>) docenteRepository.findAll();
+        return docentes.stream()
+                .filter(docent -> !docent.isActivo())
+                .sorted(Comparator.comparing(Docente::getNombreDocente)
+                        .thenComparing(Docente::getApellidoDocente))
                 .map(DocenteDTO::new)
                 .collect(Collectors.toList());
     }
@@ -26,14 +39,14 @@ public class DocenteService {
     public boolean guardarDocente(Docente docente) {
         // Verificar si el docente ya existe en la base de datos
         boolean existe = docenteRepository.existsById(docente.getDuiDocente());
-    
+
         // Guardar el docente
         docenteRepository.save(docente);
-    
-        // Devolver true si se creó un nuevo expediente, false si se actualizó uno existente
+
+        // Devolver true si se creó un nuevo expediente, false si se actualizó uno
+        // existente
         return !existe;
     }
-    
 
     public Docente buscarPorIdDocente(String duiDocente) {
         return docenteRepository.findById(duiDocente).orElse(null);
@@ -44,11 +57,11 @@ public class DocenteService {
     }
 
     // retorna una lista de docentes
-    public List<Docente> listarDocenteAsignacion(){
+    public List<Docente> listarDocenteAsignacion() {
         return docenteRepository.obtenerDocentesPorRol(UsuarioRoleEnum.DOCENTE);
     }
 
-    public List<Docente> docentes(){
+    public List<Docente> docentes() {
         return (List<Docente>) docenteRepository.findAll();
     }
 
