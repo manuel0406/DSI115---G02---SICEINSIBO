@@ -214,4 +214,13 @@ public class ControllerBachilleratos {
         return "redirect:/Bachillerato/VerOferta/" + idAnio;
     }
 
+    @GetMapping("/deleteBachillerato/{codigoBachillerato}")
+    public String eliminarBachillerato(@PathVariable("codigoBachillerato") int codigoBachillerato,
+            RedirectAttributes attributes) {
+
+        Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(codigoBachillerato);
+        bachilleratoService.deleteBachillerato(codigoBachillerato);
+        return "redirect:/Bachillerato/VerOferta/" + bachillerato.getAnioAcademico().getIdAnioAcademico();
+
+    }
 }

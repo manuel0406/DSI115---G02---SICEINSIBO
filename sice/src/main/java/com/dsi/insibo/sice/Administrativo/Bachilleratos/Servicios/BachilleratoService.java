@@ -69,4 +69,7 @@ public class BachilleratoService {
     public Bachillerato debolverBachilleratoMatricula(String carrera, String seccion, String grado){
         return bachilleratoRepository.especialidadMatricula(carrera, seccion, grado);
     }
+    public void deleteBachillerato(int codigoBachillerato){
+        bachilleratoRepository.deleteById(codigoBachillerato);
+    }
 }
