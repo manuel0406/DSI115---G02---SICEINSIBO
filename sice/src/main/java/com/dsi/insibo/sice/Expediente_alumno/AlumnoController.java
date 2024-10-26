@@ -329,7 +329,10 @@ public class AlumnoController {
 		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion, genero);
 		// Ordenar la lista por "apellidoAlumno"
 		listaAlumnos.sort(Comparator.comparing(Alumno::getApellidoAlumno));
-
+		// for (Alumno alumno : listaAlumnos) {
+		// System.out.println("Seccion: "+alumno.getBachillerato().getSeccion() + "
+		// Genero: "+alumno.getSexoAlumno());
+		// }
 		// Crear una estructura paginada manualmente
 		PageRequest pageRequest = PageRequest.of(page - 1, size);
 		int start = (int) pageRequest.getOffset();
@@ -512,6 +515,7 @@ public class AlumnoController {
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoDatosResponsable";
 	}
+
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
 	@GetMapping("/Documentos/{idAlumno}")
 	public String alumnoDocumentos(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
@@ -597,10 +601,6 @@ public class AlumnoController {
 		// Obtener la lista de carreras (bachilleratos)
 		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
 
-		if (listaAlumnos.isEmpty()) {
-			System.out.println("vacia");
-		}
-		
 		// Crear un objeto ModelAndView con la vista "Expediente_alumno/verAlumnoPdf"
 		ModelAndView modelAndView = new ModelAndView("Expediente_alumno/verAlumnoPdf");
 
@@ -611,8 +611,7 @@ public class AlumnoController {
 		modelAndView.addObject("carrera", carrera);
 		modelAndView.addObject("grado", grado);
 		modelAndView.addObject("seccion", seccion);
-		
-		
+		modelAndView.addObject("genero", genero);
 
 		// Retornar el objeto ModelAndView que contiene la vista y los datos
 		return modelAndView;

@@ -142,6 +142,7 @@ public class OrientadorController {
         model.addAttribute("carrera", carrera);
         model.addAttribute("grado", grado);
         model.addAttribute("seccion", seccion);
+        model.addAttribute("genero", genero);
         model.addAttribute("page", page);
         model.addAttribute("totalPages", pageAlumnos.getTotalPages());
         model.addAttribute("url", "/AsignacionOrientador/seccionAsigada/" + id);
@@ -164,7 +165,7 @@ public class OrientadorController {
             @RequestParam(value = "carrera", required = false) String carrera,
             @RequestParam(value = "grado", required = false) String grado,
             @RequestParam(value = "seccion", required = false) String seccion,
-            @RequestParam(value = "seccion", required = false) String genero) {
+            @RequestParam(value = "genero", required = false) String genero) {
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(id);
         // Convertir cadenas vacías a null para evitar problemas con las consultas
 
