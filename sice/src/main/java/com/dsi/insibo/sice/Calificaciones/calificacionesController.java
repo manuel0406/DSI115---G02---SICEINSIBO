@@ -308,6 +308,7 @@ public class calificacionesController {
 		model.addAttribute("carrera", carrera);
 		model.addAttribute("grado", grado);
 		model.addAttribute("seccion", seccion);
+		model.addAttribute("alumnos", listaAlumnos);
 
 		return "Calificaciones/AlumnoCalificaciones";
 	}

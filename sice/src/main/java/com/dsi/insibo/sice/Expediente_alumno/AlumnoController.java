@@ -31,7 +31,7 @@ import com.dsi.insibo.sice.entity.Bachillerato;
  */
 @Controller
 @RequestMapping("/ExpedienteAlumno")
-@PreAuthorize("hasRole('ADMINISTRADOR')") // SOLO PARA DOCENTES
+@PreAuthorize("hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')") 
 public class AlumnoController {
 
 	@Autowired
@@ -157,7 +157,7 @@ public class AlumnoController {
 	 * @return El nombre de la vista "Expediente_alumno/editar" si el alumno existe,
 	 *         de lo contrario redirige a la vista de listado de alumnos.
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/editar/{nie}")
 	public String editar(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -215,7 +215,7 @@ public class AlumnoController {
 	 *                   flash.
 	 * @return Una cadena que redirige a la vista de listado de alumnos.
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@PostMapping("/actualizar")
 	public String actualizarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes,
 			@RequestParam(value = "carrera", required = false) String carrera,
@@ -301,7 +301,7 @@ public class AlumnoController {
 	 *                predeterminado 10.
 	 * @return El nombre de la vista "Expediente_alumno/verAlumno".
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA' )")
 	@GetMapping("/ver")
 	public String verAlumno(Model model,
 			@RequestParam(value = "carrera", required = false) String carrera,
@@ -379,7 +379,7 @@ public class AlumnoController {
 	 * @param model El modelo de Spring utilizado para pasar datos a la vista.
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoInformacion".
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/Alumno/{nie}")
 	public String informacionAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -430,7 +430,7 @@ public class AlumnoController {
 	 * @param model El modelo de Spring utilizado para pasar datos a la vista.
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoEnfermedad".
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/Enfermedades/{nie}")
 	public String enfermedadAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -479,7 +479,7 @@ public class AlumnoController {
 	 * @param model El modelo de Spring utilizado para pasar datos a la vista.
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoDatosResponsable".
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/Responsable/{nie}")
 	public String responsableAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -516,7 +516,7 @@ public class AlumnoController {
 		return "Expediente_alumno/AlumnoDatosResponsable";
 	}
 
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/Documentos/{idAlumno}")
 	public String alumnoDocumentos(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
 
@@ -575,7 +575,7 @@ public class AlumnoController {
 	 *         "Expediente_alumno/verAlumnoPdf"
 	 *         y los datos necesarios para generar el PDF.
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping(value = "/ver", produces = "application/pdf")
 	public ModelAndView verAlumnosPdf(Model model,
 			@RequestParam(value = "carrera", required = false) String carrera,

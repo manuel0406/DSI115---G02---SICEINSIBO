@@ -82,6 +82,44 @@
 
                     <!-- tabla -->
                     <div>
+                        <table class="table table-sm table-hover align-middle">
+                            <thead class="text-start">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nie</th>
+                                    <th scope="col">Apellidos</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Carrera</th>
+                                    <th scope="col">Sección</th>
+                                    <th scope="col">Año</th>
+                                    <th scope="col">Genero</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="">
+                                <!-- Iterar sobre la lista de alumnos -->
+                                <tr th:each="alumno, stat : ${alumnos}">
+                                    <th scope="row" th:text="${baseIndex + stat.index + 1}">
+
+                                    </th>
+                                    <td class="text-start " th:text="${alumno.nie}"></td>
+                                    <td class="text-start " th:text="${alumno.apellidoAlumno}"></td>
+                                    <td class="text-start " th:text="${alumno.nombreAlumno}"></td>
+                                    <td class="text-start " th:text="${alumno.bachillerato.nombreCarrera}"></td>
+                                    <td class="text-center " th:text="${alumno.bachillerato.seccion}"></td>
+                                    <td class="text-center" th:text="${alumno.bachillerato.grado}"></td>
+                                    <td class="text-center" th:text="${alumno.sexoAlumno}"></td>
+                                    <td class="text-center">
+                                        <a class="btn btn-success " th:href="${urlBtnVer+alumno.idAlumno}"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Consultar">
+                                            <i class="bi bi-file-earmark-text"></i>
+                                        </a>
+                                             
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
 
                     </div>
                 </div>
