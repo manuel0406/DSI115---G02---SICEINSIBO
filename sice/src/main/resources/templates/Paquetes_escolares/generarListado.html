@@ -12,20 +12,23 @@
 <body>
   <header th:replace="~{home :: header}"></header>
   <div class="p-4 mt-5">
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a th:href="@{/}" class="text-secondary text-decoration-none">Inicio</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Entrega de Paquetes</li>
-      </ol>
-    </nav>
+    <div>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a th:href="@{/}">Inicio</a></li>
+          <li class=" breadcrumb-item active" aria-current="page">Listado entrega</li>
+        </ol>
+      </nav>
+    </div>
+    <h2 class="text-center">Generación Listado</h2>
+    <!-- Mensajes -->
+    <div th:replace="~{alertas::alertas}"></div>
 
-    <!-- Titutlo -->
-    <div class="container jumbotron mb-2 bg-light rounded-3">
-      <div class="container py-4 text-center">
-        <h2 class="text-center">Registro de Paquetes Escolares</h2>
-        <p class="text-center">Seleccione el tipo de paquete a entregar y registre el estado de entrega para cada
-          alumno.
-        </p>
+    <div class="d-flex justify-content-end">
+      <div>
+        <div>
+          <a th:href="@{/entregasPaquetes/reportesEntrega/{id}(id=${id})}" class="btn btn-success">Reportes Entrega</a>
+        </div>
       </div>
     </div>
 
@@ -224,5 +227,6 @@
       })
     </script>
 </body>
+<footer th:replace="~{home :: footer}"></footer>
 
 </html>
