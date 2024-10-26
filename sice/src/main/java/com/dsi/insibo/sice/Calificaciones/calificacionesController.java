@@ -2,6 +2,7 @@ package com.dsi.insibo.sice.Calificaciones;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -296,10 +297,26 @@ public class calificacionesController {
 			@RequestParam(value = "seccion", required = false) String seccion,
 			@RequestParam(value = "genero", required = false) String genero) {
 
-		// Obtener la lista completa de alumnos filtrada por los parámetros
-		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion, genero);
-		// Ordenar la lista por "apellidoAlumno"
-		listaAlumnos.sort(Comparator.comparing(Alumno::getApellidoAlumno));
+		if (carrera != null && carrera.isEmpty()) {
+			carrera = null;
+		}
+		if (grado != null && grado.isEmpty()) {
+			grado = null;
+		}
+		if (seccion != null && seccion.isEmpty()) {
+			seccion = null;
+		}
+		if (genero != null && genero.isEmpty()) {
+			genero = null;
+		}
+		List<Alumno> listaAlumnos = new ArrayList<>();
+
+		if (carrera != null || grado != null || seccion != null || genero != null) {
+			// Obtener la lista completa de alumnos filtrada por los parámetros
+			listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion, genero);
+			// Ordenar la lista por "apellidoAlumno"
+			listaAlumnos.sort(Comparator.comparing(Alumno::getApellidoAlumno));
+		}
 
 		// Obtener la lista de carreras (bachilleratos)
 		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
@@ -310,8 +327,21 @@ public class calificacionesController {
 		model.addAttribute("seccion", seccion);
 		model.addAttribute("alumnos", listaAlumnos);
 
-		return "Calificaciones/AlumnoCalificaciones";
+		return "Calificaciones/listaAlumnoCalificaciones";
 	}
+
+	@GetMapping("/alumno/{idAlumno}")
+	public String calificacionePorAlumno(Model model, @PathVariable("idAlumno") int idAlumno) {
+
+		Alumno alumno = alumnoService.buscarPorIdAlumno(idAlumno);
+
+		List<Nota> listaNotas= notaService.notasPorAlumno(alumno);
+		
+
+		model.addAttribute("alumno", alumno);
+		return "Calificaciones/CalificacionAlumno";
+	}
+	
 
 	/*
 	 * @GetMapping("calificaciones/materiasPorBachillerato")
