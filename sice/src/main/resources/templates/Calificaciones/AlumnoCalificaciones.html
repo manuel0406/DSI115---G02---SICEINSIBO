@@ -20,7 +20,7 @@
                         class="card bg-light shadow-sm p-4 my-3">
                         <div class="container-fluid">
                             <form class="row gy-3 gx-4 align-items-end" id="formPeriodo" method="get"
-                                th:action="@{/Calificaciones/General}">
+                                th:action="@{/Calificaciones/alumnos}">
 
                                 <!-- Carrera -->
                                 <div class="col-md-3">
@@ -99,7 +99,7 @@
                             <tbody class="">
                                 <!-- Iterar sobre la lista de alumnos -->
                                 <tr th:each="alumno, stat : ${alumnos}">
-                                    <th scope="row" th:text="${baseIndex + stat.index + 1}">
+                                    <th scope="row" th:text="${stat.index + 1}">
 
                                     </th>
                                     <td class="text-start " th:text="${alumno.nie}"></td>
@@ -110,7 +110,7 @@
                                     <td class="text-center" th:text="${alumno.bachillerato.grado}"></td>
                                     <td class="text-center" th:text="${alumno.sexoAlumno}"></td>
                                     <td class="text-center">
-                                        <a class="btn btn-success " th:href="${urlBtnVer+alumno.idAlumno}"
+                                        <a class="btn btn-success " th:href="@{/}"
                                             data-bs-toggle="tooltip" data-bs-placement="top" title="Consultar">
                                             <i class="bi bi-file-earmark-text"></i>
                                         </a>

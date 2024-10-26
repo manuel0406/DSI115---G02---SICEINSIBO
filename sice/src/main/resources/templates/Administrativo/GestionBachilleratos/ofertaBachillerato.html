@@ -53,7 +53,7 @@
                             <td th:text="${bachillerato.nombreCarrera}"></td>
                             <td th:text="${bachillerato.seccion}"></td>
                             <td th:if="${bachillerato.anioAcademico.activoMatricula != false}">
-                                <a class="btn btn-danger delete-btn" data-bs-placement="top" title="Eliminar">
+                                <a th:href="@{/Bachillerato/deleteBachillerato/}+${bachillerato.codigoBachillerato}" class="btn btn-danger delete-btn" data-bs-placement="top" title="Eliminar">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </td>
