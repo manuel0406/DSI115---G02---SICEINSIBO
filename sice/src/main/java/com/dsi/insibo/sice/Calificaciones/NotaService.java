@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Nota;
 import jakarta.transaction.Transactional;
 
@@ -38,5 +40,9 @@ public class NotaService {
 
     public List<Nota> listaNotaActividadBachillerato(String dui, int codigoBachillerato, String periodo) {
         return notaRepository.notasPeriodo(dui, codigoBachillerato, periodo);
+    }
+
+    public List<Nota> notasPorAlumno(Alumno alumno){
+        return notaRepository.findByAlumno(alumno);
     }
 }

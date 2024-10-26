@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Nota;
 
 @Repository
@@ -28,4 +30,6 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
     @Modifying
     @Query("DELETE FROM Nota n WHERE n.actividad.idActividad = :idActividad ")
     void deleteByActividad(int idActividad);
+
+    List<Nota> findByAlumno(Alumno alumno);
 }

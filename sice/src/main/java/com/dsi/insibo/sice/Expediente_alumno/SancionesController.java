@@ -64,7 +64,7 @@ public class SancionesController {
         return "Expediente_alumno/AlumnoSanciones";
     }
 
-    @PostMapping("/GuardarSancion/{nie}")
+    @PostMapping("/GuardarSancion/{idAlumno}")
     public String guardarSancion(@PathVariable("idAlumno") int idAlumno,@ModelAttribute Sancion sancion, RedirectAttributes attributes){
 
         //Buscar el alumno por su id
@@ -72,8 +72,8 @@ public class SancionesController {
         sancion.setAlumno(alumno);
         sancion.setFechaSancion(new Date());
         sancionesService.guardarSancion(sancion);
-        attributes.addFlashAttribute("success", "¡Sanción guardada o actalizada con éxito!");
-        return "redirect:/ExpedienteAlumno/Sanciones/{nie}";
+        attributes.addFlashAttribute("success", "¡Sanción guardada o actualizada con éxito!");
+        return "redirect:/ExpedienteAlumno/Sanciones/"+idAlumno;
     }
 
     @GetMapping("/eliminarSancion/{nie}/{id}")
