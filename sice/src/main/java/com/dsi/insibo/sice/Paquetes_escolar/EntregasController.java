@@ -461,6 +461,9 @@ public class EntregasController {
         model.addAttribute("resultados", resultados);
         model.addAttribute("id", idBachillerato);
         model.addAttribute("pageTitle", "Paquetes escolares");
+        model.addAttribute("tipo", tipoPaquete);
+        model.addAttribute("fecha", fechaPaquete);
+        model.addAttribute("estado", estadoEntrega);
 
         return "Paquetes_escolares/reporteEntrega";
     }
@@ -470,6 +473,9 @@ public class EntregasController {
             @RequestParam("entregado") boolean entregado,
             @RequestParam("tipoPaquete") String tipoPaquete,
             @RequestParam("id") Integer id,
+            @RequestParam(value = "tipo", required = false) String tipo,
+            @RequestParam(value = "fecha", required = false) String fecha,
+            @RequestParam(value = "estado", required = false) String estado,
             RedirectAttributes redirectAttributes) {
 
         boolean success = false;
@@ -507,7 +513,12 @@ public class EntregasController {
         } else {
             redirectAttributes.addFlashAttribute("error", "No se pudo actualizar el estado de entrega.");
         }
-        return "redirect:/entregasPaquetes/reporteEntrega/" + id; 
+
+        // Redireccionar a la misma página con los parámetros necesarios
+        return "redirect:/entregasPaquetes/reporteEntrega/" + id +
+                "?tipoPaquete=" + tipo +
+                "&fechaPaquete=" + fecha +
+                "&estadoEntrega=" + estado;
     }
 
 }

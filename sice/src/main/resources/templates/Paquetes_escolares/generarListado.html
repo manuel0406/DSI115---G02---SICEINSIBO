@@ -23,7 +23,8 @@
     <div class="container jumbotron mb-2 bg-light rounded-3">
       <div class="container py-4 text-center">
         <h2 class="text-center">Registro de Paquetes Escolares</h2>
-        <p class="text-center">Seleccione el tipo de paquete a entregar y registre el estado de entrega para cada alumno.
+        <p class="text-center">Seleccione el tipo de paquete a entregar y registre el estado de entrega para cada
+          alumno.
         </p>
       </div>
     </div>
@@ -35,18 +36,25 @@
         <header th:replace="~{alertas :: alertas}"></header>
       </div>
 
+      <div class="alert alert-info alert-dismissible fade show mr-2" id="alertaPaquetes" style="display: none;">
+        <i class="bi bi-info-circle"></i>
+        <label>Todos los paquetes han sido entregados</label>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
       <!-- Formulario de Selección de Paquete -->
       <div class="d-flex justify-content-center align-items-center mb-2">
         <form th:action="@{/entregasPaquetes/seccion/{id}(id=${id})}" method="get" class="needs-validation" novalidate>
           <div class="input-group mt-2">
             <select name="tipoPaquete" id="tipoPaquete" class="form-select me-2" required>
               <option value="">Seleccione tipo de paquete</option>
-              <option value="paqueteZapatos" disabled>Paquete de Zapatos</option>
-              <option value="paqueteUtiles" disabled>Paquete de Útiles</option>
-              <option value="paqueteUniforme" disabled>Primer Paquete de Uniforme</option>
-              <option value="paqueteUniforme" disabled>Segundo Paquete de Uniforme</option>
+              <option value="paqueteZapatos">Paquete de Zapatos</option>
+              <option value="paqueteUtiles">Paquete de Útiles</option>
+              <option value="paqueteUniforme">Primer Paquete de Uniforme</option>
+              <option value="paqueteUniforme">Segundo Paquete de Uniforme</option>
             </select>
-            <button type="submit" class="btn btn-primary me-2" id="btn-generar" disabled><i class="bi bi-list-ul"></i> Crear lista de entrega</button>
+            <button type="submit" class="btn btn-primary me-2" id="btn-generar" disabled><i class="bi bi-list-ul"></i>
+              Crear lista de entrega</button>
             <a th:href="@{/entregasPaquetes/reportesEntrega/{id}(id=${id})}" class="btn btn-secondary"
               data-bs-toggle="tooltip" data-bs-placement="top" title="Ver reportes de paquetes entregados">
               <i class="bi bi-card-checklist"></i> Ver Paquetes Entregados
@@ -61,7 +69,7 @@
         <input type="hidden" name="tipoPaquete" th:value="${tipoPaquete}" />
 
         <!-- Encabezado de la Tabla -->
-        <div class="d-flex justify-content-end mb-2" th:if="${alumnos}">
+        <div class="d-flex justify-content-end mb-2" th:if="${alumnos} and ${tipoPaquete != null}">
           <a th:href="@{/entregasPaquetes/imprimirListado/{id}(id=${id}, tipoPaquete=${tipoPaquete})}"
             class="btn btn-secondary me-1" data-bs-toggle="tooltip" data-bs-placement="top"
             title="Imprimir la lista de entrega para completar manualmente" target="_blank"
@@ -71,7 +79,7 @@
         </div>
 
 
-        <table class="table table-bordered" th:if="${alumnos}">
+        <table class="table table-bordered" th:if="${alumnos} and ${tipoPaquete != null}" tipoPaquete>
           <thead>
             <tr>
               <th class="fs-3" colspan="7" th:text="${bachillerato.nombreCarrera}">Nombre del Bachillerato</th>
@@ -107,14 +115,15 @@
               <td th:text="${alumno.sexoAlumno}"></td>
 
               <td th:if="${tipoPaquete == 'paqueteZapatos'}">
-                <input type="number" th:name="'talla_'+ ${alumno.idAlumno}" th:id="'talla_' + ${alumno.idAlumno}"
-                  class="form-control" placeholder="Talla de zapato" min="1" required />
-                <div class="invalid-feedback">Por favor, ingresa una talla de zapato.</div>
+                <input type="number" th:name="'talla_' + ${alumno.idAlumno}" th:id="'talla_' + ${alumno.idAlumno}"
+                  class="form-control" placeholder="Talla de zapato" min="10" max="50" required />
+                <div class="invalid-feedback">Ingresa una talla de zapato válida (entre 10 y 50).</div>
               </td>
+
               <td th:if="${tipoPaquete == 'paqueteUniforme'}">
                 <input type="text" th:name="'talla_' + ${alumno.idAlumno}" th:id="'talla_' + ${alumno.idAlumno}"
                   class="form-control" placeholder="Talla de uniforme" required />
-                <div class="invalid-feedback">Por favor, ingresa una talla de uniforme.</div>
+                <div class="invalid-feedback">Ingresa una talla valida de uniforme.</div>
               </td>
 
               <td>
@@ -129,7 +138,7 @@
           </tbody>
         </table>
 
-        <div class="d-flex justify-content-end mt-3" th:if="${alumnos}">
+        <div class="d-flex justify-content-end mt-3" th:if="${alumnos} and ${tipoPaquete != null}">
           <input type="submit" value="Guardar registro de entrega" class="btn btn-primary" data-bs-toggle="tooltip"
             data-bs-placement="top" title="El listado de entrega actual sera guardado">
         </div>
@@ -159,32 +168,44 @@
           type: 'GET',
           success: function (data) {
             console.log("zapatos" + data.zapatos)
+            // Verificar la cantidad de zapatos y ocultar o mostrar la opción correspondiente
             if (data.zapatos > 0) {
-              $('#tipoPaquete option[value="paqueteZapatos"]').prop('disabled', true);
+              $('#tipoPaquete option[value="paqueteZapatos"]').hide();
             } else {
-              $('#tipoPaquete option[value="paqueteZapatos"]').prop('disabled', false);
+              $('#tipoPaquete option[value="paqueteZapatos"]').show();
             }
-            console.log("utiles" + data.utiles)
+
+            console.log("utiles" + data.utiles);
+
+            // Verificar la cantidad de útiles y ocultar o mostrar la opción correspondiente
             if (data.utiles > 0) {
-              $('#tipoPaquete option[value="paqueteUtiles"]').prop('disabled', true);
+              $('#tipoPaquete option[value="paqueteUtiles"]').hide();
             } else {
-              $('#tipoPaquete option[value="paqueteUtiles"]').prop('disabled', false);
+              $('#tipoPaquete option[value="paqueteUtiles"]').show();
             }
+
 
             // Manejo de las opciones "Paquetes Uniforme"
             console.log("uniforme" + data.uniformes)
-            if (data.uniformes == 1) {
-              // Si hay solo 1 registro de uniformes, deshabilita el primer paquete, pero habilita el segundo
-              $('#tipoPaquete option[value="paqueteUniforme"]').eq(0).prop('disabled', true);
-              $('#tipoPaquete option[value="paqueteUniforme"]').eq(1).prop('disabled', false);
+            if (data.uniformes == 0) {
+              // Si no hay uniformes, muestra solo el primer paquete y oculta el segundo
+              $('#tipoPaquete option[value="paqueteUniforme"]').eq(0).show();
+              $('#tipoPaquete option[value="paqueteUniforme"]').eq(1).hide();
+            } else if (data.uniformes == 1) {
+              // Si ya hay un uniforme entregado, oculta el primer paquete y muestra el segundo
+              $('#tipoPaquete option[value="paqueteUniforme"]').eq(0).hide();
+              $('#tipoPaquete option[value="paqueteUniforme"]').eq(1).show();
             } else if (data.uniformes >= 2) {
-              // Si hay 2 o más registros de uniformes, deshabilita ambos paquetes
-              $('#tipoPaquete option[value="paqueteUniforme"]').eq(0).prop('disabled', true);
-              $('#tipoPaquete option[value="paqueteUniforme"]').eq(1).prop('disabled', true);
+              // Si hay 2 o más uniformes, oculta ambos paquetes
+              $('#tipoPaquete option[value="paqueteUniforme"]').eq(0).hide();
+              $('#tipoPaquete option[value="paqueteUniforme"]').eq(1).hide();
+            }
+
+            // Mostrar la alerta solo si hay al menos 1 zapato, 1 útil, y 2 uniformes
+            if (data.zapatos >= 1 && data.utiles >= 1 && data.uniformes >= 2) {
+              $('#alertaPaquetes').show(); // Muestra la alerta
             } else {
-              // Si no hay registros de uniformes, deshabilita el segundo paquete, pero habilita el primero
-              $('#tipoPaquete option[value="paqueteUniforme"]').eq(0).prop('disabled', true);
-              $('#tipoPaquete option[value="paqueteUniforme"]').eq(1).prop('disabled', false);
+              $('#alertaPaquetes').hide(); // Oculta la alerta
             }
           }
         });
