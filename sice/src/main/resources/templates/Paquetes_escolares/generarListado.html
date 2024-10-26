@@ -22,22 +22,8 @@
     </div>
     <h2 class="text-center">Generación Listado</h2>
     <!-- Mensajes -->
-    <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
-      <i class="bi bi-check-circle"></i>
-      <label th:text="${success}"></label>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
-      <i class="bi bi-exclamation-triangle"></i>
-      <label th:text="${error}"></label>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
-      <i class="bi bi-info-circle"></i>
-      <label th:text="${warning}"></label>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <!-- Mensajes -->
+    <div th:replace="~{alertas::alertas}"></div>
+   
     <div class="d-flex justify-content-end">
       <div>
         <div>
@@ -212,5 +198,5 @@
       })
     </script>
 </body>
-
+<footer th:replace="~{home :: footer}"></footer>
 </html>
