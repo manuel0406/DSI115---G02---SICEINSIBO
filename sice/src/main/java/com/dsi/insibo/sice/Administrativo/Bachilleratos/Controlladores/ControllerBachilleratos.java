@@ -220,6 +220,7 @@ public class ControllerBachilleratos {
 
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(codigoBachillerato);
         bachilleratoService.deleteBachillerato(codigoBachillerato);
+        attributes.addFlashAttribute("warning", "¡Registro eliminado con exito!");
         return "redirect:/Bachillerato/VerOferta/" + bachillerato.getAnioAcademico().getIdAnioAcademico();
 
     }

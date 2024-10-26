@@ -290,16 +290,16 @@ public class calificacionesController {
 	}
 
 	@GetMapping("/alumnos")
-	public String verAlumnosCalificaciones(Model model, @RequestParam(value = "carrera", required = false) String carrera,
-	@RequestParam(value = "grado", required = false) String grado,
-	@RequestParam(value = "seccion", required = false) String seccion){
+	public String verAlumnosCalificaciones(Model model,
+			@RequestParam(value = "carrera", required = false) String carrera,
+			@RequestParam(value = "grado", required = false) String grado,
+			@RequestParam(value = "seccion", required = false) String seccion,
+			@RequestParam(value = "genero", required = false) String genero) {
 
-		
 		// Obtener la lista completa de alumnos filtrada por los parámetros
-		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion, null);
+		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion, genero);
 		// Ordenar la lista por "apellidoAlumno"
 		listaAlumnos.sort(Comparator.comparing(Alumno::getApellidoAlumno));
-
 
 		// Obtener la lista de carreras (bachilleratos)
 		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
@@ -312,7 +312,6 @@ public class calificacionesController {
 
 		return "Calificaciones/AlumnoCalificaciones";
 	}
-
 
 	/*
 	 * @GetMapping("calificaciones/materiasPorBachillerato")
