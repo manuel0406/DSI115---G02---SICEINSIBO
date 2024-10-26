@@ -157,7 +157,10 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title ">Notas</h5>
                         <p class="card-text ">Accede a las calificaciones de los alumnos de la institución.</p>
-                        <a class="btn btn-primary mt-auto notas-btn">Ir a Sección</a>
+                        <a sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
+                            th:href="@{/Calificaciones/General}" class="btn btn-primary mt-auto ">Ir a sección</a>
+                        <a sec:authorize="hasAnyRole('DOCENTE')" class="btn btn-primary mt-auto notas-btn">Ir a
+                            Sección</a>
                     </div>
                 </div>
             </div><!-- carta solo del docente -->
@@ -220,7 +223,7 @@
                     </div>
                 </div>
             </div>
-            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DOCENTE' ,'DIRECTOR','SUBDIRECTORA','SECRETARIA')"
+            <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
                 class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-3 d-flex">
                 <div class="card h-100">
                     <img th:src="@{/Imagenes/biblioteca.jpg}" class="card-img-top" alt="Horarios">

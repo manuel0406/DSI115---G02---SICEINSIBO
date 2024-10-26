@@ -7,7 +7,7 @@
     <div class="container-fluid my-2 py-5">
         <div class="row">
             <!--Barra Lateral-->
-            <div th:fragment="barraCalificaciones">
+            <div th:fragment="barraCalificaciones" >
                 <nav class="col-md-2 d-none d-md-block custom-navbar min-vh-100 navbar navbar-expand-lg fixed-top">
                     <!-- Contenido del menú lateral -->
                     <div class="custom-navbar py-5">
@@ -17,18 +17,32 @@
                                     <h2>Año 2024</h2>
                                 </div>
                             </li>
-                            <li class="nav-item py-2 py-sm-0 my-2">
+                            <li class="nav-item py-2 py-sm-0 my-2" sec:authorize="hasAnyRole('DOCENTE')">
                                 <a class="nav-link text-white"
                                     th:href="@{/Actividad/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
                                     <i class="bi bi-journal-check"></i>
                                     <span class="fs-6 ms-2 d-none d-sm-inline">Gestor de actividades</span>
                                 </a>
                             </li>
-                            <li class="nav-item py-2 py-sm-0 my-2">
+                            <li class="nav-item py-2 py-sm-0 my-2" sec:authorize="hasAnyRole('DOCENTE')">
                                 <a class="nav-link text-white"
                                     th:href="@{/Calificaciones/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
                                     <i class="bi bi-journal-text"></i>
                                     <span class="fs-6 ms-2 d-none d-sm-inline">Gestor de calificaciones </span>
+                                </a>
+                            </li>
+                            <li class="nav-item py-2 py-sm-0 my-2"  sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
+                                <a class="nav-link text-white"
+                                    th:href="@{/Calificaciones/General}">
+                                    <i class="bi bi-journal-text"></i>
+                                    <span class="fs-6 ms-2 d-none d-sm-inline">Notas por Materia</span>
+                                </a>
+                            </li>
+                            <li class="nav-item py-2 py-sm-0 my-2"  sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
+                                <a class="nav-link text-white"
+                                    th:href="@{/Calificaciones/General}">
+                                    <i class="bi bi-journal-text"></i>
+                                    <span class="fs-6 ms-2 d-none d-sm-inline">Notas por Alumno</span>
                                 </a>
                             </li>
 
@@ -36,7 +50,7 @@
                     </div>
                 </nav>
             </div>
-            <div class=" col-md-10 offset-md-2">
+            <div class=" col-md-10 offset-md-2 d-flex">
                 <header th:replace="~{home :: header}"></header>
 
                 <div class="container-fluid py-2 my-2">
@@ -185,7 +199,7 @@
                             <div th:if="${asignacion.materia.tipoMateria == 'Módulo'}">
                                 <label class="col-form-label" for="descripcionActividadEditModal">Descripción:</label>
                                 <textarea class="form-control" id="tipoActividad" th:field="*{tipoActividad}"
-                                    maxlength="100" required></textarea>
+                                    maxlength="10" required></textarea>
                             </div>
 
                             <!-- se muestra si la materia es del tipo basica -->
@@ -263,7 +277,7 @@
                             <div th:if="${asignacion.materia.tipoMateria == 'Módulo'}">
                                 <label class="col-form-label" for="tipoActividadEditModal">Descripción:</label>
                                 <textarea class="form-control" id="editTipoActividad" th:field="*{tipoActividad}"
-                                    maxlength="100" required></textarea>
+                                    maxlength="10" required></textarea>
                             </div>
                             <div th:if="${asignacion.materia.tipoMateria == 'Básica'}">
                                 <label class="col-form-label" for="tipoActividadEditModal">Tipo:</label>
