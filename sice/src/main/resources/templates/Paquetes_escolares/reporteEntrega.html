@@ -9,23 +9,30 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
     <header th:replace="~{home :: header}"></header>
     <div class="p-4 mt-5">
         <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a th:href="@{/}">Inicio</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Reporte entrega</li>
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-secondary text-decoration-none">Inicio</a>
+                    </li>
+                    <li class="breadcrumb-item"><a th:href="@{/entregasPaquetes/seccionAsigada/{id}(id=${id})}"
+                            class="text-secondary text-decoration-none">Entrega de Paquetes</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Reportes</li>
                 </ol>
             </nav>
         </div>
         <h2 class="text-center">Reporte de Entrega</h2>
+
+
         <div class="row pt-3 gy-3">
             <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
-                        <form th:action="@{/entregasPaquetes/reporteEntrega/{id}(id=${id})}" method="get" class="needs-validation" novalidate>
+                        <form th:action="@{/entregasPaquetes/reporteEntrega/{id}(id=${id})}" method="get"
+                            class="needs-validation" novalidate onsubmit="return validarFechaPaquete()">
                             <input type="hidden" name="id" th:value="${id}" id="id" />
                             <div class="row row-cols-1 gy-3">
                                 <div class="col">
@@ -35,16 +42,13 @@
                                         <option value="paqueteUtiles">Paquetes Útiles</option>
                                         <option value="paqueteUniforme">Paquetes Uniforme</option>
                                     </select>
-                                    <div class="invalid-feedback">
-                                        Es necesario seleccionar
-                                    </div>
+                                    <div class="invalid-feedback">Es necesario seleccionar</div>
                                 </div>
                                 <div class="col">
                                     <select name="fechaPaquete" id="fechaPaquete" class="form-select" required>
-                                        <option value="0">Seleccionar fecha</option>
+                                        <option value="">Seleccionar fecha</option>
                                     </select>
-                                    <div class="invalid-feedback">
-                                        Es necesario seleccionar
+                                    <div id="fechaPaqueteFeedback" class="invalid-feedback">Es necesario seleccionar
                                     </div>
                                 </div>
                                 <div class="col">
@@ -54,12 +58,11 @@
                                         <option value="no_entregado">No Entregados</option>
                                         <option value="entregado">Entregados</option>
                                     </select>
-                                    <div class="invalid-feedback">
-                                        Es necesario seleccionar
-                                    </div>
+                                    <div class="invalid-feedback">Es necesario seleccionar</div>
                                 </div>
                                 <div class="col">
-                                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                                    <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Cargar reporte seleccionado">Filtrar</button>
                                 </div>
                             </div>
                         </form>
@@ -67,24 +70,13 @@
                 </div>
             </div>
             <div class="col-lg-9">
-                <!-- Mensajes -->
-                <div class="alert alert-success alert-dismissible fade show mt-1 mx-2" th:if="${success != null}">
-                    <i class="bi bi-check-circle"></i>
-                    <label th:text="${success}"></label>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <div class="alert alert-danger alert-dismissible fade show mt-1 mx-2" th:if="${error != null}">
-                    <i class="bi bi-exclamation-triangle"></i>
-                    <label th:text="${error}"></label>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <div class="alert alert-warning alert-dismissible fade show mt-1 mx-2" th:if="${warning != null}">
-                    <i class="bi bi-info-circle"></i>
-                    <label th:text="${warning}"></label>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <!-- Mensajes de alerta -->
+                <div class="alert-container">
+                    <header th:replace="~{alertas :: alertas}"></header>
                 </div>
                 <!-- Mensajes -->
-                <table class="table table-bordered mb-0" th:if="${bachillerato != null && warning == null && error == null}">
+                <table class="table table-bordered mb-0"
+                    th:if="${bachillerato != null && warning == null && error == null}">
                     <tbody>
                         <tr th:if="${bachillerato != null}">
                             <th class="fs-3" colspan="7" th:text="${bachillerato.nombreCarrera}">Nombre del Bachillerato
@@ -118,6 +110,8 @@
                             <th>Fecha Entrega</th>
                             <th th:if="${tipoPaquete != 'paqueteUtiles'}">Talla</th>
                             <th>Estado</th>
+                            <th>Acción</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -127,11 +121,12 @@
                             <td th:text="${resultado[1]}">Nombre</td>
                             <td th:text="${resultado[4]}">Fecha Entrega</td>
                             <td th:if="${tipoPaquete != 'paqueteUtiles'}" th:text="${resultado[6]}">Talla</td>
-                            <td th:text="${resultado[5] != null && resultado[5] == true ? 'Entregado' : 'No entregado'}">
+                            <td
+                                th:text="${resultado[5] != null && resultado[5] == true ? 'Entregado' : 'No entregado'}">
                                 Estado</td>
                             <!-- Botón para editar solo si no ha sido entregado -->
                             <td>
-                                <button class="btn btn-secondary" data-bs-toggle="modal"
+                                <button class="btn btn-sm btn-success" data-bs-toggle="modal"
                                     th:data-bs-target="'#modal-' + ${resultado[0]}">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
@@ -153,18 +148,23 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <!-- <h1 class="modal-title fs-5"
-                            th:text="'Editar Entrega de ' + ${resultado[1]} + ' ' + ${resultado[2]}"></h1> -->
-                            <h1 class="modal-title fs-5">Editar Entrega</h1>
+                        <h1 class="modal-title fs-5">Editar Entrega</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form th:action="@{/entregasPaquetes/editarEntrega}" method="post">
-                            <input type="hidden" name="id_entrega" th:value="${resultado[7]}" /> <!-- ID Entrega -->
+                            <input type="hidden" name="tipo" th:value="${tipo}" id="tipo" />
+                            <input type="hidden" name="estado" th:value="${estado}" id="estado" />
+                            <input type="hidden" name="fecha" th:value="${fecha}" id="fecha" />
+                            <input type="hidden" name="id_entrega"
+                                th:value="${tipoPaquete == 'paqueteUtiles' ? resultado[6] : resultado[7]}" />
+                            <!-- Ajusta el índice aquí -->
                             <input type="hidden" name="id" th:value="${id}" id="id" />
                             <input type="hidden" name="tipoPaquete" th:value="${tipoPaquete}" />
                             <p>Alumno: <span th:text="${resultado[1]} + ' ' + ${resultado[3]}"></span></p>
-                            <p>Talla: <span th:text="${resultado[7]}"></span></p>
+                            <p>Talla: <span
+                                    th:text="${tipoPaquete == 'paqueteUtiles' ? resultado[6] : resultado[7]}"></span>
+                            </p>
 
                             <!-- Campo para cambiar el estado de entregado -->
                             <div class="form-group pb-1">
@@ -184,18 +184,19 @@
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const cargarFechasPaquete = () => {
                 const tipoPaquete = document.getElementById('tipoPaquete').value;
                 const idBachillerato = document.getElementById("id").value;
-                if (tipoPaquete !== "0") {
+                if (tipoPaquete) {
                     fetch(`/entregasPaquetes/fechasPaquete?tipoPaquete=${tipoPaquete}&idBachillerato=${idBachillerato}`)
                         .then(response => response.json())
                         .then(data => {
                             const fechaSelect = document.getElementById('fechaPaquete');
-                            fechaSelect.innerHTML = '<option value="0">Seleccionar fecha</option>'; // Reiniciar las opciones
+                            fechaSelect.innerHTML = '<option value="">Seleccionar fecha</option>';
                             data.forEach(function (fecha) {
                                 fechaSelect.innerHTML += `<option value="${fecha}">${fecha}</option>`;
                             });
@@ -205,12 +206,31 @@
             };
 
             document.getElementById('tipoPaquete').addEventListener('change', cargarFechasPaquete);
-            if (document.getElementById('tipoPaquete').value !== "0") {
+            if (document.getElementById('tipoPaquete').value) {
                 cargarFechasPaquete();
             }
         });
+
+        function validarFechaPaquete() {
+            const fechaPaquete = document.getElementById('fechaPaquete');
+            const feedback = document.getElementById('fechaPaqueteFeedback');
+            if (fechaPaquete.options.length === 1 && fechaPaquete.value === "") {
+                feedback.textContent = "Selecciona un paquete previamente entregado";
+                fechaPaquete.classList.add('is-invalid');
+                return false; // Evita que el formulario se envíe
+            } else if (fechaPaquete.value === "") {
+                feedback.textContent = "Es necesario seleccionar";
+                fechaPaquete.classList.add('is-invalid');
+                return false;
+            } else {
+                fechaPaquete.classList.remove('is-invalid');
+                return true; // Permite que el formulario se envíe
+            }
+        }
     </script>
     <script type="text/javascript" src="/js/validacionRequired.js"></script>
+    <script type="text/javascript" src="/js/tooltip.js"></script>
+
 </body>
 
 </html>

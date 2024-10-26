@@ -54,8 +54,8 @@ public interface AsignacionRepository extends JpaRepository<Asignacion, Integer>
     Page<Asignacion> findAllAsignaciones(Pageable pageable);
 
     //Obtener asignación filtrado
-    @Query("SELECT a FROM Asignacion a WHERE a.bachillerato.codigoBachillerato = :codigoBachillerato  AND a.docente.duiDocente=:dui")
-    Asignacion asignaciónDocenteBachillerato(String dui, int codigoBachillerato);
+    @Query("SELECT a FROM Asignacion a WHERE a.materia.idMateria = :idMateria  AND a.docente.duiDocente=:dui AND a.bachillerato.codigoBachillerato=:codigoBachillerato")
+    Asignacion asignaciónDocenteBachillerato(String dui, int idMateria, int codigoBachillerato);
 
     //Obtener toas las asignaciones dado un docente
     @Query("SELECT a FROM Asignacion a WHERE a.docente.duiDocente = :duiDocente ")

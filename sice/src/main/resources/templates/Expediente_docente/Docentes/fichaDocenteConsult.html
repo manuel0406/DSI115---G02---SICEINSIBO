@@ -21,17 +21,25 @@
             <div class="d-flex gap-2">
 
                 <a class="btn btn-secondary" sec:authorize="hasRole('DOCENTE')"
-                    th:href="@{/expedientedocente/editarmiexpediente/} + ${profesor.duiDocente}"
-                    data-bs-toggle="tooltip" data-bs-placement="top" title="Editar mi expediente">
+                    th:href="@{/expedientedocente/editarmiexpediente}" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Editar mi expediente">
                     <i class="bi bi-pencil-square"></i> Editar
                 </a>
 
                 <a class="btn btn-secondary"
+                    sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
                     th:href="@{/expedientedocente/consultarexpediente/{id}(id=${profesor.duiDocente}, format='pdf')}"
-                    data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir ficha expediente"
-                    target="_blank" onclick="openInPopup(this.href); return false;">
+                    data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir ficha expediente" target="_blank"
+                    onclick="openInPopup(this.href); return false;">
                     <i class="bi bi-printer"></i> Imprimir
                 </a>
+
+                <a class="btn btn-secondary" sec:authorize="hasRole('DOCENTE')"
+                    th:href="@{/expedientedocente/miexpediente(format='pdf')}" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Imprimir ficha expediente" target="_blank" onclick="openInPopup(this.href); return false;">
+                    <i class="bi bi-printer"></i> Imprimir
+                </a>
+
                 <a class="btn btn-secondary" th:href="@{/expedientedocente/Documentos/} + ${profesor.duiDocente}"
                     data-bs-toggle="tooltip" data-bs-placement="top" title="Gestionar documentos"><i
                         class="bi bi-file-earmark-text"></i> Documentos

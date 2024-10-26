@@ -19,7 +19,7 @@ public class Actividad {
     private Asignacion asignacion;
     private String nombreActividad;
     private float ponderacionActividad;
-    private String descripcionActividad;
+    private String tipoActividad;
     private Date fechaActividad;
 
     public Actividad() {
@@ -32,7 +32,7 @@ public class Actividad {
         this.asignacion = asignacion;
         this.nombreActividad = nombreActividad;
         this.ponderacionActividad = ponderacionActividad;
-        this.descripcionActividad = descripcionActividad;
+        this.tipoActividad = descripcionActividad;
         this.fechaActividad = fechaActividad;
     }
 
@@ -76,12 +76,12 @@ public class Actividad {
         this.ponderacionActividad = ponderacionActividad;
     }
 
-    public String getDescripcionActividad() {
-        return descripcionActividad;
+    public String getTipoActividad() {
+        return tipoActividad;
     }
 
-    public void setDescripcionActividad(String descripcionActividad) {
-        this.descripcionActividad = descripcionActividad;
+    public void setTipoActividad(String descripcionActividad) {
+        this.tipoActividad = descripcionActividad;
     }
 
     public Date getFechaActividad() {

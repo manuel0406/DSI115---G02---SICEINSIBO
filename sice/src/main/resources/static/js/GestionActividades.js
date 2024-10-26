@@ -122,14 +122,14 @@ $(document).ready(function () {
     $('.editar-btn').on('click', function () {
         var idActividad = $(this).data('id');
         var nombre = $(this).data('non');
-        var descripcion = $(this).data('des');
+        var tipoActividad = $(this).data('tip');
         var fecha = $(this).data('fec');
         var ponderacion = $(this).data('pon');
         var periodo = $(this).data('per');
 
         $('#idActividad').val(idActividad);
         $('#editNombre').val(nombre);
-        $('#editDescripcion').text(descripcion);
+        $('#editTipoActividad').val(tipoActividad);
         $('#editFechaCreacion').val(fecha);
         $('#editPonderacion').val(ponderacion);
         $('#editPeriodo').val(periodo);

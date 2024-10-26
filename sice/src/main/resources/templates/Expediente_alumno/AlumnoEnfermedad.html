@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{home :: head}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    
+
 </head>
+
 <body>
 
     <div class="container-fluid">
@@ -13,43 +15,42 @@
             <div th:replace="~{Expediente_alumno\AlumnoInformacion :: barraLateral}"></div>
 
             <div class="col-md-10 offset-md-2">
-                
+
                 <header th:replace="~{home :: header}"></header>
                 <div class="container-fluid" style="padding-top: 56px;">
 
                     <h2 class="my-2  ">Información de padecimientos</h2>
                     <div class="col-12 col-lg-7 my-4">
                         <table class="table  table-striped">
-                            
+
                             <tbody class="">
-                                                             
                                 <tr>
-                                    <th  class="text-start">Enfermedad</th>
-                                    <td class="text-start" th:text="${alumno.padecimientos}" ></td>
-                                   
-                                  </tr>
-                                  <tr>
-                                    <th  class="text-start">Medicamento</th>
+                                    <th class="text-start">Enfermedad</th>
+                                    <td class="text-start" th:text="${alumno.padecimientos}"></td>
+
+                                </tr>
+                                <tr>
+                                    <th class="text-start">Medicamento</th>
                                     <td class="text-start" th:text="${alumno.medicamento}"></td>
-                                    
-                                  </tr>
-                                  <tr>
-                                    <th  class="text-start">Forma de medicación</th>                                    
-                                    <td  class="text-start" th:text="${alumno.formaMedicacion}"></td>
-                                  </tr>
-                                  
+
+                                </tr>
+                                <tr>
+                                    <th class="text-start">Forma de medicación</th>
+                                    <td class="text-start" th:text="${alumno.formaMedicacion}"></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                   
+
                 </div>
             </div>
         </div>
     </div>
 
-    
-    
+
+
 </body>
 
 <footer th:replace="~{home :: footer}"></footer>
+
 </html>
