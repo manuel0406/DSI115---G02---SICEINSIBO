@@ -31,8 +31,14 @@ public class Docente {
     private boolean curriculumDocente;
     private boolean atestadosDocente;
     private Date fechaEntrega;
+    private boolean activo;
     
-    
+    public boolean isActivo() {
+        return activo;
+    }
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
     public String getNip() {
         return nip;
     }

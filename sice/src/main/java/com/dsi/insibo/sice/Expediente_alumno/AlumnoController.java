@@ -31,7 +31,7 @@ import com.dsi.insibo.sice.entity.Bachillerato;
  */
 @Controller
 @RequestMapping("/ExpedienteAlumno")
-@PreAuthorize("hasRole('ADMINISTRADOR')") // SOLO PARA DOCENTES
+@PreAuthorize("hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')") 
 public class AlumnoController {
 
 	@Autowired
@@ -157,7 +157,7 @@ public class AlumnoController {
 	 * @return El nombre de la vista "Expediente_alumno/editar" si el alumno existe,
 	 *         de lo contrario redirige a la vista de listado de alumnos.
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/editar/{nie}")
 	public String editar(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -215,7 +215,7 @@ public class AlumnoController {
 	 *                   flash.
 	 * @return Una cadena que redirige a la vista de listado de alumnos.
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@PostMapping("/actualizar")
 	public String actualizarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes,
 			@RequestParam(value = "carrera", required = false) String carrera,
@@ -301,7 +301,7 @@ public class AlumnoController {
 	 *                predeterminado 10.
 	 * @return El nombre de la vista "Expediente_alumno/verAlumno".
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA' )")
 	@GetMapping("/ver")
 	public String verAlumno(Model model,
 			@RequestParam(value = "carrera", required = false) String carrera,
@@ -329,7 +329,10 @@ public class AlumnoController {
 		List<Alumno> listaAlumnos = alumnoService.listarAlumnos(carrera, grado, seccion, genero);
 		// Ordenar la lista por "apellidoAlumno"
 		listaAlumnos.sort(Comparator.comparing(Alumno::getApellidoAlumno));
-
+		// for (Alumno alumno : listaAlumnos) {
+		// System.out.println("Seccion: "+alumno.getBachillerato().getSeccion() + "
+		// Genero: "+alumno.getSexoAlumno());
+		// }
 		// Crear una estructura paginada manualmente
 		PageRequest pageRequest = PageRequest.of(page - 1, size);
 		int start = (int) pageRequest.getOffset();
@@ -346,6 +349,7 @@ public class AlumnoController {
 		model.addAttribute("carrera", carrera);
 		model.addAttribute("grado", grado);
 		model.addAttribute("seccion", seccion);
+		model.addAttribute("genero", genero);
 		model.addAttribute("page", page);
 		model.addAttribute("totalPages", pageAlumnos.getTotalPages());
 		model.addAttribute("totalElements", listaAlumnos.size());
@@ -375,7 +379,7 @@ public class AlumnoController {
 	 * @param model El modelo de Spring utilizado para pasar datos a la vista.
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoInformacion".
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/Alumno/{nie}")
 	public String informacionAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -426,7 +430,7 @@ public class AlumnoController {
 	 * @param model El modelo de Spring utilizado para pasar datos a la vista.
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoEnfermedad".
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/Enfermedades/{nie}")
 	public String enfermedadAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -475,7 +479,7 @@ public class AlumnoController {
 	 * @param model El modelo de Spring utilizado para pasar datos a la vista.
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoDatosResponsable".
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/Responsable/{nie}")
 	public String responsableAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
 
@@ -511,7 +515,8 @@ public class AlumnoController {
 		// Retornar el nombre de la vista a ser renderizada
 		return "Expediente_alumno/AlumnoDatosResponsable";
 	}
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/Documentos/{idAlumno}")
 	public String alumnoDocumentos(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
 
@@ -570,13 +575,13 @@ public class AlumnoController {
 	 *         "Expediente_alumno/verAlumnoPdf"
 	 *         y los datos necesarios para generar el PDF.
 	 */
-	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')")
+	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping(value = "/ver", produces = "application/pdf")
 	public ModelAndView verAlumnosPdf(Model model,
 			@RequestParam(value = "carrera", required = false) String carrera,
 			@RequestParam(value = "grado", required = false) String grado,
 			@RequestParam(value = "seccion", required = false) String seccion,
-			@RequestParam(value = "seccion", required = false) String genero) {
+			@RequestParam(value = "genero", required = false) String genero) {
 		// Convertir cadenas vacías a null para los parámetros opcionales
 		if (carrera != null && carrera.isEmpty()) {
 			carrera = null;
@@ -606,7 +611,7 @@ public class AlumnoController {
 		modelAndView.addObject("carrera", carrera);
 		modelAndView.addObject("grado", grado);
 		modelAndView.addObject("seccion", seccion);
-		
+		modelAndView.addObject("genero", genero);
 
 		// Retornar el objeto ModelAndView que contiene la vista y los datos
 		return modelAndView;

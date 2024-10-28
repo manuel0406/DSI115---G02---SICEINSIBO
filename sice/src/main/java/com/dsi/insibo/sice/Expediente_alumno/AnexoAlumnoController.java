@@ -57,7 +57,7 @@ public class AnexoAlumnoController {
 
 
         // Retorna la vista "upload"
-        return "upload";
+        return "Expediente_alumno/upload";
     }
     
     /**

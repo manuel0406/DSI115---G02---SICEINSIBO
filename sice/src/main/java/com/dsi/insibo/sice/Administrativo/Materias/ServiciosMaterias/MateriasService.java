@@ -51,4 +51,5 @@ public class MateriasService {
         Pageable pageable = PageRequest.of(pagina, tamanyo);
         return materiasRepository.findMateriasByType(tipo, pageable);
     }
+    
 }

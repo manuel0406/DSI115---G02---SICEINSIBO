@@ -7,7 +7,7 @@
     <div class="container-fluid my-2 py-5">
         <div class="row">
             <!--Barra Lateral-->
-            <div th:fragment="barraCalificaciones">
+            <div th:fragment="barraCalificaciones" >
                 <nav class="col-md-2 d-none d-md-block custom-navbar min-vh-100 navbar navbar-expand-lg fixed-top">
                     <!-- Contenido del menú lateral -->
                     <div class="custom-navbar py-5">
@@ -17,18 +17,32 @@
                                     <h2>Año 2024</h2>
                                 </div>
                             </li>
-                            <li class="nav-item py-2 py-sm-0 my-2">
+                            <li class="nav-item py-2 py-sm-0 my-2" sec:authorize="hasAnyRole('DOCENTE')">
                                 <a class="nav-link text-white"
-                                    th:href="@{/Actividad/}+${asignacion.bachillerato.codigoBachillerato}">
+                                    th:href="@{/Actividad/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
                                     <i class="bi bi-journal-check"></i>
                                     <span class="fs-6 ms-2 d-none d-sm-inline">Gestor de actividades</span>
                                 </a>
                             </li>
-                            <li class="nav-item py-2 py-sm-0 my-2">
+                            <li class="nav-item py-2 py-sm-0 my-2" sec:authorize="hasAnyRole('DOCENTE')">
                                 <a class="nav-link text-white"
-                                th:href="@{/Calificaciones/}+${asignacion.bachillerato.codigoBachillerato}">
+                                    th:href="@{/Calificaciones/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
                                     <i class="bi bi-journal-text"></i>
                                     <span class="fs-6 ms-2 d-none d-sm-inline">Gestor de calificaciones </span>
+                                </a>
+                            </li>
+                            <li class="nav-item py-2 py-sm-0 my-2"  sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
+                                <a class="nav-link text-white"
+                                    th:href="@{/Calificaciones/General}">
+                                    <i class="bi bi-journal-text"></i>
+                                    <span class="fs-6 ms-2 d-none d-sm-inline">Notas por Materia</span>
+                                </a>
+                            </li>
+                            <li class="nav-item py-2 py-sm-0 my-2"  sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
+                                <a class="nav-link text-white"
+                                    th:href="@{/Calificaciones/alumnos}">
+                                    <i class="bi bi-journal-text"></i>
+                                    <span class="fs-6 ms-2 d-none d-sm-inline">Notas por Alumno</span>
                                 </a>
                             </li>
 
@@ -36,65 +50,114 @@
                     </div>
                 </nav>
             </div>
-            <div class=" col-md-10 offset-md-2">
+            <div class=" col-md-10 offset-md-2 d-flex">
                 <header th:replace="~{home :: header}"></header>
+
                 <div class="container-fluid py-2 my-2">
                     <!--Mensajes-->
                     <div th:replace="~{alertas::alertas}"></div>
-                    <div class="col-12 table-responsive-sm">
-                        <table class="table table-hover table-bordered table-sm">
-                            <thead class="thead table-dark text-start">
-                                <tr>
-                                    <th scope="col">N°</th>
-                                    <th scope="col">Nombre</th>
-                                    <th scope="col">Descripción</th>
-                                    <th scope="col">Fecha</th>
-                                    <th scope="col">Ponderación</th>
-                                    <th scope="col">Periodo</th>
-                                    <th scope="col">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody class="fs-6 align-middle ">
-                                <!-- Iterar sobre la lista de sanciones -->
-                                <tr th:each="actividad, stat: ${listadoActividades}">
-                                    <th scope="row" th:text="${stat.index + 1}"></th>
-                                    <td class="text-start" th:text="${actividad.nombreActividad}"></td>
-                                    <td th:text="${actividad.descripcionActividad}"></td>
-                                    <td th:text="${#dates.format(actividad.fechaActividad,'dd/MM/yyyy')}"></td>
+                    <!-- Carta para filtrar -->
+                    <div th:if="${asignacion.materia.tipoMateria == 'Básica'}" class="card bg-light shadow-sm p-3">
+                        <div class="container-fluid">
+                            <form class="row gy-3 gx-4 align-items-center" id="formPeriodo" method="get"
+                                th:action="@{/Actividad/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
 
-                                    <td th:text="${actividad.ponderacionActividad +'%'}"></td>
-                                    <td th:text="${actividad.periodo.numeroPeriodo}"></td>
-                                    <td>
-                                        <a class="btn btn-success btn-sm" data-bs-t="tooltip" data-bs-placement="top"
-                                            title="Calificaciones"
-                                            th:href="@{/Calificaciones/registro/}+${actividad.idActividad}">
-                                            <i class="bi bi-journal-text"></i>
-                                        </a>
-                                        <a class="btn btn-primary editar-btn btn-sm" data-bs-t="tooltip"
-                                            data-bs-toggle="modal" data-bs-target="#EditarActividadModal"
-                                            data-bs-placement="top" title="Editar" th:data-id="${actividad.idActividad}"
-                                            th:data-non="${actividad.nombreActividad}"
-                                            th:data-des="${actividad.descripcionActividad}"
-                                            th:data-fec="${actividad.fechaActividad}"
-                                            th:data-pon="${actividad.ponderacionActividad}"
-                                            th:data-per="${actividad.periodo.idPeriodo}">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                        <a class="btn btn-danger delete-btn btn-sm"
-                                            th:href="@{/Actividad/}+ ${actividad.asignacion.bachillerato.codigoBachillerato+'/delete/'+actividad.idActividad}"
-                                            data-bs-t="tooltip" data-bs-placement="top" title="Eliminar">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <!-- Alerta que se muestra solo cuando se le manda una lista vacia de alumnos -->
-                        <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2"
-                        th:if="${#lists.isEmpty(listadoActividades)}">
-                        <i class="bi bi-info-circle"></i>
-                        <label th:text="${'¡No hay actividades registradas!'}"></label>
+                                <!-- Label for Periodo -->
+                                <div class="col-auto">
+                                    <label for="periodo" class="form-label fs-5 fw-semibold ">Periodo:</label>
+                                </div>
+
+                                <!-- Periodo Select -->
+                                <div class="col-12 col-md-4">
+                                    <select id="pe" name="pe" th:value="${pe}" class="form-select"
+                                        aria-label="Seleccione un periodo">
+                                        <option value="" selected>Seleccione</option>
+                                        <option th:each="period : ${periodos}" th:value="${period.idPeriodo}"
+                                            th:text="${period.numeroPeriodo}"
+                                            th:selected="${period.idPeriodo.toString() == pe}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-search"></i> Buscar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+
+                    <!-- Se muestra solo si la lista no está vacia -->
+                    <div th:if="${pe != null || asignacion.materia.tipoMateria != 'Básica'}">
+                        <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
+                            <h3 class="text-start col-lg-9"
+                                th:text="${'Actividades de '+asignacion.materia.nomMateria + ': '+asignacion.bachillerato.grado+ '° '+ asignacion.bachillerato.nombreCarrera+ ' ' + asignacion.bachillerato.seccion}">
+                            </h3>
+                            <div class="d-flex gap-2">
+                                <a class="btn btn-primary Agregar-btn" data-bs-t="tooltip" data-bs-placement="top"
+                                    title="Agregar Sancion" th:text="'Agregar actividad'"></a>
+                            </div>
+                        </div>
+
+                        <div class="col-12 table-responsive-sm py-4 ">
+                            <table class="table table-hover table-bordered table-sm">
+                                <thead class="thead">
+                                    <tr>
+                                        <th scope="col">N°</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Tipo</th>
+                                        <th scope="col">Fecha</th>
+                                        <th scope="col">Ponderación</th>
+                                        <!-- <th th:if="${asignacion.materia.tipoMateria == 'Básica'}" scope="col">Periodo
+                                        </th> -->
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="fs-6 align-middle ">
+                                    <!-- Iterar sobre la lista de sanciones -->
+                                    <tr th:each="actividad, stat: ${listadoActividades}">
+                                        <th scope="row" th:text="${stat.index + 1}"></th>
+                                        <td class="text-start" th:text="${actividad.nombreActividad}"></td>
+                                        <td th:text="${actividad.tipoActividad}"></td>
+                                        <td th:text="${#dates.format(actividad.fechaActividad,'dd/MM/yyyy')}"></td>
+                                        <td th:text="${actividad.ponderacionActividad +'%'}"></td>
+                                        <!-- <td th:if="${actividad.asignacion.materia.tipoMateria == 'Básica'}"
+                                            th:text="${actividad.periodo.numeroPeriodo}"></td> -->
+                                        <td>
+                                            <a class="btn btn-success btn-sm" data-bs-t="tooltip"
+                                                data-bs-placement="top" title="Calificaciones"
+                                                th:href="@{/Calificaciones/registro/}+${actividad.idActividad}">
+                                                <i class="bi bi-journal-text"></i>
+                                            </a>
+                                            <a class="btn btn-primary editar-btn btn-sm" data-bs-t="tooltip"
+                                                data-bs-toggle="modal" data-bs-target="#EditarActividadModal"
+                                                data-bs-placement="top" title="Editar"
+                                                th:data-id="${actividad.idActividad}"
+                                                th:data-non="${actividad.nombreActividad}"
+                                                th:data-tip="${actividad.tipoActividad}"
+                                                th:data-fec="${actividad.fechaActividad}"
+                                                th:data-pon="${actividad.ponderacionActividad}"
+                                                th:data-per="${actividad.periodo.idPeriodo}">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                            <a class="btn btn-danger delete-btn btn-sm"
+                                                th:href="@{/Actividad/}+ ${actividad.asignacion.materia.idMateria+ '/'} + ${actividad.asignacion.bachillerato.codigoBachillerato+'/delete/'+actividad.idActividad}"
+                                                data-bs-t="tooltip" data-bs-placement="top" title="Eliminar">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- Alerta que se muestra solo cuando se le manda una lista vacia de alumnos -->
+                            <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2"
+                                th:if="${#lists.isEmpty(listadoActividades)}">
+                                <i class="bi bi-info-circle"></i>
+                                <label th:text="${'¡No hay actividades registradas!'}"></label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -114,7 +177,8 @@
                     <form th:object="${actividad}" method="post" id="formActividad" class="needs-validation"
                         th:action="@{/Actividad/add}" novalidate>
                         <input type="hidden" id="idAsignacion" name="asignacion" th:value="${asignacion.idAsignacion}">
-                        <div class="mb-3">
+                        <input type="hidden" id="idPeriodo" name="periodo" th:value="${pe}">
+                        <!-- <div class="mb-3" >
                             <label for="periodo" class="form-label fw-bold">Periodo</label>
                             <select th:field="*{periodo}" class="form-select border-secondary border-opacity-75"
                                 id="periodo" required>
@@ -123,7 +187,7 @@
                                     th:text="${period.numeroPeriodo}">Leve</option>
                             </select>
                             <div class="invalid-feedback">Es necesario seleccionar el periodo.</div>
-                        </div>
+                        </div> -->
                         <div class="mb-3">
                             <label for="nombreActividadEditModal" class="col-form-label">Nombre de la Actividad:</label>
                             <input type="text" class="form-control" id="nombreActividad" th:field="*{nombreActividad}"
@@ -131,10 +195,27 @@
                             <div class="invalid-feedback">Es necesario agregar un nombre.</div>
                         </div>
                         <div class="mb-3">
-                            <label class="col-form-label" for="descripcionActividadEditModal">Descripción:</label>
-                            <textarea class="form-control" id="descripcionActividad" th:field="*{descripcionActividad}" maxlength="100"
-                                required></textarea>
-                            <div class="invalid-feedback">Es necesario agregar una descripción</div>
+                            <!-- se muestra si la materia es del tipo módulo -->
+                            <div th:if="${asignacion.materia.tipoMateria == 'Módulo'}">
+                                <label class="col-form-label" for="descripcionActividadEditModal">Descripción:</label>
+                                <textarea class="form-control" id="tipoActividad" th:field="*{tipoActividad}"
+                                    maxlength="10" required></textarea>
+                            </div>
+
+                            <!-- se muestra si la materia es del tipo basica -->
+                            <div th:if="${asignacion.materia.tipoMateria == 'Básica'}">
+                                <label class="col-form-label" for="descripcionActividadEditModal">Tipo:</label>
+                                <select th:field="*{tipoActividad}" class="form-select " id="tipoActividad" required>
+                                    <option value="" selected>Selecciona </option>
+                                    <option value="Actividad cotidiana" selected>Actividad cotidiana</option>
+                                    <option value="Actividad integradora" selected>Actividad integradora</option>
+                                    <option value="Autoevaluación" selected>Autoevaluación</option>
+                                    <option value="Heteroevaluación" selected>Heteroevaluación</option>
+                                    <option value="Examen de periodo" selected>Examen de periodo</option>
+                                </select>
+                            </div>
+
+                            <div class="invalid-feedback">Es necesario seleccionar un tipo</div>
                         </div>
                         <div class="mb-3">
                             <label for="fechaActividadEditModal" class="col-form-label">Fecha de la Actividad:</label>
@@ -166,7 +247,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="EditarActividadLabel">Crear actividad</h1>
+                    <h1 class="modal-title fs-5" id="EditarActividadLabel">Editar actividad</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -175,7 +256,8 @@
                         th:action="@{/Actividad/add}" novalidate>
                         <input type="hidden" id="idActividad" name="idActividad">
                         <input type="hidden" id="idAsignacion" name="asignacion" th:value="${asignacion.idAsignacion}">
-                        <div class="mb-3">
+                        <input type="hidden" id="editPeriodo" name="periodo">
+                        <!-- <div class="mb-3">
                             <label for="periodo" class="form-label fw-bold">Periodo</label>
                             <select th:field="*{periodo}" class="form-select border-secondary border-opacity-75"
                                 id="editPeriodo" required>
@@ -184,7 +266,7 @@
                                     th:text="${period.numeroPeriodo}">Leve</option>
                             </select>
                             <div class="invalid-feedback">Es necesario seleccionar el periodo.</div>
-                        </div>
+                        </div> -->
                         <div class="mb-3">
                             <label for="nombreActividadEditModal" class="col-form-label">Nombre de la Actividad:</label>
                             <input type="text" class="form-control" id="editNombre" name="editNombre"
@@ -192,10 +274,25 @@
                             <div class="invalid-feedback">Es necesario agregar un nombre.</div>
                         </div>
                         <div class="mb-3">
-                            <label class="col-form-label" for="descripcionActividadEditModal">Descripción:</label>
-                            <textarea class="form-control no-resize " id="editDescripcion" rows="3"
-                                th:field="*{descripcionActividad}" maxlength="100" required> </textarea>
-                            <div class="invalid-feedback">Es necesario agregar una descripción</div>
+                            <div th:if="${asignacion.materia.tipoMateria == 'Módulo'}">
+                                <label class="col-form-label" for="tipoActividadEditModal">Descripción:</label>
+                                <textarea class="form-control" id="editTipoActividad" th:field="*{tipoActividad}"
+                                    maxlength="10" required></textarea>
+                            </div>
+                            <div th:if="${asignacion.materia.tipoMateria == 'Básica'}">
+                                <label class="col-form-label" for="tipoActividadEditModal">Tipo:</label>
+                                <select th:field="*{tipoActividad}" class="form-select " id="editTipoActividad"
+                                    required>
+                                    <option value="" selected>Selecciona </option>
+                                    <option value="Actividad cotidiana" selected>Actividad cotidiana</option>
+                                    <option value="Actividad integradora" selected>Actividad integradora</option>
+                                    <option value="Autoevaluación" selected>Autoevaluación</option>
+                                    <option value="Heteroevaluación" selected>Heteroevaluación</option>
+                                    <option value="Examen de periodo" selected>Examen de periodo</option>
+                                </select>
+                            </div>
+
+                            <div class="invalid-feedback">Es necesario seleccionar un tipo</div>
                         </div>
                         <div class="mb-3">
                             <label for="fechaActividadEditModal" class="col-form-label">Fecha de la Actividad:</label>

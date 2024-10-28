@@ -18,16 +18,7 @@
 
                 <div class="container-fluid py-5 my-2">
                     <!--Mensajes-->
-                    <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2"
-                        th:if="${success != null}">
-                        <label th:text="${success}"></label>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div class="alert alert-warning alert-dismissible fade show mt-1 ms-2 mr-2"
-                        th:if="${warning != null}">
-                        <label th:text="${warning}"></label>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                    <div th:replace="~{alertas::alertas}"></div>
                     <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
                         <h3 class="text-start col-lg-9" th:text="${'Listado de sanciones de: '+ alumno.nombreAlumno}">
                         </h3>
@@ -93,7 +84,7 @@
                         </table>
                         <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2"
                             th:if="${#lists.isEmpty(listaSanciones)}">
-                            <i class="bi bi-exclamation-triangle"></i>
+                            <i class="bi bi-info-circle"></i>
                             <label th:text="${'¡No existen sanciones registradas!'}"></label>
                         </div>
                     </div>

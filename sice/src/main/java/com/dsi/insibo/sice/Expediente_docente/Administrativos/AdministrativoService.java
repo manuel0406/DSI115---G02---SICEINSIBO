@@ -13,15 +13,29 @@ public class AdministrativoService {
     @Autowired
     private AdministrativoRepository administrativoRepository;
 
+    // Filtra solo a los administrativos activos
     public List<AdministrativoDTO> listarAdministrativos() {
-        List<PersonalAdministrativo> administrativos = (List<PersonalAdministrativo>) administrativoRepository.findAll();
+        List<PersonalAdministrativo> administrativos = (List<PersonalAdministrativo>) administrativoRepository
+                .findAll();
         return administrativos.stream()
+                .filter(PersonalAdministrativo::isActivo)
                 .sorted(Comparator.comparing(PersonalAdministrativo::getNombrePersonal)
                         .thenComparing(PersonalAdministrativo::getApellidoPersonal))
                 .map(AdministrativoDTO::new)
                 .collect(Collectors.toList());
     }
 
+    // Filtra solo a los administrativos inactivos
+    public List<AdministrativoDTO> listarAdministrativosInactivos() {
+        List<PersonalAdministrativo> administrativos = (List<PersonalAdministrativo>) administrativoRepository
+                .findAll();
+        return administrativos.stream()
+                .filter(admin -> !admin.isActivo())
+                .sorted(Comparator.comparing(PersonalAdministrativo::getNombrePersonal)
+                        .thenComparing(PersonalAdministrativo::getApellidoPersonal))
+                .map(AdministrativoDTO::new)
+                .collect(Collectors.toList());
+    }
 
     public boolean guardarAdministrativo(PersonalAdministrativo administrativo) {
         // Verificar si el docente ya existe en la base de datos
