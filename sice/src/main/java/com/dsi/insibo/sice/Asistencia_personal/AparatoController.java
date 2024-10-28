@@ -34,6 +34,11 @@ import org.springframework.validation.BindingResult;
 @RequestMapping("/aparato")
 public class AparatoController {
 
+	/*
+	 * /aparato/editarNumeroDocente/1
+	 * SELECT * FROM personal_aparato;
+	 * SELECT * FROM docente_aparato;
+	 */
 	@Autowired
 	private AparatoDocenteService aparatoDocenteService;
 
@@ -83,30 +88,6 @@ public class AparatoController {
 		
 		// Retornar la vista
 		return "Aparato_Asistencia/aparatoListar";
-	}
-
-
-	// VISTA CREAR CON SELECT DOCENTE ------------------------------------------ ELIMINAR
-	@GetMapping("/asignarNumero")
-	public String asignarNumero(Model model) {
-		DocenteAparato docenteAparato = new DocenteAparato();
-		List<DocenteDTO> listadoDocentes = docenteService.listarDocentes();
-		model.addAttribute("docenteAparato", docenteAparato);
-		model.addAttribute("docentes", listadoDocentes);
-		model.addAttribute("txtBoton", "Asignar");
-		model.addAttribute("txtTitulo", "Asignar número asistencia");
-		return "Aparato_Asistencia/agregarNumeroAparato";
-	}
-	// VISTA CREAR CON SELECT ADMINISTRATIVO   ---------------------------------------  ELIMINAR
-	@GetMapping("/asignarNumeroPersonal")
-	public String asignarNumeroPersonal(Model model) {
-		PersonalAparato personalAparato = new PersonalAparato();
-		List<AdministrativoDTO> listadoPersonal = administrativoService.listarAdministrativos();
-		model.addAttribute("personalAparato", personalAparato);
-		model.addAttribute("administrativos", listadoPersonal);
-		model.addAttribute("txtBoton", "Asignar");
-		model.addAttribute("txtTitulo", "Asignar número asistencia");
-		return "Aparato_Asistencia/agregarNumeroAparatoPersonal";
 	}
 
 	// METODO GUARDAR DOCENTE
@@ -183,36 +164,6 @@ public class AparatoController {
   		return "redirect:/aparato/listarAparato";
     }
 
-	// METODO EDITAR DOCENTE
-	@GetMapping("/editarNumeroDocente/{id}")
-	public String editarNumeroDocente(@PathVariable("id") int idAparato, Model model, RedirectAttributes attribute) {
-		DocenteAparato docenteAparato = aparatoDocenteService.buscarPorIdAparatoDocente(idAparato);
-		if(docenteAparato == null){
-			attribute.addFlashAttribute("error", "El ID no existe");
-            return "redirect:/aparato/listarAparato";
-		}
-		List<DocenteDTO> listadoDocentes = docenteService.listarDocentes();
-		model.addAttribute("docenteAparato", docenteAparato);
-		model.addAttribute("docentes", listadoDocentes);
-		model.addAttribute("txtBoton", "Editar");
-		model.addAttribute("txtTitulo", "Editar asignación");
-		return "Aparato_Asistencia/agregarNumeroAparato";
-	}
-	// METODO EDITAR ADMINISTRATIVO
-	@GetMapping("/editarNumeroPersonal/{id}")
-	public String editarNumeroPersonal(@PathVariable("id") int idAparato, Model model, RedirectAttributes attribute) {
-		PersonalAparato personalAparato = aparatoPersonalService.buscarPorIdAparatoPersonal(idAparato);
-		if(personalAparato == null){
-			attribute.addFlashAttribute("error", "El ID no existe");
-            return "redirect:/aparato/listarAparato";
-		}
-		List<AdministrativoDTO> listadoPersonal = administrativoService.listarAdministrativos();
-		model.addAttribute("personalAparato", personalAparato);
-		model.addAttribute("administrativos", listadoPersonal);
-		model.addAttribute("txtBoton", "Editar");
-		model.addAttribute("txtTitulo", "Editar asignación");
-		return "Aparato_Asistencia/agregarNumeroAparatoPersonal";
-	}
 	// METODO ELIMINAR DOCENTE
 	@GetMapping("/eliminarNumeroDocente/{id}")
 	public String eliminarNumeroDocente(@PathVariable("id") int idAparato, Model model, RedirectAttributes attribute) {
@@ -233,6 +184,7 @@ public class AparatoController {
 		attribute.addFlashAttribute("warning", "Registro eliminado con exito.");
 		return "redirect:/aparato/listarAparato";
 	}
+	
 	// METODO ELIMINAR ADMINISTRATIVO
 	@GetMapping("/eliminarNumeroAdmnistrativo/{id}")
 	public String eliminarNumeroAdministrativo(@PathVariable("id") int idAparato, Model model, RedirectAttributes attribute) {
