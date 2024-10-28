@@ -1,58 +1,69 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{home :: head}"></head>
 
 <body>
-    <div class="container-fluid my-2 py-5">
+    <div class="container-fluid  ">
         <div class="row">
             <!--Barra Lateral-->
-            <div th:fragment="barraCalificaciones" >
-                <nav class="col-md-2 d-none d-md-block custom-navbar min-vh-100 navbar navbar-expand-lg fixed-top">
-                    <!-- Contenido del menú lateral -->
-                    <div class="custom-navbar py-5">
-                        <ul class="nav nav-pills flex-column mt-2">
-                            <li class="nav-item py-2 py-sm-0 my-2 bg-primary">
-                                <div class="text-center text-white">
-                                    <h2>Año 2024</h2>
-                                </div>
-                            </li>
-                            <li class="nav-item py-2 py-sm-0 my-2" sec:authorize="hasAnyRole('DOCENTE')">
-                                <a class="nav-link text-white"
-                                    th:href="@{/Actividad/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
-                                    <i class="bi bi-journal-check"></i>
-                                    <span class="fs-6 ms-2 d-none d-sm-inline">Gestor de actividades</span>
-                                </a>
-                            </li>
-                            <li class="nav-item py-2 py-sm-0 my-2" sec:authorize="hasAnyRole('DOCENTE')">
-                                <a class="nav-link text-white"
-                                    th:href="@{/Calificaciones/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
-                                    <i class="bi bi-journal-text"></i>
-                                    <span class="fs-6 ms-2 d-none d-sm-inline">Gestor de calificaciones </span>
-                                </a>
-                            </li>
-                            <li class="nav-item py-2 py-sm-0 my-2"  sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
-                                <a class="nav-link text-white"
-                                    th:href="@{/Calificaciones/General}">
-                                    <i class="bi bi-journal-text"></i>
-                                    <span class="fs-6 ms-2 d-none d-sm-inline">Notas por Materia</span>
-                                </a>
-                            </li>
-                            <li class="nav-item py-2 py-sm-0 my-2"  sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
-                                <a class="nav-link text-white"
-                                    th:href="@{/Calificaciones/alumnos}">
-                                    <i class="bi bi-journal-text"></i>
-                                    <span class="fs-6 ms-2 d-none d-sm-inline">Notas por Alumno</span>
-                                </a>
-                            </li>
-
-                        </ul>
+            <div class="col-auto p-0 min-vh-100" id="sidebar" th:fragment="barraCalificaciones">
+                <div class="d-flex flex-column h-100 ">
+                    <!-- Botón de abrir/cerrar menú bajado con py-5 y mb-2 -->
+                    <div class="py-1 custom-navbar"></div>
+                    <div class="pt-5 custom-navbar">
+                        <button class="btn btn-primary" style="border-radius: 0;" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-expanded="true"
+                            aria-controls="sidebarMenu">
+                            <i class="bi bi-layout-sidebar-inset"></i>
+                        </button>
                     </div>
-                </nav>
+                    <div class="collapse collapse-horizontal show custom-navbar h-100" id="sidebarMenu">
+                        <nav class="navbar navbar-expand-lg navbar-light custom-navbar-b ">
+                            <ul class="nav flex-column mt-2 nav-pills">
+                                <li class="nav-item">
+                                    <div class="text-center bg-primary text-white">
+                                        <h2>Año 2024</h2>
+                                    </div>
+                                </li>
+                                <li class="nav-item" sec:authorize="hasAnyRole('DOCENTE')">
+                                    <a class="nav-link"
+                                        th:href="@{/Actividad/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
+                                        <i class="bi bi-journal-check"></i>
+                                        Gestor de actividades
+                                    </a>
+                                </li>
+                                <li class="nav-item nav-pills" sec:authorize="hasAnyRole('DOCENTE')">
+                                    <a class="nav-link"
+                                        th:href="@{/Calificaciones/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
+                                        <i class="bi bi-journal-text"></i>
+                                        Gestor de calificaciones
+                                    </a>
+                                </li>
+                                <li class="nav-item"
+                                    sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
+                                    <a class="nav-link" th:href="@{/Calificaciones/General}">
+                                        <i class="bi bi-journal-text"></i>
+                                        Notas por Materia
+                                    </a>
+                                </li>
+                                <li class="nav-item"
+                                    sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
+                                    <a class="nav-link text-white" th:href="@{/Calificaciones/alumnos}">
+                                        <i class="bi bi-journal-text"></i>
+                                        Notas por Alumno
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
             </div>
-            <div class=" col-md-10 offset-md-2 d-flex">
-                <header th:replace="~{home :: header}"></header>
 
+
+            <!-- Contenido Principal -->
+            <div class="col py-5 my-2">
+                <header th:replace="~{home :: header}"></header>
                 <div class="container-fluid py-2 my-2">
                     <!--Mensajes-->
                     <div th:replace="~{alertas::alertas}"></div>
@@ -68,7 +79,7 @@
                                 </div>
 
                                 <!-- Periodo Select -->
-                                <div class="col-12 col-md-4">
+                                <div class="col-10 col-md-4">
                                     <select id="pe" name="pe" th:value="${pe}" class="form-select"
                                         aria-label="Seleccione un periodo">
                                         <option value="" selected>Seleccione</option>
@@ -189,7 +200,8 @@
                             <div class="invalid-feedback">Es necesario seleccionar el periodo.</div>
                         </div> -->
                         <div class="mb-3">
-                            <label for="nombreActividadEditModal" class="col-form-label">Nombre de la Actividad:</label>
+                            <label for="nombreActividadEditModal" class="col-form-label">Nombre de la
+                                Actividad:</label>
                             <input type="text" class="form-control" id="nombreActividad" th:field="*{nombreActividad}"
                                 required />
                             <div class="invalid-feedback">Es necesario agregar un nombre.</div>
@@ -218,7 +230,8 @@
                             <div class="invalid-feedback">Es necesario seleccionar un tipo</div>
                         </div>
                         <div class="mb-3">
-                            <label for="fechaActividadEditModal" class="col-form-label">Fecha de la Actividad:</label>
+                            <label for="fechaActividadEditModal" class="col-form-label">Fecha de la
+                                Actividad:</label>
                             <input type="date" class="form-control" id="fechaActividad" th:field="*{fechaActividad}"
                                 required />
                             <div class="invalid-feedback">Es necesario agregar una fecha</div>
@@ -268,7 +281,8 @@
                             <div class="invalid-feedback">Es necesario seleccionar el periodo.</div>
                         </div> -->
                         <div class="mb-3">
-                            <label for="nombreActividadEditModal" class="col-form-label">Nombre de la Actividad:</label>
+                            <label for="nombreActividadEditModal" class="col-form-label">Nombre de la
+                                Actividad:</label>
                             <input type="text" class="form-control" id="editNombre" name="editNombre"
                                 th:field="*{nombreActividad}" required />
                             <div class="invalid-feedback">Es necesario agregar un nombre.</div>
@@ -295,7 +309,8 @@
                             <div class="invalid-feedback">Es necesario seleccionar un tipo</div>
                         </div>
                         <div class="mb-3">
-                            <label for="fechaActividadEditModal" class="col-form-label">Fecha de la Actividad:</label>
+                            <label for="fechaActividadEditModal" class="col-form-label">Fecha de la
+                                Actividad:</label>
                             <input type="date" class="form-control" id="editFechaCreacion" th:field="*{fechaActividad}"
                                 required />
                             <div class="invalid-feedback">Es necesario agregar una fecha</div>
@@ -340,7 +355,9 @@
     </div>
 
 
-    <footer th:replace="~{home :: footer}"></footer>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
     <script type="text/javascript" src="/js/modalEliminacion.js"></script>
     <script type="text/javascript" th:src="@{/js/GestionActividades.js}"></script>
 </body>

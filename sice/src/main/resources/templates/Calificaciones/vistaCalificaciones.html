@@ -13,11 +13,11 @@
 
 <body>
 
-    <div class="container-fluid my-2 py-5">
+    <div class="container-fluid">
         <div class="row">
             <div th:replace="~{Calificaciones\vistaActividades :: barraCalificaciones}">
             </div>
-            <div class="col-md-10 ms-auto">
+            <div class="col ms-auto py-5 my-2">
                 <header th:replace="~{home :: header}"></header>
 
                 <div class="container-fluid py-2 my-2 align-items-center">
@@ -187,7 +187,7 @@
                         </div>
                         <div class="col-12 table-responsive">
                             <table class="table table-hover table-sm table-bordered">
-                                <thead class="thead ">
+                                <thead class="thead table-sm">
                                     <tr>
                                         <th scope="col" colspan="3"></th>
 
@@ -201,7 +201,8 @@
                                         <th scope="col" colspan="3"></th>
                                         <!-- Encabezado para nombres de actividades, iterar solo por actividades -->
                                         <th scope="col" th:each="actividad : ${listadoActividades}"
-                                            th:text="${actividad.nombreActividad}"></th>
+                                            th:text="${actividad.nombreActividad}" class="text-center align-middle "
+                                            style="writing-mode: vertical-rl; text-orientation: mixed;"> </th>
                                         <th scope="col">Total</th>
                                     </tr>
                                 </thead>

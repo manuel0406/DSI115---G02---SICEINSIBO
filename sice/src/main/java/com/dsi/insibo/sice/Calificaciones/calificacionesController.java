@@ -84,7 +84,7 @@ public class calificacionesController {
 		List<Actividad> listadoActividades = actividadService.listaActividades(dui,
 				asignacion.getMateria().getIdMateria(), pe, codigoBachillerato);
 		List<Nota> listaNotas = notaService.listaNotaActividadBachillerato(asignacion.getDocente().getDuiDocente(),
-				asignacion.getBachillerato().getCodigoBachillerato(), pe);
+				asignacion.getBachillerato().getCodigoBachillerato(), pe, asignacion.getMateria().getIdMateria());
 		List<Alumno> listaAlumnos = alumnoService
 				.alumnosPorBachilerato(asignacion.getBachillerato().getCodigoBachillerato());
 
@@ -102,12 +102,16 @@ public class calificacionesController {
 					.computeIfAbsent(idAlumno, k -> new HashMap<>())
 					.put(idActividad, nota);
 
-			// Calcular el total de notas por alumno
-			BigDecimal notafinal = new BigDecimal(
-					(double) (nota.getNotaObtenida()) * (nota.getActividad().getPonderacionActividad() / 100));
-			notafinal = notafinal.setScale(2, RoundingMode.HALF_UP);
-			totalNotasPorAlumno.merge(idAlumno, notafinal.doubleValue(), Double::sum);
+			// Calcular el total ponderado de notas por alumno
+			BigDecimal notaObtenida = BigDecimal.valueOf(nota.getNotaObtenida());
+			BigDecimal ponderacion = BigDecimal.valueOf(nota.getActividad().getPonderacionActividad())
+					.divide(BigDecimal.valueOf(100));
+			BigDecimal notaPonderada = notaObtenida.multiply(ponderacion).setScale(2, RoundingMode.HALF_UP);
+
+			// Sumar al total de notas por alumno
+			totalNotasPorAlumno.merge(idAlumno, notaPonderada.doubleValue(), Double::sum);
 		}
+
 		// if (listadoActividades.size() == 0) {
 		// System.out.println("La lista está vacía.");
 		// } else if (listadoActividades.size() >= 0) {
@@ -122,9 +126,10 @@ public class calificacionesController {
 		// Convertir el mapa a una lista de ActividadDTO
 		List<ActividadDTO> actividadDTOList = conteoPorTipo.entrySet().stream()
 				.map(entry -> new ActividadDTO(entry.getKey(), entry.getValue().intValue()))
+				.sorted(Comparator.comparing(ActividadDTO::getNombreActividad)) // Ordenar por nombre
 				.collect(Collectors.toList());
 
-		// Agregar la lista al modelo
+		// Agregar la lista ordenada al modelo
 		model.addAttribute("actividadDTOList", actividadDTOList);
 
 		List<Periodo> periodos = periodoService.listaPeriodos();
@@ -239,7 +244,7 @@ public class calificacionesController {
 				List<Nota> listaNotas = notaService.listaNotaActividadBachillerato(
 						asignacion.getDocente().getDuiDocente(),
 						asignacion.getBachillerato().getCodigoBachillerato(),
-						pe);
+						pe, asignacion.getMateria().getIdMateria());
 				List<Alumno> listaAlumnos = alumnoService.alumnosPorBachilerato(
 						asignacion.getBachillerato().getCodigoBachillerato());
 
@@ -332,14 +337,21 @@ public class calificacionesController {
 
 	@GetMapping("/alumno/{idAlumno}")
 	public String calificacionePorAlumno(Model model, @PathVariable("idAlumno") int idAlumno) {
-
 		Alumno alumno = alumnoService.buscarPorIdAlumno(idAlumno);
+		Map<Materia, Map<Integer, Map<String, List<Nota>>>> notasAgrupadas = notaService.notasAgrupadas(alumno);
 
-		List<Nota> listaNotas= notaService.notasPorAlumno(alumno);
-		
+		// Obtener promedios globales
+		Map<Materia, Map<Integer, Double>> promediosGlobales = notaService.calcularPromediosGlobales(alumno);
 
 		model.addAttribute("alumno", alumno);
+		model.addAttribute("notasAgrupadas", notasAgrupadas);
+		model.addAttribute("promediosGlobales", promediosGlobales);
 		return "Calificaciones/CalificacionAlumno";
+	}
+
+	@GetMapping("/prueba")
+	public String getMethodName() {
+		return "prueba";
 	}
 	
 
