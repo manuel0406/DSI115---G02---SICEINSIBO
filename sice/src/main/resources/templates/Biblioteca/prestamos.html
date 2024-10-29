@@ -111,23 +111,46 @@
 
       <!-- Mostrar la paginación solo si hay datos y más de una página -->
       <div th:if="${page.totalElements > 0 and page.totalPages > 0}">
-        <nav aria-label="Page navigation">
+        <nav th:if="${page.totalPages > 1}" aria-label="Page navigation">
             <ul class="pagination justify-content-center">
-                <!-- Botón de anterior -->
+                
+                <!-- Botón Anterior -->
                 <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${page.number - 1}}">Anterior</a>
+                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + (${page.number - 1})}">Anterior</a>
                 </li>
 
-                <!-- Páginas numeradas -->
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                <!-- Primera página -->
+                <li class="page-item" th:classappend="${page.number == 0} ? 'active'">
+                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=0'}">1</a>
+                </li>
+
+                <!-- Mostrar tres puntos si la página actual está lejos del inicio -->
+                <li class="page-item disabled" th:if="${page.number > 2}">
+                    <span class="page-link">...</span>
+                </li>
+
+                <!-- Páginas alrededor de la página actual -->
+                <li class="page-item" 
+                    th:each="i : ${#numbers.sequence(page.number - 1, page.number + 4)}" 
+                    th:if="${i > 0 and i < page.totalPages - 1}" 
                     th:classappend="${page.number == i} ? 'active'">
-                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${i}}"
-                        th:text="${i + 1}">1</a>
+                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${i}}" th:text="${i + 1}">1</a>
                 </li>
 
-                <!-- Botón de siguiente -->
+                <!-- Mostrar tres puntos si la página actual está lejos del final -->
+                <li class="page-item disabled" th:if="${page.number + 4 < page.totalPages - 2}">
+                    <span class="page-link">...</span>
+                </li>
+
+                <!-- Última página -->
+                <li class="page-item" th:classappend="${page.number == page.totalPages - 1} ? 'active'">
+                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + (${page.totalPages - 1})}" 
+                      th:text="${page.totalPages}">1</a>
+                </li>
+
+                <!-- Botón Siguiente -->
                 <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
-                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${page.number + 1}}">Siguiente</a>
+                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + (${page.number + 1})}">Siguiente</a>
                 </li>
             </ul>
         </nav>
