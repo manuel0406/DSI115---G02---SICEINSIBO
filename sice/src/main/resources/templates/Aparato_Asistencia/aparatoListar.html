@@ -269,6 +269,8 @@
                 <div class="invalid-feedback">
                   Por favor ingresa un número de aparato válido.
                 </div>
+                <div class="text-danger" id="mensajeAdvertenciaDocente" style="display: none;">Identificador ya es usado por otro empleado.</div>
+
               </div>
               <div class="modal-footer">
                 <button
@@ -279,7 +281,7 @@
                 >
                   Cancelar
                 </button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-primary" id="btnGuardarDocente">Guardar</button>
               </div>
             </form>
           </div>
@@ -358,6 +360,7 @@
                 <div class="invalid-feedback">
                   Por favor ingresa un número de aparato válido.
                 </div>
+                <div class="text-danger" id="mensajeAdvertenciaPersonal" style="display: none;">Identificador ya es usado por otro empleado.</div>
               </div>
               <div class="modal-footer">
                 <button
@@ -368,7 +371,7 @@
                 >
                   Cancelar
                 </button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-primary" id="btnGuardarPersonal">Guardar</button>
               </div>
             </form>
           </div>
@@ -443,9 +446,8 @@
                 <div class="invalid-feedback">
                   Por favor ingresa un número de aparato válido.
                 </div>
-                <label for="idAparatoPersonal" class="form-label d-none"
-                  >ID de Aparato</label
-                >
+                <div class="text-danger" id="mensajeAdvertenciaActD" style="display: none;">Identificador ya es usado por otro empleado.</div>
+
                 <input
                   type="hidden"
                   class="form-control"
@@ -464,7 +466,7 @@
                 >
                   Cancelar
                 </button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-primary" id="btnActD">Guardar Cambios</button>
               </div>
             </form>
           </div>
@@ -536,6 +538,7 @@
                 <div class="invalid-feedback">
                   Por favor ingresa un número de aparato válido.
                 </div>
+                <div class="text-danger" id="mensajeAdvertenciaActP" style="display: none;">Identificador ya es usado por otro empleado.</div>
               </div>
               <div class="mb-3">
                 <label for="idAparatoPersonal" class="form-label d-none"
@@ -558,7 +561,7 @@
                 >
                   Cancelar
                 </button>
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" id="btnActP">
                   Guardar Cambios
                 </button>
               </div>
@@ -567,6 +570,18 @@
         </div>
       </div>
     </div>
+
+    <!-- ID APARATO DOCENTES Y ADMINISTRATIVO VIGENTES -->
+    <script th:inline="javascript">
+      // Obtiene los datos JSON desde el modelo Thymeleaf
+      var JSONAparato = /*[[${JSONAparato}]]*/ '[]';
+      
+      // Parseo de JSON a objetos de JavaScript
+      var aparato = JSON.parse(JSONAparato);
+  
+      console.log("Datos de aparato para docentes y personal:", aparato);
+  </script>
+  
 
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

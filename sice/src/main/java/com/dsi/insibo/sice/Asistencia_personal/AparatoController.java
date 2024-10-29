@@ -21,6 +21,9 @@ import com.dsi.insibo.sice.entity.Docente;
 import com.dsi.insibo.sice.entity.DocenteAparato;
 import com.dsi.insibo.sice.entity.PersonalAdministrativo;
 import com.dsi.insibo.sice.entity.PersonalAparato;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.data.domain.Page;
 
 import jakarta.validation.Valid;
@@ -53,39 +56,53 @@ public class AparatoController {
 
 	// LISTAR LISTA TANTO DOCENTE COMO ADMINISTRATIVOS
 	@GetMapping("/listarAparato")
-	public String listarApartoDocente(@RequestParam(defaultValue = "0") int page, 
-									@RequestParam(defaultValue = "10") int size,
-									Model model) {
+	public String listarApartoDocente(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size,
+			Model model) {
 		// Configurar paginación
 		PageRequest pageable = PageRequest.of(page, size);
-		
+
 		// Obtener la página de aparatos para docentes y administrativos
 		Page<DocenteAparato> listadoAparatoDocentePag = aparatoDocenteService.aparatoTodosDoc(pageable);
 		Page<PersonalAparato> listadoAparatoAdmiPag = aparatoPersonalService.aparatoTodosAdm(pageable);
-		
+
 		// Asignar paginación al modelo
 		model.addAttribute("aparatoDocente", listadoAparatoDocentePag);
 		model.addAttribute("aparatoPersonal", listadoAparatoAdmiPag);
-		
-		// Consideraciones finales de paginación (compara para obtener el total mayor)
-		int totalPages = Math.max(listadoAparatoDocentePag.getTotalPages(), listadoAparatoAdmiPag.getTotalPages());
-		
-		model.addAttribute("currentPage", page);
-		model.addAttribute("size", size);
-		model.addAttribute("totalPages", totalPages);
-		
-		// Listado de docentes y administrativos
-		DocenteAparato docenteAparato = new DocenteAparato();
-		List<Docente> listadoDocentes = docenteService.docentes();        
-		model.addAttribute("listaDocentes", listadoDocentes);
-		model.addAttribute("docenteAparato", docenteAparato);
+		int totalPages = Math.max(listadoAparatoDocentePag.getTotalPages(), listadoAparatoAdmiPag.getTotalPages()); // Total
+																													// mayor
+		model.addAttribute("currentPage", page); // Pagina actual
+		model.addAttribute("size", size); // Tamaño de la pagina
+		model.addAttribute("totalPages", totalPages); // Total de paginas
 
-		
-		PersonalAparato personalAparato = new PersonalAparato();
-		List<PersonalAdministrativo> listadoPersonal = administrativoService.personal();
+		// Objeto docentes y administrativo aparato para el llenado en formulario
+		DocenteAparato docenteAparato = new DocenteAparato(); // Instancia Objeto aparato docente
+		model.addAttribute("docenteAparato", docenteAparato);
+		PersonalAparato personalAparato = new PersonalAparato(); // Instancia Objeto aparato personal
 		model.addAttribute("personalAparato", personalAparato);
+
+		// Query para llenado de listado de docentes y personal
+		List<Docente> listadoDocentes = docenteService.docentes(); // Listado de docentes
+		model.addAttribute("listaDocentes", listadoDocentes);
+		List<PersonalAdministrativo> listadoPersonal = administrativoService.personal(); // Listado de personal
 		model.addAttribute("listaAdministrativo", listadoPersonal);
-		
+
+		// Query para validar identificador no repetidos
+		List<Integer> JSONDocente = aparatoDocenteService.obtenerAparatoDocente(); // Obtenemos ID Aparato Docente
+		List<Integer> JSONPersonal = aparatoPersonalService.obtenerAparatoPersonal(); // Obtenermos ID Aparato Personal
+		JSONDocente.addAll(JSONPersonal); // Uno Listas
+		List<Integer> JSONID = JSONDocente; // Asigno una lista para mayor legibilidad
+
+		// Convertir objetos a JSON
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			String JSONAparato = objectMapper.writeValueAsString(JSONID); // Conversion de aparatoDocente a JSON
+			model.addAttribute("JSONAparato", JSONAparato);
+
+		} catch (JsonProcessingException e) {
+			System.out.println("Error al convertir a JSON: " + e);
+		}
+
 		// Retornar la vista
 		return "Aparato_Asistencia/aparatoListar";
 	}
@@ -115,54 +132,53 @@ public class AparatoController {
 	public String guardaPersonalAp(@Valid @ModelAttribute PersonalAparato personalAparato,
 			@RequestParam("personal") String personalDui, BindingResult result, Model model,
 			RedirectAttributes attribute) {
-				List<AdministrativoDTO> listadoPersonales= administrativoService.listarAdministrativos();
-				if(result.hasErrors()){
-					model.addAttribute("personalAparato", personalAparato);
-					model.addAttribute("personal", listadoPersonales);
-					attribute.addFlashAttribute("error","El número ya esta asignado.");
-					return "Aparato_Asistencia/agregarNumeroAparatoPersonal";
-				}
-				PersonalAdministrativo administrativos = administrativoService.buscarPorIdAdministrativo(personalDui);
-				personalAparato.setPersonal(administrativos);
-				aparatoPersonalService.guardarPersonalAparato(personalAparato);
+		List<AdministrativoDTO> listadoPersonales = administrativoService.listarAdministrativos();
+		if (result.hasErrors()) {
+			model.addAttribute("personalAparato", personalAparato);
+			model.addAttribute("personal", listadoPersonales);
+			attribute.addFlashAttribute("error", "El número ya esta asignado.");
+			return "Aparato_Asistencia/agregarNumeroAparatoPersonal";
+		}
+		PersonalAdministrativo administrativos = administrativoService.buscarPorIdAdministrativo(personalDui);
+		personalAparato.setPersonal(administrativos);
+		aparatoPersonalService.guardarPersonalAparato(personalAparato);
 		attribute.addFlashAttribute("error", "Asignado con exito.");
 		return "redirect:/aparato/listarAparato";
 	}
 
 	// METODO ACTUALIZAR ADMINISTRATIVO
-    @PostMapping("/actualizarNumeroPersonal")
-    public String actualizarPersonalAp(@RequestParam("personalAsignado") String duiPersonal, 
-										@RequestParam("numAparatoPersonal") int numAparato,
-										@RequestParam("idAparatoPersonal") int idAparato,
-										RedirectAttributes redirectAttributes) {
+	@PostMapping("/actualizarNumeroPersonal")
+	public String actualizarPersonalAp(@RequestParam("personalAsignado") String duiPersonal,
+			@RequestParam("numAparatoPersonal") int numAparato,
+			@RequestParam("idAparatoPersonal") int idAparato,
+			RedirectAttributes redirectAttributes) {
 		PersonalAparato personalAparato = aparatoPersonalService.buscarPorIdAparatoPersonal(idAparato);
-		if(personalAparato == null){
+		if (personalAparato == null) {
 			redirectAttributes.addFlashAttribute("error", "El ID no existe");
-            return "redirect:/aparato/listarAparato";
+			return "redirect:/aparato/listarAparato";
 		}
 
 		personalAparato.setNumeroAparatoPersonal(numAparato);
 		aparatoPersonalService.guardarPersonalAparato(personalAparato);
-  		return "redirect:/aparato/listarAparato";
-    }
-
+		return "redirect:/aparato/listarAparato";
+	}
 
 	// METODO ACTUALIZAR DOCENTE
-    @PostMapping("/actualizarNumeroDocente")
-    public String actualizarDocenteAp(@RequestParam("docenteAsignado") String duiDocente, 
-										@RequestParam("numAparatoDocente") int numAparato,
-										@RequestParam("idAparatoDocente") int idAparato,
-										RedirectAttributes redirectAttributes) {
+	@PostMapping("/actualizarNumeroDocente")
+	public String actualizarDocenteAp(@RequestParam("docenteAsignado") String duiDocente,
+			@RequestParam("numAparatoDocente") int numAparato,
+			@RequestParam("idAparatoDocente") int idAparato,
+			RedirectAttributes redirectAttributes) {
 		DocenteAparato docenteAparato = aparatoDocenteService.buscarPorIdAparatoDocente(idAparato);
-		if(docenteAparato == null){
+		if (docenteAparato == null) {
 			redirectAttributes.addFlashAttribute("error", "El ID no existe");
-            return "redirect:/aparato/listarAparato";
+			return "redirect:/aparato/listarAparato";
 		}
 
 		docenteAparato.setNumeroAparatoDocente(numAparato);
 		aparatoDocenteService.guardarDocenteAparato(docenteAparato);
-  		return "redirect:/aparato/listarAparato";
-    }
+		return "redirect:/aparato/listarAparato";
+	}
 
 	// METODO ELIMINAR DOCENTE
 	@GetMapping("/eliminarNumeroDocente/{id}")
@@ -184,10 +200,11 @@ public class AparatoController {
 		attribute.addFlashAttribute("warning", "Registro eliminado con exito.");
 		return "redirect:/aparato/listarAparato";
 	}
-	
+
 	// METODO ELIMINAR ADMINISTRATIVO
 	@GetMapping("/eliminarNumeroAdmnistrativo/{id}")
-	public String eliminarNumeroAdministrativo(@PathVariable("id") int idAparato, Model model, RedirectAttributes attribute) {
+	public String eliminarNumeroAdministrativo(@PathVariable("id") int idAparato, Model model,
+			RedirectAttributes attribute) {
 		PersonalAparato personalAparato = null;
 		if (idAparato > 0) {
 			personalAparato = aparatoPersonalService.buscarPorIdAparatoPersonal(idAparato);
