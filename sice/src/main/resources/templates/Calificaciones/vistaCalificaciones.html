@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:fragment="head">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestión de Actividades</title>
-    <link rel="shortcut icon" type="image/x-icon" th:href="@{/Imagenes/INSIBO2.ico}">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
-</head>
+<head th:replace="~{home :: head}"></head>
 
 <body>
 
@@ -27,8 +19,8 @@
                     <div sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')"
                         class="card bg-light shadow-sm p-4 my-3">
                         <div class="container-fluid">
-                            <form class="row gy-3 gx-4 align-items-center" id="formPeriodo" method="get"
-                                th:action="@{/Calificaciones/General}">
+                            <form class="row gy-3 gx-4 align-items-center needs-validation" id="formCalificaciones"
+                                novalidate method="get" th:action="@{/Calificaciones/General}">
 
                                 <!-- Materia -->
                                 <div class="col-md-6">
@@ -36,13 +28,14 @@
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-journal-bookmark"></i></span>
                                         <select id="idMateria" name="idMateria" th:value="${idMateria}"
-                                            class="form-select" aria-label="Seleccione una materia">
+                                            class="form-select" aria-label="Seleccione una materia" required>
                                             <option value="" selected>Seleccione</option>
-                                            <option th:each="materia : ${listaMaterias}" th:value="${materia.idMateria}"
-                                                th:text="${materia.nomMateria}"
-                                                th:selected="${materia.idMateria == idMateria}">
+                                            <option th:each="materi : ${listaMaterias}" th:value="${materi.idMateria}"
+                                                th:text="${materi.nomMateria}"
+                                                th:selected="${materi.idMateria.toString() == idMateria}">
                                             </option>
                                         </select>
+                                        <div class="invalid-feedback">Es necesario seleccionar una materia.</div>
                                     </div>
                                 </div>
 
@@ -52,23 +45,23 @@
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
                                         <select id="docente" name="docente" th:value="${docente}" class="form-select"
-                                            aria-label="Seleccione un docente">
+                                            aria-label="Seleccione un docente" required>
                                             <option value="" selected>Seleccione</option>
-                                            <option th:each="docente : ${docentes}" th:value="${docente.duiDocente}"
-                                                th:text="${docente.nombreDocente + ' ' + docente.apellidoDocente}"
-                                                th:selected="${docente.duiDocente == docente}">
+                                            <option th:each="docent : ${docentes}" th:value="${docent.duiDocente}"
+                                                th:text="${docent.nombreDocente + ' ' + docent.apellidoDocente}"
+                                                th:selected="${docent.duiDocente == docente}">
                                             </option>
                                         </select>
+                                        <div class="invalid-feedback">Es necesario seleccionar un docente.</div>
                                     </div>
                                 </div>
-
                                 <!-- Carrera -->
                                 <div class="col-md-6">
                                     <label for="carrera" class="form-label fs-6 fw-semibold">Carrera:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-building"></i></span>
                                         <select id="carrera" name="carrera" th:value="${carrera}" class="form-select"
-                                            aria-label="Seleccione una carrera">
+                                            aria-label="Seleccione una carrera" required>
                                             <option value="" selected>Seleccione</option>
                                             <option th:each="bachillerato : ${bachilleratos}"
                                                 th:value="${bachillerato.nombreCarrera}"
@@ -76,63 +69,62 @@
                                                 th:selected="${bachillerato.nombreCarrera == carrera}">
                                             </option>
                                         </select>
+                                        <div class="invalid-feedback">Es necesario seleccionar una carrera.</div>
                                     </div>
                                 </div>
-
                                 <!-- Año (Grado) -->
                                 <div class="col-md-6">
                                     <label for="grado" class="form-label fs-6 fw-semibold">Año:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
                                         <select id="grado" name="grado" th:value="${grado}" class="form-select"
-                                            aria-label="Seleccione un grado">
+                                            aria-label="Seleccione un grado" required>
                                             <option value="" selected>Seleccione</option>
                                             <option value="1" th:selected="${grado == '1'}">1</option>
                                             <option value="2" th:selected="${grado == '2'}">2</option>
                                             <option value="3" th:selected="${grado == '3'}">3</option>
                                         </select>
+                                        <div class="invalid-feedback">Es necesario seleccionar un año.</div>
                                     </div>
                                 </div>
-
                                 <!-- Sección -->
                                 <div class="col-md-6">
                                     <label for="seccion" class="form-label fs-6 fw-semibold">Sección:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-list-check"></i></span>
                                         <select id="seccion" name="seccion" th:value="${seccion}" class="form-select"
-                                            aria-label="Seleccione una sección">
+                                            aria-label="Seleccione una sección" required>
                                             <option value="" selected>Seleccione</option>
                                             <option value="A" th:selected="${seccion == 'A'}">A</option>
                                             <option value="B" th:selected="${seccion == 'B'}">B</option>
                                             <option value="C" th:selected="${seccion == 'C'}">C</option>
                                             <option value="D" th:selected="${seccion == 'D'}">D</option>
                                         </select>
+                                        <div class="invalid-feedback">Es necesario seleccionar una seccion.</div>
                                     </div>
                                 </div>
-
                                 <!-- Periodo -->
                                 <div class="col-md-6">
                                     <label for="periodo" class="form-label fs-6 fw-semibold">Periodo:</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-clock-history"></i></span>
                                         <select id="pe" name="pe" th:value="${pe}" class="form-select"
-                                            aria-label="Seleccione un periodo">
+                                            aria-label="Seleccione un periodo" required>
                                             <option value="" selected>Seleccione</option>
                                             <option th:each="period : ${periodos}" th:value="${period.idPeriodo}"
                                                 th:text="${period.numeroPeriodo}"
                                                 th:selected="${period.idPeriodo.toString() == pe}">
                                             </option>
                                         </select>
+                                        <div class="invalid-feedback">Es necesario seleccionar un periodo.</div>
                                     </div>
                                 </div>
-
                                 <!-- Botón de Buscar -->
                                 <div class="col-12 text-end">
                                     <button type="submit" class="btn btn-primary">
                                         <i class="bi bi-search"></i> Buscar
                                     </button>
                                 </div>
-
                             </form>
                         </div>
                     </div>
@@ -166,7 +158,7 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
+                    </div>                    
                     <div
                         th:if="${pe != null || (asignacion != null and asignacion.materia != null and asignacion.materia.tipoMateria != 'Básica')}">
                         <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
@@ -245,6 +237,7 @@
 
 
     <footer th:replace="~{home :: footer}"></footer>
+    <script type="text/javascript" th:src="@{/js/validacionRequired.js}"></script>
 </body>
 
 </html>
