@@ -86,17 +86,10 @@ public class OrientadorController {
 
         return "redirect:/AsignacionOrientador/Asignar";
     }
+
     @PostMapping("/actualizarOrientacion")
     public String actualizarorientador(@ModelAttribute Orientador orientador, RedirectAttributes attributes) {
 
-        Orientador existe = null;
-
-        // existe = orientadorService.existe(orientador.getBachillerato().getCodigoBachillerato());
-        
-        // if (existe.getDocente().getDuiDocente() != orientador.getDocente().getDuiDocente()) {
-        //     attributes.addFlashAttribute("error", "¡Está sección ya fue asignada!");
-        //     return "redirect:/AsignacionOrientador/Asignar";
-        // }
         orientadorService.guardarOrientador(orientador);
         attributes.addFlashAttribute("success", "¡Registro guardado con exito!");
 
@@ -149,6 +142,7 @@ public class OrientadorController {
         model.addAttribute("carrera", carrera);
         model.addAttribute("grado", grado);
         model.addAttribute("seccion", seccion);
+        model.addAttribute("genero", genero);
         model.addAttribute("page", page);
         model.addAttribute("totalPages", pageAlumnos.getTotalPages());
         model.addAttribute("url", "/AsignacionOrientador/seccionAsigada/" + id);
@@ -158,9 +152,9 @@ public class OrientadorController {
                                           // pagina
         model.addAttribute("baseIndex", baseIndex);
         model.addAttribute("urlBtnEditar", "/ExpedienteAlumno/editar/");
-		model.addAttribute("urlBtnVer", "/ExpedienteAlumno/Alumno/");
-		model.addAttribute("urlBtnEli", "/ExpedienteAlumno/delete/");
-		model.addAttribute("navMatriculados", false);
+        model.addAttribute("urlBtnVer", "/ExpedienteAlumno/Alumno/");
+        model.addAttribute("urlBtnEli", "/ExpedienteAlumno/delete/");
+        model.addAttribute("navMatriculados", false);
 
         // Retornar el nombre de la vista a ser renderizada
         return "Expediente_alumno/verAlumno";
@@ -171,7 +165,7 @@ public class OrientadorController {
             @RequestParam(value = "carrera", required = false) String carrera,
             @RequestParam(value = "grado", required = false) String grado,
             @RequestParam(value = "seccion", required = false) String seccion,
-            @RequestParam(value = "seccion", required = false) String genero) {
+            @RequestParam(value = "genero", required = false) String genero) {
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(id);
         // Convertir cadenas vacías a null para evitar problemas con las consultas
 
@@ -186,8 +180,8 @@ public class OrientadorController {
         List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
 
         carrera = bachillerato.getNombreCarrera();
-		grado = String.valueOf(bachillerato.getGrado());
-		seccion = bachillerato.getSeccion();
+        grado = String.valueOf(bachillerato.getGrado());
+        seccion = bachillerato.getSeccion();
 
         // Crear un objeto ModelAndView con la vista "Expediente_alumno/verAlumnoPdf"
         ModelAndView modelAndView = new ModelAndView("Expediente_alumno/verAlumnoPdf");

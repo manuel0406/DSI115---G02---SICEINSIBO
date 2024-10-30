@@ -159,7 +159,7 @@ public class AlumnoService {
      * @param codigoBachillerato Código del bachillerato.
      * @return Lista de alumnos que pertenecen al bachillerato especificado.
      */
-    public List<Alumno> findAlumnosByBachilleratoCodigoBachillerato(int codigoBachillerato) {
+    public List<Alumno> alumnosPorBachilerato(int codigoBachillerato) {
         return alumnoRepository.findByBachilleratoCodigoBachillerato(codigoBachillerato);
     }
 
@@ -169,5 +169,9 @@ public class AlumnoService {
 
     public List<Alumno> yaMatriculado(){
         return alumnoRepository.yaMatriculado();
+    }
+
+    public List<Alumno> buscarPorNombre(String nombre) {
+        return alumnoRepository.findByNombreAlumnoContainingIgnoreCase(nombre);
     }
 }

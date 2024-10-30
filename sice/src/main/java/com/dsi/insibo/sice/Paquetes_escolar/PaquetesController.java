@@ -64,7 +64,7 @@ public class PaquetesController {
 
     @GetMapping("/inicio")
     public String paquetesInicio(Model model) {
-        model.addAttribute("pageTitle", "Inicio paquetes");
+        model.addAttribute("titulo", "Inicio paquetes");
         return "Paquetes_escolares/inicioPaquetes";
     }
 
@@ -72,7 +72,7 @@ public class PaquetesController {
     @GetMapping("/listaDonaciones")
     public String paquetesDonaciones(Model model) {
         model.addAttribute("donaciones", inventarioDonacionService.obtenerTodasLasDonaciones());
-        model.addAttribute("pageTitle", "Paquetes escolares");
+        model.addAttribute("titulo", "Paquetes escolares");
         return "Paquetes_escolares/listaDonaciones";
     }
 
@@ -178,7 +178,7 @@ public class PaquetesController {
         List<Object[]> bachilleratos = inventarioDonacionService.obtenerBachilleratosPorAnioAcademico(idAnioAcademico);
         // Agregar los bachilleratos al modelo
         model.addAttribute("bachilleratos", bachilleratos);
-        model.addAttribute("pageTitle", "Reportes entrega");
+        model.addAttribute("titulo", "Reportes entrega");
         return "Paquetes_escolares/generarEntregas";
     }
 
@@ -229,7 +229,7 @@ public class PaquetesController {
             Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(idBachillerato);
             model.addAttribute("bachillerato", bachillerato);
             model.addAttribute("id", idBachillerato);
-            model.addAttribute("pageTitle", "Paquetes escolares");
+            model.addAttribute("titulo", "Paquetes escolares");
             return "Paquetes_escolares/generarEntregas";
         }
 
@@ -273,7 +273,7 @@ public class PaquetesController {
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(idBachillerato);
 
         // Añadir atributos al modelo
-        model.addAttribute("pageTitle", "Reportes entrega");
+        model.addAttribute("titulo", "Reportes entrega");
         model.addAttribute("fechaPaquete", fechaPaquete);
         model.addAttribute("estadoEntrega", estadoEntrega);
         model.addAttribute("bachillerato", bachillerato);

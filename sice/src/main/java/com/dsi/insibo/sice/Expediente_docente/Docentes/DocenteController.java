@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.dsi.insibo.sice.Expediente_docente.Docentes.Anexos.AnexoDocenteService;
+import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
 import com.dsi.insibo.sice.Seguridad.SeguridadService.UsuarioService;
 import com.dsi.insibo.sice.entity.AnexoDocente;
 import com.dsi.insibo.sice.entity.Docente;
@@ -31,27 +32,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class DocenteController {
     @Autowired
     private AnexoDocenteService anexoDocenteService;
-
     @Autowired
     private UsuarioService usuarioService;
-    // Lista docentes usando la DB /expedientedocente/plantadocente
     @Autowired
     private DocenteService docenteService;
+    @Autowired
+	SessionService sesion;
 
-    // Ficha general de expediente docente /expedientedocente/formulario
+    // CONTROLADORES CRUD
+    // Guardar un docente (guardar rol)
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
-    @GetMapping("/formulario")
-    public String abrirformulario(Model model) {
-        Docente profesor = new Docente();
-
-        model.addAttribute("profesor", profesor);
-        model.addAttribute("titulo", "Nuevo usuario");
-
-        return "Expediente_docente/Docentes/fichaDocente";
-    }
-
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
-    // guardando formulario
     @PostMapping("/guardar")
     public String guardar(@Validated @ModelAttribute Docente docente,
             @RequestParam("docenteRol") String rolSeleccionado, BindingResult result, Model model,
@@ -102,6 +92,7 @@ public class DocenteController {
 
             // Fin del codigo para usuario
             // guardando el registro
+            docente.setActivo(true);
             docenteService.guardarDocente(docente);
             usuarioService.asignarRol(usuario, idRol); //Guardado y asignado de rol
             attribute.addFlashAttribute("success", "Expediente creado con exito!");
@@ -110,7 +101,7 @@ public class DocenteController {
         }
     }
 
-    // actualizando la informacion de un docente
+    // Actualizar un docente (Si actualiza rol)
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR', 'DOCENTE')")
     @PostMapping("/actualizar")
     public String actualizar(@Validated @ModelAttribute Docente docente,
@@ -137,22 +128,61 @@ public class DocenteController {
                 break;
         }
         usuarioService.asignarRol(usuario, idRol);          // Guardamos la actualización
+        docente.setActivo(true);
         docenteService.guardarDocente(docente);
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
         return "redirect:plantadocente";
     }
 
+    // Actualizar ficha del docente que ha iniciado sesión (No actualiza rol)
     @PreAuthorize("hasRole('DOCENTE')")
     @PostMapping("/actualizarGen")
     public String actualizarGen(@Validated @ModelAttribute Docente docente,
             @RequestParam("docenteRol") String rolSeleccionado, BindingResult result, Model model,
             RedirectAttributes attribute) {
 
+        docente.setActivo(true);
         docenteService.guardarDocente(docente);
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
-        return "redirect:consultarexpediente/" + docente.getDuiDocente();
+        return "redirect:miexpediente";
     }
 
+    // Consultar un docente
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
+    @GetMapping("/consultarexpediente/{id}")
+    public String consultarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
+
+        Docente profesor = docenteService.buscarPorIdDocente(idDocente);
+        if (profesor == null) {
+            attribute.addFlashAttribute("error", "El expediente no existe dentro del sistema");
+            return "redirect:/expedientedocente/plantadocente";
+        }
+
+        model.addAttribute("profesor", profesor);
+        model.addAttribute("editar", true);
+        model.addAttribute("titulo", "Expediente");
+        return "Expediente_docente/Docentes/fichaDocenteConsult";
+    }
+
+    // Consultar el docente que ha iniciado sesión
+    @PreAuthorize("hasRole('DOCENTE')")
+    @GetMapping("/miexpediente")
+    public String consultarMiExpediente(Model model, RedirectAttributes attribute) {
+
+		String idDocente = sesion.duiSession();
+        Docente profesor = docenteService.buscarPorIdDocente(idDocente);
+        if (profesor == null) {
+            attribute.addFlashAttribute("error", "El expediente no existe dentro del sistema");
+            return "redirect:/";
+        }
+
+        model.addAttribute("profesor", profesor);
+        model.addAttribute("editar", true);
+        model.addAttribute("titulo", "Expediente");
+        return "Expediente_docente/Docentes/fichaDocenteConsult";
+    }
+
+    // Listar todos los docentes
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'DOCENTE', 'SUBDIRECTORA')")
     @GetMapping("/plantadocente")
     public String listarDocentes(Model model,
@@ -165,44 +195,85 @@ public class DocenteController {
         // Hace la conversion de la estructura List a Page
         PageRequest pageRequest = PageRequest.of(page, size);
         List<DocenteDTO> listadoDocentes = docenteService.listarDocentes();
+        //List<DocenteDTO> listadoDocentesInactivos = docenteService.listarDocentesInactivos();
+
         Page<DocenteDTO> pagedocentes = new PageImpl<>(listadoDocentes.subList(pageRequest.getPageNumber() * pageRequest.getPageSize(),
                 Math.min((pageRequest.getPageNumber() + 1) * pageRequest.getPageSize(), listadoDocentes.size())),
                 pageRequest, listadoDocentes.size());
 
         model.addAttribute("titulo", "Planta Docente");
         model.addAttribute("Docentes", listadoDocentes);
+        //model.addAttribute("DocentesInactivos", listadoDocentesInactivos);
         model.addAttribute("totalPages", pagedocentes.getTotalPages());
         // Hace el envio de la estructura con paginación a la vista
         model.addAttribute("page", pagedocentes);
         return "Expediente_docente/Docentes/listarDocentes"; // Vista HTML
     }
 
-    // Consultando docente
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'DOCENTE', 'SUBDIRECTORA', 'DIRECTOR')")
-    @GetMapping("/consultarexpediente/{id}")
-    public String consultarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
-
+    // Eliminar un docente (Pasa a estado inactivo)
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
+    @GetMapping("/eliminarexpediente/{id}")
+    public String eliminarDocente(@PathVariable("id") String idDocente, RedirectAttributes attribute) {
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
+
+        // Controlando el ingreso de un id inexistente desde URL
         if (profesor == null) {
-            attribute.addFlashAttribute("error", "El expediente no existe");
+            attribute.addFlashAttribute("error", "El expediente no existe dentro del sistema");
             return "redirect:/expedientedocente/plantadocente";
         }
 
-        model.addAttribute("profesor", profesor);
-        model.addAttribute("editar", true);
-        model.addAttribute("titulo", "Expediente");
-        return "Expediente_docente/Docentes/fichaDocenteConsult";
+        /* anexoDocenteService.eliminarAnexoDocente(idDocente);
+        usuarioService.eliminarUsuarioPorDocenteId(idDocente);
+        docenteService.eliminar(idDocente); */
+
+        // cuando un docente es "eliminado" este no se borra del sistema sino que pasa a un estado 'inactivo'
+        profesor.setActivo(false);
+        docenteService.guardarDocente(profesor);
+        attribute.addFlashAttribute("warning", "El administrativo " + profesor.getNombreDocente() + " "
+                + profesor.getApellidoDocente() + " ha sido eliminado de la planta docente");  
+        return "redirect:/expedientedocente/plantadocente";
     }
 
-    // Editando docente
+    // Restaurar un docente
+/*     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
+    @GetMapping("/restaurarexpediente/{id}")
+    public String restararDocente(@PathVariable("id") String idDocente, RedirectAttributes attribute) {
+        Docente profesor = docenteService.buscarPorIdDocente(idDocente);
+        if (profesor == null) {
+            attribute.addFlashAttribute("error", "El expediente no existe dentro del sistema");
+            return "redirect:/expedientedocente/plantadocente";
+        }
+
+        // cuando un docente es "eliminado" este no se borra del sistema sino que pasa a un estado 'inactivo'
+        profesor.setActivo(true);
+        docenteService.guardarDocente(profesor);
+        attribute.addFlashAttribute("success", "El administrativo " + profesor.getNombreDocente() + " "
+                + profesor.getApellidoDocente() + " ha sido restaurado a la planta docente");  
+        return "redirect:/expedientedocente/plantadocente";
+    }
+ */
+    
+    // OTROS CONTROLADORES
+    // Habilitar el formulario en modo 'agregar'
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
-    // Editando docente como director, subdirector
+    @GetMapping("/formulario")
+    public String abrirformulario(Model model) {
+        Docente profesor = new Docente();
+
+        model.addAttribute("profesor", profesor);
+        model.addAttribute("titulo", "Nuevo usuario");
+
+        return "Expediente_docente/Docentes/fichaDocente";
+    }
+
+    // Habilitar el formulario en modo 'editar'
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/editarexpediente/{id}")
     public String editarDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
 
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
         if (profesor == null) {
-            attribute.addFlashAttribute("error", "El expediente no existe");
+            attribute.addFlashAttribute("error", "El expediente no existe dentro del sistema");
             return "redirect:/expedientedocente/plantadocente";
         }
 
@@ -212,14 +283,15 @@ public class DocenteController {
         return "Expediente_docente/Docentes/fichaDocente";
     }
 
+    // habilitar el formulario en modo 'editar' con ficha limitada
     @PreAuthorize("hasRole('DOCENTE')")
-    // Editando docente como docente, osea solo datos generales
-    @GetMapping("/editarmiexpediente/{id}")
-    public String editarComoDocente(@PathVariable("id") String idDocente, Model model, RedirectAttributes attribute) {
+    @GetMapping("/editarmiexpediente")
+    public String editarComoDocente(Model model, RedirectAttributes attribute) {
+        String idDocente = sesion.duiSession();
         Docente profesor = docenteService.buscarPorIdDocente(idDocente);
         if (profesor == null) {
-            attribute.addFlashAttribute("error", "El expediente no existe");
-            return "redirect:/expedientedocente/plantadocente";
+            attribute.addFlashAttribute("error", "El expediente no existe dentro del sistema");
+            return "redirect:/";
         }
 
         model.addAttribute("profesor", profesor);
@@ -227,34 +299,7 @@ public class DocenteController {
         return "Expediente_docente/Docentes/fichaDocenteLimitada";
     }
 
-    // Eliminar ficha
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
-    @GetMapping("/eliminarexpediente/{id}")
-    public String eliminarDocente(@PathVariable("id") String idDocente, RedirectAttributes attribute) {
-        Docente profesor = docenteService.buscarPorIdDocente(idDocente);
-
-        if (profesor == null) {
-            attribute.addFlashAttribute("error", "El expediente no existe");
-            return "redirect:/expedientedocente/plantadocente";
-        }
-
-        anexoDocenteService.eliminarAnexoDocente(idDocente);
-        usuarioService.eliminarUsuarioPorDocenteId(idDocente);
-        docenteService.eliminar(idDocente);
-        attribute.addFlashAttribute("warning", "El expediente se elimino");
-
-        return "redirect:/expedientedocente/plantadocente";
-    }
-
-    @Controller
-    public class OtroController {
-        @RequestMapping("/inicioexpedientes")
-        public String inicio() {
-            return "Expediente_docente/inicioExpedientes";
-        }
-    }
-
-    // Gestionando anexos
+    // Habilitar la sección de anexos
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'DOCENTE', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("Documentos/{id}")
     public String docenteDocumentos(@PathVariable("id") String idDocente, Model model,
@@ -267,7 +312,7 @@ public class DocenteController {
 
             // Verifica que exista
             if (docente == null) {
-                attributes.addFlashAttribute("error", "Error: El expediente no existe");
+                attributes.addFlashAttribute("error", "El expediente no existe dentro del sistema");
                 return "redirect:/expedientedocente/plantaadministrativa";
             }
         } else {
@@ -287,4 +332,5 @@ public class DocenteController {
         // return "Expediente_docente/docenteDocumentos";
         return "Expediente_docente/docentes/docenteDocumentos";
     }
+
 }

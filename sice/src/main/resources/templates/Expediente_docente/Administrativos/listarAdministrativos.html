@@ -25,6 +25,10 @@
                     data-bs-placement="top" title="Agregar administrativo">
                     <i class="bi bi-person-plus"></i> Agregar
                 </a>
+                <!-- <button class="btn btn-primary btn-sm mx-1 editar-btn" data-bs-toggle="modal"
+                    data-bs-target="#administrativosNoActivos">
+                    <i class="bi bi-clock-history"></i> Inactivos
+                </button> -->
             </div>
         </div>
 
@@ -45,7 +49,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="administrativoDTO : ${page.content}">
+                    <tr th:each="administrativoDTO : ${page.content}"
+                        th:if="${administrativoDTO.administrativo.activo}">
                         <td th:text="${administrativoDTO.administrativo.nombrePersonal}"></td>
                         <td th:text="${administrativoDTO.administrativo.apellidoPersonal}"></td>
                         <td th:text="${administrativoDTO.administrativo.profesionPersonal}"></td>
@@ -86,23 +91,43 @@
                 <label th:text="${'¡No hay administrativos registrados!'}"></label>
             </div>
 
+            <!-- Maneja la paginacion  -->
             <div th:if="${totalPages != 0}">
-                <nav aria-label="...">
+                <nav aria-label="Paginación">
                     <ul class="pagination justify-content-center">
+
+                        <!-- Botón "Anterior" -->
                         <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
                             <a class="page-link"
-                                th:href="@{'/expedienteadministrativo/plantaadministrativa?page=' + ${page.number - 1}}">Anterior</a>
+                                th:href="@{'/expedienteadministrativo/plantaadministrativa?page=' + ${page.number - 1}}"
+                                tabindex="-1">Anterior</a>
                         </li>
-                        <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+
+                        <!-- Si hay más de 5 páginas, agregar marcador "..." antes -->
+                        <li class="page-item" th:if="${page.number > 2}">
+                            <span class="page-link">...</span>
+                        </li>
+
+                        <!-- Páginas limitadas a un rango visible de 5 alrededor de la página actual -->
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence((page.number - 2) > 0 ? (page.number - 2) : 0, (page.number + 2) < page.totalPages - 1 ? (page.number + 2) : page.totalPages - 1)}"
                             th:classappend="${page.number == i} ? 'active'">
                             <a class="page-link"
                                 th:href="@{'/expedienteadministrativo/plantaadministrativa?page=' + ${i}}"
                                 th:text="${i + 1}">1</a>
                         </li>
+
+                        <!-- Si hay más páginas después del rango visible, agregar marcador "..." -->
+                        <li class="page-item" th:if="${page.number + 3 < page.totalPages}">
+                            <span class="page-link">...</span>
+                        </li>
+
+                        <!-- Botón "Siguiente" -->
                         <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
                             <a class="page-link"
                                 th:href="@{'/expedienteadministrativo/plantaadministrativa?page=' + ${page.number + 1}}">Siguiente</a>
                         </li>
+
                     </ul>
                 </nav>
             </div>
@@ -129,6 +154,51 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal con los administrativos no activos, es decir "eliminados" -->
+    <!--     <div class="modal fade" id="administrativosNoActivos" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Administrativos Inactivos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div th:each="administrativoDTO : ${AdministrativosInactivos}"
+                            th:if="${!administrativoDTO.administrativo.activo}" class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary"
+                                        th:text="${administrativoDTO.administrativo.nombrePersonal + ' ' + administrativoDTO.administrativo.apellidoPersonal}">
+                                    </h5>
+                                    <p class="card-text mb-1"><strong>DUI:</strong> <span
+                                            th:text="${administrativoDTO.administrativo.duiPersonal}"></span></p>
+                                    <p class="card-text"><small class="text-muted">Estado: Inactivo</small></p>
+                                    <div class="d-flex justify-content-between">
+                                        <a class="btn btn-primary btn-sm mx-1"
+                                            th:href="@{/expedienteadministrativo/restaurarexpediente/} + ${administrativoDTO.administrativo.duiPersonal}"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Restaurar al administrativo">
+                                            <i class="bi bi-person-plus"></i> Restaurar
+                                        </a>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm"
+                                            data-bs-dismiss="modal">
+                                            <i class="bi bi-x-circle"></i> Cerrar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${#lists.isEmpty(AdministrativosInactivos)}">
+                        <p class="text-center text-muted">No hay administrativos inactivos en este momento.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
 
     <footer th:replace="~{home :: footer}"></footer>
     <script type="text/javascript" src="/js/modalEliminacion.js"></script>

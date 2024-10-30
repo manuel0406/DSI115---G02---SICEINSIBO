@@ -18,27 +18,18 @@
 
                 <div class="container-fluid py-5 my-2">
                     <!--Mensajes-->
-                    <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2"
-                        th:if="${success != null}">
-                        <label th:text="${success}"></label>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div class="alert alert-warning alert-dismissible fade show mt-1 ms-2 mr-2"
-                        th:if="${warning != null}">
-                        <label th:text="${warning}"></label>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                    <div th:replace="~{alertas::alertas}"></div>
                     <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
                         <h3 class="text-start col-lg-9" th:text="${'Listado de sanciones de: '+ alumno.nombreAlumno}">
                         </h3>
                         <div class="d-flex gap-2">
                             <a class="btn btn-secondary"
                                 th:href="@{/ExpedienteAlumno/Sanciones/{nie}(nie=${alumno.idAlumno}, format='pdf')}"
-                                data-bs-toggle="tooltip" data-bs-placement="top" title="Imprimir listado actual"
+                                data-bs-t="tooltip" data-bs-placement="top" title="Imprimir listado actual"
                                 target="_blank" onclick="openInPopup(this.href); return false;">
                                 <i class="bi bi-printer"></i> Imprimir listado
                             </a>
-                            <a class="btn btn-primary Agregar-btn" data-bs-toggle="tooltip" data-bs-placement="top"
+                            <a class="btn btn-primary Agregar-btn" data-bs-t="tooltip" data-bs-placement="top"
                                 title="Agregar Sancion" th:text="'Agregar Sancion'"></a>
                         </div>
                     </div>
@@ -60,7 +51,7 @@
                                     <td class="text-center fs-6"
                                         th:text="${#dates.format(sanciones.fechaSancion,'dd/MM/yyyy')}"></td>
                                     <td class="text-center">
-                                        <a class="btn btn-success editar-btn" data-bs-toggle="modal"
+                                        <a class="btn btn-success editar-btn" data-bs-t="tooltip" data-bs-toggle="modal"
                                             data-bs-target="#consultarSancionModal" data-bs-placement="top"
                                             title="Consultar" th:data-id="${sanciones.idSancion}"
                                             th:data-des="${sanciones.descripcionSancion}"
@@ -69,7 +60,7 @@
                                             th:data-fec="${#dates.format(sanciones.fechaSancion,'dd/MM/yyyy')}">
                                             <i class="bi bi-file-earmark-text"></i>
                                         </a>
-                                        <a class="btn btn-primary editar-btn" data-bs-toggle="modal"
+                                        <a class="btn btn-primary editar-btn" data-bs-t="tooltip" data-bs-toggle="modal"
                                             data-bs-target="#actualizarSancionModal" data-bs-placement="top"
                                             title="Editar" th:data-id="${sanciones.idSancion}"
                                             th:data-des="${sanciones.descripcionSancion}"
@@ -79,10 +70,10 @@
                                         </a>
                                         <a class="btn btn-danger delete-btn"
                                             th:href="@{/ExpedienteAlumno/eliminarSancion/}+${alumno.idAlumno+'/'}+ ${sanciones.idSancion}"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                            data-bs-t="tooltip" data-bs-placement="top" title="Eliminar">
                                             <i class="bi bi-trash"></i>
                                         </a>
-                                        <a th:href="@{/} " class="btn btn-secondary " data-bs-toggle="tooltip"
+                                        <a th:href="@{/} " class="btn btn-secondary " data-bs-t="tooltip"
                                             data-bs-placement="top" title="Imprimir" target="_blank"
                                             onclick="openInPopup(this.href); return false;">
                                             <i class="bi bi-printer"></i>
@@ -93,7 +84,7 @@
                         </table>
                         <div class="alert alert-success alert-dismissible fade show mt-1 ms-2 mr-2"
                             th:if="${#lists.isEmpty(listaSanciones)}">
-                            <i class="bi bi-exclamation-triangle"></i>
+                            <i class="bi bi-info-circle"></i>
                             <label th:text="${'¡No existen sanciones registradas!'}"></label>
                         </div>
                     </div>

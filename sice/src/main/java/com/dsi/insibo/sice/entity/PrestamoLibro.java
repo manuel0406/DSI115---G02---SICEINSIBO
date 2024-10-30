@@ -3,6 +3,8 @@ package com.dsi.insibo.sice.entity;
 import java.sql.Date;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
@@ -10,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 public class PrestamoLibro {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPrestamoLibro;
     @ManyToOne
     private Alumno alumno;
@@ -99,6 +102,14 @@ public class PrestamoLibro {
 
     public void setEstadoPrestamo(String estadoPrestamo) {
         this.estadoPrestamo = estadoPrestamo;
+    }
+
+    public String getGradoSeccion() {
+        throw new UnsupportedOperationException("Unimplemented method 'getGradoSeccion'");
+    }
+
+    public String getNombreLibro() {
+        throw new UnsupportedOperationException("Unimplemented method 'getNombreLibro'");
     }
 
 }

@@ -4,5 +4,3 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         delay: { show: 600, hide: 100 }  // 600ms de retardo al mostrar, 100ms al ocultar
     });
 });
-
-
