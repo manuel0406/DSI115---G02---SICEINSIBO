@@ -56,4 +56,31 @@ public class AdministrativoService {
     public void eliminar(String duiPersonal) {
         administrativoRepository.deleteById(duiPersonal);
     }
+
+
+
+    public boolean correoYaRegistrado(String correoPersonal) {
+        return administrativoRepository.existsByCorreoPersonal(correoPersonal);
+    }
+
+    public boolean nitYaRegistrado(String nitPersonal) {
+        return administrativoRepository.existsBynitPersonal(nitPersonal);
+    }
+
+    public boolean nupYaRegistrado(String nupPersonal) {
+        return administrativoRepository.existsBynupPersonal(nupPersonal);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
