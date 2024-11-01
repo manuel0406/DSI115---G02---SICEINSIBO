@@ -20,5 +20,13 @@ public interface DocenteRepository extends CrudRepository<Docente, String> {
 
 
     List<Docente> findByNombreDocenteContainingIgnoreCase(String nombre);
+    
+    boolean existsBynit(String nit);
+    boolean existsBynup(String nup);
+    boolean existsBynip(String nip);
+    boolean existsBycorreoDocente(String correoDocente);
+
+
+
 
 }

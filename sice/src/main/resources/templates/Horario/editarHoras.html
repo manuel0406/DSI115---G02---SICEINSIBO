@@ -24,6 +24,14 @@
                 <header th:replace="~{home :: header}"></header>
 
                 <div class="container-fluid">
+                    <nav class="px-4"  aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-3">
+                            <li class="breadcrumb-item">
+                                <a th:href="@{/administracion}" class="text-decoration-none text-secondary">Administración</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Horario</li>
+                        </ol>
+                    </nav>
                     <div class="card border-0">
                         <div class="card-header bg-light text-dark">
                             <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">

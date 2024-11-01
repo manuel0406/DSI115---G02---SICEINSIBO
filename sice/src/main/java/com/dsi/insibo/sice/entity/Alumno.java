@@ -38,6 +38,7 @@ public class Alumno implements Serializable {
     private String lugarDeTrabajo;
     private String correoEncargado;
     private String duiEncargado;
+    private boolean estadoAlumno;
 
     @ManyToOne
     private Bachillerato bachillerato;
@@ -77,6 +78,8 @@ public class Alumno implements Serializable {
         this.duiEncargado = duiEncargado;
         this.bachillerato = bachillerato;
     }
+
+    
 
     public int getIdAlumno() {
         return idAlumno;
@@ -284,6 +287,14 @@ public class Alumno implements Serializable {
 
     public void setZonaAlumno(String zonaAlumno) {
         this.zonaAlumno = zonaAlumno;
+    }
+
+    public boolean isEstadoAlumno() {
+        return estadoAlumno;
+    }
+
+    public void setEstadoAlumno(boolean estadoAlumno) {
+        this.estadoAlumno = estadoAlumno;
     }
 
 }

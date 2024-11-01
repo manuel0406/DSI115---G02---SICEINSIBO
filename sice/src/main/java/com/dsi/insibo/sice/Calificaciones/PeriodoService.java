@@ -13,4 +13,8 @@ public class PeriodoService {
     public List<Periodo> listaPeriodos() {
         return (List<Periodo>) periodoRepository.findAll();
     }
+
+    public Periodo periodoPorId(int idPeriodo){
+        return periodoRepository.findById(idPeriodo).orElse(null);
+    }
 }

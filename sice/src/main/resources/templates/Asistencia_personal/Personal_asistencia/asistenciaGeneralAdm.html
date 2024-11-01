@@ -13,40 +13,52 @@
 
 <body>
   <header th:replace="~{home :: header}"></header>
-    <!-- TITULO PRINCIPAL -->
-    <div class="container mt-4 d-flex justify-content-center mb-3 flex-wrap">
-      <h3 class="text-center mt-5"><b>Asistencia General - Administrativos</b></h3>
+  <div class="py-4 my-3"></div>
+  <nav aria-label="breadcrumb" class="px-4 py-2 rounded">
+    <ol class="breadcrumb mb-2"> <!-- mb-2 reduce el espacio debajo del breadcrumb -->
+        <li class="breadcrumb-item">
+            <a th:href="@{/asistencias/seleccionInicio}" class="text-decoration-none">Asistencia</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Asistencia del personal administrativo
+        </li>
+    </ol>
+  </nav>
+  <!-- TITULO PRINCIPAL -->
+  <div class="container d-flex justify-content-center flex-wrap">
+      <h1 class="h1 text-center"><b>Asistencia General - Administrativos</b></h1>
     </div>
   <div class="p-4">
-    <div class="d-flex justify-content-end">
-      <a type="button" class="btn btn-outline-primary" th:href="@{/asistencias/seleccionInicio}">
-        Regresar
-      </a>
-    </div>
     <div class="row row-cols-lg-2 row-cols-1 gy-3 mt-3">
       <div class="col-lg-3 col">
-        <p class="text-center">Filtros Asistencia</p>
-        <form action="/asistencias/listaGeneralAdm" method="get">
-          <div class="row gy-3">
-            <div class="col-lg-12 col">
-              <select id="admAparatoSelect" name="admAparato" class="form-select">
-                <option value="" disabled selected>Seleccione un Administrivos</option>
-                <option th:each="adm : ${admConAparato}" th:value="${adm['id_personal_aparato']}"
-                  th:text="${adm['nombre_personal']} + ' ' + ${adm['apellido_personal']}">
-                </option>
-              </select>
-            </div>
-            <div class="col-lg-12 col">
-              <select id="admDepartSelect" name="admDepart" class="form-select">
-                <option value="" disabled selected>Seleccione un Departamento</option>
-                <option th:each="dp : ${admDepartamentos}" th:value="${dp['depart_personal']}"
-                  th:text="${dp['depart_personal']}">
-                </option>
-              </select>
-            </div>
+        <div class="card">
+          <div class="card-body">
+          
+            <p class="text-center">Filtros Asistencia</p>
+            <form action="/asistencias/listaGeneralAdm" method="get">
+              <div class="row gy-3">
+                <div class="col-lg-12 col">
+                  <select id="admAparatoSelect" name="admAparato" class="form-select">
+                    <option value="" disabled selected>Seleccione un Administrivos</option>
+                    <option th:each="adm : ${admConAparato}" th:value="${adm['id_personal_aparato']}"
+                      th:text="${adm['nombre_personal']} + ' ' + ${adm['apellido_personal']}">
+                    </option>
+                  </select>
+                </div>
+                <div class="col-lg-12 col">
+                  <select id="admDepartSelect" name="admDepart" class="form-select">
+                    <option value="" disabled selected>Seleccione un Departamento</option>
+                    <option th:each="dp : ${admDepartamentos}" th:value="${dp['depart_personal']}"
+                      th:text="${dp['depart_personal']}">
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <input type="submit" value="Filtrar" class="btn btn-primary my-2">
+            </form>
           </div>
-          <input type="submit" value="Filtrar" class="btn btn-primary my-2">
-        </form>
+        </div>
+
       </div>
       <div class="col-lg-9 col">
         <div class="d-flex justify-content-end pb-4">
@@ -77,11 +89,9 @@
         </div>
 
         <div th:if="${totalPages == 0}" class="alert alert-info d-flex align-items-center" role="alert">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" role="img" class="bi bi-exclamation-triangle-fill me-2" viewBox="0 0 16 16">
-              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-            </svg>
           <div>
-              ¡No se han encontrado registros de asistencia administrativa disponibles!
+            <i class="bi bi-exclamation-triangle"></i>
+            ¡No se han encontrado registros de asistencia del personal administrativo disponibles!
           </div>
         </div>
 

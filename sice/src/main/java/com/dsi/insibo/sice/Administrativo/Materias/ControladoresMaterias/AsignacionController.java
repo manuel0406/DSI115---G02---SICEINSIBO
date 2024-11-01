@@ -20,7 +20,6 @@ import com.dsi.insibo.sice.Administrativo.Materias.Clases.DocenteAsignacionDTO;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.BachilleratosService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.MateriasService;
-import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteDTO;
 import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteService;
 import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.Bachillerato;
