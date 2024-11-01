@@ -1,4 +1,4 @@
-package com.dsi.insibo.sice.entity;
+package com.dsi.insibo.sice.Asistencia_personal.DTOAparato;
 
 import java.time.LocalDateTime;
 

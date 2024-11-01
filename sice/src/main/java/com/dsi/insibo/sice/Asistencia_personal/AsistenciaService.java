@@ -6,7 +6,7 @@ import com.dsi.insibo.sice.Asistencia_personal.Aparato_Docente.AparatoDocenteRep
 import com.dsi.insibo.sice.Asistencia_personal.Aparato_Personal.AparatoPersonalRepository;
 import com.dsi.insibo.sice.Asistencia_personal.Asistencia_admnistrativa.AsistenciaAdmRepository;
 import com.dsi.insibo.sice.Asistencia_personal.Asistencia_docente.AsistenciaDocenteRepository;
-import com.dsi.insibo.sice.entity.AsistenciaDTO;
+import com.dsi.insibo.sice.Asistencia_personal.DTOAparato.AsistenciaDTO;
 import com.dsi.insibo.sice.entity.AsistenciaDocente;
 import com.dsi.insibo.sice.entity.AsistenciaPersonal;
 import com.dsi.insibo.sice.entity.DocenteAparato;
