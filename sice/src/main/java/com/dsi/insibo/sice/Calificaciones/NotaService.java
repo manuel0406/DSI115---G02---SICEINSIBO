@@ -104,4 +104,8 @@ public class NotaService {
         return promediosGlobales;
     }
 
+    public List<Nota> listaNotaActividadBachilleratoAlumno(String dui, int codigoBachillerato, String periodo,int idMateria, int idAlumno) {
+        return notaRepository.notasPeriodoAlumno(dui, codigoBachillerato, periodo, idMateria, idAlumno);
+    }
+
 }

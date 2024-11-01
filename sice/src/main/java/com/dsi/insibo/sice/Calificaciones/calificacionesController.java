@@ -90,7 +90,6 @@ public class calificacionesController {
 		if (asignacion.getMateria().getTipoMateria().equals("Módulo")) {
 			pe = "1";
 			System.out.println("entro");
-
 		}
 		List<Actividad> listadoActividades = actividadService.listaActividades(dui,
 				asignacion.getMateria().getIdMateria(), pe, codigoBachillerato);
@@ -139,15 +138,8 @@ public class calificacionesController {
 
 			}
 		}
+		// notaPeriodoService.procesarNotaPeriodo(asignacion, dui, pe, codigoBachillerato);
 
-		// if (listadoActividades.size() == 0) {
-		// System.out.println("La lista está vacía.");
-		// } else if (listadoActividades.size() >= 0) {
-		// System.out.println("La lista tiene elementos.");
-		// }
-		// Obtén tipos únicos
-
-		// Contar las actividades por tipo
 		Map<String, Long> conteoPorTipo = listadoActividades.stream()
 				.collect(Collectors.groupingBy(Actividad::getTipoActividad, Collectors.counting()));
 
@@ -221,7 +213,24 @@ public class calificacionesController {
 	public String guardarCalificacion(@ModelAttribute Nota nota, RedirectAttributes redirectAttributes) {
 
 		nota.setFechaModificacion(new Date());
+
 		notaService.guardarNota(nota);
+		try {
+			notaPeriodoService.procesarNotaPeriodo(nota);
+			System.out.println("Entro al try");
+		} catch (Exception e) {
+			System.out.println("Error: " + e);
+		}
+
+		try {
+			notaMateriaService.procesarNotaMateria(nota.getActividad().getAsignacion(),
+					nota.getActividad().getAsignacion().getDocente().getDuiDocente(),
+					String.valueOf(nota.getActividad().getPeriodo().getNumeroPeriodo()),
+					nota.getActividad().getAsignacion().getBachillerato().getCodigoBachillerato());
+					System.out.println("Entro al try de materia");
+		} catch (Exception e) {
+			System.out.println("Error: " + e);
+		}
 
 		redirectAttributes.addFlashAttribute("success", "Calificación actualizada exitosamente.");
 		return "redirect:/Calificaciones/registro/" + nota.getActividad().getIdActividad();
@@ -420,7 +429,7 @@ public class calificacionesController {
 			@PathVariable("codigoBachillerato") int codigoBachillerato) {
 
 		String dui = sesion.duiSession();
-		NotaMateria notaMateria=null;
+		NotaMateria notaMateria = null;
 		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, idMateria, codigoBachillerato);
 		List<NotaPeriodo> notaPeriodos = notaPeriodoService.listadoNotasPeriodoMateria(idMateria, codigoBachillerato,
 				dui);
@@ -436,7 +445,6 @@ public class calificacionesController {
 
 		// Organizar las notas por alumno y periodo en función de listaAlumnos
 		for (Alumno alumno : listaAlumnos) {
-
 			Map<Integer, Float> notasPeriodo = new HashMap<>();
 			for (NotaPeriodo nota : notaPeriodos) {
 				if (nota.getAlumno().equals(alumno)) {
@@ -446,7 +454,6 @@ public class calificacionesController {
 			}
 			notasPorAlumnoYPeriodo.put(alumno, notasPeriodo);
 		}
-
 		// Calcular la nota global para cada alumno
 		for (Alumno alumno : listaAlumnos) {
 			Map<Integer, Float> notasPeriodo = notasPorAlumnoYPeriodo.getOrDefault(alumno, new HashMap<>());
@@ -457,22 +464,24 @@ public class calificacionesController {
 				notaGlobal += nota * 0.25;
 			}
 			notaGlobalPorAlumno.put(alumno, notaGlobal);
-			
-			// notaPeriodo = notaPeriodoService.notaPeriodoAlumno(idAlumno, pe, idMateria, codigoBachillerato, dui);
-			notaMateria= notaMateriaService.existeNotaMateria(alumno.getIdAlumno(), idMateria, dui, codigoBachillerato);
-			if (notaMateria!=null) {
-				System.out.println("si existe");
-				System.out.println("nota: "+ notaGlobal);
-				// notaMateria.setNotaMateria(notaGlobal);
-				// notaMateriaService.guardarNotaMateria(notaMateria);
 
-			}else{
-				// notaMateria= new NotaMateria();
-				// notaMateria.setAlumno(alumno);
-				// notaMateria.setAsignacion(asignacion);
-				// notaMateria.setNotaMateria(notaGlobal);
-				System.out.println("nota: "+ notaGlobal);
-				System.out.println("neles");
+			// notaPeriodo = notaPeriodoService.notaPeriodoAlumno(idAlumno, pe, idMateria,
+			// codigoBachillerato, dui);
+			notaMateria = notaMateriaService.existeNotaMateria(alumno.getIdAlumno(), idMateria, dui,
+					codigoBachillerato);
+			if (notaMateria != null) {
+				// System.out.println("si existe");
+				// System.out.println("nota: "+ notaGlobal);
+				notaMateria.setNotaMateria(notaGlobal);
+				notaMateriaService.guardarNotaMateria(notaMateria);
+			} else {
+				notaMateria = new NotaMateria();
+				notaMateria.setAlumno(alumno);
+				notaMateria.setAsignacion(asignacion);
+				notaMateria.setNotaMateria(notaGlobal);
+				// System.out.println("nota: "+ notaGlobal);
+				// System.out.println("neles");
+				notaMateriaService.guardarNotaMateria(notaMateria);
 			}
 		}
 

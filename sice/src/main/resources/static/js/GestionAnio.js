@@ -1,3 +1,9 @@
+var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-t="tooltip"]')
+);
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+});
 document.addEventListener("DOMContentLoaded", function () {
     var agregarButton = document.querySelectorAll(".Agregar-btn");
     var confirmAgregarModal = new bootstrap.Modal(

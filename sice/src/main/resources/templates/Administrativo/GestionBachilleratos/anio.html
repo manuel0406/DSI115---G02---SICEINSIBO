@@ -9,12 +9,12 @@
     <div class="container">
         <!--Mensajes-->
         <div th:replace="~{alertas::alertas}"></div>
-        <nav class="px-4"  aria-label="breadcrumb">
+        <nav class="px-4" aria-label="breadcrumb">
             <ol class="breadcrumb mb-3">
                 <li class="breadcrumb-item">
                     <a th:href="@{/administracion}" class="text-decoration-none text-secondary">Administración</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page"> Crear Anio</li>
+                <li class="breadcrumb-item active" aria-current="page"> Crear año</li>
             </ol>
         </nav>
 
@@ -53,22 +53,30 @@
                             <td th:if="${anios.activoMatricula == true}" th:text="${'Activo'}"></td>
                             <td>
                                 <a class="btn btn-warning" th:if="${!anioBachilleratoMap[anios.idAnioAcademico]}"
-                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                    data-bs-t="tooltip" data-bs-placement="top"
                                     th:href="@{/Bachillerato/Oferta/}+${anios.idAnioAcademico}" title="Crear oferta">
                                     <i class="bi bi-plus-circle"></i> Crear oferta
                                 </a>
                                 <a class="btn btn-success" th:if="${anioBachilleratoMap[anios.idAnioAcademico]}"
-                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Consultar"
+                                    data-bs-t="tooltip" data-bs-placement="top" title="Consultar"
                                     th:href="@{/Bachillerato/VerOferta/}+${anios.idAnioAcademico}">
                                     <i class="bi bi-file-earmark-text"></i>
                                 </a>
                                 <a class="btn btn-primary editar-btn"
                                     th:if="${anioBachilleratoMap[anios.idAnioAcademico]}" data-bs-toggle="modal"
-                                    data-bs-target="#actualizarAnioModal" data-bs-placement="top" title="Editar"
-                                    th:data-id="${anios.idAnioAcademico}" th:data-est="${anios.activoAnio}"
-                                    th:data-an="${anios.anio}" th:data-ma="${anios.activoMatricula}">
+                                    data-bs-t="tooltip" data-bs-target="#actualizarAnioModal" data-bs-placement="top"
+                                    title="Editar" th:data-id="${anios.idAnioAcademico}"
+                                    th:data-est="${anios.activoAnio}" th:data-an="${anios.anio}"
+                                    th:data-ma="${anios.activoMatricula}">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
+                                <a class="btn btn-info"
+                                    th:if="${anios.activoAnio && anioBachilleratoMap[anios.idAnioAcademico] != null}"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Finalizar año"
+                                    th:href="${'/Bachillerato/cierreAcademico/'+ anios.idAnioAcademico}">
+                                    <i class="bi bi-mortarboard"></i>
+                                </a>
+
                             </td>
                         </tr>
                     </tbody>
@@ -91,7 +99,8 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="anioLabel" class="form-label fw-bold">Año:</label>
-                            <input type="text" th:field="*{anio}" class="form-control restricted-input" id="anio"
+                            <input type="text" th:field="*{anio}"
+                                class="form-control restricted-input border border-secondary" id="anio"
                                 placeholder="0000" required minlength="4" maxlength="4" />
                             <div class="invalid-feedback">
                                 Este campo no puede quedar vacio y el año debe de ser mayo a 2020.
@@ -125,15 +134,14 @@
                             <input type="hidden" th:field="*{idAnioAcademico}" id="editIdAnio" name="idAnioAcademico">
                             <input type="hidden" th:field="*{anio}" id="editAnio" name="AnioAcademico">
                             <label class="form-check-label" for="editEstado">Estado:</label>
-                            <input class="form-check-input" type="checkbox" id="editEstado" name="activoAnio"
-                                th:field="*{activoAnio}">
+                            <input class="form-check-input border border-secondary" type="checkbox" id="editEstado"
+                                name="activoAnio" th:field="*{activoAnio}">
 
                         </div>
                         <div class="mb-3">
-
                             <label class="form-check-label" for="editEstado">Matricula:</label>
-                            <input class="form-check-input" type="checkbox" id="editMatricula" name="activoMatricula"
-                                th:field="*{activoMatricula}">
+                            <input class="form-check-input border border-secondary" type="checkbox" id="editMatricula"
+                                name="activoMatricula" th:field="*{activoMatricula}">
 
                         </div>
                     </div>

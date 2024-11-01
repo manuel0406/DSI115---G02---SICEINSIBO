@@ -42,4 +42,8 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
                         "ORDER BY p.numeroPeriodo, m.nomMateria, a.nombreActividad")
         List<Nota> findNotasByAlumnoGroupedByMateriaAndPeriodo(@Param("alumno") Alumno alumno);
 
+        @Query("SELECT n FROM Nota n WHERE n.actividad.asignacion.docente.duiDocente=:dui AND n.actividad.asignacion.bachillerato.codigoBachillerato=:codigoBachillerato AND n.actividad.periodo.numeroPeriodo=:periodo AND n.actividad.asignacion.materia.idMateria=:idMateria AND n.alumno.idAlumno=:idAlumno ORDER BY n.actividad.tipoActividad ASC")
+        List<Nota> notasPeriodoAlumno(@Param("dui") String dui, @Param("codigoBachillerato") int codigoBachillerato,
+                        @Param("periodo") String periodo, @Param("idMateria") int idMateria, @Param("idAlumno") int idAlumno);
+
 }
