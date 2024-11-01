@@ -58,7 +58,10 @@ public class BachilleratoService {
                 .orElse(null);
     }
     
-    public List<String> getSeccionesByCarrera(String carrera, String grado) {
+    public List<String> getSeccionesByCarrera(String carrera, String grado, boolean matricula) {
+        if (matricula) {
+            return bachilleratoRepository.findSeccionesByCarreraMatricula(carrera, grado);
+        }
         return bachilleratoRepository.findSeccionesByCarrera(carrera, grado);
     }
 

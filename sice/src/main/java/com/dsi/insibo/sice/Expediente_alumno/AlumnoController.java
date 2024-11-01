@@ -124,6 +124,7 @@ public class AlumnoController {
 		model.addAttribute("titulo", "Crear Alumno");
 		model.addAttribute("alumno", alumno);
 		model.addAttribute("bachilleratos", listaCarreras);
+		model.addAttribute("matricula", "true");
 
 		// Retorna el nombre de la vista de registro de alumnos
 		return "Expediente_alumno/registro";
@@ -131,12 +132,15 @@ public class AlumnoController {
 
 	@GetMapping("/secciones")
 	public ResponseEntity<List<String>> getSecciones(@RequestParam("carrera") String carrera,
-			@RequestParam("grado") String grado) {
+			@RequestParam("grado") String grado, @RequestParam("matricula") String matricula) {
 		if (carrera == null || grado == null || carrera.isEmpty() || grado.isEmpty()) {
 			return ResponseEntity.ok(Collections.emptyList());
 		}
-
-		List<String> secciones = bachilleratoService.getSeccionesByCarrera(carrera, grado);
+		boolean matriculaActiva=false;
+		if (matricula.equals("true")) {
+			matriculaActiva=true;
+		}
+		List<String> secciones = bachilleratoService.getSeccionesByCarrera(carrera, grado, matriculaActiva);
 		return ResponseEntity.ok(secciones); // Esto asegurará que Spring lo serialice como JSON
 	}
 
@@ -196,6 +200,7 @@ public class AlumnoController {
 		model.addAttribute("seccion", seccion);
 		model.addAttribute("url", "/ExpedienteAlumno/actualizar");
 		model.addAttribute("btnCancelar", "/ExpedienteAlumno/ver");
+		model.addAttribute("matricula", "false");
 
 		// Retorna el nombre de la vista de edición del alumno
 		return "Expediente_alumno/editar";

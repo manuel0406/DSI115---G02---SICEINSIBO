@@ -97,13 +97,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const carreraSelect = document.getElementById('carrera');
     const gradoSelect = document.getElementById('grado');
     const seccionSelect = document.getElementById('seccion');
-
+    const matricula = document.getElementById('matricula')
+  console.log(matricula.value)
     function updateSecciones() {
         const carrera = carreraSelect.value;
         const grado = gradoSelect.value;
 
         if (carrera && grado) {
-            fetch(`/ExpedienteAlumno/secciones?carrera=${encodeURIComponent(carrera)}&grado=${encodeURIComponent(grado)}`)
+            fetch(`/ExpedienteAlumno/secciones?carrera=${encodeURIComponent(carrera)}&grado=${encodeURIComponent(grado)}&matricula=${encodeURIComponent(matricula.value)}`)
                 .then(response => response.json())
                 .then(data => {
                     seccionSelect.innerHTML = '<option value="" selected>Seleccione</option>';

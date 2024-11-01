@@ -51,6 +51,7 @@ public class MatriculaController {
 
 		List<Alumno> busqueda = alumnoService.matricula(nie, nombre, apellido, anioActivo);
 		List<Alumno> listadoMatriculado = alumnoService.yaMatriculado();
+		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(true);
 
 		List<Alumno> listado = new ArrayList<>();
 
@@ -77,6 +78,8 @@ public class MatriculaController {
 		model.addAttribute("nie", nie);
 		model.addAttribute("nombre", nombre);
 		model.addAttribute("apellido", apellido);
+		model.addAttribute("matricula", "true");
+		model.addAttribute("bachilleratos", listaCarreras);
 
 		return "Administrativo/GestionMatricula/antiguoIngreso";
 	}
@@ -123,7 +126,9 @@ public class MatriculaController {
 	}
 
 	@GetMapping("/saveMatricula/{idAlumno}")
-	public String saveMatricula(@PathVariable("idAlumno") int idAlumno, RedirectAttributes attributes) {
+	public String saveMatricula(@PathVariable("idAlumno") int idAlumno, RedirectAttributes attributes, @RequestParam(value = "carrera", required = false) String carrera,
+	@RequestParam(value = "grado", required = false) String grado,
+	@RequestParam(value = "seccion", required = false) String seccion) {
 
 		Alumno alumno = alumnoService.buscarPorIdAlumno(idAlumno);
 
@@ -325,6 +330,7 @@ public class MatriculaController {
 		model.addAttribute("seccion", seccion);
 		model.addAttribute("url", "/matriculados/actualizar");
 		model.addAttribute("btnCancelar", "/matriculados");
+		model.addAttribute("matricula", "true");
 
 		// Retorna el nombre de la vista de edición del alumno
 		return "Expediente_alumno/editar";

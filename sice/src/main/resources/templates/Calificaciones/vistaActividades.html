@@ -40,7 +40,7 @@
                                         Calificaciones
                                     </a>
                                 </li>
-                                <li class="nav-item nav-pills" sec:authorize="hasAnyRole('DOCENTE')" >
+                                <li class="nav-item nav-pills" sec:authorize="hasAnyRole('DOCENTE')" th:if="${asignacion.materia.tipoMateria == 'Básica'}" >
                                     <a class="nav-link"
                                         th:href="@{/Calificaciones/CalificacionPeriodos/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
                                         <i class="bi bi-journal-text"></i>
