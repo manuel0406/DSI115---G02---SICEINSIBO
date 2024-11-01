@@ -18,7 +18,7 @@ public class AdministrativoService {
         List<PersonalAdministrativo> administrativos = (List<PersonalAdministrativo>) administrativoRepository
                 .findAll();
         return administrativos.stream()
-                .filter(PersonalAdministrativo::isActivo)
+                .filter(PersonalAdministrativo::isActivoPersonalAdministrativo)
                 .sorted(Comparator.comparing(PersonalAdministrativo::getNombrePersonal)
                         .thenComparing(PersonalAdministrativo::getApellidoPersonal))
                 .map(AdministrativoDTO::new)
@@ -30,7 +30,7 @@ public class AdministrativoService {
         List<PersonalAdministrativo> administrativos = (List<PersonalAdministrativo>) administrativoRepository
                 .findAll();
         return administrativos.stream()
-                .filter(admin -> !admin.isActivo())
+                .filter(admin -> !admin.isActivoPersonalAdministrativo())
                 .sorted(Comparator.comparing(PersonalAdministrativo::getNombrePersonal)
                         .thenComparing(PersonalAdministrativo::getApellidoPersonal))
                 .map(AdministrativoDTO::new)

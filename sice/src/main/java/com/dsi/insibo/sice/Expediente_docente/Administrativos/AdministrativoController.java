@@ -59,7 +59,7 @@ public class AdministrativoController {
         PersonalAdministrativo administrativoExistente = administrativoService
                 .buscarPorIdAdministrativo(administrativo.getDuiPersonal());
         if (administrativoExistente != null) {
-            if (administrativoExistente.isActivo()) {
+            if (administrativoExistente.isActivoPersonalAdministrativo()) {
                 attribute.addFlashAttribute("error", "Error: Este DUI ya esta siendo utilizado.");
                 return "redirect:plantaadministrativa";
             } else {
@@ -107,7 +107,7 @@ public class AdministrativoController {
         }
 
         // Guardando el administrativo
-        administrativo.setActivo(true);
+        administrativo.setActivoPersonalAdministrativo(true);
         administrativoService.guardarAdministrativo(administrativo);
         usuarioService.asignarRol(usuario, idRol);
 
@@ -181,7 +181,7 @@ public class AdministrativoController {
                 break;
         }
         usuarioService.asignarRol(usuario, idRol); // Guardamos la actualización
-        administrativo.setActivo(true);
+        administrativo.setActivoPersonalAdministrativo(true);
         administrativoService.guardarAdministrativo(administrativo);
         attribute.addFlashAttribute("success", "Expediente actualizado con exito!");
         return "redirect:plantaadministrativa";
@@ -254,7 +254,7 @@ public class AdministrativoController {
 
         // cuando un administrativo es "eliminado" este no se borra del sistema sino que
         // pasa a un estado 'inactivo'
-        administrativo.setActivo(false);
+        administrativo.setActivoPersonalAdministrativo(false);
         administrativoService.guardarAdministrativo(administrativo);
 
         attribute.addFlashAttribute("warning", "El administrativo " + administrativo.getNombrePersonal() + " "
