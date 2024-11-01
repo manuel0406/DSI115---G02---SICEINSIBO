@@ -43,6 +43,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/paquetes")
+@PreAuthorize("hasAnyRole('ADMINISTRADOR','SUBDIRECTORA','DOCENTE')") 
 public class PaquetesController {
     @Autowired
     private InventarioDonacionService inventarioDonacionService;
@@ -87,8 +88,7 @@ public class PaquetesController {
         // Convertir talla a mayusculas
         donacion.setTallaPrenda(donacion.getTallaPrenda().toUpperCase());
 
-        // Verificar si ya existe una donación con la combinación de tipoPrenda y
-        // tallaPrenda
+        // Verificar si ya existe una donación con la combinación de tipoPrenda y tallaPrenda
         if (inventarioDonacionService.existeDonacion(donacion.getTipoPrenda(), donacion.getTallaPrenda())) {
             attributes.addFlashAttribute("error", "¡Ya existe una donación con este tipo y talla de prenda!");
             return "redirect:/paquetes/listaDonaciones";
@@ -104,7 +104,7 @@ public class PaquetesController {
         return "redirect:/paquetes/listaDonaciones";
     }
 
-    // Modificar la cantidad de donacion
+    // Modificar la cantidad de donación, agregando al inventario de un registro especifico
     @PostMapping("/modificarCantidad")
     public String modificarCantidad(
             @RequestParam("donacionId") int donacionId,
@@ -114,8 +114,7 @@ public class PaquetesController {
         // Obtener la cantidad actual desde el servicio
         int cantidadActual = inventarioDonacionService.obtenerCantidadPorId(donacionId);
 
-        // Calcular la nueva cantidad sumando la cantidad actual y la nueva cantidad
-        // ingresada
+        // Calcular la nueva cantidad sumando la cantidad actual y la nueva cantidad ingresada
         int cantidadTotal = cantidadActual + nuevaCantidad;
 
         // Llamar al servicio para actualizar la cantidad
@@ -130,7 +129,7 @@ public class PaquetesController {
         return "redirect:/paquetes/listaDonaciones";
     }
 
-    // Modificar la cantidad de donación
+    // Modificar la cantidad de donación, restando al inventario de un registro especifico
     @PostMapping("/modificarMenosCantidad")
     public String modificarMenosCantidad(
             @RequestParam("donacionId") int donacionId,
@@ -140,8 +139,7 @@ public class PaquetesController {
         // Obtener la cantidad actual desde el servicio
         int cantidadActual = inventarioDonacionService.obtenerCantidadPorId(donacionId);
         if (cantidadActual >= nuevaCantidad) {
-            // Calcular la nueva cantidad sumando la cantidad actual y la nueva cantidad
-            // ingresada
+            // Calcular la nueva cantidad sumando la cantidad actual y la nueva cantidad ingresada
             int cantidadTotal = cantidadActual - nuevaCantidad;
 
             // Llamar al servicio para actualizar la cantidad
@@ -159,7 +157,7 @@ public class PaquetesController {
         return "redirect:/paquetes/listaDonaciones";
     }
 
-    // eliminar donacion solo si esta en 0(cero) validacion en vista
+    // eliminar donacion solo si esta en 0(cero) validación en vista
     @PostMapping("/eliminar/{id}")
     public String eliminarDonacion(@PathVariable int id, RedirectAttributes redirectAttributes) {
         inventarioDonacionService.eliminarDonacion(id);
@@ -173,8 +171,7 @@ public class PaquetesController {
         // Obtener el año académico activo desde el servicio
         Integer idAnioAcademico = inventarioDonacionService.obtenerAnioAcademicoActivo();
 
-        // Obtener los bachilleratos basados en el año académico activo desde el
-        // servicio
+        // Obtener los bachilleratos basados en el año académico activo desde el servicio
         List<Object[]> bachilleratos = inventarioDonacionService.obtenerBachilleratosPorAnioAcademico(idAnioAcademico);
         // Agregar los bachilleratos al modelo
         model.addAttribute("bachilleratos", bachilleratos);
@@ -182,6 +179,7 @@ public class PaquetesController {
         return "Paquetes_escolares/generarEntregas";
     }
 
+    /**obtener las fechas de entregas de paquetes escolares según el tipo de paquete seleccionado, para llenar un select */
     @GetMapping("/fechasPaquete")
     @ResponseBody
     public List<String> obtenerFechasPaquete(@RequestParam("tipoPaquete") String tipoPaquete,
@@ -203,19 +201,19 @@ public class PaquetesController {
         return fechas;
     }
 
+    /**Obtener listado de entregas según el tipo de entregas existente */
     @GetMapping("/reporteEntregas")
     public String filtrarEntregasAdm(
             @RequestParam("tipoPaquete") String tipoPaquete,
             @RequestParam("fechaPaquete") String fechaPaquete,
             @RequestParam("estadoEntrega") String estadoEntrega,
-            @RequestParam("idBachillerato") int idBachillerato, // Cambiar id a idBachillerato
+            @RequestParam("idBachillerato") int idBachillerato,
             Model model) {
 
         // Obtener el año académico activo desde el servicio
         Integer idAnioAcademico = inventarioDonacionService.obtenerAnioAcademicoActivo();
 
-        // Obtener los bachilleratos basados en el año académico activo desde el
-        // servicio
+        // Obtener los bachilleratos basados en el año académico activo desde el servicio
         List<Object[]> bachilleratos = inventarioDonacionService.obtenerBachilleratosPorAnioAcademico(idAnioAcademico);
         // Agregar los bachilleratos al modelo
         model.addAttribute("bachilleratos", bachilleratos);
@@ -289,8 +287,7 @@ public class PaquetesController {
         // Obtener el año académico activo desde el servicio
         Integer idAnioAcademico = inventarioDonacionService.obtenerAnioAcademicoActivo();
 
-        // Obtener los bachilleratos basados en el año académico activo desde el
-        // servicio
+        // Obtener los bachilleratos basados en el año académico activo desde el servicio
         List<Object[]> bachilleratos = inventarioDonacionService.obtenerBachilleratosPorAnioAcademico(idAnioAcademico);
         // Agregar los bachilleratos al modelo
         model.addAttribute("bachilleratos", bachilleratos);
@@ -298,6 +295,7 @@ public class PaquetesController {
         return "Paquetes_escolares/impresionEntregas";
     }
 
+    /**Metodo de impresión de entregas de paquetes escolares */
     @GetMapping("/imprimirEntregas")
     public void imprimirEntregas(HttpServletResponse response,
             @RequestParam("tipoPaquete") String tipoPaquete,
@@ -358,8 +356,7 @@ public class PaquetesController {
         Document document = new Document(PageSize.LETTER.rotate());
         PdfWriter.getInstance(document, response.getOutputStream());
         document.open();
-
-        // Crear tabla de encabezado similar a tu ejemplo
+        //Encabezado
         PdfPTable headerTable = new PdfPTable(2);
         headerTable.setWidthPercentage(100);
         headerTable.setWidths(new float[] { 0.55f, 3 });
@@ -378,7 +375,7 @@ public class PaquetesController {
                 PdfPCell logoCell = new PdfPCell(img);
                 logoCell.setBorder(PdfPCell.NO_BORDER);
                 logoCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                logoCell.setPaddingTop(4); // Ajustar la posición vertical si es necesario
+                logoCell.setPaddingTop(4);
 
                 headerTable.addCell(logoCell);
             } catch (Exception e) {
@@ -412,7 +409,7 @@ public class PaquetesController {
         document.add(new Paragraph(" ")); // Línea vacía
 
         // Crear tabla de resultados
-        PdfPTable table = new PdfPTable(6); // Ajustar las columnas según los datos
+        PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100);
         table.setWidths(new int[] { 1, 2, 2, 2, 2, 3 });
 
@@ -431,8 +428,8 @@ public class PaquetesController {
         for (Object[] row : resultados) {
             addTableCell(table, String.valueOf(index++), bodyFont);
             addTableCell(table, String.valueOf(row[2]), bodyFont); // NIE
-            addTableCell(table, String.valueOf(row[1]), bodyFont); // Nombre completo
-            addTableCell(table, String.valueOf(row[3]), bodyFont); // Nombre completo
+            addTableCell(table, String.valueOf(row[1]), bodyFont); 
+            addTableCell(table, String.valueOf(row[3]), bodyFont); 
             addTableCell(table, String.valueOf(row[4]), bodyFont); // Fecha entrega
             addTableCell(table, (Boolean) row[5] ? "Entregado" : "No Entregado", bodyFont); // Estado entrega
         }
