@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.dsi.insibo.sice.Expediente_docente.Administrativos.Anexos.AnexoAdministrativoService;
 import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteService;
+import com.dsi.insibo.sice.Seguridad.ClasesDeSeguridad.PasswordGenerator;
 import com.dsi.insibo.sice.Seguridad.SeguridadService.UsuarioService;
 import com.dsi.insibo.sice.entity.AnexoPersonalAdministrativo;
 import com.dsi.insibo.sice.entity.PersonalAdministrativo;
@@ -110,7 +112,6 @@ public class AdministrativoController {
         administrativo.setActivoPersonalAdministrativo(true);
         administrativoService.guardarAdministrativo(administrativo);
         usuarioService.asignarRol(usuario, idRol);
-
         attribute.addFlashAttribute("success", "Expediente creado con exito!");
         return "redirect:plantaadministrativa";
 
@@ -235,6 +236,8 @@ public class AdministrativoController {
     }
 
     // Eliminar un empleado administrativo (Pasa a estado inactivo)
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @GetMapping("/eliminarexpediente/{id}")
     public String eliminarAdministrativo(@PathVariable("id") String idAdministrativo, RedirectAttributes attribute) {
         PersonalAdministrativo administrativo = administrativoService.buscarPorIdAdministrativo(idAdministrativo);
@@ -245,12 +248,12 @@ public class AdministrativoController {
             return "redirect:/expedienteadministrativo/plantaadministrativa";
         }
 
-        /*
-         * // Primero elimina los anexos
-         * anexoadministrativoService.eliminarAnexoAdministrativo(idAdministrativo);
-         * usuarioService.eliminarUsuarioPorPersonalId(idAdministrativo);
-         * administrativoService.eliminar(idAdministrativo);
-         */
+        // Modifiaciones de Usuario
+        Usuario usuario = usuarioService.buscarPorCorreo(administrativo.getCorreoPersonal());
+        usuario.setAccountLocked(false); // Bloqueo al usuario
+        usuario.setEnabled(true); // Activo para que no vaya a rechazados
+        usuario.setContrasenaUsuario(passwordEncoder.encode(PasswordGenerator.generateRandomPassword(8))); //Contraseña encriptada
+        usuarioService.guardarUsuario(usuario); // Guardo la actualización de estado
 
         // cuando un administrativo es "eliminado" este no se borra del sistema sino que
         // pasa a un estado 'inactivo'

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.dsi.insibo.sice.Expediente_docente.Administrativos.AdministrativoService;
 import com.dsi.insibo.sice.Expediente_docente.Docentes.Anexos.AnexoDocenteService;
+import com.dsi.insibo.sice.Seguridad.ClasesDeSeguridad.PasswordGenerator;
 import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
 import com.dsi.insibo.sice.Seguridad.SeguridadService.UsuarioService;
 import com.dsi.insibo.sice.entity.AnexoDocente;
@@ -51,8 +53,8 @@ public class DocenteController {
             RedirectAttributes attribute) {
 
         // Verifica si el correoDocente ya está en uso
-        if (docenteService.correoYaRegistrado(docente.getCorreoDocente()) == true 
-            || administrativoService.correoYaRegistrado(docente.getCorreoDocente())) {
+        if (docenteService.correoYaRegistrado(docente.getCorreoDocente()) == true
+                || administrativoService.correoYaRegistrado(docente.getCorreoDocente())) {
             model.addAttribute("profesor", docente);
             model.addAttribute("ROL", rolSeleccionado);
             model.addAttribute("titulo", "Nuevo usuario");
@@ -127,7 +129,7 @@ public class DocenteController {
 
         docente.setActivoDocente(true);
         docenteService.guardarDocente(docente);
-        usuarioService.asignarRol(usuario, idRol); // Guardado y asignado de rol
+        usuarioService.asignarRol(usuario, idRol); // Guardado y asignado de rol docente
         attribute.addFlashAttribute("success", "Expediente creado con exito!");
 
         return "redirect:plantadocente";
@@ -143,11 +145,12 @@ public class DocenteController {
         Docente docenteExistente = docenteService.buscarPorIdDocente(docente.getDuiDocente());
         // Verifica que exista un registro asociado al DUI
         if (docenteExistente != null) {
-            // Verifica que el correo del registro asociado al DUI sea diferente al correo al que se quiere actualizar
+            // Verifica que el correo del registro asociado al DUI sea diferente al correo
+            // al que se quiere actualizar
             if (!docente.getCorreoDocente().equals(docenteExistente.getCorreoDocente())) {
                 // Verifica si el correo al que se quiere actualizar ya este registrado
-                if (docenteService.correoYaRegistrado(docente.getCorreoDocente()) == true 
-                    || administrativoService.correoYaRegistrado(docente.getCorreoDocente())) {
+                if (docenteService.correoYaRegistrado(docente.getCorreoDocente()) == true
+                        || administrativoService.correoYaRegistrado(docente.getCorreoDocente())) {
                     model.addAttribute("warning", "Alerta: El correo ya esta siendo utilizado.");
                     model.addAttribute("editar", true); // Deshabilita el campo DUI
                     model.addAttribute("profesor", docente);
@@ -157,7 +160,8 @@ public class DocenteController {
                     return "Expediente_docente/Docentes/fichaDocente";
                 }
             }
-            // Verifica que el NIP del registro asociado al DUI sea diferente al NUP al que se quiere actualizar
+            // Verifica que el NIP del registro asociado al DUI sea diferente al NUP al que
+            // se quiere actualizar
             if (!docenteExistente.getNip().equals(docente.getNip())) {
                 // Verifica si el NIP al que se quiere actualizar ya este registrado
                 if (docenteService.nipYaRegistrado(docente.getNip()) == true) {
@@ -170,7 +174,8 @@ public class DocenteController {
                     return "Expediente_docente/Docentes/fichaDocente";
                 }
             }
-            // Verifica que el NUP del registro asociado al DUI sea diferente al NUP al que se quiere actualizar
+            // Verifica que el NUP del registro asociado al DUI sea diferente al NUP al que
+            // se quiere actualizar
             if (!docenteExistente.getNup().equals(docente.getNup())) {
                 // Verifica si el NUP al que se quiere actualizar ya este registrado
                 if (docenteService.nupYaRegistrado(docente.getNup()) == true) {
@@ -183,7 +188,8 @@ public class DocenteController {
                     return "Expediente_docente/Docentes/fichaDocente";
                 }
             }
-            // Verifica que el NIT del registro asociado al DUI sea diferente al NIT al que se quiere actualizar
+            // Verifica que el NIT del registro asociado al DUI sea diferente al NIT al que
+            // se quiere actualizar
             if (!docenteExistente.getNit().equals(docente.getNit())) {
                 // Verifica si el NIT al que se quiere actualizar ya este registrado
                 if (docenteService.nitYaRegistrado(docente.getNit()) == true) {
@@ -217,7 +223,7 @@ public class DocenteController {
                 idRol = 2L;
                 break;
         }
-        usuarioService.asignarRol(usuario, idRol);          // Guardamos la actualización
+        usuarioService.asignarRol(usuario, idRol); // Guardamos la actualización
         docente.setActivoDocente(true);
         docenteService.guardarDocente(docente);
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
@@ -303,6 +309,8 @@ public class DocenteController {
     }
 
     // Eliminar un docente (Pasa a estado inactivo)
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/eliminarexpediente/{id}")
     public String eliminarDocente(@PathVariable("id") String idDocente, RedirectAttributes attribute) {
@@ -314,13 +322,15 @@ public class DocenteController {
             return "redirect:/expedientedocente/plantadocente";
         }
 
-        /*
-         * anexoDocenteService.eliminarAnexoDocente(idDocente);
-         * usuarioService.eliminarUsuarioPorDocenteId(idDocente);
-         * docenteService.eliminar(idDocente);
-         */
+        // Modifiaciones de Usuario
+        Usuario usuario = usuarioService.buscarPorCorreo(profesor.getCorreoDocente()); //Obtengo el correo
+        usuario.setAccountLocked(false); // Bloqueo al usuario
+        usuario.setEnabled(true); // Activo para que no vaya a rechazados
+        usuario.setContrasenaUsuario(passwordEncoder.encode(PasswordGenerator.generateRandomPassword(8))); //Contraseña encriptada
+        usuarioService.guardarUsuario(usuario); // Guardo la actualización de estado
 
-        // cuando un docente es "eliminado" este no se borra del sistema sino que pasa a un estado 'inactivo'
+        // cuando un docente es "eliminado" este no se borra del sistema sino que pasa a
+        // un estado 'inactivo'
         profesor.setActivoDocente(false);
         docenteService.guardarDocente(profesor);
         attribute.addFlashAttribute("warning", "El administrativo " + profesor.getNombreDocente() + " "
@@ -390,20 +400,20 @@ public class DocenteController {
                 ROL = "Docente";
                 break;
             case "SUBDIRECTORA":
-            ROL = "Subdirector";
+                ROL = "Subdirector";
                 break;
             case "DIRECTOR":
-            ROL = "Director";
+                ROL = "Director";
                 break;
             default:
-            ROL = "";
+                ROL = "";
                 break;
         }
 
         boolean homologado;
-        if(profesor.getDuiDocente().equals(profesor.getNit())){
+        if (profesor.getDuiDocente().equals(profesor.getNit())) {
             homologado = true;
-        }else{
+        } else {
             homologado = false;
         }
 

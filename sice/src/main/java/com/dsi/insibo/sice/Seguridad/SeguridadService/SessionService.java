@@ -18,7 +18,7 @@ public class SessionService {
     private UsuarioService usuarioService;
 
     public String duiSession() {
-        String sessionId = "";
+        String sessionId = "No encontrado";
         String dui = "No encontrado";
         String correoUsuario = "No encontrado";
         List<Object> sessions = sessionRegistry.getAllPrincipals();

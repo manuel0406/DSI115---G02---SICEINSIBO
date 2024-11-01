@@ -81,3 +81,18 @@ document.addEventListener("DOMContentLoaded", function() {
       window.location.href = currentHref;
   });
 });
+
+
+// Usuario que no se pueden desbloquear
+document.querySelectorAll(".btn-rechazado-inactivo").forEach(function (element) {
+  element.addEventListener("click", function () {
+    Swal.fire({
+      position: "center",
+      icon: "error",
+      title: "Oops",
+      text: "Este usuario no puede ser aceptado, informar a soporte.",
+      showConfirmButton: false,
+      timer: 5000,
+    });
+  });
+});
