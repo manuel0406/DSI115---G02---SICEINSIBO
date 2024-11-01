@@ -55,7 +55,7 @@ public class recuperarContraController {
             usuario.setContrasenaUsuario(passwordEncoder.encode(nuevaContra)); // Codifico y cambio la nueva contraseña
             usuario.setPrimerIngreso(true); // Restablezco primer inicio de sesión si es necesario
             usuarioService.guardarUsuario(usuario); // Guardo el usuario actualizado con la nueva contraseña
-            
+
             // Envío de correo con la nueva contraseña utilizando la plantilla HTML
             String encabezado = "Restauración de contraseña";
             envioCorreo.sendEmail(encabezado, usuario.getCorreoUsuario(), nuevaContra);
