@@ -86,7 +86,6 @@ public class EntregasController {
         model.addAttribute("bachillerato", bachillerato);
         model.addAttribute("id", id); // Pasar el ID del bachillerato
         model.addAttribute("tipoPaquete", tipoPaquete); // Paquete seleccionado
-        model.addAttribute("pageTitle", "Paquetes escolares");
         model.addAttribute("info", "Selecciona un tipo de paquete para comenzar");
 
         return "Paquetes_escolares/generarListado";
@@ -120,7 +119,6 @@ public class EntregasController {
         model.addAttribute("alumnos", listaAlumnos); // Lista de alumnos
         model.addAttribute("tipoPaquete", tipoPaquete); // Tipo de paquete seleccionado
         model.addAttribute("id", id); // ID del bachillerato
-        model.addAttribute("pageTitle", "Paquetes escolares");
 
         return "Paquetes_escolares/generarListado";
     }
@@ -373,7 +371,6 @@ public class EntregasController {
     @GetMapping("/reportesEntrega/{id}")
     public String generarReporte(@PathVariable("id") int id, Model model) {
         model.addAttribute("id", id);
-        model.addAttribute("pageTitle", "Paquetes escolares");
         return "Paquetes_escolares/reporteEntrega";
     }
 
@@ -463,7 +460,6 @@ public class EntregasController {
         model.addAttribute("tipoPaquete", tipoPaquete);
         model.addAttribute("resultados", resultados);
         model.addAttribute("id", idBachillerato);
-        model.addAttribute("pageTitle", "Paquetes escolares");
         model.addAttribute("tipo", tipoPaquete);
         model.addAttribute("fecha", fechaPaquete);
         model.addAttribute("estado", estadoEntrega);
