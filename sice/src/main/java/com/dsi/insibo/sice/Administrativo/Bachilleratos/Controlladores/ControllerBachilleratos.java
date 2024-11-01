@@ -19,8 +19,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.AnioService;
 import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
+import com.dsi.insibo.sice.Calificaciones.NotaMateriaService;
+import com.dsi.insibo.sice.Expediente_alumno.AlumnoService;
+import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.AnioAcademico;
 import com.dsi.insibo.sice.entity.Bachillerato;
+import com.dsi.insibo.sice.entity.NotaMateria;
 
 @Controller
 @RequestMapping("/Bachillerato")
@@ -31,12 +35,14 @@ public class ControllerBachilleratos {
 
     @Autowired
     BachilleratoService bachilleratoService;
+    @Autowired
+    private NotaMateriaService notaMateriaService;
+    @Autowired
+    private AlumnoService alumnoService;
 
     @GetMapping("/anio")
     public String prueba(Model model) {
 
-        // Crea una nueva instancia de AnioAcademico, probablemente para un formulario o
-        // propósito similar en la vista.
         AnioAcademico anio = new AnioAcademico();
 
         // Obtiene una lista de todos los años académicos a través del servicio
@@ -224,4 +230,49 @@ public class ControllerBachilleratos {
         return "redirect:/Bachillerato/VerOferta/" + bachillerato.getAnioAcademico().getIdAnioAcademico();
 
     }
+
+    @GetMapping("/cierreAcademico/{idAnioAcademico}")
+    public String cierreAcademnico(Model model, @PathVariable("idAnioAcademico") int idAnioAcademico) {
+
+        List<Bachillerato> listadoBachilleratos = bachilleratoService.listadOfertaPorAnio(idAnioAcademico);
+        boolean aprobado = true;
+
+        for (Bachillerato bachillerato : listadoBachilleratos) {
+            List<Alumno> listadoAlumnos = alumnoService.alumnosPorBachilerato(bachillerato.getCodigoBachillerato());
+
+            for (Alumno alumno : listadoAlumnos) {
+                // Filtrar listaNotas para obtener solo notas del alumno actual
+                List<NotaMateria> listaNotas = notaMateriaService.listadoNotaMateriaAlumno(alumno.getIdAlumno())
+                        .stream()
+                        .filter(nota -> nota.getAlumno().getIdAlumno() == alumno.getIdAlumno())
+                        .toList();
+
+                if (listaNotas.isEmpty()) {
+                    System.out.println("El alumno " + alumno.getIdAlumno() + " no tiene notas registradas.");
+                    continue; // Salta al siguiente alumno si no tiene notas
+                }
+                for (NotaMateria notaMateria : listaNotas) {
+                    if (notaMateria.getNotaMateria() < 6) {
+                        aprobado = false;
+                        System.out.println("El alumno " + alumno.getIdAlumno() + " está reprobado en una materia.");
+                        break; // Salir del bucle de notas al encontrar una nota reprobada
+                    }                                
+                }
+                if (aprobado) {
+                    System.out
+                            .println("Aprobado: " + aprobado + ". Se puede guardar el alumno " + alumno.getIdAlumno());
+
+                            alumno.setEstadoAlumno(true);
+                            alumnoService.guardarAlumno(alumno);
+                }
+            }
+        }
+
+        AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnioAcademico);       
+        anioAcademico.setActivoAnio(false);
+        anioService.guardarAnio(anioAcademico);
+        System.out.println("Año cerrado");
+        return "redirect:/Bachillerato/anio";
+    }
+
 }

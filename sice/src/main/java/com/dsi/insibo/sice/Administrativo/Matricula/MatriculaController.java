@@ -127,10 +127,18 @@ public class MatriculaController {
 
 		Alumno alumno = alumnoService.buscarPorIdAlumno(idAlumno);
 
+		if (!alumno.isEstadoAlumno()) {
+			attributes.addFlashAttribute("error", "¡Este alumno no aprobo el año anterior!");
+			return "redirect:/AntiguoIngreso";
+		}
+
 		Bachillerato bachillerato = bachilleratoService.debolverBachilleratoMatricula(
 				alumno.getBachillerato().getNombreCarrera(), alumno.getBachillerato().getSeccion(),
 				String.valueOf(alumno.getBachillerato().getGrado() + 1));
 
+				if (bachillerato==null) {
+					System.out.println("Bachillerato nulo");
+				}
 		Alumno alumnoNuevo = new Alumno(alumno.getNie(), alumno.getNombreAlumno(), alumno.getApellidoAlumno(),
 				alumno.getSexoAlumno(), alumno.getFechaNacimientoAlumno(), alumno.getDuiAlumno(),
 				alumno.getTelefonoAlumno(),

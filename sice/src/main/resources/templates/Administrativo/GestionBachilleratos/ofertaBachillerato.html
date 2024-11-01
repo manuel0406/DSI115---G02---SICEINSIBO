@@ -13,7 +13,7 @@
                     <a th:href="@{/administracion}" class="text-decoration-none text-secondary">Administración</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a th:href="@{/Bachillerato/anio}" class="text-decoration-none text-secondary">Crear anio</a>
+                    <a th:href="@{/Bachillerato/anio}" class="text-decoration-none text-secondary">Crear año</a>
                 </li>    
                 <li class="breadcrumb-item active" aria-current="page" > Oferta academica</li>
             </ol>
@@ -84,7 +84,7 @@
                                     th:value="${bachillerato.nombreCarrera}" th:text="${bachillerato.nombreCarrera}">
                                 </option>
                             </select>
-                            <div class="invalid-feedback">Es necesario seleccionar el docente</div>
+                            <div class="invalid-feedback">Es necesario seleccionar una carrera.</div>
                         </div>
                         <div class="mb-3">
                             <label for="grado" class="form-label fs-6">Año:</label>
@@ -95,7 +95,7 @@
                                 <option value="3">3</option>
                             </select>
 
-                            <div class="invalid-feedback">Es necesario seleccionar una especialidad</div>
+                            <div class="invalid-feedback">Es necesario seleccionar una año.</div>
                         </div>
                         <div class="mb-3">
                             <label for="seccion" class="form-label fs-6">Sección:</label>
@@ -106,7 +106,7 @@
                                 <option value="C">C</option>
                                 <option value="D">D</option>
                             </select>
-                            <div class="invalid-feedback">Es necesario seleccionar una especialidad</div>
+                            <div class="invalid-feedback">Es necesario seleccionar una sección</div>
                         </div>
                     </div>
                     <div class="modal-footer text-center">

@@ -6,6 +6,11 @@
 .custom-h2 {
   background-color: #84b6f4;
 }
+.custom-navbar-b {
+  background-color: #005187;
+  /* height: 100vh; */
+  /* Reemplaza ##005187 con el color que desees */
+}
 
 .thead {
   background-color: #005187;
