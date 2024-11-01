@@ -92,19 +92,22 @@
         </div>
 
         <!-- Maneja de paginación -->
-        <nav th:if="${page.totalElements > 9}" aria-label="Page navigation">
+        <div th:if="${page.totalElements > 0 and page.totalPages > 0}" class="text-center">
+        <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{'/Biblioteca/Papeleria/Control?page=' + ${page.number - 1}}"> Anterior </a>
+                <li class="page-item" th:class="${page.first ? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{/Biblioteca/Papeleria/Control(page=${page.number - 1}, size=${page.size}, nombreAlumno=${param.nombreAlumno})}" tabindex="-1">Anterior</a>
                 </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:classappend="${page.number == i} ? 'active'">
-                    <a class="page-link" th:href="@{'/Biblioteca/Papeleria/Control?page=' + ${i}}" th:text="${i + 1}">1</a>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                    th:class="${i == page.number ? 'active' : ''}">
+                    <a class="page-link" th:href="@{/Biblioteca/Papeleria/Control(page=${i}, size=${page.size}, nombreAlumno=${param.nombreAlumno})}" th:text="${i + 1}"></a>
                 </li>
-                <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
-                    <a class="page-link" th:href="@{'/Biblioteca/Papeleria/Control?page=' + ${page.number + 1}}"> Siguiente </a>
+                <li class="page-item" th:class="${page.last ? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{/Biblioteca/Papeleria/Control(page=${page.number + 1}, size=${page.size}, nombreAlumno=${param.nombreAlumno})}">Siguiente</a>
                 </li>
             </ul>
         </nav>
+      </div>
     </div>
 
     <!-- Modal para Registrar Nueva Entrega -->
