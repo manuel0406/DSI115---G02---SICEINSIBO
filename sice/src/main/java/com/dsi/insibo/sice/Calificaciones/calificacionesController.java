@@ -7,9 +7,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,8 @@ import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.Materia;
 import com.dsi.insibo.sice.entity.Nota;
+import com.dsi.insibo.sice.entity.NotaMateria;
+import com.dsi.insibo.sice.entity.NotaPeriodo;
 import com.dsi.insibo.sice.entity.Periodo;
 
 import org.springframework.ui.Model;
@@ -60,6 +65,10 @@ public class calificacionesController {
 	private PeriodoService periodoService;
 	@Autowired
 	private DocenteService docenteService;
+	@Autowired
+	private NotaPeriodoService notaPeriodoService;
+	@Autowired
+	private NotaMateriaService notaMateriaService;
 
 	// @Autowired
 	// private MateriaBachilleratoRepository materiaBachilleratoRepository;
@@ -75,16 +84,17 @@ public class calificacionesController {
 			pe = null;
 		}
 
+		NotaPeriodo notaPeriodo = null;
+
 		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, idMateria, codigoBachillerato);
 		if (asignacion.getMateria().getTipoMateria().equals("Módulo")) {
 			pe = "1";
 			System.out.println("entro");
-
 		}
 		List<Actividad> listadoActividades = actividadService.listaActividades(dui,
 				asignacion.getMateria().getIdMateria(), pe, codigoBachillerato);
 		List<Nota> listaNotas = notaService.listaNotaActividadBachillerato(asignacion.getDocente().getDuiDocente(),
-				asignacion.getBachillerato().getCodigoBachillerato(), pe);
+				asignacion.getBachillerato().getCodigoBachillerato(), pe, asignacion.getMateria().getIdMateria());
 		List<Alumno> listaAlumnos = alumnoService
 				.alumnosPorBachilerato(asignacion.getBachillerato().getCodigoBachillerato());
 
@@ -102,32 +112,48 @@ public class calificacionesController {
 					.computeIfAbsent(idAlumno, k -> new HashMap<>())
 					.put(idActividad, nota);
 
-			// Calcular el total de notas por alumno
-			BigDecimal notafinal = new BigDecimal(
-					(double) (nota.getNotaObtenida()) * (nota.getActividad().getPonderacionActividad() / 100));
-			notafinal = notafinal.setScale(2, RoundingMode.HALF_UP);
-			totalNotasPorAlumno.merge(idAlumno, notafinal.doubleValue(), Double::sum);
-		}
-		// if (listadoActividades.size() == 0) {
-		// System.out.println("La lista está vacía.");
-		// } else if (listadoActividades.size() >= 0) {
-		// System.out.println("La lista tiene elementos.");
-		// }
-		// Obtén tipos únicos
+			// Calcular el total ponderado de notas por alumno
+			BigDecimal notaObtenida = BigDecimal.valueOf(nota.getNotaObtenida());
+			BigDecimal ponderacion = BigDecimal.valueOf(nota.getActividad().getPonderacionActividad())
+					.divide(BigDecimal.valueOf(100));
+			BigDecimal notaPonderada = notaObtenida.multiply(ponderacion).setScale(2, RoundingMode.HALF_UP);
 
-		// Contar las actividades por tipo
+			// Sumar al total de notas por alumno
+			totalNotasPorAlumno.merge(idAlumno, notaPonderada.doubleValue(), Double::sum);
+
+			notaPeriodo = notaPeriodoService.notaPeriodoAlumno(idAlumno, pe, idMateria, codigoBachillerato, dui);
+			if (notaPeriodo != null) {
+				notaPeriodo.setNotaPeriodo(totalNotasPorAlumno.get(idAlumno).floatValue());
+				notaPeriodoService.guardarNotaPeriodo(notaPeriodo);
+			} else {
+				notaPeriodo = new NotaPeriodo();
+				Alumno alumno = alumnoService.buscarPorIdAlumno(idAlumno);
+				Periodo periodo = periodoService.periodoPorId(nota.getActividad().getPeriodo().getIdPeriodo());
+
+				notaPeriodo.setAlumno(alumno);
+				notaPeriodo.setAsignacion(asignacion);
+				notaPeriodo.setPeriodo(periodo);
+				notaPeriodo.setNotaPeriodo(totalNotasPorAlumno.get(idAlumno).floatValue());
+				notaPeriodoService.guardarNotaPeriodo(notaPeriodo);
+
+			}
+		}
+		// notaPeriodoService.procesarNotaPeriodo(asignacion, dui, pe, codigoBachillerato);
+
 		Map<String, Long> conteoPorTipo = listadoActividades.stream()
 				.collect(Collectors.groupingBy(Actividad::getTipoActividad, Collectors.counting()));
 
 		// Convertir el mapa a una lista de ActividadDTO
 		List<ActividadDTO> actividadDTOList = conteoPorTipo.entrySet().stream()
 				.map(entry -> new ActividadDTO(entry.getKey(), entry.getValue().intValue()))
+				.sorted(Comparator.comparing(ActividadDTO::getNombreActividad)) // Ordenar por nombre
 				.collect(Collectors.toList());
 
-		// Agregar la lista al modelo
+		// Agregar la lista ordenada al modelo
 		model.addAttribute("actividadDTOList", actividadDTOList);
 
 		List<Periodo> periodos = periodoService.listaPeriodos();
+		model.addAttribute("titulo", "Cuadro de nota");
 		model.addAttribute("periodos", periodos);
 		model.addAttribute("listadoActividades", listadoActividades);
 		model.addAttribute("listaAlumnos", listaAlumnos);
@@ -187,7 +213,24 @@ public class calificacionesController {
 	public String guardarCalificacion(@ModelAttribute Nota nota, RedirectAttributes redirectAttributes) {
 
 		nota.setFechaModificacion(new Date());
+
 		notaService.guardarNota(nota);
+		try {
+			notaPeriodoService.procesarNotaPeriodo(nota);
+			System.out.println("Entro al try");
+		} catch (Exception e) {
+			System.out.println("Error: " + e);
+		}
+
+		try {
+			notaMateriaService.procesarNotaMateria(nota.getActividad().getAsignacion(),
+					nota.getActividad().getAsignacion().getDocente().getDuiDocente(),
+					String.valueOf(nota.getActividad().getPeriodo().getNumeroPeriodo()),
+					nota.getActividad().getAsignacion().getBachillerato().getCodigoBachillerato());
+					System.out.println("Entro al try de materia");
+		} catch (Exception e) {
+			System.out.println("Error: " + e);
+		}
 
 		redirectAttributes.addFlashAttribute("success", "Calificación actualizada exitosamente.");
 		return "redirect:/Calificaciones/registro/" + nota.getActividad().getIdActividad();
@@ -199,7 +242,7 @@ public class calificacionesController {
 	// @RequestParam(value = "seccion", required = false) String seccion,
 
 	@GetMapping("/General")
-	public String verCalificacioneGeneral(Model model,
+	public String verCalificacioneGeneral(Model model, RedirectAttributes redirectAttributes,
 			@RequestParam(value = "idMateria", required = false) String idMateria,
 			@RequestParam(value = "docente", required = false) String docente,
 			@RequestParam(value = "carrera", required = false) String carrera,
@@ -208,14 +251,24 @@ public class calificacionesController {
 			@RequestParam(value = "pe", required = false) String pe) {
 
 		// Validaciones para los parámetros vacíos
-		if (carrera != null && carrera.isEmpty())
+		if (carrera != null && carrera.isEmpty()) {
 			carrera = null;
-		if (grado != null && grado.isEmpty())
+		}
+		if (grado != null && grado.isEmpty()) {
 			grado = null;
-		if (seccion != null && seccion.isEmpty())
+		}
+		if (seccion != null && seccion.isEmpty()) {
 			seccion = null;
-		if (pe != null && pe.isEmpty())
+		}
+		if (pe != null && pe.isEmpty()) {
 			pe = null;
+		}
+		if (idMateria != null && idMateria.isEmpty()) {
+			idMateria = null;
+		}
+		if (docente != null && docente.isEmpty()) {
+			docente = null;
+		}
 
 		String dui = docente;
 
@@ -239,7 +292,7 @@ public class calificacionesController {
 				List<Nota> listaNotas = notaService.listaNotaActividadBachillerato(
 						asignacion.getDocente().getDuiDocente(),
 						asignacion.getBachillerato().getCodigoBachillerato(),
-						pe);
+						pe, asignacion.getMateria().getIdMateria());
 				List<Alumno> listaAlumnos = alumnoService.alumnosPorBachilerato(
 						asignacion.getBachillerato().getCodigoBachillerato());
 
@@ -262,9 +315,9 @@ public class calificacionesController {
 
 				Map<String, Long> conteoPorTipo = listadoActividades.stream()
 						.collect(Collectors.groupingBy(Actividad::getTipoActividad, Collectors.counting()));
-
 				List<ActividadDTO> actividadDTOList = conteoPorTipo.entrySet().stream()
 						.map(entry -> new ActividadDTO(entry.getKey(), entry.getValue().intValue()))
+						.sorted(Comparator.comparing(ActividadDTO::getNombreActividad)) // Ordenar por nombre
 						.collect(Collectors.toList());
 
 				model.addAttribute("actividadDTOList", actividadDTOList);
@@ -273,6 +326,10 @@ public class calificacionesController {
 				model.addAttribute("notasPorAlumno", notasPorAlumno);
 				model.addAttribute("totalNotasPorAlumno", totalNotasPorAlumno);
 				model.addAttribute("asignacion", asignacion);
+			} else {
+				System.out.println("La asignación solicitada no existe");
+				redirectAttributes.addFlashAttribute("info", "No existe esa asignación");
+				return "redirect:/Calificaciones/General";
 			}
 		}
 
@@ -281,11 +338,17 @@ public class calificacionesController {
 		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
 		List<Materia> listaMaterias = materiaService.obtenerMaterias();
 
+		model.addAttribute("titulo", "Gestion de calificaciones");
 		model.addAttribute("docentes", docenteService.listarDocenteAsignacion());
 		model.addAttribute("periodos", periodos);
 		model.addAttribute("pe", pe);
 		model.addAttribute("bachilleratos", listaCarreras);
 		model.addAttribute("listaMaterias", listaMaterias);
+		model.addAttribute("carrera", carrera);
+		model.addAttribute("grado", grado);
+		model.addAttribute("seccion", seccion);
+		model.addAttribute("idMateria", idMateria);
+		model.addAttribute("docente", docente);
 
 		return "Calificaciones/vistaCalificaciones";
 	}
@@ -321,6 +384,7 @@ public class calificacionesController {
 		// Obtener la lista de carreras (bachilleratos)
 		List<Bachillerato> listaCarreras = bachilleratoService.listaCarrera(false);
 
+		model.addAttribute("titulo", "Notas por alumno");
 		model.addAttribute("bachilleratos", listaCarreras);
 		model.addAttribute("carrera", carrera);
 		model.addAttribute("grado", grado);
@@ -332,16 +396,103 @@ public class calificacionesController {
 
 	@GetMapping("/alumno/{idAlumno}")
 	public String calificacionePorAlumno(Model model, @PathVariable("idAlumno") int idAlumno) {
-
 		Alumno alumno = alumnoService.buscarPorIdAlumno(idAlumno);
+		Map<Materia, Map<Integer, Map<String, List<Nota>>>> notasAgrupadas = notaService.notasAgrupadas(alumno);
 
-		List<Nota> listaNotas= notaService.notasPorAlumno(alumno);
-		
+		// Mapa para almacenar las notas globales por materia y período
+		Map<Materia, Map<Integer, Float>> notasGlobalesPorPeriodo = new HashMap<>();
 
+		for (Map.Entry<Materia, Map<Integer, Map<String, List<Nota>>>> materiaEntry : notasAgrupadas.entrySet()) {
+			Materia materia = materiaEntry.getKey();
+			Map<Integer, Map<String, List<Nota>>> periodos = materiaEntry.getValue();
+
+			for (Integer numeroPeriodo : periodos.keySet()) {
+				Optional<NotaPeriodo> notaPeriodoOpt = notaPeriodoService.obtenerNotaPeriodo(alumno, numeroPeriodo,
+						materia);
+				if (notaPeriodoOpt.isPresent()) {
+					Float notaGlobal = notaPeriodoOpt.get().getNotaPeriodo();
+					notasGlobalesPorPeriodo.computeIfAbsent(materia, k -> new HashMap<>()).put(numeroPeriodo,
+							notaGlobal);
+				}
+			}
+		}
+
+		model.addAttribute("titulo", "Calicaciones " + alumno.getNie());
 		model.addAttribute("alumno", alumno);
+		model.addAttribute("notasAgrupadas", notasAgrupadas);
+		model.addAttribute("notasGlobalesPorPeriodo", notasGlobalesPorPeriodo);
 		return "Calificaciones/CalificacionAlumno";
 	}
-	
+
+	@GetMapping("/CalificacionPeriodos/{idMateria}/{codigoBachillerato}")
+	public String calificacionPorMateria(Model model, @PathVariable("idMateria") int idMateria,
+			@PathVariable("codigoBachillerato") int codigoBachillerato) {
+
+		String dui = sesion.duiSession();
+		NotaMateria notaMateria = null;
+		Asignacion asignacion = asignacionService.asignacionParaActividad(dui, idMateria, codigoBachillerato);
+		List<NotaPeriodo> notaPeriodos = notaPeriodoService.listadoNotasPeriodoMateria(idMateria, codigoBachillerato,
+				dui);
+
+		// Obtener lista de alumnos y ordenar por apellido en orden ascendente
+		List<Alumno> listaAlumnos = alumnoService
+				.alumnosPorBachilerato(asignacion.getBachillerato().getCodigoBachillerato());
+		listaAlumnos.sort(Comparator.comparing(Alumno::getApellidoAlumno));
+
+		// Usar LinkedHashMap para preservar el orden en listaAlumnos
+		Map<Alumno, Map<Integer, Float>> notasPorAlumnoYPeriodo = new LinkedHashMap<>();
+		Map<Alumno, Float> notaGlobalPorAlumno = new HashMap<>();
+
+		// Organizar las notas por alumno y periodo en función de listaAlumnos
+		for (Alumno alumno : listaAlumnos) {
+			Map<Integer, Float> notasPeriodo = new HashMap<>();
+			for (NotaPeriodo nota : notaPeriodos) {
+				if (nota.getAlumno().equals(alumno)) {
+					int periodo = nota.getPeriodo().getIdPeriodo();
+					notasPeriodo.put(periodo, nota.getNotaPeriodo());
+				}
+			}
+			notasPorAlumnoYPeriodo.put(alumno, notasPeriodo);
+		}
+		// Calcular la nota global para cada alumno
+		for (Alumno alumno : listaAlumnos) {
+			Map<Integer, Float> notasPeriodo = notasPorAlumnoYPeriodo.getOrDefault(alumno, new HashMap<>());
+
+			float notaGlobal = 0;
+			for (int i = 1; i <= 4; i++) {
+				float nota = notasPeriodo.getOrDefault(i, 0.0f);
+				notaGlobal += nota * 0.25;
+			}
+			notaGlobalPorAlumno.put(alumno, notaGlobal);
+
+			// notaPeriodo = notaPeriodoService.notaPeriodoAlumno(idAlumno, pe, idMateria,
+			// codigoBachillerato, dui);
+			notaMateria = notaMateriaService.existeNotaMateria(alumno.getIdAlumno(), idMateria, dui,
+					codigoBachillerato);
+			if (notaMateria != null) {
+				// System.out.println("si existe");
+				// System.out.println("nota: "+ notaGlobal);
+				notaMateria.setNotaMateria(notaGlobal);
+				notaMateriaService.guardarNotaMateria(notaMateria);
+			} else {
+				notaMateria = new NotaMateria();
+				notaMateria.setAlumno(alumno);
+				notaMateria.setAsignacion(asignacion);
+				notaMateria.setNotaMateria(notaGlobal);
+				// System.out.println("nota: "+ notaGlobal);
+				// System.out.println("neles");
+				notaMateriaService.guardarNotaMateria(notaMateria);
+			}
+		}
+
+		model.addAttribute("titulo", "Calificación general");
+		model.addAttribute("asignacion", asignacion);
+		model.addAttribute("notasPorAlumnoYPeriodo", notasPorAlumnoYPeriodo);
+		model.addAttribute("notaGlobalPorAlumno", notaGlobalPorAlumno);
+		model.addAttribute("listaAlumnos", listaAlumnos);
+
+		return "Calificaciones/calificacionesPorPeriodo";
+	}
 
 	/*
 	 * @GetMapping("calificaciones/materiasPorBachillerato")

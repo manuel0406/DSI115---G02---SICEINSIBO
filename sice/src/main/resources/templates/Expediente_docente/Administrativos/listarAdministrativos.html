@@ -50,7 +50,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="administrativoDTO : ${page.content}"
-                        th:if="${administrativoDTO.administrativo.activo}">
+                        th:if="${administrativoDTO.administrativo.activoPersonalAdministrativo}">
                         <td th:text="${administrativoDTO.administrativo.nombrePersonal}"></td>
                         <td th:text="${administrativoDTO.administrativo.apellidoPersonal}"></td>
                         <td th:text="${administrativoDTO.administrativo.profesionPersonal}"></td>

@@ -8,74 +8,79 @@
 </head>
 
 <body>
-    <div class="container-fluid my-2 py-5">
-        <div th:replace="~{Calificaciones\vistaActividades :: barraCalificaciones}">
-        </div>
-        <div class=" col-md-10 offset-md-2">
-            <header th:replace="~{home :: header}"></header>
+    <div class="container-fluid">
+        <div class="row">
+            <div th:replace="~{Calificaciones\vistaActividades :: barraCalificaciones}"></div>
 
-            <div class="container-fluid py-2 my-2">
-                <!--Mensajes-->
-                <div th:replace="~{alertas::alertas}"></div>
-                
-                <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
-                    <h3 class="text-start col-lg-9" th:text="${'Actividad: ' + actividad.nombreActividad + '  -  ' + 
-                        actividad.asignacion.bachillerato.grado + '° ' + 
-                        (actividad.asignacion.bachillerato.nombreCarrera == 'Electrónica' ? 'ECA' :
-                        actividad.asignacion.bachillerato.nombreCarrera == 'Atención Primaria en Salud' ? 'APS' :
-                        actividad.asignacion.bachillerato.nombreCarrera == 'Sistemas Eléctricos' ? 'SE' :
-                        actividad.asignacion.bachillerato.nombreCarrera == 'Desarrollo de Software' ? 'DS' :
-                        actividad.asignacion.bachillerato.nombreCarrera == 'Administrativo Contable' ? 'AC' :
-                        actividad.asignacion.bachillerato.nombreCarrera) + ' ' + 
-                        actividad.asignacion.bachillerato.seccion + ' '}">
-                    </h3>
+            <div class="col ms-auto py-5 my-2">
+                <header th:replace="~{home :: header}"></header>
 
-                    <!-- <h3 class="text-start col-lg-9"
-                        th:text="${actividad.asignacion.bachillerato.grado+'° '+actividad.asignacion.bachillerato.nombreCarrera+' '+ actividad.asignacion.bachillerato.seccion}">
-                    </h3> -->
+                <div class="container-fluid py-2 my-2 align-items-center ">
+                    <!--Mensajes-->
+                    <div th:replace="~{alertas::alertas}"></div>
 
-                </div>
-                <div class="col-12 table-responsive-sm">
-                    <table class="table table-hover table-bordered table-sm">
-                        <thead class="thead table-dark text-start">
-                            <tr>
-                                <th scope="col">N°</th>
-                                <th scope="col">NIE</th>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">Nota</th>
-                                <th scope="col">Fecha de modificación</th>
-                                <th scope="col">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tBody>
-                            <tr th:each="nota, stat: ${listadoNotas}">
-                                <th scope="row" th:text="${stat.index + 1}"></th>
-                                <td th:text="${nota.alumno.nie}"></td>                
+                    <div class="d-flex justify-content-between align-items-center mb-3 my-3 flex-wrap">
+                        <h3 class="text-start col-lg-9" th:text="${'Actividad: ' + actividad.nombreActividad + '  -  ' + 
+                            actividad.asignacion.bachillerato.grado + '° ' + 
+                            (actividad.asignacion.bachillerato.nombreCarrera == 'Electrónica' ? 'ECA' :
+                            actividad.asignacion.bachillerato.nombreCarrera == 'Atención Primaria en Salud' ? 'APS' :
+                            actividad.asignacion.bachillerato.nombreCarrera == 'Sistemas Eléctricos' ? 'SE' :
+                            actividad.asignacion.bachillerato.nombreCarrera == 'Desarrollo de Software' ? 'DS' :
+                            actividad.asignacion.bachillerato.nombreCarrera == 'Administrativo Contable' ? 'AC' :
+                            actividad.asignacion.bachillerato.nombreCarrera) + ' ' + 
+                            actividad.asignacion.bachillerato.seccion + ' '}">
+                        </h3>
 
-                                <td class="text-start"
-                                    th:text="${nota.alumno.apellidoAlumno +' '+nota.alumno.nombreAlumno}"></td>
-                                <td th:text="${nota.notaObtenida}"></td>                               
-                                <td th:text="${#dates.format(nota.fechaModificacion,'dd/MM/yyyy')}"></td>
-                                <td>
-                                    <a class="btn btn-primary btn-sm editar-btn" data-bs-t="tooltip"
-                                        data-bs-placement="top" title="Editar" data-bs-toggle="modal"
-                                        data-bs-target="#EditarNotadModal" th:data-id="${nota.idNota}"
-                                        th:data-al="${nota.alumno.idAlumno}" th:data-ac="${nota.actividad.idActividad}"
-                                        th:data-not="${nota.notaObtenida}"> <i class="bi bi-pencil-square"></i></a>
-                                </td>
-                            </tr>
-                        </tBody>
-                    </table>
-                    <!-- Alerta que se muestra solo cuando se le manda una lista vacia de alumnos -->
-                    <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2"
-                        th:if="${#lists.isEmpty(listadoNotas)}">
-                        <i class="bi bi-exclamation-triangle"></i>
-                        <label th:text="${'¡No hay alumnos registrados!'}"></label>
+                        <!-- <h3 class="text-start col-lg-9"
+                            th:text="${actividad.asignacion.bachillerato.grado+'° '+actividad.asignacion.bachillerato.nombreCarrera+' '+ actividad.asignacion.bachillerato.seccion}">
+                        </h3> -->
+
+                    </div>
+                    <div class="col-12 table-responsive-sm">
+                        <table class="table table-hover table-bordered table-sm">
+                            <thead class="thead table-dark text-start">
+                                <tr>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">NIE</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Nota</th>
+                                    <th scope="col">Fecha de modificación</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tBody>
+                                <tr th:each="nota, stat: ${listadoNotas}">
+                                    <th scope="row" th:text="${stat.index + 1}"></th>
+                                    <td th:text="${nota.alumno.nie}"></td>
+
+                                    <td class="text-start"
+                                        th:text="${nota.alumno.apellidoAlumno +' '+nota.alumno.nombreAlumno}"></td>
+                                    <td th:text="${nota.notaObtenida}"></td>
+                                    <td th:text="${#dates.format(nota.fechaModificacion,'dd/MM/yyyy')}"></td>
+                                    <td>
+                                        <a class="btn btn-primary btn-sm editar-btn" data-bs-t="tooltip"
+                                            data-bs-placement="top" title="Editar" data-bs-toggle="modal"
+                                            data-bs-target="#EditarNotadModal" th:data-id="${nota.idNota}"
+                                            th:data-al="${nota.alumno.idAlumno}"
+                                            th:data-ac="${nota.actividad.idActividad}"
+                                            th:data-not="${nota.notaObtenida}"> <i class="bi bi-pencil-square"></i></a>
+                                    </td>
+                                </tr>
+                            </tBody>
+                        </table>
+                        <!-- Alerta que se muestra solo cuando se le manda una lista vacia de alumnos -->
+                        <div class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2"
+                            th:if="${#lists.isEmpty(listadoNotas)}">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <label th:text="${'¡No hay alumnos registrados!'}"></label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
     <!-- Modal editar nota -->
     <div class="modal fade" id="EditarNotadModal" tabindex="-1" aria-labelledby="EditarNotaModalLabel"
         aria-hidden="true">

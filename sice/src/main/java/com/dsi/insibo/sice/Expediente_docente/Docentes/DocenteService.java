@@ -18,7 +18,7 @@ public class DocenteService {
     public List<DocenteDTO> listarDocentes() {
         List<Docente> docentes = (List<Docente>) docenteRepository.findAll();
         return docentes.stream()
-                .filter(Docente::isActivo)
+                .filter(Docente::isActivoDocente)
                 .sorted(Comparator.comparing(Docente::getNombreDocente)
                         .thenComparing(Docente::getApellidoDocente))
                 .map(DocenteDTO::new)
@@ -29,7 +29,7 @@ public class DocenteService {
     public List<DocenteDTO> listarDocentesInactivos() {
         List<Docente> docentes = (List<Docente>) docenteRepository.findAll();
         return docentes.stream()
-                .filter(docent -> !docent.isActivo())
+                .filter(docent -> !docent.isActivoDocente())
                 .sorted(Comparator.comparing(Docente::getNombreDocente)
                         .thenComparing(Docente::getApellidoDocente))
                 .map(DocenteDTO::new)
@@ -67,6 +67,22 @@ public class DocenteService {
 
     public List<Docente> buscarPorNombre(String nombre) {
         return docenteRepository.findByNombreDocenteContainingIgnoreCase(nombre);
+    }
+
+    public boolean correoYaRegistrado(String correoDocente) {
+        return docenteRepository.existsBycorreoDocente(correoDocente);
+    }
+
+    public boolean nitYaRegistrado(String nitPersonal) {
+        return docenteRepository.existsBynit(nitPersonal);
+    }
+
+    public boolean nupYaRegistrado(String nupPersonal) {
+        return docenteRepository.existsBynup(nupPersonal);
+    }
+
+    public boolean nipYaRegistrado(String nipPersonal) {
+        return docenteRepository.existsBynip(nipPersonal);
     }
 
 }

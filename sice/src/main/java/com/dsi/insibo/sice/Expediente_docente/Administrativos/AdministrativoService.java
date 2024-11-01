@@ -18,7 +18,7 @@ public class AdministrativoService {
         List<PersonalAdministrativo> administrativos = (List<PersonalAdministrativo>) administrativoRepository
                 .findAll();
         return administrativos.stream()
-                .filter(PersonalAdministrativo::isActivo)
+                .filter(PersonalAdministrativo::isActivoPersonalAdministrativo)
                 .sorted(Comparator.comparing(PersonalAdministrativo::getNombrePersonal)
                         .thenComparing(PersonalAdministrativo::getApellidoPersonal))
                 .map(AdministrativoDTO::new)
@@ -30,7 +30,7 @@ public class AdministrativoService {
         List<PersonalAdministrativo> administrativos = (List<PersonalAdministrativo>) administrativoRepository
                 .findAll();
         return administrativos.stream()
-                .filter(admin -> !admin.isActivo())
+                .filter(admin -> !admin.isActivoPersonalAdministrativo())
                 .sorted(Comparator.comparing(PersonalAdministrativo::getNombrePersonal)
                         .thenComparing(PersonalAdministrativo::getApellidoPersonal))
                 .map(AdministrativoDTO::new)
@@ -61,4 +61,31 @@ public class AdministrativoService {
     public void eliminar(String duiPersonal) {
         administrativoRepository.deleteById(duiPersonal);
     }
+
+
+
+    public boolean correoYaRegistrado(String correoPersonal) {
+        return administrativoRepository.existsByCorreoPersonal(correoPersonal);
+    }
+
+    public boolean nitYaRegistrado(String nitPersonal) {
+        return administrativoRepository.existsBynitPersonal(nitPersonal);
+    }
+
+    public boolean nupYaRegistrado(String nupPersonal) {
+        return administrativoRepository.existsBynupPersonal(nupPersonal);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
