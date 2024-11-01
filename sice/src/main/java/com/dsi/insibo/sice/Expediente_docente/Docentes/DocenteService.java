@@ -18,7 +18,7 @@ public class DocenteService {
     public List<DocenteDTO> listarDocentes() {
         List<Docente> docentes = (List<Docente>) docenteRepository.findAll();
         return docentes.stream()
-                .filter(Docente::isActivo)
+                .filter(Docente::isActivoDocente)
                 .sorted(Comparator.comparing(Docente::getNombreDocente)
                         .thenComparing(Docente::getApellidoDocente))
                 .map(DocenteDTO::new)
@@ -29,7 +29,7 @@ public class DocenteService {
     public List<DocenteDTO> listarDocentesInactivos() {
         List<Docente> docentes = (List<Docente>) docenteRepository.findAll();
         return docentes.stream()
-                .filter(docent -> !docent.isActivo())
+                .filter(docent -> !docent.isActivoDocente())
                 .sorted(Comparator.comparing(Docente::getNombreDocente)
                         .thenComparing(Docente::getApellidoDocente))
                 .map(DocenteDTO::new)

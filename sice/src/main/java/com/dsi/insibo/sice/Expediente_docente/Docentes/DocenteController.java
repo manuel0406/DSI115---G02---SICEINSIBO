@@ -92,7 +92,7 @@ public class DocenteController {
 
             // Fin del codigo para usuario
             // guardando el registro
-            docente.setActivo(true);
+            docente.setActivoDocente(true);
             docenteService.guardarDocente(docente);
             usuarioService.asignarRol(usuario, idRol); //Guardado y asignado de rol
             attribute.addFlashAttribute("success", "Expediente creado con exito!");
@@ -128,7 +128,7 @@ public class DocenteController {
                 break;
         }
         usuarioService.asignarRol(usuario, idRol);          // Guardamos la actualización
-        docente.setActivo(true);
+        docente.setActivoDocente(true);
         docenteService.guardarDocente(docente);
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
         return "redirect:plantadocente";
@@ -141,7 +141,7 @@ public class DocenteController {
             @RequestParam("docenteRol") String rolSeleccionado, BindingResult result, Model model,
             RedirectAttributes attribute) {
 
-        docente.setActivo(true);
+        docente.setActivoDocente(true);
         docenteService.guardarDocente(docente);
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
         return "redirect:miexpediente";
@@ -227,7 +227,7 @@ public class DocenteController {
         docenteService.eliminar(idDocente); */
 
         // cuando un docente es "eliminado" este no se borra del sistema sino que pasa a un estado 'inactivo'
-        profesor.setActivo(false);
+        profesor.setActivoDocente(false);
         docenteService.guardarDocente(profesor);
         attribute.addFlashAttribute("warning", "El administrativo " + profesor.getNombreDocente() + " "
                 + profesor.getApellidoDocente() + " ha sido eliminado de la planta docente");  
