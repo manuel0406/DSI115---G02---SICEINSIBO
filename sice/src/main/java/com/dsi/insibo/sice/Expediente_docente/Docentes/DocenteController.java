@@ -63,7 +63,7 @@ public class DocenteController {
         // Verifica si el DUI ya está en uso y si el registro está activo
         Docente docenteExistente = docenteService.buscarPorIdDocente(docente.getDuiDocente());
         if (docenteExistente != null) {
-            if (docenteExistente.isActivo()) {
+            if (docenteExistente.isActivoDocente()) {
                 attribute.addFlashAttribute("error", "Error: Este DUI ya esta siendo utilizado.");
                 return "redirect:plantadocente";
             } else {
@@ -125,7 +125,7 @@ public class DocenteController {
             return "expedientedocente/formulario";
         }
 
-        docente.setActivo(true);
+        docente.setActivoDocente(true);
         docenteService.guardarDocente(docente);
         usuarioService.asignarRol(usuario, idRol); // Guardado y asignado de rol
         attribute.addFlashAttribute("success", "Expediente creado con exito!");
@@ -217,8 +217,8 @@ public class DocenteController {
                 idRol = 2L;
                 break;
         }
-        usuarioService.asignarRol(usuario, idRol); // Guardamos la actualización
-        docente.setActivo(true);
+        usuarioService.asignarRol(usuario, idRol);          // Guardamos la actualización
+        docente.setActivoDocente(true);
         docenteService.guardarDocente(docente);
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
         return "redirect:plantadocente";
@@ -231,7 +231,7 @@ public class DocenteController {
             @RequestParam("docenteRol") String rolSeleccionado, BindingResult result, Model model,
             RedirectAttributes attribute) {
 
-        docente.setActivo(true);
+        docente.setActivoDocente(true);
         docenteService.guardarDocente(docente);
         attribute.addFlashAttribute("success", "Expediente actualizado con éxito!");
         return "redirect:miexpediente";
@@ -320,9 +320,8 @@ public class DocenteController {
          * docenteService.eliminar(idDocente);
          */
 
-        // cuando un docente es "eliminado" este no se borra del sistema sino que pasa a
-        // un estado 'inactivo'
-        profesor.setActivo(false);
+        // cuando un docente es "eliminado" este no se borra del sistema sino que pasa a un estado 'inactivo'
+        profesor.setActivoDocente(false);
         docenteService.guardarDocente(profesor);
         attribute.addFlashAttribute("warning", "El administrativo " + profesor.getNombreDocente() + " "
                 + profesor.getApellidoDocente() + " ha sido eliminado de la planta docente");
