@@ -37,14 +37,14 @@
                                     <a class="nav-link"
                                         th:href="@{/Calificaciones/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
                                         <i class="bi bi-journal-text"></i>
-                                        Calificaciones por periodo
+                                        Calificaciones
                                     </a>
                                 </li>
-                                <li class="nav-item nav-pills" sec:authorize="hasAnyRole('DOCENTE')">
+                                <li class="nav-item nav-pills" sec:authorize="hasAnyRole('DOCENTE')" >
                                     <a class="nav-link"
                                         th:href="@{/Calificaciones/CalificacionPeriodos/}+${asignacion.materia.idMateria+'/'+asignacion.bachillerato.codigoBachillerato}">
                                         <i class="bi bi-journal-text"></i>
-                                        Calificaciones global
+                                        Promedio general
                                     </a>
                                 </li>
                                 <li class="nav-item"

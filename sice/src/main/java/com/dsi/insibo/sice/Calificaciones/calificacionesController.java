@@ -138,7 +138,8 @@ public class calificacionesController {
 
 			}
 		}
-		// notaPeriodoService.procesarNotaPeriodo(asignacion, dui, pe, codigoBachillerato);
+		// notaPeriodoService.procesarNotaPeriodo(asignacion, dui, pe,
+		// codigoBachillerato);
 
 		Map<String, Long> conteoPorTipo = listadoActividades.stream()
 				.collect(Collectors.groupingBy(Actividad::getTipoActividad, Collectors.counting()));
@@ -227,7 +228,7 @@ public class calificacionesController {
 					nota.getActividad().getAsignacion().getDocente().getDuiDocente(),
 					String.valueOf(nota.getActividad().getPeriodo().getNumeroPeriodo()),
 					nota.getActividad().getAsignacion().getBachillerato().getCodigoBachillerato());
-					System.out.println("Entro al try de materia");
+			System.out.println("Entro al try de materia");
 		} catch (Exception e) {
 			System.out.println("Error: " + e);
 		}
@@ -443,6 +444,8 @@ public class calificacionesController {
 		Map<Alumno, Map<Integer, Float>> notasPorAlumnoYPeriodo = new LinkedHashMap<>();
 		Map<Alumno, Float> notaGlobalPorAlumno = new HashMap<>();
 
+		boolean esModulo = "Módulo".equals(asignacion.getMateria().getTipoMateria());
+
 		// Organizar las notas por alumno y periodo en función de listaAlumnos
 		for (Alumno alumno : listaAlumnos) {
 			Map<Integer, Float> notasPeriodo = new HashMap<>();
@@ -459,14 +462,19 @@ public class calificacionesController {
 			Map<Integer, Float> notasPeriodo = notasPorAlumnoYPeriodo.getOrDefault(alumno, new HashMap<>());
 
 			float notaGlobal = 0;
-			for (int i = 1; i <= 4; i++) {
-				float nota = notasPeriodo.getOrDefault(i, 0.0f);
-				notaGlobal += nota * 0.25;
+			if (esModulo) {
+				// Si es "Módulo", solo considerar la nota del periodo 1
+				notaGlobal = notasPeriodo.getOrDefault(1, 0.0f);
+			} else {
+				// Si no es "Módulo", calcular la nota global considerando todos los periodos
+				for (int i = 1; i <= 4; i++) {
+					float nota = notasPeriodo.getOrDefault(i, 0.0f);
+					notaGlobal += nota * 0.25;
+				}
 			}
 			notaGlobalPorAlumno.put(alumno, notaGlobal);
 
-			// notaPeriodo = notaPeriodoService.notaPeriodoAlumno(idAlumno, pe, idMateria,
-			// codigoBachillerato, dui);
+			// Guardar la nota en NotaMateria
 			notaMateria = notaMateriaService.existeNotaMateria(alumno.getIdAlumno(), idMateria, dui,
 					codigoBachillerato);
 			if (notaMateria != null) {
