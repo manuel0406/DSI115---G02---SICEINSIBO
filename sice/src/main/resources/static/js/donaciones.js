@@ -1,6 +1,7 @@
 var options = {
     valueNames: ['tipo']
 };
+
 var userList = new List('prendas', options);
 
 var tooltipTriggerList = [].slice.call(
