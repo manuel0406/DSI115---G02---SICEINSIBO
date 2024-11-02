@@ -110,13 +110,13 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 
 
-document
-    .getElementById("cancelarSancion")
-    .addEventListener("click", function () {
-        var form = document.getElementById("formActividad");
-        form.reset();
-        form.classList.remove("was-validated"); // Eliminar la clase de validación
-    });
+// document
+//     .getElementById("cancelarSancion")
+//     .addEventListener("click", function () {
+//         var form = document.getElementById("formActividad");
+//         form.reset();
+//         form.classList.remove("was-validated"); // Eliminar la clase de validación
+//     });
 
 $(document).ready(function () {
     $('.editar-btn').on('click', function () {

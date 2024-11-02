@@ -622,4 +622,9 @@ public class AlumnoController {
 		return modelAndView;
 	}
 
+	@GetMapping("/prueba12")
+	public String pruebaString(){
+		return "prueba";
+	}
+
 }

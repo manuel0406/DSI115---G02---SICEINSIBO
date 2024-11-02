@@ -82,9 +82,8 @@
                                 data-bs-target="#MatricularModal" data-bs-placement="top" title="Editar"
                                 th:data-id="${alumno.idAlumno}" th:data-non="${alumno.nombreAlumno}"
                                 th:data-ape="${alumno.apellidoAlumno}" th:data-nie="${alumno.nie}"
-                                th:data-ca="${alumno.bachillerato.nombreCarrera}" 
-                                th:data-sec="${alumno.bachillerato.seccion}"
-                                th:data-gra="${alumno.bachillerato.grado}"
+                                th:data-ca="${alumno.bachillerato.nombreCarrera}"
+                                th:data-sec="${alumno.bachillerato.seccion}" th:data-gra="${alumno.bachillerato.grado}"
                                 th:data-cod="${alumno.bachillerato.codigoBachillerato}"
                                 th:data-est="${alumno.estadoAlumno}">Matricular
                             </a>
@@ -94,63 +93,75 @@
             </table>
         </div>
     </div>
-
     <!-- Modal  -->
     <div class="modal fade" id="MatricularModal" tabindex="-1" aria-labelledby="MatricularModal" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="EditarActividadLabel">Matriculación</h1>
+                    <h5 class="modal-title" id="EditarActividadLabel">Matriculación</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!-- Mensaje dinámico -->
-                    <p id="alumnoMensaje"></p>
+                    <p id="alumnoMensaje" class="mb-3 text-center fw-bold"></p>
+                    
                     <!-- Formulario dentro del modal -->
-                    <form th:object="${alumno}" method="post" id="formMatricula" class="needs-validation" novalidate>
+                    <form th:object="${alumno}" method="post" id="formMatricula" class="needs-validation" th:action="@{/saveMatricula/}" novalidate>
                         <input type="hidden" id="idAlumno" name="idAlumno">
-                        <div class="mb-3"
-                                sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
-                                <label for="carrera" class="form-label fs-6">Carrera:</label>
-                                <select id="carrera" name="carrera" th:value="${carrera}" class="form-select"
-                                    aria-label="Default select example">
-                                    <option value="" selected>Seleccione</option>
-                                    <option th:each="bachillerato : ${bachilleratos}"
-                                        th:value="${bachillerato.nombreCarrera}" th:text="${bachillerato.nombreCarrera}"
-                                        th:selected="${bachillerato.nombreCarrera == carrera}">
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="mb-3"
-                                sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
-                                <label for="grado" class="form-label fs-6">Año:</label>
-                                <select id="grado" name="grado" th:value="${grado}" class="form-select">
-                                    <option value="" selected>Seleccione</option>
-                                    <option value="1" th:selected="${grado == '1'}">1</option>
-                                    <option value="2" th:selected="${grado == '2'}">2</option>
-                                    <option value="3" th:selected="${grado == '3'}">3</option>
-                                </select>
-                            </div>
-                            <div class="mb-3"
-                                sec:authorize="hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')">
-                                <label for="seccion" class="form-label fs-6">Sección:</label>
-                                <select id="seccion" name="seccion" th:value="${seccion}" class="form-select">
-                                    <option value="" selected>Seleccione</option>
-                                    <option value="A" th:selected="${seccion == 'A'}">A</option>
-                                    <option value="B" th:selected="${seccion == 'B'}">B</option>
-                                    <option value="C" th:selected="${seccion == 'C'}">C</option>
-                                    <option value="D" th:selected="${seccion == 'D'}">D</option>
-                                </select>
-                            </div>
+                        <input type="hidden" id="matricula" name="matricula" th:value="${matricula}">
+    
+                        <!-- Año (Grado) -->
+                        <div class="mb-3">
+                            <label for="grado" class="form-label fs-6">Año:</label>
+                            <select id="grado" name="grado" class="form-select border border-dark-subtle" required>
+                                <option value="" selected>Seleccione</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <div class="invalid-feedback">Por favor, seleccione un año.</div>
+                        </div>
+    
+                        <!-- Carrera -->
+                        <div class="mb-3">
+                            <label for="carrera" class="form-label fs-6">Carrera:</label>
+                            <select id="carrera" name="carrera" class="form-select border border-dark-subtle" required>
+                                <option value="" selected>Seleccione</option>
+                                <option th:each="bachillerato : ${bachilleratos}" th:value="${bachillerato.nombreCarrera}" th:text="${bachillerato.nombreCarrera}"></option>
+                            </select>
+                            <div class="invalid-feedback">Por favor, seleccione una carrera.</div>
+                        </div>
+    
+                        <!-- Sección -->
+                        <div class="mb-3">
+                            <label for="seccion" class="form-label fs-6">Sección:</label>
+                            <select id="seccion" name="seccion" class="form-select border border-dark-subtle" required>
+                                <option value="" selected>Seleccione</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                            <div class="invalid-feedback">Por favor, seleccione una sección.</div>
+                        </div>
                     </form>
+                </div>
+    
+                <!-- Botones del modal -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="cancelarMatricula">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" form="formMatricula" id="agregarModalButton">Guardar</button>
                 </div>
             </div>
         </div>
     </div>
     
 
+
+
     <footer th:replace="~{home :: footer}"></footer>
     <script type="text/javascript" th:src="@{/js/GestionMatricula.js}"></script>
+    <script type="text/javascript" th:src="@{/js/validacionRequired.js}"></script>
 </body>
 
 </html>

@@ -75,7 +75,7 @@ public class MatriculaController {
 
 		model.addAttribute("alumnos", listado);
 		model.addAttribute("titulo", "Antiguo ingreso");
-		model.addAttribute("nie", nie);
+		// model.addAttribute("nie", nie);
 		model.addAttribute("nombre", nombre);
 		model.addAttribute("apellido", apellido);
 		model.addAttribute("matricula", "true");
@@ -125,25 +125,27 @@ public class MatriculaController {
 		return "Expediente_alumno/registro";
 	}
 
-	@GetMapping("/saveMatricula/{idAlumno}")
-	public String saveMatricula(@PathVariable("idAlumno") int idAlumno, RedirectAttributes attributes, @RequestParam(value = "carrera", required = false) String carrera,
-	@RequestParam(value = "grado", required = false) String grado,
-	@RequestParam(value = "seccion", required = false) String seccion) {
+	@PostMapping("/saveMatricula/")
+	public String saveMatricula(RedirectAttributes attributes, @RequestParam(value = "idAlumno", required = false) String idAlumno,
+			@RequestParam(value = "carrera", required = false) String carrera,
+			@RequestParam(value = "grado", required = false) String grado,
+			@RequestParam(value = "seccion", required = false) String seccion) {
 
-		Alumno alumno = alumnoService.buscarPorIdAlumno(idAlumno);
+		Alumno alumno = alumnoService.buscarPorIdAlumno(Integer.parseInt(idAlumno));
+		System.out.println("grado: " + grado);
+		// System.out.println("idAlumno: " + alumnoa.getIdAlumno());
 
-		if (!alumno.isEstadoAlumno()) {
-			attributes.addFlashAttribute("error", "¡Este alumno no aprobo el año anterior!");
-			return "redirect:/AntiguoIngreso";
+		// if (!alumno.isEstadoAlumno()) {
+		// attributes.addFlashAttribute("error", "¡Este alumno no aprobo el año
+		// anterior!");
+		// return "redirect:/AntiguoIngreso";
+		// }
+
+		Bachillerato bachillerato = bachilleratoService.debolverBachilleratoMatricula(carrera, seccion, grado);
+
+		if (bachillerato == null) {
+			System.out.println("Bachillerato nulo");
 		}
-
-		Bachillerato bachillerato = bachilleratoService.debolverBachilleratoMatricula(
-				alumno.getBachillerato().getNombreCarrera(), alumno.getBachillerato().getSeccion(),
-				String.valueOf(alumno.getBachillerato().getGrado() + 1));
-
-				if (bachillerato==null) {
-					System.out.println("Bachillerato nulo");
-				}
 		Alumno alumnoNuevo = new Alumno(alumno.getNie(), alumno.getNombreAlumno(), alumno.getApellidoAlumno(),
 				alumno.getSexoAlumno(), alumno.getFechaNacimientoAlumno(), alumno.getDuiAlumno(),
 				alumno.getTelefonoAlumno(),
