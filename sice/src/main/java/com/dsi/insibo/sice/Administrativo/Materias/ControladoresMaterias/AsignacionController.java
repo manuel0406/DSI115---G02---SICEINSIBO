@@ -102,7 +102,6 @@ public class AsignacionController {
         model.addAttribute("cantidad", cantidad);
         model.addAttribute("idMateria", idMateria);
         model.addAttribute("docentes", docentes);
-
         return "Administrativo/GestionMaterias/AsignacionMateria";
     }
 
@@ -119,7 +118,6 @@ public class AsignacionController {
 
         // Obtenemos las asignaciones
         List<Asignacion> asignaciones = asignacionService.obtenerTodaAsignaciones();
-
 
         // Convertir la listas  a JSON
         ObjectMapper objectMapper = new ObjectMapper();
@@ -233,8 +231,10 @@ public class AsignacionController {
             asignaciones.add(asignacion);
         }
 
+        redirectAttributes.addFlashAttribute("success", "La asignación de la materia \"" + materia.getNomMateria() + "\" se ha guardado con éxito.");
+
         asignacionService.saveAsignaciones(asignaciones);
-        return "redirect:/AsignacionMateria/" + idMateria; // Redireccionar a la página deseada después de guardar
+        return "redirect:/AsignacionMateria"; // Redireccionar a la página deseada después de guardar
     }
 
     @PostMapping("/actualizarAsignacion")
@@ -256,52 +256,59 @@ public class AsignacionController {
             } else {
                 // Si no se encuentra el docente, redirige con un mensaje de error
                 redirectAttributes.addFlashAttribute("error", "Docente no encontrado.");
-                return "redirect:/AsignacionMateria/" + idMateria;
+                return "redirect:/AsignacionMateria";
             }
-    
-            // Actualiza otros detalles de la asignación
-            // Por ejemplo, actualiza la materia y el bachillerato si es necesario
-            // asignacion.setMateria(nomMateria);
-            // asignacion.setCodigoBachillerato(codigoBachillerato);
     
             // Guarda la asignación actualizada
             asignacionService.saveAsignacion(asignacion);
     
             // Redirige con un mensaje de éxito si lo deseas
-            redirectAttributes.addFlashAttribute("success", "Asignación actualizada correctamente.");
+            redirectAttributes.addFlashAttribute("success", "La asignación de la materia \"" + asignacion.getMateria().getNomMateria() + "\" se ha actualizado con éxito.");
         } else {
             // Si no se encuentra la asignación, redirige con un mensaje de error
             redirectAttributes.addFlashAttribute("error", "Asignación no encontrada.");
         }
     
         // Redirige a la página correcta usando idMateria
-        return "redirect:/AsignacionMateria/" + idMateria;
+        return "redirect:/AsignacionMateria";
     }
     
 
-    @GetMapping("/eliminarAsignacion")
-    public String eliminarAsignacion(
-        @RequestParam("idMateria") int idMateria,
-        @RequestParam("idAsignacion") int idAsignacion,
-        RedirectAttributes redirectAttributes) {
-    
+@GetMapping("/eliminarAsignacion")
+public String eliminarAsignacion(
+    @RequestParam("idMateria") int idMateria,
+    @RequestParam("idAsignacion") int idAsignacion,
+    RedirectAttributes redirectAttributes) {
+
+    try {
         // Buscar la asignación por idAsignacion
         Asignacion asignacion = asignacionService.buscarAsignacion(idAsignacion);
-        
+
         if (asignacion != null) {
-            // Eliminar la asignación
-            asignacionService.eliminarAsignacion(asignacion);
-            
-            // Redirigir con mensaje de éxito
-            redirectAttributes.addFlashAttribute("mensaje", "Asignación eliminada con éxito.");
+            // Verificar si la asignación corresponde a la materia solicitada (opcional, pero más seguro)
+            if (asignacion.getMateria().getIdMateria() == idMateria) {
+                // Eliminar la asignación
+                asignacionService.eliminarAsignacion(asignacion);
+
+                // Redirigir con mensaje de éxito
+                redirectAttributes.addFlashAttribute("success", "La asignación de la materia \"" + asignacion.getMateria().getNomMateria() + "\" se ha eliminado con éxito.");
+            } else {
+                // Redirigir con mensaje de error si la asignación no corresponde a la materia
+                redirectAttributes.addFlashAttribute("error", "La asignación no corresponde a la materia proporcionada.");
+            }
         } else {
             // Redirigir con mensaje de error si la asignación no se encuentra
             redirectAttributes.addFlashAttribute("error", "Asignación no encontrada.");
         }
-        
-        // Redirigir a la página de asignación de materia
-        return "redirect:/AsignacionMateria/" + idMateria;
+    } catch (Exception e) {
+        // Manejo de excepciones generales
+        redirectAttributes.addFlashAttribute("error", "Ocurrió un error al intentar eliminar la asignación. Tiene información relacionada");
     }
+
+    // Redirigir a la página de asignación de materia, pasando el idMateria
+    return "redirect:/AsignacionMateria?idMateria=" + idMateria;
+}
+
     
        
     

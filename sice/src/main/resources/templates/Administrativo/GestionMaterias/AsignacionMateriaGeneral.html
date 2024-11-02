@@ -22,6 +22,8 @@
         </div>
 
         <div class="col-9 mx-auto">
+            <div th:replace="~{alertas :: alertas}"></div>
+
             <div class="d-flex justify-content-end mb-2">
                 <!-- Botón Nueva Asignación -->
                 <a class="btn btn-primary" th:href="@{/NuevaAsignacion}">Nueva Asignacion</a>
@@ -52,26 +54,25 @@
                                         th:data-cod-bachillerato="${asignacion.bachillerato.grado + '° año ' + asignacion.bachillerato.nombreCarrera + ' &quot;' + asignacion.bachillerato.seccion + '&quot;' }">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>                                
+                                <!-- Botón para eliminar con modal de confirmación -->
                                 <a class="btn btn-danger btn-sm mx-1 delete-btn" 
-                                    th:href="@{/eliminarAsignacion(idMateria=${asignacion.materia.idMateria}, idAsignacion=${asignacion.idAsignacion})}" 
-                                    data-bs-toggle="tooltip" 
-                                    data-bs-placement="top" 
+                                    href="#" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#confirmDeleteModal"
+                                    th:data-id="${asignacion.idAsignacion}" 
+                                    th:data-id-materia="${asignacion.materia.idMateria}" 
                                     title="Eliminar">
                                     <i class="bi bi-trash"></i>
-                                 </a>
+                                </a>
                             </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-            <div th:if="${asignaciones.totalPages == 0}" class="alert alert-info d-flex align-items-center" role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" role="img" class="bi bi-exclamation-triangle-fill me-2" viewBox="0 0 16 16">
-                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-                  </svg>
-                <div>
-                    ¡No se han encontrado asignaciones disponibles!
-                </div>
+            <div th:if="${asignaciones.totalPages == 0}" class="alert alert-info alert-dismissible fade show mt-1 ms-2 mr-2" role="alert">
+                <i class="bi bi-exclamation-triangle"></i>
+                <label th:text="${'¡No se han encontrado asignaciones disponibles!'}"></label>
             </div>
 
             <nav aria-label="Paginación" th:if="${asignaciones.totalPages > 1}">
@@ -133,6 +134,24 @@
         </div>
     </div>
 
+    <!-- Modal de confirmación de eliminación -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar esta asignación? Esta acción no se puede deshacer.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a id="confirmDeleteButton" href="#" class="btn btn-danger">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

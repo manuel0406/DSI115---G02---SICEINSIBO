@@ -11,11 +11,10 @@ import com.dsi.insibo.sice.entity.UsuarioRoleEnum;
 
 public interface DocenteRepository extends CrudRepository<Docente, String> {
    
-    //@Query("SELECT b FROM Bachillerato b WHERE b.grado = :grado ORDER BY b.nombreCarrera ASC, b.seccion ASC")
-    @Query("SELECT d FROM Docente d "
+    @Query("SELECT d FROM Docente d  "
          + "JOIN Usuario u ON d.duiDocente = u.docente.duiDocente " 
          + "JOIN u.rolesUsuario r " +
-           "WHERE r.roleEnum = :roleEnum")
+           "WHERE r.roleEnum = :roleEnum AND u.docente.activoDocente = true")
     List<Docente> obtenerDocentesPorRol(@Param("roleEnum") UsuarioRoleEnum roleEnum);
 
 

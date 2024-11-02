@@ -19,15 +19,18 @@ public class Materia implements Serializable{
     @Column(unique = true)
     private String nomMateria;
     private String tipoMateria;
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT true") // Valor por defecto
+    private boolean activoMateria;
 
     public Materia() {
     }
 
-    public Materia(int idMateria, String codMateria, String nomMateria, String tipoMateria) {
+    public Materia(int idMateria, String codMateria, String nomMateria, String tipoMateria, boolean activoMateria) {
         this.idMateria = idMateria;
         this.codMateria = codMateria;
         this.nomMateria = nomMateria;
         this.tipoMateria = tipoMateria;
+        this.activoMateria = activoMateria;
     }
 
     public int getIdMateria() {
@@ -62,4 +65,11 @@ public class Materia implements Serializable{
         this.tipoMateria = tipoMateria;
     }
 
+    public boolean getActivoMateria() {
+        return activoMateria;
+    }
+
+    public void setActivoMateria(boolean activoMateria) {
+        this.activoMateria = activoMateria;
+    }
 }

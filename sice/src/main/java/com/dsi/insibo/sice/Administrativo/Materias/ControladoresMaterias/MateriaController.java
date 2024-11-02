@@ -78,12 +78,18 @@ public class MateriaController {
                                  @RequestParam("codMateria") String codigo,
                                  @RequestParam("tipoMateria") String tipo,
                                  RedirectAttributes redirectAttributes) {
-        Materia materia = new Materia();
-        materia.setCodMateria(codigo);
-        materia.setNomMateria(nombre);
-        materia.setTipoMateria(tipo);
-        materiasService.guardarMateria(materia);
-        redirectAttributes.addFlashAttribute("msjAccion", "Su nueva materia se ha guardado con éxito.");
+        try {
+            Materia materia = new Materia();
+            materia.setCodMateria(codigo);
+            materia.setNomMateria(nombre);
+            materia.setTipoMateria(tipo);
+            materia.setActivoMateria(true);
+            materiasService.guardarMateria(materia);
+            redirectAttributes.addFlashAttribute("success", "La materia \"" + nombre + "\" se ha guardado con éxito.");
+            
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "La materia \"" + nombre + "\" ya existe, ingresar otro nombre o código.");
+        }            
         return "redirect:/GestionMaterias";
     }
 
@@ -99,11 +105,16 @@ public class MateriaController {
             redirectAttributes.addFlashAttribute("error", "La materia no existe.");
             return "redirect:/GestionMaterias";
         }
-        materia.setCodMateria(codigo);
-        materia.setNomMateria(nombre);
-        materia.setTipoMateria(tipo);
-        materiasService.guardarMateria(materia);
-        redirectAttributes.addFlashAttribute("msjAccion", "Su materia se ha actualizado con éxito.");
+        
+        try {
+            materia.setCodMateria(codigo);
+            materia.setNomMateria(nombre);
+            materia.setTipoMateria(tipo);
+            materiasService.guardarMateria(materia);
+            redirectAttributes.addFlashAttribute("success", "La materia \"" + materia.getNomMateria() + "\" se ha actualizado con éxito.");  
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "La materia \"" + nombre + "\" ya existe, ingresar otro nombre o código.");
+        } 
         return "redirect:/GestionMaterias";
     }
 
@@ -115,8 +126,15 @@ public class MateriaController {
             redirectAttributes.addFlashAttribute("error", "La materia no existe.");
             return "redirect:/GestionMaterias";
         }
-        materiasService.eliminarMateria(materia);
-        redirectAttributes.addFlashAttribute("msjAccion", "Su materia se ha eliminado con éxito..");
+
+        try {
+            materiasService.eliminarMateria(materia); // Eliminado si no tiene datos ligados.
+        } catch (Exception e) {
+            materia.setActivoMateria(false); // Eliminado con desactivados dado que tiene datos ligados.
+            materiasService.guardarMateria(materia); 
+        }
+
+        redirectAttributes.addFlashAttribute("success", "La materia \"" + materia.getNomMateria() + "\" se ha eliminado con éxito.");
         return "redirect:/GestionMaterias";
     }
 }

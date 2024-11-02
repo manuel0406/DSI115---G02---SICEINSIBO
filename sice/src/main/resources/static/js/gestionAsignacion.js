@@ -53,3 +53,19 @@ $(document).ready(function() {
         }, false)
     })
 })()
+
+// Capturar clic en el botón de eliminar y asignar el href al botón de confirmación
+$(document).on("click", ".delete-btn", function () {
+    const idAsignacion = $(this).data("id");
+    const idMateria = $(this).data("id-materia");
+  
+    // Formar la URL para eliminar con los parámetros
+    const deleteUrl =
+      "/eliminarAsignacion?idMateria=" +
+      idMateria +
+      "&idAsignacion=" +
+      idAsignacion;
+  
+    // Asignar la URL al botón de confirmación en el modal
+    $("#confirmDeleteButton").attr("href", deleteUrl);
+  });
