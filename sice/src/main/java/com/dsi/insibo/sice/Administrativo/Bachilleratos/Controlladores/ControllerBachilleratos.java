@@ -101,6 +101,7 @@ public class ControllerBachilleratos {
 
         AnioAcademico activoMatricula = anioService.activoMatricula();
         AnioAcademico activoAnio = anioService.activoAnio();
+        System.out.println("cerrado: "+ anio.isCerrado());
 
         if (activoMatricula != null && (anio.isActivoMatricula() == true)) {
             attributes.addFlashAttribute("error", "¡Solo un año puede tener matricula activa!");
@@ -225,8 +226,14 @@ public class ControllerBachilleratos {
             RedirectAttributes attributes) {
 
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(codigoBachillerato);
-        bachilleratoService.deleteBachillerato(codigoBachillerato);
-        attributes.addFlashAttribute("warning", "¡Registro eliminado con exito!");
+
+        try {
+            bachilleratoService.deleteBachillerato(codigoBachillerato);
+            attributes.addFlashAttribute("warning", "¡Registro eliminado con exito!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("error",
+                    "¡Registro no se puede eliminar, porque contiene datos relacionados!");
+        }
         return "redirect:/Bachillerato/VerOferta/" + bachillerato.getAnioAcademico().getIdAnioAcademico();
 
     }
@@ -256,20 +263,21 @@ public class ControllerBachilleratos {
                         aprobado = false;
                         System.out.println("El alumno " + alumno.getIdAlumno() + " está reprobado en una materia.");
                         break; // Salir del bucle de notas al encontrar una nota reprobada
-                    }                                
+                    }
                 }
                 if (aprobado) {
                     System.out
                             .println("Aprobado: " + aprobado + ". Se puede guardar el alumno " + alumno.getIdAlumno());
 
-                            alumno.setEstadoAlumno(true);
-                            alumnoService.guardarAlumno(alumno);
+                    alumno.setEstadoAlumno(true);
+                    alumnoService.guardarAlumno(alumno);
                 }
             }
         }
 
-        AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnioAcademico);       
+        AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnioAcademico);
         anioAcademico.setActivoAnio(false);
+        anioAcademico.setCerrado(true);
         anioService.guardarAnio(anioAcademico);
         System.out.println("Año cerrado");
         return "redirect:/Bachillerato/anio";

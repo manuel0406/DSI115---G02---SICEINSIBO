@@ -31,7 +31,7 @@ import com.dsi.insibo.sice.entity.Bachillerato;
  */
 @Controller
 @RequestMapping("/ExpedienteAlumno")
-@PreAuthorize("hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')") 
+@PreAuthorize("hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 public class AlumnoController {
 
 	@Autowired
@@ -89,10 +89,14 @@ public class AlumnoController {
 			System.out.println("bachillerato no nulo");
 			alumno.setBachillerato(bachillerato);
 		}
-
-		// Guarda el nuevo alumno
-		alumnoService.guardarAlumno(alumno);
-		attributes.addFlashAttribute("success", "¡Alumno guardado con éxito!");
+		try {
+			// Guarda el nuevo alumno
+			alumnoService.guardarAlumno(alumno);
+			attributes.addFlashAttribute("success", "¡Alumno guardado con éxito!");
+		} catch (Exception e) {
+			attributes.addFlashAttribute("error", "¡Error no se puede guardar el registro!");
+			e.printStackTrace();
+		}
 
 		// Redirige a la vista de listado de alumnos
 		return "redirect:/matriculados";
@@ -136,9 +140,9 @@ public class AlumnoController {
 		if (carrera == null || grado == null || carrera.isEmpty() || grado.isEmpty()) {
 			return ResponseEntity.ok(Collections.emptyList());
 		}
-		boolean matriculaActiva=false;
+		boolean matriculaActiva = false;
 		if (matricula.equals("true")) {
-			matriculaActiva=true;
+			matriculaActiva = true;
 		}
 		List<String> secciones = bachilleratoService.getSeccionesByCarrera(carrera, grado, matriculaActiva);
 		return ResponseEntity.ok(secciones); // Esto asegurará que Spring lo serialice como JSON
@@ -147,7 +151,7 @@ public class AlumnoController {
 	/**
 	 * Controlador para editar la información de un alumno específico.
 	 * 
-	 * Este método maneja las solicitudes GET a la ruta "/editar/{nie}" y permite
+	 * Este método maneja las solicitudes GET a la ruta "/editar/{idAlumno}" y permite
 	 * editar
 	 * la información de un alumno basado en su número de identificación estudiantil
 	 * (NIE).
@@ -162,13 +166,13 @@ public class AlumnoController {
 	 *         de lo contrario redirige a la vista de listado de alumnos.
 	 */
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
-	@GetMapping("/editar/{nie}")
-	public String editar(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+	@GetMapping("/editar/{idAlumno}")
+	public String editar(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
-		if (nie > 0) {
+		if (idAlumno > 0) {
 			// Busca al alumno por su número de identificación estudiantil (NIE)
-			alumno = alumnoService.buscarPorIdAlumno(nie);
+			alumno = alumnoService.buscarPorIdAlumno(idAlumno);
 
 			// Verifica que el alumno exista
 			if (alumno == null) {
@@ -227,13 +231,19 @@ public class AlumnoController {
 			@RequestParam(value = "grado", required = false) String grado,
 			@RequestParam(value = "seccion", required = false) String seccion) {
 
-		Bachillerato bachillerato = bachilleratoService.debolverBachillerato(carrera, seccion, grado);
-		alumno.setBachillerato(bachillerato);
-		// Guarda el alumno con la información actualizada
-		alumnoService.guardarAlumno(alumno);
+		try {
 
-		// Añade un mensaje flash indicando que la actualización fue exitosa
-		attributes.addFlashAttribute("success", "¡Alumno actualizado con éxito!");
+			Bachillerato bachillerato = bachilleratoService.debolverBachillerato(carrera, seccion, grado);
+			alumno.setBachillerato(bachillerato);
+			// Guarda el alumno con la información actualizada
+			alumnoService.guardarAlumno(alumno);
+
+			// Añade un mensaje flash indicando que la actualización fue exitosa
+			attributes.addFlashAttribute("success", "¡Alumno actualizado con éxito!");
+		} catch (Exception e) {
+			attributes.addFlashAttribute("error", "¡Error no se pude actualizar el registro!");
+			e.printStackTrace();
+		}
 
 		// Redirige a la vista de listado de alumnos
 		return "redirect:/ExpedienteAlumno/ver";
@@ -242,7 +252,7 @@ public class AlumnoController {
 	/**
 	 * Controlador para eliminar un alumno específico.
 	 * 
-	 * Este método maneja las solicitudes GET a la ruta "/delete/{nie}" y elimina el
+	 * Este método maneja las solicitudes GET a la ruta "/delete/{idAlumno}" y elimina el
 	 * registro
 	 * de un alumno basado en su número de identificación estudiantil (NIE).
 	 * Redirige a la vista
@@ -253,13 +263,13 @@ public class AlumnoController {
 	 *                   flash.
 	 * @return Una cadena que redirige a la vista de listado de alumnos.
 	 */
-	@GetMapping("/delete/{nie}")
-	public String eliminarAlumno(@PathVariable("nie") int nie, RedirectAttributes attributes) {
+	@GetMapping("/delete/{idAlumno}")
+	public String eliminarAlumno(@PathVariable("idAlumno") int idAlumno, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
-		if (nie > 0) {
+		if (idAlumno > 0) {
 			// Busca al alumno por su número de identificación estudiantil (NIE)
-			alumno = alumnoService.buscarPorIdAlumno(nie);
+			alumno = alumnoService.buscarPorIdAlumno(idAlumno);
 
 			// Verifica que el alumno exista
 			if (alumno == null) {
@@ -274,13 +284,20 @@ public class AlumnoController {
 			return "redirect:/ExpedienteAlumno/ver";
 		}
 
-		// Elimino primero los anexos relacionados al alumno encontrado
-		anexoAlumnoService.eliminarAnexoAlumno(nie);
-		// Se eliminan las notas relacionadas a ese alumno
-		notaService.deleteNotasByAlumnoNie(nie);
-		// Elimina el registro del alumno y añade un mensaje de confirmación
-		alumnoService.eliminar(nie);
-		attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");
+		try {
+			// Elimino primero los anexos relacionados al alumno encontrado
+			anexoAlumnoService.eliminarAnexoAlumno(idAlumno);
+			// Se eliminan las notas relacionadas a ese alumno
+			notaService.deleteNotasByAlumnoNie(idAlumno);
+			// Elimina el registro del alumno y añade un mensaje de confirmación
+			alumnoService.eliminar(idAlumno);
+			attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");
+		} catch (Exception e) {
+			attributes.addFlashAttribute("error",
+					"¡No se puede eliminar este alumno, primero eliminar sus datos relacionados!");
+			e.printStackTrace();
+		}
+
 		return "redirect:/ExpedienteAlumno/ver"; // Redirige a la vista de listado de alumnos
 	}
 
@@ -375,23 +392,23 @@ public class AlumnoController {
 	/**
 	 * Controlador para manejar la vista de la información de un alumno específico.
 	 * 
-	 * Este método maneja las solicitudes GET a la ruta "/Alumno/{nie}" y muestra la
+	 * Este método maneja las solicitudes GET a la ruta "/Alumno/{idAlumno}" y muestra la
 	 * información
 	 * detallada de un alumno basado en su número de identificación estudiantil
 	 * (NIE).
 	 *
-	 * @param nie   El número de identificación estudiantil del alumno (NIE).
+	 * @param idAlumno   
 	 * @param model El modelo de Spring utilizado para pasar datos a la vista.
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoInformacion".
 	 */
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
-	@GetMapping("/Alumno/{nie}")
-	public String informacionAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+	@GetMapping("/Alumno/{idAlumno}")
+	public String informacionAlumno(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
-		if (nie > 0) {
+		if (idAlumno > 0) {
 			// Busca al alumno por su número de identificación estudiantil (NIE)
-			alumno = alumnoService.buscarPorIdAlumno(nie);
+			alumno = alumnoService.buscarPorIdAlumno(idAlumno);
 
 			// Verifica que el alumno exista
 			if (alumno == null) {
@@ -426,7 +443,7 @@ public class AlumnoController {
 	 * Controlador para manejar la vista de las enfermedades de un alumno
 	 * específico.
 	 * 
-	 * Este método maneja las solicitudes GET a la ruta "/Enfermedades/{nie}" y
+	 * Este método maneja las solicitudes GET a la ruta "/Enfermedades/{idAlumno}" y
 	 * muestra la información
 	 * de los padecimientos de un alumno basado en su número de identificación
 	 * estudiantil (NIE).
@@ -436,13 +453,13 @@ public class AlumnoController {
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoEnfermedad".
 	 */
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
-	@GetMapping("/Enfermedades/{nie}")
-	public String enfermedadAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+	@GetMapping("/Enfermedades/{idAlumno}")
+	public String enfermedadAlumno(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
-		if (nie > 0) {
+		if (idAlumno > 0) {
 			// Busca al alumno por su número de identificación estudiantil (NIE)
-			alumno = alumnoService.buscarPorIdAlumno(nie);
+			alumno = alumnoService.buscarPorIdAlumno(idAlumno);
 
 			// Verifica que el alumno exista
 			if (alumno == null) {
@@ -475,23 +492,23 @@ public class AlumnoController {
 	/**
 	 * Controlador para manejar la vista del responsable de un alumno específico.
 	 * 
-	 * Este método maneja las solicitudes GET a la ruta "/Responsable/{nie}" y
+	 * Este método maneja las solicitudes GET a la ruta "/Responsable/{idAlumno}" y
 	 * muestra la información
 	 * del encargado de un alumno basado en su número de identificación estudiantil
 	 * (NIE).
 	 *
-	 * @param nie   El número de identificación estudiantil del alumno (NIE).
+	 * @param    El número de identificación estudiantil del alumno (NIE).
 	 * @param model El modelo de Spring utilizado para pasar datos a la vista.
 	 * @return El nombre de la vista "Expediente_alumno/AlumnoDatosResponsable".
 	 */
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
-	@GetMapping("/Responsable/{nie}")
-	public String responsableAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+	@GetMapping("/Responsable/{idAlumno}")
+	public String responsableAlumno(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
-		if (nie > 0) {
+		if (idAlumno > 0) {
 			// Busca al alumno por su número de identificación estudiantil (NIE)
-			alumno = alumnoService.buscarPorIdAlumno(nie);
+			alumno = alumnoService.buscarPorIdAlumno(idAlumno);
 
 			// Verifica que el alumno exista
 			if (alumno == null) {
@@ -620,11 +637,6 @@ public class AlumnoController {
 
 		// Retornar el objeto ModelAndView que contiene la vista y los datos
 		return modelAndView;
-	}
-
-	@GetMapping("/prueba12")
-	public String pruebaString(){
-		return "prueba";
 	}
 
 }
