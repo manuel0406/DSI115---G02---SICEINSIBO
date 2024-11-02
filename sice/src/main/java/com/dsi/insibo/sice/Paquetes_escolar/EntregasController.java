@@ -57,7 +57,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'DOCENTE', 'SUBDIRECTORA', 'DIRECTOR')")
 @RequestMapping("/entregasPaquetes")
-@PreAuthorize("hasAnyRole('ADMINISTRADOR','SUBDIRECTORA','DOCENTE')") 
 public class EntregasController {
     @Autowired
     private EntregasService entregasService;

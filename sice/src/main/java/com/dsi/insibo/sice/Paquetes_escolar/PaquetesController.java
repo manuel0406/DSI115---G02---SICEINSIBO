@@ -43,8 +43,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'DOCENTE', 'SUBDIRECTORA', 'DIRECTOR')")
-@RequestMapping("/paquetes")
-@PreAuthorize("hasAnyRole('ADMINISTRADOR','SUBDIRECTORA','DOCENTE')") 
+@RequestMapping("/paquetes") 
 public class PaquetesController {
     @Autowired
     private InventarioDonacionService inventarioDonacionService;
