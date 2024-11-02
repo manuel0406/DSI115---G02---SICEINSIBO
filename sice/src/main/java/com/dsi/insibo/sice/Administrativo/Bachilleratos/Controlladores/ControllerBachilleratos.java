@@ -105,10 +105,10 @@ public class ControllerBachilleratos {
         AnioAcademico activoAnio = anioService.activoAnio();
         System.out.println("cerrado: "+ anio.isCerrado());
 
-        if (activoMatricula != null && (anio.isActivoMatricula() == true)) {
+        if (activoMatricula != null && (anio.isActivoMatricula() == true) && anio.getIdAnioAcademico() !=activoMatricula.getIdAnioAcademico() ) {
             attributes.addFlashAttribute("error", "¡Solo un año puede tener matricula activa!");
-        } else if (activoAnio != null && (anio.isActivoAnio() == true)) {
-            attributes.addFlashAttribute("error", "¡Solo un año puede es´tar activo activo!");
+        } else if (activoAnio != null && (anio.isActivoAnio() == true) && anio.getIdAnioAcademico() !=activoAnio.getIdAnioAcademico()) {
+            attributes.addFlashAttribute("error", "¡Solo un año puede estar activo activo!");
         } else {
             anioService.guardarAnio(anio);
             attributes.addFlashAttribute("success", "¡Registro editado con exito!");
@@ -280,6 +280,7 @@ public class ControllerBachilleratos {
         AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnioAcademico);
         anioAcademico.setActivoAnio(false);
         anioAcademico.setCerrado(true);
+        anioAcademico.setActivoMatricula(false);
         anioService.guardarAnio(anioAcademico);
         System.out.println("Año cerrado");
         return "redirect:/Bachillerato/anio";
