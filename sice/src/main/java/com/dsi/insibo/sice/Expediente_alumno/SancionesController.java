@@ -19,7 +19,7 @@ import com.dsi.insibo.sice.entity.Sancion;
 
 @Controller
 @RequestMapping("/ExpedienteAlumno")
-@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR')") // SOLO PARA DOCENTES
+@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA')") // SOLO PARA DOCENTES
 public class SancionesController {
     @Autowired
     private AlumnoService alumnoService;

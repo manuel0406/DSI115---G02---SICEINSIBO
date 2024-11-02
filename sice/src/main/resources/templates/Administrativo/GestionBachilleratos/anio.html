@@ -59,7 +59,7 @@
                                     th:href="@{/Bachillerato/Oferta/}+${anios.idAnioAcademico}" title="Crear oferta">
                                     <i class="bi bi-plus-circle"></i> Crear oferta
                                 </a>
-                                <a class="btn btn-success" th:if="${anioBachilleratoMap[anios.idAnioAcademico]}"
+                                <a class="btn btn-success" th:if="${anioBachilleratoMap[anios.idAnioAcademico] && anios.cerrado==false}"
                                     data-bs-t="tooltip" data-bs-placement="top" title="Consultar"
                                     th:href="@{/Bachillerato/VerOferta/}+${anios.idAnioAcademico}">
                                     <i class="bi bi-file-earmark-text"></i>
