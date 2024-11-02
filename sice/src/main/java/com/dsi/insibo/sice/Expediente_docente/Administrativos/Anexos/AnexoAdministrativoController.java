@@ -23,7 +23,7 @@ import com.dsi.insibo.sice.entity.AnexoPersonalAdministrativo;
 import com.dsi.insibo.sice.entity.PersonalAdministrativo;
 
 @Controller
-@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SUBDIRECTORA', 'DIRECTOR', 'SECRETARIA')")
+@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
 public class AnexoAdministrativoController {
 
     @Autowired

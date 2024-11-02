@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,6 @@ import com.dsi.insibo.sice.Paquetes_escolar.Donaciones.InventarioDonacionService
 import com.dsi.insibo.sice.Paquetes_escolar.Uniforme.UniformeService;
 import com.dsi.insibo.sice.Paquetes_escolar.Utiles.UtilesService;
 import com.dsi.insibo.sice.Paquetes_escolar.Zapatos.ZapatosService;
-import com.dsi.insibo.sice.Seguridad.SeguridadService.SessionService;
 import com.dsi.insibo.sice.entity.Bachillerato;
 import com.dsi.insibo.sice.entity.InventarioDonacion;
 import com.lowagie.text.DocumentException;
@@ -42,6 +42,7 @@ import com.lowagie.text.Font;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
+@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'DOCENTE', 'SUBDIRECTORA', 'DIRECTOR')")
 @RequestMapping("/paquetes")
 public class PaquetesController {
     @Autowired
@@ -49,9 +50,6 @@ public class PaquetesController {
 
     @Autowired
     private BachilleratoService bachilleratoService;
-
-    @Autowired
-    private SessionService sessionService;
 
     @Autowired
     private UniformeService uniformeService;

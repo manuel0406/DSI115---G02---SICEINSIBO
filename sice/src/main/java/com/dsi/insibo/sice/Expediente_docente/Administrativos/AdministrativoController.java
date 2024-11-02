@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SUBDIRECTORA', 'DIRECTOR', 'SECRETARIA')")
+@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
 @RequestMapping("/expedienteadministrativo")
 public class AdministrativoController {
     @Autowired
@@ -209,14 +209,11 @@ public class AdministrativoController {
     public String listarAdministrativos(Model model,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        // page indica el numero de pagina en el que se encontrara por defecto
-        // Size el numero de registros por pagina
-
+        // page indica el numero de pagina en el que se encontrara por defecto Size el numero de registros por pagina
         // Hace la conversion de la estructura List a Page
         PageRequest pageRequest = PageRequest.of(page, size);
         List<AdministrativoDTO> listadoAdministrativos = administrativoService.listarAdministrativos();
-        // List<AdministrativoDTO> listadoAdministrativosInactivos =
-        // administrativoService.listarAdministrativosInactivos();
+
 
         Page<AdministrativoDTO> pageAdministrativos = new PageImpl<>(listadoAdministrativos.subList(
                 pageRequest.getPageNumber() * pageRequest.getPageSize(),
@@ -225,8 +222,6 @@ public class AdministrativoController {
 
         model.addAttribute("titulo", "Planta Administrativa");
         model.addAttribute("Administrativos", listadoAdministrativos);
-        // model.addAttribute("AdministrativosInactivos",
-        // listadoAdministrativosInactivos);
 
         // Hace el envio de la estructura con paginación a la vista
         model.addAttribute("page", pageAdministrativos);
@@ -255,8 +250,7 @@ public class AdministrativoController {
         usuario.setContrasenaUsuario(passwordEncoder.encode(PasswordGenerator.generateRandomPassword(8))); //Contraseña encriptada
         usuarioService.guardarUsuario(usuario); // Guardo la actualización de estado
 
-        // cuando un administrativo es "eliminado" este no se borra del sistema sino que
-        // pasa a un estado 'inactivo'
+        // cuando un administrativo es "eliminado" este no se borra del sistema sino que pasa a un estado 'inactivo'
         administrativo.setActivoPersonalAdministrativo(false);
         administrativoService.guardarAdministrativo(administrativo);
 
@@ -265,35 +259,6 @@ public class AdministrativoController {
         return "redirect:/expedienteadministrativo/plantaadministrativa";
     }
 
-    // Restaurar un administrativo
-    /*
-     * @GetMapping("/restaurarexpediente/{id}")
-     * public String restaurarAdministrativo(@PathVariable("id") String
-     * idAdministrativo, RedirectAttributes attribute) {
-     * PersonalAdministrativo administrativo =
-     * administrativoService.buscarPorIdAdministrativo(idAdministrativo);
-     * 
-     * // Controlando el ingreso de un id inexistente desde URL
-     * if (administrativo == null) {
-     * attribute.addFlashAttribute("error",
-     * "El expediente no existe dentro del sistema");
-     * return "redirect:/expedienteadministrativo/plantaadministrativa";
-     * }
-     * 
-     * // cuando un administrativo es "eliminado" este no se borra del sistema sino
-     * que
-     * // pasa a un estado 'inactivo'
-     * administrativo.setActivo(true);
-     * administrativoService.guardarAdministrativo(administrativo);
-     * 
-     * attribute.addFlashAttribute("success", "El administrativo " +
-     * administrativo.getNombrePersonal() + " "
-     * + administrativo.getApellidoPersonal() +
-     * " ha sido restaurado a la planta administrativa");
-     * return "redirect:/expedienteadministrativo/plantaadministrativa";
-     * }
-     */
-
     // OTROS CONTROLADORES
     // Habilitar el formulario en modo 'agregar'
     @GetMapping("/formulario")
@@ -301,6 +266,7 @@ public class AdministrativoController {
         PersonalAdministrativo administrativo = new PersonalAdministrativo();
 
         model.addAttribute("administrativo", administrativo);
+        model.addAttribute("tipoNIT", false);
         model.addAttribute("formAction", "/expedienteadministrativo/guardar"); // Acción de creación
         model.addAttribute("titulo", "Nuevo usuario");
         return "Expediente_docente/Administrativos/fichaAdministrativo";
@@ -340,8 +306,16 @@ public class AdministrativoController {
                 break;
         }
 
+        boolean homologado;
+        if(administrativo.getDuiPersonal().equals(administrativo.getDuiPersonal())){
+            homologado = true;
+        }else{
+            homologado = false;
+        }
+
         model.addAttribute("administrativo", administrativo);
         model.addAttribute("ROL", ROL);
+        model.addAttribute("tipoNIT", homologado);
         model.addAttribute("editar", true); // Deshabilita el campo DUI
         model.addAttribute("formAction", "/expedienteadministrativo/actualizar"); // Acción de edición
         return "Expediente_docente/Administrativos/fichaAdministrativo";
@@ -376,7 +350,6 @@ public class AdministrativoController {
         model.addAttribute("anexos", anexos);
         model.addAttribute("titulo", "Documentos");
 
-        // return "Expediente_administrativo/administrativoDocumentos";
         return "Expediente_docente/Administrativos/AdministrativoDocumentos";
     }
 }

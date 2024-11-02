@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +55,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'DOCENTE', 'SUBDIRECTORA', 'DIRECTOR')")
 @RequestMapping("/entregasPaquetes")
 public class EntregasController {
     @Autowired
@@ -95,9 +97,6 @@ public class EntregasController {
     public String miSeccion(Model model, @PathVariable("id") int id,
             @RequestParam(value = "tipoPaquete", required = false) String tipoPaquete,
             @RequestParam(value = "genero", required = false) String genero) {
-
-        // Obtener la fecha actual
-        LocalDate currentDate = LocalDate.now();
 
         // Obtener la información del Bachillerato por ID
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(id);

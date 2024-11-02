@@ -25,8 +25,4 @@ public interface DocenteRepository extends CrudRepository<Docente, String> {
     boolean existsBynup(String nup);
     boolean existsBynip(String nip);
     boolean existsBycorreoDocente(String correoDocente);
-
-
-
-
 }

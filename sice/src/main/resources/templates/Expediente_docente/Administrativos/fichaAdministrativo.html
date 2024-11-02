@@ -22,8 +22,7 @@
       </div>
       <div class="card-body">
 
-        <form class="row g-3 needs-validation" novalidate th:object="${administrativo}"
-        th:action="@{${formAction}}"
+        <form class="row g-3 needs-validation" novalidate th:object="${administrativo}" th:action="@{${formAction}}"
           method="post">
           <!-- Datos Personales -->
           <div class="col-12">
@@ -155,17 +154,18 @@
 
             <div class="col-auto mt-2">
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="nitOption" id="homologado" value="homologado">
+                <input class="form-check-input" type="radio" name="nitOption" id="homologado" value="homologado"
+                  th:checked="${tipoNIT}">
                 <label class="form-check-label" for="homologado">NIT Homologado</label>
               </div>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="nitOption" id="convencional" value="convencional"
-                  checked>
+                  th:checked="${!tipoNIT}">
                 <label class="form-check-label" for="convencional">NIT Convencional</label>
               </div>
             </div>
             <div class="invalid-feedback">
-              Es necesario agregar un NIT valido
+              Es necesario agregar un NIT válido
             </div>
           </div>
 
