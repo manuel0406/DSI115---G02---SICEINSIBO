@@ -60,6 +60,8 @@ public class NotaMateriaService {
 		Map<Alumno, Map<Integer, Float>> notasPorAlumnoYPeriodo = new LinkedHashMap<>();
 		Map<Alumno, Float> notaGlobalPorAlumno = new HashMap<>();
 
+		boolean esModulo = "Módulo".equals(asignacion.getMateria().getTipoMateria());
+
 		// Organizar las notas por alumno y periodo en función de listaAlumnos
 		for (Alumno alumno : listaAlumnos) {
 			Map<Integer, Float> notasPeriodo = new HashMap<>();
@@ -76,9 +78,15 @@ public class NotaMateriaService {
 			Map<Integer, Float> notasPeriodo = notasPorAlumnoYPeriodo.getOrDefault(alumno, new HashMap<>());
 
 			float notaGlobal = 0;
-			for (int i = 1; i <= 4; i++) {
-				float nota = notasPeriodo.getOrDefault(i, 0.0f);
-				notaGlobal += nota * 0.25;
+			if (esModulo) {
+				// Si es "Módulo", solo considerar la nota del periodo 1
+				notaGlobal = notasPeriodo.getOrDefault(1, 0.0f);
+			} else {
+				// Si no es "Módulo", calcular la nota global considerando todos los periodos
+				for (int i = 1; i <= 4; i++) {
+					float nota = notasPeriodo.getOrDefault(i, 0.0f);
+					notaGlobal += nota * 0.25;
+				}
 			}
 			notaGlobalPorAlumno.put(alumno, notaGlobal);
 

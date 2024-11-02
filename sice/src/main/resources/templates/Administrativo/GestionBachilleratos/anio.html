@@ -47,7 +47,9 @@
                         <tr th:each="anios, stat: ${lista}">
                             <th scope="row" th:text="${stat.index + 1}"></th>
                             <td th:text="${anios.anio}"></td>
-                            <td th:if="${anios.activoAnio != true}" th:text="${'Inactivo'}"></td>
+                            <td th:if="${anios.activoAnio != true && anios.cerrado ==false}" th:text="${'Inactivo'}">
+                            </td>
+                            <td th:if="${anios.activoAnio != true && anios.cerrado ==true}" th:text="${'Cerrado'}"></td>
                             <td th:if="${anios.activoAnio == true}" th:text="${'Activo'}"></td>
                             <td th:if="${anios.activoMatricula != true}" th:text="${'Inactivo'}"></td>
                             <td th:if="${anios.activoMatricula == true}" th:text="${'Activo'}"></td>
@@ -57,18 +59,27 @@
                                     th:href="@{/Bachillerato/Oferta/}+${anios.idAnioAcademico}" title="Crear oferta">
                                     <i class="bi bi-plus-circle"></i> Crear oferta
                                 </a>
-                                <a class="btn btn-success" th:if="${anioBachilleratoMap[anios.idAnioAcademico]}"
+                                <a class="btn btn-success" th:if="${anioBachilleratoMap[anios.idAnioAcademico] && anios.cerrado==false}"
                                     data-bs-t="tooltip" data-bs-placement="top" title="Consultar"
                                     th:href="@{/Bachillerato/VerOferta/}+${anios.idAnioAcademico}">
                                     <i class="bi bi-file-earmark-text"></i>
                                 </a>
-                                <a class="btn btn-primary editar-btn"
+                                <a class="btn btn-primary editar-btn" sec:authorize="hasAnyRole('ADMINISTRADOR')"
                                     th:if="${anioBachilleratoMap[anios.idAnioAcademico]}" data-bs-toggle="modal"
                                     data-bs-t="tooltip" data-bs-target="#actualizarAnioModal" data-bs-placement="top"
                                     title="Editar" th:data-id="${anios.idAnioAcademico}"
                                     th:data-est="${anios.activoAnio}" th:data-an="${anios.anio}"
-                                    th:data-ma="${anios.activoMatricula}">
+                                    th:data-ma="${anios.activoMatricula}" th:data-ce="${anios.cerrado}">
                                     <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <!-- Boton editar solo para Director y subdirectora -->
+                                <a class="btn btn-primary editar-btn" sec:authorize="hasAnyRole('DIRECTOR','SUBDIRECTORA')"
+                                    th:if="${anioBachilleratoMap[anios.idAnioAcademico] && anios.cerrado==false}" data-bs-toggle="modal"
+                                    data-bs-t="tooltip" data-bs-target="#actualizarAnioModal" data-bs-placement="top"
+                                    title="Editar" th:data-id="${anios.idAnioAcademico}"
+                                    th:data-est="${anios.activoAnio}" th:data-an="${anios.anio}"
+                                    th:data-ma="${anios.activoMatricula}" th:data-ce="${anios.cerrado}">
+                                    <i class="bi bi-pencil-square"></i> 
                                 </a>
                                 <a class="btn btn-info"
                                     th:if="${anios.activoAnio && anioBachilleratoMap[anios.idAnioAcademico] != null}"
@@ -131,8 +142,10 @@
                     th:action="@{/Bachillerato/editarAnio}">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <input type="hidden" th:field="*{idAnioAcademico}" id="editIdAnio" name="idAnioAcademico">
+                            <input type="hidden" th:field="*{idAnioAcademico}" id="editIdAnio" name="idAnioAcademico" >
                             <input type="hidden" th:field="*{anio}" id="editAnio" name="AnioAcademico">
+                            <input type="hidden" th:field="*{cerrado}" id="editcerrado" name="cerrado" sec:authorize="hasAnyRole('DIRECTOR','SUBDIRECTORA')" >
+
                             <label class="form-check-label" for="editEstado">Estado:</label>
                             <input class="form-check-input border border-secondary" type="checkbox" id="editEstado"
                                 name="activoAnio" th:field="*{activoAnio}">
@@ -142,6 +155,12 @@
                             <label class="form-check-label" for="editEstado">Matricula:</label>
                             <input class="form-check-input border border-secondary" type="checkbox" id="editMatricula"
                                 name="activoMatricula" th:field="*{activoMatricula}">
+
+                        </div>
+                        <div class="mb-3" sec:authorize="hasAnyRole('ADMINISTRADOR')" >
+                            <label class="form-check-label" for="editCerrado">Cerrado:</label>
+                            <input class="form-check-input border border-secondary" type="checkbox" id="editcerrado"
+                                name="activoMatricula" th:field="*{cerrado}">
 
                         </div>
                     </div>

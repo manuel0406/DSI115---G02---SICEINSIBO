@@ -136,7 +136,7 @@ public class DocenteController {
     }
 
     // Actualizar un docente (Si actualiza rol)
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR', 'DOCENTE')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @PostMapping("/actualizar")
     public String actualizar(@Validated @ModelAttribute Docente docente,
             @RequestParam("docenteRol") String rolSeleccionado, BindingResult result, Model model,
@@ -145,8 +145,7 @@ public class DocenteController {
         Docente docenteExistente = docenteService.buscarPorIdDocente(docente.getDuiDocente());
         // Verifica que exista un registro asociado al DUI
         if (docenteExistente != null) {
-            // Verifica que el correo del registro asociado al DUI sea diferente al correo
-            // al que se quiere actualizar
+            // Verifica que el correo del registro asociado al DUI sea diferente al correo al que se quiere actualizar
             if (!docente.getCorreoDocente().equals(docenteExistente.getCorreoDocente())) {
                 // Verifica si el correo al que se quiere actualizar ya este registrado
                 if (docenteService.correoYaRegistrado(docente.getCorreoDocente()) == true
@@ -160,8 +159,7 @@ public class DocenteController {
                     return "Expediente_docente/Docentes/fichaDocente";
                 }
             }
-            // Verifica que el NIP del registro asociado al DUI sea diferente al NUP al que
-            // se quiere actualizar
+            // Verifica que el NIP del registro asociado al DUI sea diferente al NUP al que se quiere actualizar
             if (!docenteExistente.getNip().equals(docente.getNip())) {
                 // Verifica si el NIP al que se quiere actualizar ya este registrado
                 if (docenteService.nipYaRegistrado(docente.getNip()) == true) {
@@ -174,8 +172,7 @@ public class DocenteController {
                     return "Expediente_docente/Docentes/fichaDocente";
                 }
             }
-            // Verifica que el NUP del registro asociado al DUI sea diferente al NUP al que
-            // se quiere actualizar
+            // Verifica que el NUP del registro asociado al DUI sea diferente al NUP al que se quiere actualizar
             if (!docenteExistente.getNup().equals(docente.getNup())) {
                 // Verifica si el NUP al que se quiere actualizar ya este registrado
                 if (docenteService.nupYaRegistrado(docente.getNup()) == true) {
@@ -188,8 +185,7 @@ public class DocenteController {
                     return "Expediente_docente/Docentes/fichaDocente";
                 }
             }
-            // Verifica que el NIT del registro asociado al DUI sea diferente al NIT al que
-            // se quiere actualizar
+            // Verifica que el NIT del registro asociado al DUI sea diferente al NIT al que se quiere actualizar
             if (!docenteExistente.getNit().equals(docente.getNit())) {
                 // Verifica si el NIT al que se quiere actualizar ya este registrado
                 if (docenteService.nitYaRegistrado(docente.getNit()) == true) {
@@ -279,19 +275,16 @@ public class DocenteController {
     }
 
     // Listar todos los docentes
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'DOCENTE', 'SUBDIRECTORA', 'DIRECTOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')")
     @GetMapping("/plantadocente")
     public String listarDocentes(Model model,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        // page indica el numero de pagina en el que se encontrara por defecto
-        // Size el numero de registros por pagina
+        // page indica el numero de pagina en el que se encontrara por defecto Size el numero de registros por pagina
 
         // Hace la conversion de la estructura List a Page
         PageRequest pageRequest = PageRequest.of(page, size);
         List<DocenteDTO> listadoDocentes = docenteService.listarDocentes();
-        // List<DocenteDTO> listadoDocentesInactivos =
-        // docenteService.listarDocentesInactivos();
 
         Page<DocenteDTO> pagedocentes = new PageImpl<>(
                 listadoDocentes.subList(pageRequest.getPageNumber() * pageRequest.getPageSize(),
@@ -329,40 +322,13 @@ public class DocenteController {
         usuario.setContrasenaUsuario(passwordEncoder.encode(PasswordGenerator.generateRandomPassword(8))); //Contraseña encriptada
         usuarioService.guardarUsuario(usuario); // Guardo la actualización de estado
 
-        // cuando un docente es "eliminado" este no se borra del sistema sino que pasa a
-        // un estado 'inactivo'
+        // cuando un docente es "eliminado" este no se borra del sistema sino que pasa a un estado 'inactivo'
         profesor.setActivoDocente(false);
         docenteService.guardarDocente(profesor);
-        attribute.addFlashAttribute("warning", "El administrativo " + profesor.getNombreDocente() + " "
+        attribute.addFlashAttribute("warning", "El docente " + profesor.getNombreDocente() + " "
                 + profesor.getApellidoDocente() + " ha sido eliminado de la planta docente");
         return "redirect:/expedientedocente/plantadocente";
     }
-
-    // Restaurar un docente
-    /*
-     * @PreAuthorize("hasAnyRole('ADMINISTRADOR','SECRETARIA', 'SUBDIRECTORA', 'DIRECTOR')"
-     * )
-     * 
-     * @GetMapping("/restaurarexpediente/{id}")
-     * public String restararDocente(@PathVariable("id") String idDocente,
-     * RedirectAttributes attribute) {
-     * Docente profesor = docenteService.buscarPorIdDocente(idDocente);
-     * if (profesor == null) {
-     * attribute.addFlashAttribute("error",
-     * "El expediente no existe dentro del sistema");
-     * return "redirect:/expedientedocente/plantadocente";
-     * }
-     * 
-     * // cuando un docente es "eliminado" este no se borra del sistema sino que
-     * pasa a un estado 'inactivo'
-     * profesor.setActivo(true);
-     * docenteService.guardarDocente(profesor);
-     * attribute.addFlashAttribute("success", "El administrativo " +
-     * profesor.getNombreDocente() + " "
-     * + profesor.getApellidoDocente() + " ha sido restaurado a la planta docente");
-     * return "redirect:/expedientedocente/plantadocente";
-     * }
-     */
 
     // OTROS CONTROLADORES
     // Habilitar el formulario en modo 'agregar'
@@ -372,6 +338,7 @@ public class DocenteController {
         Docente profesor = new Docente();
 
         model.addAttribute("profesor", profesor);
+        model.addAttribute("tipoNIT", false);
         model.addAttribute("titulo", "Nuevo usuario");
 
         return "Expediente_docente/Docentes/fichaDocente";

@@ -23,6 +23,7 @@
                     IDENTIFICACION DEL CENTRO EDUCATIVO
                 </h3>
                 <div class="col-12 col-md-4">
+                    <input type="hidden" id="matricula" name="matricula" th:value="${matricula}">
                     <label for="carrera" class="form-label fs-6">Carrera:</label>
                     <select id="carrera" name="carrera" class="form-select" th:value="${carrera}" aria-label="Default select example" required>
                         <option value="" th:if="${carrera == null}" selected>Seleccione</option>

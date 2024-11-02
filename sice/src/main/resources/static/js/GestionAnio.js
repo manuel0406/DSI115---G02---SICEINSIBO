@@ -106,11 +106,13 @@ $(document).ready(function() {
         var estado = $(this).data('est');
         var anio = $(this).data('an');
         var matricula = $(this).data('ma');
+        var cerrado=$(this).data('ce')
         
         $('#editIdAnio').val(idAnio);
         $('#editEstado').prop('checked', estado);
         $('#editAnio').val(anio);
         $('#editMatricula').prop('checked', matricula);
+        $('#editcerrado').prop('checked', cerrado);
         
     });
 });

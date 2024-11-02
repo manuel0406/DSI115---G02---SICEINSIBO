@@ -7,6 +7,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.AnexoAlumno;
 
 @Controller
+@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 public class AnexoAlumnoController {
 
     @Autowired
