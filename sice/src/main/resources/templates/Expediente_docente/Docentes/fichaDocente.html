@@ -18,6 +18,7 @@
                 <h5>INSTITUTO NACIONAL SIMON BOLIVAR</h5>
                 <h5>CÓDIGO 11694 SANTO TOMAS</h5>
                 <h3>FICHA PERSONAL DOCENTE: DATOS PERSONALES</h3>
+                <header th:replace="~{alertas :: alertas}"></header>
             </div>
             <div class="card-body">
 
@@ -158,16 +159,16 @@
                     <div class="col-lg-4 col-md-6">
                         <label for="docente_nit" class="form-label">NIT</label>
                         <input type="text" th:field="*{nit}" class="form-control restricted-input" id="docente_nit"
-                            minlength="17" required>
+                               minlength="17" required>
                         <div class="col-auto mt-2">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="nitOption" id="homologado"
-                                    value="homologado">
+                                       value="homologado" th:checked="${tipoNIT}">
                                 <label class="form-check-label" for="homologado">NIT Homologado</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="nitOption" id="convencional"
-                                    value="convencional" checked>
+                                       value="convencional" th:checked="${!tipoNIT}">
                                 <label class="form-check-label" for="convencional">NIT Convencional</label>
                             </div>
                         </div>
@@ -175,6 +176,7 @@
                             Es necesario agregar un NIT valido
                         </div>
                     </div>
+                    
 
                     <!-- Información de Contacto -->
                     <div class="col-12">
@@ -281,19 +283,20 @@
 
                     <!-- Habilitando la seleccion de roles -->
                     <div class="col-lg-6 col-md-6">
-                        <label for="docente_rol" class="form-label">Rol que desempeñara</label>
+                        <label for="docente_rol" class="form-label">Rol que desempeñará</label>
                         <select id="docente_rol" name="docenteRol" class="form-select" required>
-                            <option value="" selected>Seleccionar...</option>
-                            <option value="Docente">Docente</option>
-                            <option value="Subdirector">Subdirector/a</option>
-                            <option value="Director">Director/a</option>
+                            <option value="" th:selected="${ROL == ''}">Seleccionar...</option>
+                            <option value="Docente" th:selected="${ROL == 'Docente'}">Docente</option>
+                            <option value="Subdirector" th:selected="${ROL == 'Subdirector'}">Subdirector/a</option>
+                            <option value="Director" th:selected="${ROL == 'Director'}">Director/a</option>
                         </select>
                         <div class="invalid-feedback">
                             Es necesario seleccionar un rol para asignar credenciales
                         </div>
-                        <div id="rolHelp" class="form-text" required>Aqui debe escoger el rol que desempeñara el docente
-                            que se encuentra registrando.</div>
-                    </div>
+                        <div id="rolHelp" class="form-text" required>Aquí debe escoger el rol que desempeñará el docente
+                            que se encuentra registrando.
+                        </div>
+                    </div>                    
                     <div class="row justify-content-center text-center mt-4">
                         <div class="col-auto">
                             <button type="submit" class="btn btn-primary">Guardar</button>

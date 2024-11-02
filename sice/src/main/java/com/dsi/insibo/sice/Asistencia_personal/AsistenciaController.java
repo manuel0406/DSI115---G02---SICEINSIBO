@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.dsi.insibo.sice.Asistencia_personal.Asistencia_admnistrativa.AsistenciaAdmService;
 import com.dsi.insibo.sice.Asistencia_personal.Asistencia_docente.AsistenciaDocenteService;
-import com.dsi.insibo.sice.entity.AsistenciaDTO;
+import com.dsi.insibo.sice.Asistencia_personal.DTOAparato.AsistenciaDTO;
 import java.util.*;
 
 @PreAuthorize("hasRole('ADMINISTRADOR')")

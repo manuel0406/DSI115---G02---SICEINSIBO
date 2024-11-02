@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +55,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'DOCENTE', 'SUBDIRECTORA', 'DIRECTOR')")
 @RequestMapping("/entregasPaquetes")
 public class EntregasController {
     @Autowired
@@ -85,7 +87,6 @@ public class EntregasController {
         model.addAttribute("bachillerato", bachillerato);
         model.addAttribute("id", id); // Pasar el ID del bachillerato
         model.addAttribute("tipoPaquete", tipoPaquete); // Paquete seleccionado
-        model.addAttribute("pageTitle", "Paquetes escolares");
         model.addAttribute("info", "Selecciona un tipo de paquete para comenzar");
 
         return "Paquetes_escolares/generarListado";
@@ -95,9 +96,6 @@ public class EntregasController {
     public String miSeccion(Model model, @PathVariable("id") int id,
             @RequestParam(value = "tipoPaquete", required = false) String tipoPaquete,
             @RequestParam(value = "genero", required = false) String genero) {
-
-        // Obtener la fecha actual
-        LocalDate currentDate = LocalDate.now();
 
         // Obtener la información del Bachillerato por ID
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(id);
@@ -119,11 +117,11 @@ public class EntregasController {
         model.addAttribute("alumnos", listaAlumnos); // Lista de alumnos
         model.addAttribute("tipoPaquete", tipoPaquete); // Tipo de paquete seleccionado
         model.addAttribute("id", id); // ID del bachillerato
-        model.addAttribute("pageTitle", "Paquetes escolares");
 
         return "Paquetes_escolares/generarListado";
     }
 
+    /**Metodo que cuenta las fechas de entrega existentes para limitar el número de entregas por paquete */
     @GetMapping("/fechasPaquetesContar/{idBachillerato}")
     public ResponseEntity<Map<String, Integer>> obtenerConteoPaquetes(@PathVariable int idBachillerato) {
         int countZapatos = zapatosService.obtenerFechasPorBachillerato(idBachillerato).size();
@@ -138,6 +136,7 @@ public class EntregasController {
         return ResponseEntity.ok(conteos);
     }
 
+    /**Metodo para guardar el estado de entrega de paquetes  */
     @PostMapping("/entregarPaquete")
     public String entregarPaquete(@RequestParam("tipoPaquete") String tipoPaquete,
             HttpServletRequest request,
@@ -189,6 +188,7 @@ public class EntregasController {
         return "redirect:/entregasPaquetes/seccion/" + request.getParameter("id");
     }
 
+    /**Imprimir listado de entrega de seccion para el docente orientador, para la entrega fisica, genera ficha de entrega donde se debe firmar de recibido el paquete por parte del alumno/encargado */
     @GetMapping("/imprimirListado/{id}")
     public void imprimirListado(HttpServletResponse response,
             @PathVariable("id") int id,
@@ -238,7 +238,7 @@ public class EntregasController {
                 PdfPCell logoCell = new PdfPCell(img);
                 logoCell.setBorder(PdfPCell.NO_BORDER);
                 logoCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                logoCell.setPaddingTop(4); // Ajustar la posición vertical si es necesario
+                logoCell.setPaddingTop(4);
 
                 headerTable.addCell(logoCell);
             } catch (Exception e) {
@@ -369,10 +369,10 @@ public class EntregasController {
     @GetMapping("/reportesEntrega/{id}")
     public String generarReporte(@PathVariable("id") int id, Model model) {
         model.addAttribute("id", id);
-        model.addAttribute("pageTitle", "Paquetes escolares");
         return "Paquetes_escolares/reporteEntrega";
     }
 
+    /**obtener las fechas de entregas de paquetes escolares según el tipo de paquete seleccionado, para llenar un select */
     @GetMapping("/fechasPaquete")
     @ResponseBody
     public List<String> obtenerFechasPaquete(@RequestParam("tipoPaquete") String tipoPaquete,
@@ -394,8 +394,7 @@ public class EntregasController {
         return fechas;
     }
 
-    //
-
+    /**Metodo para obtener el reporte de entregas para el docente orientador, segun el idBachillerato, el tipo de paquete, fecha de entrega y el estado de entrega */
     @GetMapping("/reporteEntrega/{id}")
     public String filtrarEntregas(
             @PathVariable("id") int idBachillerato,
@@ -408,8 +407,7 @@ public class EntregasController {
 
         // Validaciones
         if (tipoPaquete == null || fechaPaquete == null || estadoEntrega == null) {
-            model.addAttribute("error",
-                    "Por favor, selecciona un tipo de paquete, una fecha y un estado de entrega válidos.");
+            model.addAttribute("error", "Por favor, selecciona un tipo de paquete, una fecha y un estado de entrega válidos.");
             Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(idBachillerato);
             model.addAttribute("bachillerato", bachillerato);
             model.addAttribute("id", idBachillerato);
@@ -460,7 +458,6 @@ public class EntregasController {
         model.addAttribute("tipoPaquete", tipoPaquete);
         model.addAttribute("resultados", resultados);
         model.addAttribute("id", idBachillerato);
-        model.addAttribute("pageTitle", "Paquetes escolares");
         model.addAttribute("tipo", tipoPaquete);
         model.addAttribute("fecha", fechaPaquete);
         model.addAttribute("estado", estadoEntrega);
@@ -468,6 +465,7 @@ public class EntregasController {
         return "Paquetes_escolares/reporteEntrega";
     }
 
+    /**Metodo para guardar el editar estado de entrega de paquete escolar, se realiza para cada uno de los registros */
     @PostMapping("/editarEntrega")
     public String editarEntrega(@RequestParam("id_entrega") Integer idEntrega,
             @RequestParam("entregado") boolean entregado,

@@ -69,4 +69,20 @@ public class DocenteService {
         return docenteRepository.findByNombreDocenteContainingIgnoreCase(nombre);
     }
 
+    public boolean correoYaRegistrado(String correoDocente) {
+        return docenteRepository.existsBycorreoDocente(correoDocente);
+    }
+
+    public boolean nitYaRegistrado(String nitPersonal) {
+        return docenteRepository.existsBynit(nitPersonal);
+    }
+
+    public boolean nupYaRegistrado(String nupPersonal) {
+        return docenteRepository.existsBynup(nupPersonal);
+    }
+
+    public boolean nipYaRegistrado(String nipPersonal) {
+        return docenteRepository.existsBynip(nipPersonal);
+    }
+
 }

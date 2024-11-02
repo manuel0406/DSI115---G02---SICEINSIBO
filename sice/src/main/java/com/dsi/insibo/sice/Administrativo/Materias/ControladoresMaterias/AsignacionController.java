@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,9 +19,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dsi.insibo.sice.Administrativo.Materias.Clases.DocenteAsignacionDTO;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.AsignacionService;
-import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.BachilleratosService;
+import com.dsi.insibo.sice.Administrativo.Bachilleratos.Servicios.BachilleratoService;
 import com.dsi.insibo.sice.Administrativo.Materias.ServiciosMaterias.MateriasService;
-import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteDTO;
 import com.dsi.insibo.sice.Expediente_docente.Docentes.DocenteService;
 import com.dsi.insibo.sice.entity.Asignacion;
 import com.dsi.insibo.sice.entity.Bachillerato;
@@ -29,7 +29,7 @@ import com.dsi.insibo.sice.entity.Materia;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
+@PreAuthorize("hasAnyRole('ADMINISTRADOR','SUBDIRECTORA', 'DIRECTOR')")
 @Controller
 public class AsignacionController {
 
@@ -38,7 +38,7 @@ public class AsignacionController {
     private MateriasService materiasService;
     // Bachilleratos
     @Autowired
-    private BachilleratosService bachilleratosService;
+    private BachilleratoService bachilleratosService;
     // Profesores
     @Autowired
     private DocenteService docenteService;

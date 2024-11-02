@@ -188,11 +188,6 @@ td {
 
 }
 
-#correoIniciarSesion {
-  margin-bottom: 15px;
-  /* Margen inferior para separar los campos */
-}
-
 .btnIniciarSesion {
   background-color: #005187;
   /* Cambio de color de fondo */
@@ -252,24 +247,6 @@ td {
 /* ----------------------------------------------------------------------------------------- */
 /*                               ESTILO DE RECUPERAR CONTRASEÑA                              */
 /* ----------------------------------------------------------------------------------------- */
-.btnRecuperar {
-  background-color: #005187;
-  /* Cambio de color de fondo */
-  color: white;
-  /* Color del texto */
-  font-weight: bold;
-  /* Texto en negrita */
-  text-align: center;
-  /* Centrar el texto */
-  width: 100%;
-  /* Ancho del botón */
-  border: 2px solid white;
-  /* Borde blanco alrededor del botón */
-  border-radius: 20px;
-  /* Esquinas redondeadas */
-  padding: 10px 20px;
-  /* Espaciado interno del botón */
-}
 
 .btnCancelar {
   background-color: #000000;
@@ -303,8 +280,7 @@ td {
   /* Justifica el texto */
 }
 
-.btnCancelar:hover,
-.btnRecuperar:hover {
+.btnCancelar:hover {
   background-color: white;
   color: black;
   border-color: black;

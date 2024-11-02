@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
@@ -45,6 +46,7 @@ public class SiceApplication {
 	@Autowired
 	AsignacionService asignacionService;
 
+	@PreAuthorize("!hasRole('BIBLIOTECARIO')")
 	@GetMapping("/")
 	public String holamundo(Model model) {
 
@@ -69,6 +71,7 @@ public class SiceApplication {
 		return "home";
 	}
 
+	@PreAuthorize("!hasRole('BIBLIOTECARIO')")
 	@GetMapping("/administracion")
 	public String homeAdministracion(Model model) {
 

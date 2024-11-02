@@ -21,7 +21,7 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+//import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -110,6 +110,10 @@ public class ConfiguracionSeguridad {
                 for (GrantedAuthority authority : authorities) {
                     if (authority.getAuthority().equals("ROLE_ADMINISTRADOR")) {
                         return "/gestionarCredenciales"; // URL para usuarios con rol ADMIN
+                    }
+                    if (authority.getAuthority().equals("ROLE_BIBLIOTECARIO")) {
+                        return "/Biblioteca/"; // URL para usuarios con rol BIBLIOTECARIO
+
                     }
                 }
                 return "/"; // Por defecto, si no se encuentra ningún rol específico

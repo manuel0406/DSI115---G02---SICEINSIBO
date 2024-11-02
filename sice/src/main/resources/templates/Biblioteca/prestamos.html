@@ -110,24 +110,18 @@
       </div>
 
       <!-- Mostrar la paginación solo si hay datos y más de una página -->
-      <div th:if="${page.totalElements > 0 and page.totalPages > 0}">
+      <div th:if="${page.totalElements > 0 and page.totalPages > 0}" class="text-center">
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
-                <!-- Botón de anterior -->
-                <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${page.number - 1}}">Anterior</a>
+                <li class="page-item" th:class="${page.first ? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{/Biblioteca/Prestamos(page=${page.number - 1}, size=${page.size}, nombreAlumno=${param.nombreAlumno})}" tabindex="-1">Anterior</a>
                 </li>
-
-                <!-- Páginas numeradas -->
                 <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
-                    th:classappend="${page.number == i} ? 'active'">
-                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${i}}"
-                        th:text="${i + 1}">1</a>
+                    th:class="${i == page.number ? 'active' : ''}">
+                    <a class="page-link" th:href="@{/Biblioteca/Prestamos(page=${i}, size=${page.size}, nombreAlumno=${param.nombreAlumno})}" th:text="${i + 1}"></a>
                 </li>
-
-                <!-- Botón de siguiente -->
-                <li class="page-item" th:classappend="${page.number + 1 >= page.totalPages} ? 'disabled'">
-                    <a class="page-link" th:href="@{'/Biblioteca/Prestamos?page=' + ${page.number + 1}}">Siguiente</a>
+                <li class="page-item" th:class="${page.last ? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{/Biblioteca/Prestamos(page=${page.number + 1}, size=${page.size}, nombreAlumno=${param.nombreAlumno})}">Siguiente</a>
                 </li>
             </ul>
         </nav>

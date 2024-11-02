@@ -14,9 +14,23 @@
     <header th:replace="~{home :: header}"></header>
 
     <div class="container mb-2">
+        <!--Indicación de la ubicación de la página actual-->
+        <div class="container col-8 mt-4 d-flex justify-content-start flex-wrap">
+            <nav class="mt-5" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/administracion}"class="text-decoration-none text-secondary">Administración</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/GestionMaterias}"class="text-decoration-none text-secondary">Materias</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Asignaciones</li>
+                </ol>
+            </nav>
+        </div>
         <!-- TITULO PRINCIPAL -->
-        <div class="mt-4 d-flex justify-content-center mb-3 flex-wrap">
-            <h3 class="text-center mt-5">
+        <div class="d-flex justify-content-center mb-3 flex-wrap">
+            <h3 class="text-center">
                 <b th:text="${titulo}"></b>
             </h3>
         </div>

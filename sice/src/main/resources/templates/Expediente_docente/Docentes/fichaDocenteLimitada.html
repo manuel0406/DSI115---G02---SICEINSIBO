@@ -30,7 +30,7 @@
 
                     <div class="col-lg-4 col-md-6">
                         <label for="docente_nombres" class="form-label">Nombres:</label>
-                        <input type="text" th:field="*{nombreDocente}" class="form-control" id="docente_nombres"
+                        <input type="text" th:field="*{nombreDocente}" class="form-control bg-light" id="docente_nombres"
                             required readonly>
                         <div class="invalid-feedback">
                             Es necesario agregar nombres
@@ -39,7 +39,7 @@
 
                     <div class="col-lg-4 col-md-6">
                         <label for="docente_apellidos" class="form-label">Apellidos:</label>
-                        <input type="text" th:field="*{apellidoDocente}" class="form-control" id="docente_apellidos"
+                        <input type="text" th:field="*{apellidoDocente}" class="form-control bg-light" id="docente_apellidos"
                             required readonly>
                         <div class="invalid-feedback">
                             Es necesario agregar apellidos
@@ -48,7 +48,7 @@
 
                     <div class="col-lg-4 col-md-6">
                         <label for="docente_profesion" class="form-label">Profesión:</label>
-                        <input type="text" th:field="*{profesionDocente}" class="form-control" id="docente_profesion"
+                        <input type="text" th:field="*{profesionDocente}" class="form-control bg-light" id="docente_profesion"
                             required readonly>
                         <div class="invalid-feedback">
                             Es necesario agregar la profesión
@@ -57,7 +57,7 @@
 
                     <div class="col-lg-4 col-md-6">
                         <label for="docente_fecha_nacimiento" class="form-label">Fecha de nacimiento:</label>
-                        <input type="date" th:field="*{fechaNacimientoD}" class="form-control"
+                        <input type="date" th:field="*{fechaNacimientoD}" class="form-control bg-light"
                             id="docente_fecha_nacimiento" required readonly>
                         <div class="invalid-feedback">
                             Es necesario agregar la fecha de nacimiento
@@ -127,7 +127,7 @@
 
                     <div class="col-lg-4 col-md-6">
                         <label for="docente_dui" class="form-label">DUI</label>
-                        <input type="text" th:field="*{duiDocente}" class="form-control" id="docente_dui" minlength="10"
+                        <input type="text" th:field="*{duiDocente}" class="form-control bg-light" id="docente_dui" minlength="10"
                             required readonly>
                         <div class="invalid-feedback">
                             Es necesario agregar un DUI valido
@@ -137,7 +137,7 @@
 
                     <div class="col-lg-4 col-md-6">
                         <label for="docente_nip" class="form-label">NIP</label>
-                        <input type="text" th:field="*{nip}" class="form-control restricted-input" id="docente_nip"
+                        <input type="text" th:field="*{nip}" class="form-control restricted-input bg-light" id="docente_nip"
                             minlength="7" required readonly>
                         <div class="invalid-feedback">
                             Es necesario agregar un NIP valido
@@ -146,7 +146,7 @@
 
                     <div class="col-lg-4 col-md-6">
                         <label for="docente_nup" class="form-label">NUP</label>
-                        <input type="text" th:field="*{nup}" class="form-control" id="docente_nup" minlength="12"
+                        <input type="text" th:field="*{nup}" class="form-control bg-light" id="docente_nup" minlength="12"
                             required readonly>
                         <div class="invalid-feedback">
                             Es necesario agregar un NUP valido
@@ -155,7 +155,7 @@
 
                     <div class="col-lg-4 col-md-6">
                         <label for="docente_nit" class="form-label">NIT</label>
-                        <input type="text" th:field="*{nit}" class="form-control restricted-input" id="docente_nit"
+                        <input type="text" th:field="*{nit}" class="form-control restricted-input  bg-light" id="docente_nit"
                             minlength="17" required readonly>
 
                         <div class="col-auto mt-2">
@@ -183,7 +183,7 @@
                     </div>
                     <div class="col-lg-4 col-md-12">
                         <label for="docente_correo_institucional" class="form-label">Correo Electrónico</label>
-                        <input type="email" th:field="*{correoDocente}" class="form-control"
+                        <input type="email" th:field="*{correoDocente}" class="form-control bg-light"
                             id="docente_correo_institucional" aria-describedby="correoHelp" required>
                         <div id="correoHelp" class="form-text">Ingrese su correo electrónico (institucional o personal).
                         </div>
@@ -220,7 +220,7 @@
                     </div>
                     <div class="col-lg-8 col-md-12">
                         <label for="docente_titulo" class="form-label">Título que lo acredita como docente:</label>
-                        <input type="text" th:field="*{tituloDocente}" class="form-control" id="docente_titulo"
+                        <input type="text" th:field="*{tituloDocente}" class="form-control bg-light" id="docente_titulo"
                             name="titulo" required readonly>
                         <div class="invalid-feedback">
                             Es necesario agregar el titulo que lo acredita
@@ -230,7 +230,7 @@
                         <label for="docente_fecha_ingreso" class="form-label">Fecha de ingreso al MYNEDUCIT:</label>
                         <div class="row">
                             <div class="col-lg-12 col-md-5">
-                                <input type="date" th:field="*{fechaMineducyt}" class="form-control"
+                                <input type="date" th:field="*{fechaMineducyt}" class="form-control bg-light"
                                     id="docente_fecha_ingreso" name="fecha_ingreso" required readonly>
                             </div>
                             <div class="invalid-feedback">

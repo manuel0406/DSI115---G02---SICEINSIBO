@@ -75,4 +75,30 @@ public class BachilleratoService {
     public void deleteBachillerato(int codigoBachillerato){
         bachilleratoRepository.deleteById(codigoBachillerato);
     }
+
+
+        //OBTENER PRIMEROS AÑOS
+    // 1. Usado en nuevas asignaciones.
+    public List<Bachillerato> obtenerPrimeros(){
+        return (List<Bachillerato>) bachilleratoRepository.findPorSecciones(1);
+    } 
+
+    //OBTENER SEGUNDOS AÑOS
+    // 1. Usado en nuevas asignaciones.
+    public List<Bachillerato> obtenerSegundos(){
+        return (List<Bachillerato>) bachilleratoRepository.findPorSecciones(2);
+    }  
+
+    //OBTENER TERCEROS AÑOS
+    // 1. Usado en nuevas asignaciones.
+    public List<Bachillerato> obtenerTerceros(){
+        return (List<Bachillerato>) bachilleratoRepository.findPorSecciones(3);
+    }
+    
+    // OBTENER POR ID
+    public Bachillerato obtenerBachilleratoPorId(Integer codigoBachillerato){
+        return bachilleratoRepository.findById(codigoBachillerato).orElse(null);
+    }
 }
+
+

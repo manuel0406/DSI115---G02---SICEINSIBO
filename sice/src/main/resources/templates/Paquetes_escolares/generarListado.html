@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <title th:text="${pageTitle}">Entrega de Paquetes Escolares</title>
+  <title>Paquetes Escolares</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 
@@ -15,26 +15,14 @@
     <div>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a th:href="@{/}">Inicio</a></li>
+          <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none text-secondary">Inicio</a></li>
           <li class=" breadcrumb-item active" aria-current="page">Listado entrega</li>
         </ol>
       </nav>
     </div>
     <h2 class="text-center">Generación Listado</h2>
-    <!-- Mensajes -->
-    <div th:replace="~{alertas::alertas}"></div>
-
-    <div class="d-flex justify-content-end">
-      <div>
-        <div>
-          <a th:href="@{/entregasPaquetes/reportesEntrega/{id}(id=${id})}" class="btn btn-success">Reportes Entrega</a>
-        </div>
-      </div>
-    </div>
 
     <div class="container">
-
-      <!-- Mensajes de alerta -->
       <div class="alert-container">
         <header th:replace="~{alertas :: alertas}"></header>
       </div>

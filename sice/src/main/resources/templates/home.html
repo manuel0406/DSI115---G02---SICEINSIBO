@@ -24,7 +24,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex ">
-                        <li class="nav-item">
+                        <li class="nav-item" sec:authorize="!hasAnyRole('BIBLIOTECARIO')" >
                             <a class="nav-link active text-white" aria-current="page" th:href="@{/}">
                                 <i class="bi bi-house-door text-white"></i> Inicio
                             </a>
@@ -341,7 +341,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="bachillerato, stat : ${listaSecciones}">
+                            <tr class="align-middle" th:each="bachillerato, stat : ${listaSecciones}">
                                 <td th:text="${bachillerato.grado}"></td>
                                 <td th:text="${bachillerato.nombreCarrera}"></td>
                                 <td th:text="${bachillerato.seccion}"></td>

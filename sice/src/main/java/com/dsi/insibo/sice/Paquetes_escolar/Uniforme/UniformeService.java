@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.dsi.insibo.sice.entity.Alumno;
 import com.dsi.insibo.sice.entity.Uniforme;
-import com.dsi.insibo.sice.entity.Zapatos;
 
 @Service
 public class UniformeService {

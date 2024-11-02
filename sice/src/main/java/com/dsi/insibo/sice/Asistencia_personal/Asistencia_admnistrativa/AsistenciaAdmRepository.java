@@ -19,11 +19,11 @@ public interface AsistenciaAdmRepository extends JpaRepository<AsistenciaPersona
         Page<Map<String, Object>> findAsistenciaAdministrativaP(Pageable pageable);
 
         // Lista de administrativos en asistencia (select)
-        @Query(value = "SELECT d.nombre_personal, d.apellido_personal, da.id_personal_aparato FROM public.personal_administrativo AS d JOIN public.personal_aparato AS da ON d.dui_personal = da.personal_dui_personal ", nativeQuery = true)
+        @Query(value = "SELECT d.nombre_personal, d.apellido_personal, da.id_personal_aparato FROM personal_administrativo AS d JOIN personal_aparato AS da ON d.dui_personal = da.personal_dui_personal ", nativeQuery = true)
         List<Map<String, Object>> findAdministrativosAparato();
 
         // Lista de departamentos en asistencia(select)
-        @Query(value = "SELECT DISTINCT depart_personal FROM public.asistencia_personal", nativeQuery = true)
+        @Query(value = "SELECT DISTINCT depart_personal FROM asistencia_personal", nativeQuery = true)
         List<Map<String, Object>> findAdministrativosDepartamento();
 
         // Listar por numero aparato personal (en vista por nombre)
@@ -78,8 +78,8 @@ public interface AsistenciaAdmRepository extends JpaRepository<AsistenciaPersona
 
         // Listado de id aparato en asistencia tardia administrativos
         @Query(value = "SELECT p.nombre_personal, p.apellido_personal, pa.id_personal_aparato "
-                        + "FROM public.personal AS p "
-                        + "JOIN public.personal_aparato AS pa ON p.dui_personal = pa.personal_dui_personal "
+                        + "FROM personal_administrativo AS p "
+                        + "JOIN personal_aparato AS pa ON p.dui_personal = pa.personal_dui_personal "
                         + "WHERE pa.id_personal_aparato IN (SELECT ap.id_personal_aparato "
                         + "FROM asistencia_personal ap "
                         + "JOIN personal_aparato pa ON ap.id_personal_aparato = pa.id_personal_aparato "
@@ -93,7 +93,7 @@ public interface AsistenciaAdmRepository extends JpaRepository<AsistenciaPersona
 
         // Listado de fechas disponible en tardias
         @Query(value = "SELECT DISTINCT EXTRACT (MONTH FROM hora_entradap) AS mes, EXTRACT(YEAR FROM hora_entradap) "
-                        + " AS año FROM public.asistencia_personal ORDER BY año DESC, mes DESC", nativeQuery = true)
+                        + " AS año FROM asistencia_personal ORDER BY año DESC, mes DESC", nativeQuery = true)
         List<Map<String, Object>> findMesAnioAdministrativo();
 
         // Listado tardias por numero aparato(en vista por nombre administrativo)

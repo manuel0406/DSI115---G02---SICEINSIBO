@@ -44,8 +44,7 @@ public class AdministrativoService {
         // Guardar el docente
         administrativoRepository.save(administrativo);
 
-        // Devolver true si se creó un nuevo expediente, false si se actualizó uno
-        // existente
+        // Devolver true si se creó un nuevo expediente, false si se actualizó uno existente
         return !existe;
     }
 
@@ -53,7 +52,23 @@ public class AdministrativoService {
         return administrativoRepository.findById(duiPersonal).orElse(null);
     }
 
+    public List<PersonalAdministrativo> personal(){
+        return (List<PersonalAdministrativo>) administrativoRepository.findAll();
+    }
+
     public void eliminar(String duiPersonal) {
         administrativoRepository.deleteById(duiPersonal);
+    }
+
+    public boolean correoYaRegistrado(String correoPersonal) {
+        return administrativoRepository.existsByCorreoPersonal(correoPersonal);
+    }
+
+    public boolean nitYaRegistrado(String nitPersonal) {
+        return administrativoRepository.existsBynitPersonal(nitPersonal);
+    }
+
+    public boolean nupYaRegistrado(String nupPersonal) {
+        return administrativoRepository.existsBynupPersonal(nupPersonal);
     }
 }
