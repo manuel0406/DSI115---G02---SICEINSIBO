@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequestMapping("/Biblioteca")
-@PreAuthorize("hasAnyRole('BIBLIOTECARIO','ADMINISTRADOR')")
+@PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SUBDIRECTORA', 'DIRECTOR', 'BIBLIOTECARIO')")
 public class BibliotecaController {
 
     @GetMapping("/")
