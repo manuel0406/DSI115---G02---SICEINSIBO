@@ -257,19 +257,19 @@ public class ControllerBachilleratos {
                         .toList();
 
                 if (listaNotas.isEmpty()) {
-                    System.out.println("El alumno " + alumno.getIdAlumno() + " no tiene notas registradas.");
+                    System.out.println("El alumno " + alumno.getNie() + " no tiene notas registradas.");
                     continue; // Salta al siguiente alumno si no tiene notas
                 }
                 for (NotaMateria notaMateria : listaNotas) {
                     if (notaMateria.getNotaMateria() < 6) {
                         aprobado = false;
-                        System.out.println("El alumno " + alumno.getIdAlumno() + " está reprobado en una materia.");
+                        System.out.println("El alumno " + alumno.getNie() + " está reprobado en una materia.");
                         break; // Salir del bucle de notas al encontrar una nota reprobada
                     }
                 }
                 if (aprobado) {
                     System.out
-                            .println("Aprobado: " + aprobado + ". Se puede guardar el alumno " + alumno.getIdAlumno());
+                            .println("Aprobado: " + aprobado + ". Se puede guardar el alumno " + alumno.getNie());
 
                     alumno.setEstadoAlumno(true);
                     alumnoService.guardarAlumno(alumno);
