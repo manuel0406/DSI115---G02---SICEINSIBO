@@ -59,7 +59,8 @@
                                     th:href="@{/Bachillerato/Oferta/}+${anios.idAnioAcademico}" title="Crear oferta">
                                     <i class="bi bi-plus-circle"></i> Crear oferta
                                 </a>
-                                <a class="btn btn-success" th:if="${anioBachilleratoMap[anios.idAnioAcademico] && anios.cerrado==false}"
+                                <a class="btn btn-success"
+                                    th:if="${anioBachilleratoMap[anios.idAnioAcademico] && anios.cerrado==false}"
                                     data-bs-t="tooltip" data-bs-placement="top" title="Consultar"
                                     th:href="@{/Bachillerato/VerOferta/}+${anios.idAnioAcademico}">
                                     <i class="bi bi-file-earmark-text"></i>
@@ -73,18 +74,19 @@
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                                 <!-- Boton editar solo para Director y subdirectora -->
-                                <a class="btn btn-primary editar-btn" sec:authorize="hasAnyRole('DIRECTOR','SUBDIRECTORA')"
-                                    th:if="${anioBachilleratoMap[anios.idAnioAcademico] && anios.cerrado==false}" data-bs-toggle="modal"
-                                    data-bs-t="tooltip" data-bs-target="#actualizarAnioModal" data-bs-placement="top"
-                                    title="Editar" th:data-id="${anios.idAnioAcademico}"
+                                <a class="btn btn-primary editar-btn"
+                                    sec:authorize="hasAnyRole('DIRECTOR','SUBDIRECTORA')"
+                                    th:if="${anioBachilleratoMap[anios.idAnioAcademico] && anios.cerrado==false}"
+                                    data-bs-toggle="modal" data-bs-t="tooltip" data-bs-target="#actualizarAnioModal"
+                                    data-bs-placement="top" title="Editar" th:data-id="${anios.idAnioAcademico}"
                                     th:data-est="${anios.activoAnio}" th:data-an="${anios.anio}"
                                     th:data-ma="${anios.activoMatricula}" th:data-ce="${anios.cerrado}">
-                                    <i class="bi bi-pencil-square"></i> 
+                                    <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <a class="btn btn-info"
+                                <a class="btn btn-info cerrar-btn"
                                     th:if="${anios.activoAnio && anioBachilleratoMap[anios.idAnioAcademico] != null}"
-                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Finalizar año"
-                                    th:href="${'/Bachillerato/cierreAcademico/'+ anios.idAnioAcademico}">
+                                    data-bs-t="tooltip" data-bs-placement="top" title="Finalizar año"
+                                    th:href="${'/Bachillerato/cierreAcademico/' + anios.idAnioAcademico}">
                                     <i class="bi bi-mortarboard"></i>
                                 </a>
 
@@ -142,9 +144,10 @@
                     th:action="@{/Bachillerato/editarAnio}">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <input type="hidden" th:field="*{idAnioAcademico}" id="editIdAnio" name="idAnioAcademico" >
+                            <input type="hidden" th:field="*{idAnioAcademico}" id="editIdAnio" name="idAnioAcademico">
                             <input type="hidden" th:field="*{anio}" id="editAnio" name="AnioAcademico">
-                            <input type="hidden" th:field="*{cerrado}" id="editcerrado" name="cerrado" sec:authorize="hasAnyRole('DIRECTOR','SUBDIRECTORA')" >
+                            <input type="hidden" th:field="*{cerrado}" id="editcerrado" name="cerrado"
+                                sec:authorize="hasAnyRole('DIRECTOR','SUBDIRECTORA')">
 
                             <label class="form-check-label" for="editEstado">Estado:</label>
                             <input class="form-check-input border border-secondary" type="checkbox" id="editEstado"
@@ -157,7 +160,7 @@
                                 name="activoMatricula" th:field="*{activoMatricula}">
 
                         </div>
-                        <div class="mb-3" sec:authorize="hasAnyRole('ADMINISTRADOR')" >
+                        <div class="mb-3" sec:authorize="hasAnyRole('ADMINISTRADOR')">
                             <label class="form-check-label" for="editCerrado">Cerrado:</label>
                             <input class="form-check-input border border-secondary" type="checkbox" id="editcerrado"
                                 name="activoMatricula" th:field="*{cerrado}">
@@ -192,13 +195,31 @@
         </div>
     </div>
 
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmCerrarModal" tabindex="-1" aria-labelledby="confirmCerrarModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmCerrarModalLabel">Confirmar Acción</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro en realizar el cierre del año ahora? Esta acción no puede deshacerse.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmCerrarButton">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <footer th:replace="~{home :: footer}"></footer>
+    <script>
+        $('#anio').mask('0000');    
+    </script>
+    <script type="text/javascript" th:src="@{/js/GestionAnio.js}"></script>
 </body>
-<footer th:replace="~{home :: footer}"></footer>
-<script type="text/javascript" th:src="@{/js/GestionAnio.js}"></script>
-<script>
-    $('#anio').mask('0000');
-
-</script>
 
 </html>

@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    
     confirmAgregarButton.addEventListener("click", function () {
         var form = document.getElementById("formAnio");
         var yearField = document.getElementById("anio");
@@ -45,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
     var consultarButton = document.querySelectorAll(".consultar-btn");
     var confirmConsultarModal = new bootstrap.Modal(document.getElementById("consultarModal"));
-    var confirmConsultarModalButton = document.getElementById("consultarModalButton");    
+    var confirmConsultarModalButton = document.getElementById("consultarModalButton");
 
     consultarButton.forEach(function (button) {
         button.addEventListener("click", function (event) {
@@ -100,19 +101,38 @@ document
         form.classList.remove("was-validated"); // Eliminar la clase de validación
     });
 
-$(document).ready(function() {
-    $('.editar-btn').on('click', function() {
+$(document).ready(function () {
+    $('.editar-btn').on('click', function () {
         var idAnio = $(this).data('id');
         var estado = $(this).data('est');
         var anio = $(this).data('an');
         var matricula = $(this).data('ma');
-        var cerrado=$(this).data('ce')
-        
+        var cerrado = $(this).data('ce')
+
         $('#editIdAnio').val(idAnio);
         $('#editEstado').prop('checked', estado);
         $('#editAnio').val(anio);
         $('#editMatricula').prop('checked', matricula);
         $('#editcerrado').prop('checked', cerrado);
-        
+
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    var deleteButtons = document.querySelectorAll('.cerrar-btn');
+    var confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmCerrarModal'));
+    var confirmDeleteButton = document.getElementById('confirmCerrarButton');
+    var currentHref = '';
+
+    deleteButtons.forEach(function (button) {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            currentHref = button.getAttribute('href');
+            confirmDeleteModal.show();
+        });
+    });
+
+    confirmDeleteButton.addEventListener('click', function () {
+        window.location.href = currentHref;
     });
 });
