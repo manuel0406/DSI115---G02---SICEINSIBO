@@ -41,7 +41,7 @@ public interface AsistenciaAdmRepository extends JpaRepository<AsistenciaPersona
                         + "d.telefono_personal FROM asistencia_personal ad " +
                         "JOIN personal_aparato da ON ad.id_personal_aparato = da.id_personal_aparato " +
                         "JOIN personal_administrativo d ON da.personal_dui_personal = d.dui_personal "
-                        + "WHERE ad.depart_personal =:departamento"
+                        + "WHERE ad.depart_personal =:departamento "
                         + "ORDER BY ad.id_asistencia_personal DESC", nativeQuery = true)
         Page<Map<String, Object>> findAdministrativoDepartamentoAll(String departamento, Pageable pageable);
 
