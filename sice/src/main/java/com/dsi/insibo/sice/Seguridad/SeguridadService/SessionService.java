@@ -39,4 +39,18 @@ public class SessionService {
 
         return dui;
     }
+
+    public Usuario usuarioSession(){
+        String correoUsuario = "No encontrado";
+
+        // Obtenemos la autenticación del usuario actual
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            User userObject = (User) authentication.getPrincipal();
+            correoUsuario = userObject.getUsername();
+        }
+
+        // Buscamos el usuario por correo y obtenemos su información de DUI
+        return usuarioService.buscarPorCorreo(correoUsuario);
+    }
 }

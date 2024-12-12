@@ -18,5 +18,6 @@ public class LoginController {
         }
         return "Seguridad/iniciarSesion";
     }
+    
 }
 
