@@ -48,7 +48,7 @@ public class SiceApplication {
 
 	@PreAuthorize("!hasRole('BIBLIOTECARIO')")
 	@GetMapping("/")
-	public String holamundo(Model model) {
+	public String homeDocente(Model model) {
 
 		String dui = sesion.duiSession();
 		boolean secciones = true;
