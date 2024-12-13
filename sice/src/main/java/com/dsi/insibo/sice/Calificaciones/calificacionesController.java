@@ -108,6 +108,7 @@ public class calificacionesController {
 			int idAlumno = nota.getAlumno().getIdAlumno();
 			int idActividad = nota.getActividad().getIdActividad();
 
+			System.out.println("idAlumno: "+idAlumno);
 			notasPorAlumno
 					.computeIfAbsent(idAlumno, k -> new HashMap<>())
 					.put(idActividad, nota);
@@ -125,6 +126,7 @@ public class calificacionesController {
 			if (notaPeriodo != null) {
 				notaPeriodo.setNotaPeriodo(totalNotasPorAlumno.get(idAlumno).floatValue());
 				notaPeriodoService.guardarNotaPeriodo(notaPeriodo);
+				System.out.println("nota update: "+ totalNotasPorAlumno.get(idAlumno).floatValue());
 			} else {
 				notaPeriodo = new NotaPeriodo();
 				Alumno alumno = alumnoService.buscarPorIdAlumno(idAlumno);
@@ -135,11 +137,12 @@ public class calificacionesController {
 				notaPeriodo.setPeriodo(periodo);
 				notaPeriodo.setNotaPeriodo(totalNotasPorAlumno.get(idAlumno).floatValue());
 				notaPeriodoService.guardarNotaPeriodo(notaPeriodo);
+				System.out.println("nota new: "+ totalNotasPorAlumno.get(idAlumno).floatValue());
 
 			}
+			
 		}
-		// notaPeriodoService.procesarNotaPeriodo(asignacion, dui, pe,
-		// codigoBachillerato);
+		// notaPeriodoService.procesarNotaPeriodo(asignacion, dui, pe, codigoBachillerato);
 
 		Map<String, Long> conteoPorTipo = listadoActividades.stream()
 				.collect(Collectors.groupingBy(Actividad::getTipoActividad, Collectors.counting()));

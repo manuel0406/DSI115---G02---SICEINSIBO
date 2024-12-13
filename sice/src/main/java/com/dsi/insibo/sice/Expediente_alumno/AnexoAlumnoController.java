@@ -105,8 +105,8 @@ public class AnexoAlumnoController {
         }
 
         if (!file.getContentType().equals("application/pdf")) {
-            redirectAttributes.addFlashAttribute("message", "Solo se permiten archivos PDF.");
-            redirectAttributes.addFlashAttribute("warning", "Error, el archivo a subir debe ser PDF.");
+            redirectAttributes.addFlashAttribute("warning", "Solo se permiten archivos PDF.");
+            // redirectAttributes.addFlashAttribute("error", "Error, el archivo a subir debe ser PDF.");
             return "redirect:/ExpedienteAlumno/Documentos/" + alumno.getIdAlumno();
         }
 

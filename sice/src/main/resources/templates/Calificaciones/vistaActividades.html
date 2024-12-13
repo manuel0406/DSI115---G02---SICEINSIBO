@@ -210,7 +210,7 @@
                             <label for="nombreActividadEditModal" class="col-form-label">Nombre de la
                                 Actividad:</label>
                             <input type="text" class="form-control" id="nombreActividad" th:field="*{nombreActividad}"
-                                required maxlength="20" />
+                                required maxlength="30" />
                             <div class="invalid-feedback">Es necesario agregar un nombre.</div>
                         </div>
                         <div class="mb-3">
@@ -218,7 +218,7 @@
                             <div th:if="${asignacion.materia.tipoMateria == 'Módulo'}">
                                 <label class="col-form-label" for="descripcionActividadEditModal">Descripción:</label>
                                 <textarea class="form-control" id="tipoActividad" th:field="*{tipoActividad}"
-                                    maxlength="10" required></textarea>
+                                    maxlength="30" required></textarea>
                             </div>
 
                             <!-- se muestra si la materia es del tipo basica -->

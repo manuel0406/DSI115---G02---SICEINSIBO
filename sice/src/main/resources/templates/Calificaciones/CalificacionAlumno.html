@@ -20,13 +20,14 @@
                         <div th:each="materiaEntry : ${notasAgrupadas}" class="col">
                             <div class="card border-secondary h-100 shadow-sm">
                                 <div class="card-header bg-secondary text-white py-2">
-                                    <h2 class="mb-0" th:text="${materiaEntry.key.nomMateria}" style="font-size: 1.1rem;">
+                                    <h2 class="mb-0" th:text="${materiaEntry.key.nomMateria}"
+                                        style="font-size: 1.1rem;">
                                         Materia
                                     </h2>
                                 </div>
                                 <div class="card-body p-2">
-                                    <div th:each="periodoEntry : ${materiaEntry.value}">
-                                        <h4 class="text-muted mb-1" style="font-size: 1rem;">
+                                    <div th:each="periodoEntry, stat: ${materiaEntry.value}">
+                                        <!-- <h4 class="text-muted mb-1" style="font-size: 1rem;">
                                             Periodo: <span th:text="${periodoEntry.key}">1</span>
                                         </h4>
                                         <div th:each="tipoActividadEntry : ${periodoEntry.value}" class="mb-1">
@@ -34,7 +35,8 @@
                                                 <thead class="table-light">
                                                     <tr>
                                                         <th style="width: 30%;">Ponderación</th>
-                                                        <th style="width: 50%;" th:text="${tipoActividadEntry.key}">Actividad</th>
+                                                        <th style="width: 50%;" th:text="${tipoActividadEntry.key}">
+                                                            Actividad</th>
                                                         <th style="width: 20%;">Nota</th>
                                                     </tr>
                                                 </thead>
@@ -46,24 +48,83 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                        </div>
-
+                                        </div> -->
                                         <!-- Nota global por periodo -->
-                                        <div class="alert alert-info py-1 px-2 mt-2">
+                                        <!-- <div class="alert alert-info py-1 px-2 mt-2">
                                             <h5 class="mb-0" style="font-size: 0.95rem;">
                                                 Nota Global del Período:
-                                                <span th:text="${notasGlobalesPorPeriodo[materiaEntry.key][periodoEntry.key]}"></span>
+                                                <span
+                                                    th:text="${notasGlobalesPorPeriodo[materiaEntry.key][periodoEntry.key]}"></span>
                                             </h5>
+                                        </div> -->
+                                        <div class="accordion" th:id="accordionExample">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        th:data-bs-target="'#collapse' + ${materiaEntry.key}+ '_' + ${periodoEntry.key} "
+                                                        aria-expanded="true"
+                                                        th:aria-controls="'collapse' + ${materiaEntry.key}+ '_' + ${periodoEntry.key} ">
+                                                        Periodo: <span th:text="${periodoEntry.key}">1</span>
+                                                    </button>
+                                                </h2>
+                                                <div th:id="'collapse'+ ${materiaEntry.key}+ '_'  + ${periodoEntry.key} "
+                                                    class="accordion-collapse collapse"
+                                                    th:classappend="${stat.index == 0} ? ' show' : ''"
+                                                    data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <div th:each="tipoActividadEntry : ${periodoEntry.value}"
+                                                            class="mb-1">
+                                                            <table class="table table-sm table-bordered">
+                                                                <thead class="table-light">
+                                                                    <tr>
+                                                                        <th style="width: 30%;">Ponderación</th>
+                                                                        <th style="width: 50%;"
+                                                                            th:text="${tipoActividadEntry.key}">
+                                                                            Actividad</th>
+                                                                        <th style="width: 20%;">Nota</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr th:each="nota : ${tipoActividadEntry.value}">
+                                                                        <td
+                                                                            th:text="${nota.actividad.ponderacionActividad + '%'}">
+                                                                        </td>
+                                                                        <td th:text="${nota.actividad.nombreActividad}">
+                                                                        </td>
+                                                                        <td th:text="${nota.notaObtenida}"></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <!-- Nota global por periodo -->
+                                                        <div class="alert alert-info py-1 px-2 mt-2">
+                                                            <h5 class="mb-0" style="font-size: 0.95rem;">
+                                                                Nota Global del Período:
+                                                                <span
+                                                                    th:text="${notasGlobalesPorPeriodo[materiaEntry.key][periodoEntry.key]}"></span>
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
+
+
                                     </div>
                                 </div>
-                            </div>
-                        </div> <!-- Fin tarjeta de materia -->
-                    </div> <!-- Fin contenedor de cuadrícula -->
+                            </div> <!-- Fin tarjeta de materia -->
+                        </div> <!-- Fin contenedor de cuadrícula -->
+                    </div>
                 </div>
             </div>
         </div>
+
+
+
     </div>
+
+
 
     <footer th:replace="~{home :: footer}"></footer>
 </body>
