@@ -59,7 +59,7 @@ public class PasswordController {
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
         }
-        return "redirect:/update-password";
+        return "redirect:/login?actualizado=true";    
     }
     
 }
