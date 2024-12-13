@@ -42,9 +42,9 @@ public class MatriculaController {
 	private AnexoAlumnoService anexoAlumnoService;
 
 	@GetMapping("/AntiguoIngreso")
-	public String antiguoIngreso(Model model, @RequestParam(value = "nie", required = false) String nie,
-			@RequestParam(value = "nombre", required = false) String nombre,
-			@RequestParam(value = "apellido", required = false) String apellido) {
+	public String antiguoIngreso(Model model, @RequestParam(required = false) String nie,
+			@RequestParam(required = false) String nombre,
+			@RequestParam(required = false) String apellido) {
 
 		AnioAcademico anioAcademico = anioService.activoMatricula();
 		int anioActivo = anioAcademico.getAnio() - 1;
@@ -85,7 +85,7 @@ public class MatriculaController {
 	}
 
 	@GetMapping("/fichaMatricula/{idAlumno}")
-	public String fichaMatricula(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
+	public String fichaMatricula(@PathVariable int idAlumno, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (idAlumno > 0) {
@@ -126,10 +126,10 @@ public class MatriculaController {
 	}
 
 	@PostMapping("/saveMatricula/")
-	public String saveMatricula(RedirectAttributes attributes, @RequestParam(value = "idAlumno", required = false) String idAlumno,
-			@RequestParam(value = "carrera", required = false) String carrera,
-			@RequestParam(value = "grado", required = false) String grado,
-			@RequestParam(value = "seccion", required = false) String seccion) {
+	public String saveMatricula(RedirectAttributes attributes, @RequestParam(required = false) String idAlumno,
+			@RequestParam(required = false) String carrera,
+			@RequestParam(required = false) String grado,
+			@RequestParam(required = false) String seccion) {
 
 		Alumno alumno = alumnoService.buscarPorIdAlumno(Integer.parseInt(idAlumno));
 		System.out.println("grado: " + grado);
@@ -165,12 +165,12 @@ public class MatriculaController {
 
 	@GetMapping("/matriculados")
 	public String verAlumno(Model model,
-			@RequestParam(value = "carrera", required = false) String carrera,
-			@RequestParam(value = "grado", required = false) String grado,
-			@RequestParam(value = "seccion", required = false) String seccion,
-			@RequestParam(value = "genero", required = false) String genero,
-			@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "size", defaultValue = "50") int size) {
+			@RequestParam(required = false) String carrera,
+			@RequestParam(required = false) String grado,
+			@RequestParam(required = false) String seccion,
+			@RequestParam(required = false) String genero,
+			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "50") int size) {
 
 		// Convertir cadenas vacías a null para evitar problemas con las consultas
 		carrera = (carrera != null && carrera.isEmpty()) ? null : carrera;
@@ -241,9 +241,9 @@ public class MatriculaController {
 
 	@GetMapping(value = "/matriculados", produces = "application/pdf")
 	public ModelAndView verAlumnosPdf(Model model,
-			@RequestParam(value = "carrera", required = false) String carrera,
-			@RequestParam(value = "grado", required = false) String grado,
-			@RequestParam(value = "seccion", required = false) String seccion,
+			@RequestParam(required = false) String carrera,
+			@RequestParam(required = false) String grado,
+			@RequestParam(required = false) String seccion,
 			@RequestParam(value = "seccion", required = false) String genero) {
 		// Convertir cadenas vacías a null para evitar problemas con las consultas
 		carrera = (carrera != null && carrera.isEmpty()) ? null : carrera;
@@ -295,7 +295,7 @@ public class MatriculaController {
 	}
 
 	@GetMapping("/matriculados/editar/{nie}")
-	public String editar(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+	public String editar(@PathVariable int nie, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (nie > 0) {
@@ -340,9 +340,9 @@ public class MatriculaController {
 
 	@PostMapping("/matriculados/actualizar")
 	public String actualizarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes,
-			@RequestParam(value = "carrera", required = false) String carrera,
-			@RequestParam(value = "grado", required = false) String grado,
-			@RequestParam(value = "seccion", required = false) String seccion) {
+			@RequestParam(required = false) String carrera,
+			@RequestParam(required = false) String grado,
+			@RequestParam(required = false) String seccion) {
 
 		Bachillerato bachillerato = bachilleratoService.debolverBachilleratoMatricula(carrera, seccion, grado);
 		alumno.setBachillerato(bachillerato);
@@ -357,7 +357,7 @@ public class MatriculaController {
 	}
 
 	@GetMapping("/matriculados/Alumno/{nie}")
-	public String informacionAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+	public String informacionAlumno(@PathVariable int nie, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (nie > 0) {
@@ -395,7 +395,7 @@ public class MatriculaController {
 	}
 
 	@GetMapping("/matriculados/Enfermedades/{nie}")
-	public String enfermedadAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+	public String enfermedadAlumno(@PathVariable int nie, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (nie > 0) {
@@ -431,7 +431,7 @@ public class MatriculaController {
 	}
 
 	@GetMapping("/matriculados/Responsable/{nie}")
-	public String responsableAlumno(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+	public String responsableAlumno(@PathVariable int nie, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (nie > 0) {
@@ -467,7 +467,7 @@ public class MatriculaController {
 	}
 
 	@GetMapping("/matriculados/Documentos/{nie}")
-	public String alumnoDocumentos(@PathVariable("nie") int nie, Model model, RedirectAttributes attributes) {
+	public String alumnoDocumentos(@PathVariable int nie, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (nie > 0) {
@@ -506,7 +506,7 @@ public class MatriculaController {
 	}
 
 	@GetMapping("/matriculados/delete/{nie}")
-	public String eliminarAlumno(@PathVariable("nie") int nie, RedirectAttributes attributes) {
+	public String eliminarAlumno(@PathVariable int nie, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (nie > 0) {

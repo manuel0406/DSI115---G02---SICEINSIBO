@@ -52,9 +52,9 @@ public class JustificacionController {
     }
 
     @PostMapping("/subirJustificacion")
-    public String subirJustificacion(@RequestParam("archivo") MultipartFile archivo,
+    public String subirJustificacion(@RequestParam MultipartFile archivo,
             @RequestParam("descripcionJustificacion") String descripcion,
-            @RequestParam("idAsistencia") int idAsistencia,
+            @RequestParam int idAsistencia,
             Model model) {
 
         try {
@@ -127,9 +127,9 @@ public class JustificacionController {
     }
 
     @PostMapping("/subirJustificacionadm")
-    public String subirJustificacionAdm(@RequestParam("archivo") MultipartFile archivo,
+    public String subirJustificacionAdm(@RequestParam MultipartFile archivo,
             @RequestParam("descripcionJustificacion") String descripcion,
-            @RequestParam("idAsistencia") int idAsistencia,
+            @RequestParam int idAsistencia,
             Model model) {
 
         try {

@@ -74,9 +74,9 @@ public class calificacionesController {
 	// private MateriaBachilleratoRepository materiaBachilleratoRepository;
 
 	@GetMapping("/{idMateria}/{codigoBachillerato}")
-	public String verCalificaciones(Model model, @PathVariable("idMateria") int idMateria,
-			@PathVariable("codigoBachillerato") int codigoBachillerato,
-			@RequestParam(value = "pe", required = false) String pe) {
+	public String verCalificaciones(Model model, @PathVariable int idMateria,
+			@PathVariable int codigoBachillerato,
+			@RequestParam(required = false) String pe) {
 		String dui = sesion.duiSession();
 		// System.out.println(dui + " " + codigoBachillerato);
 
@@ -168,7 +168,7 @@ public class calificacionesController {
 
 	@PreAuthorize("hasAnyRole('DOCENTE')")
 	@GetMapping("/registro/{idActividad}")
-	public String registro(Model model, @PathVariable("idActividad") int idActividad) {
+	public String registro(Model model, @PathVariable int idActividad) {
 
 		Actividad actividad = actividadService.buscarActividadPorId(idActividad);
 		List<Alumno> listaAlumno = alumnoService
@@ -244,12 +244,12 @@ public class calificacionesController {
 
 	@GetMapping("/General")
 	public String verCalificacioneGeneral(Model model, RedirectAttributes redirectAttributes,
-			@RequestParam(value = "idMateria", required = false) String idMateria,
-			@RequestParam(value = "docente", required = false) String docente,
-			@RequestParam(value = "carrera", required = false) String carrera,
-			@RequestParam(value = "grado", required = false) String grado,
-			@RequestParam(value = "seccion", required = false) String seccion,
-			@RequestParam(value = "pe", required = false) String pe) {
+			@RequestParam(required = false) String idMateria,
+			@RequestParam(required = false) String docente,
+			@RequestParam(required = false) String carrera,
+			@RequestParam(required = false) String grado,
+			@RequestParam(required = false) String seccion,
+			@RequestParam(required = false) String pe) {
 
 		// Validaciones para los parámetros vacíos
 		if (carrera != null && carrera.isEmpty()) {
@@ -356,10 +356,10 @@ public class calificacionesController {
 
 	@GetMapping("/alumnos")
 	public String verAlumnosCalificaciones(Model model,
-			@RequestParam(value = "carrera", required = false) String carrera,
-			@RequestParam(value = "grado", required = false) String grado,
-			@RequestParam(value = "seccion", required = false) String seccion,
-			@RequestParam(value = "genero", required = false) String genero) {
+			@RequestParam(required = false) String carrera,
+			@RequestParam(required = false) String grado,
+			@RequestParam(required = false) String seccion,
+			@RequestParam(required = false) String genero) {
 
 		if (carrera != null && carrera.isEmpty()) {
 			carrera = null;
@@ -396,7 +396,7 @@ public class calificacionesController {
 	}
 
 	@GetMapping("/alumno/{idAlumno}")
-	public String calificacionePorAlumno(Model model, @PathVariable("idAlumno") int idAlumno) {
+	public String calificacionePorAlumno(Model model, @PathVariable int idAlumno) {
 		Alumno alumno = alumnoService.buscarPorIdAlumno(idAlumno);
 		Map<Materia, Map<Integer, Map<String, List<Nota>>>> notasAgrupadas = notaService.notasAgrupadas(alumno);
 
@@ -426,8 +426,8 @@ public class calificacionesController {
 	}
 
 	@GetMapping("/CalificacionPeriodos/{idMateria}/{codigoBachillerato}")
-	public String calificacionPorMateria(Model model, @PathVariable("idMateria") int idMateria,
-			@PathVariable("codigoBachillerato") int codigoBachillerato) {
+	public String calificacionPorMateria(Model model, @PathVariable int idMateria,
+			@PathVariable int codigoBachillerato) {
 
 		String dui = sesion.duiSession();
 		NotaMateria notaMateria = null;

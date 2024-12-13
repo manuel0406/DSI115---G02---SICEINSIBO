@@ -50,7 +50,7 @@ public class ConfiguracionSeguridad {
 
     // CONFIGURACION DE FILTROS BASICOS
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
         
         // He dejado activo el .csrf(csrf -> csrf.disable())
         return httpSecurity
@@ -93,7 +93,7 @@ public class ConfiguracionSeguridad {
 
     // CONTROLADOR DE SECCIONES INICIADAS
     @Bean
-    public AuthenticationSuccessHandler successHandler() {
+    AuthenticationSuccessHandler successHandler() {
         return new SimpleUrlAuthenticationSuccessHandler() {
             @Override
             protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -127,9 +127,9 @@ public class ConfiguracionSeguridad {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    
+
     @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsServiceImpl userDetailsServiceImpl) throws Exception {
+    AuthenticationProvider authenticationProvider(UserDetailsServiceImpl userDetailsServiceImpl) throws Exception {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());         // Contraseña
         //provider.setUserDetailsService(userDetailsService());   // Información del Usuario
@@ -139,7 +139,7 @@ public class ConfiguracionSeguridad {
 
     // LEYES DE ENCRIPTAMIENTO DE CONTRASEÑAS
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         //return NoOpPasswordEncoder.getInstance(); // SOLO PARA PRUEBAS
         return new BCryptPasswordEncoder();
     }
@@ -157,12 +157,12 @@ public class ConfiguracionSeguridad {
 
     //Obtener datos de la sesion
     @Bean
-    public SessionRegistry sessionRegistry(){
+    SessionRegistry sessionRegistry(){
         return new SessionRegistryImpl();
     }
 
     @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
+    HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
     }
 

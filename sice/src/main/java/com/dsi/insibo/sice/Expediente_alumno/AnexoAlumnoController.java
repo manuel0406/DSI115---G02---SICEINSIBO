@@ -44,7 +44,7 @@ public class AnexoAlumnoController {
      * @return Una cadena que representa la vista de carga de archivos.
      */
     @GetMapping("/Subir/{clave}/{nie}")
-    public String subir(@PathVariable("clave") String clave, @PathVariable("nie") int nie, Model model) {
+    public String subir(@PathVariable String clave, @PathVariable int nie, Model model) {
         if (clave.equals("dui")) {
             model.addAttribute("tituloB", "Seleccione su DUI");
         }else if (clave.equals("PartidaNacimiento")) {
@@ -92,8 +92,8 @@ public class AnexoAlumnoController {
      * @return Una cadena que redirige a la vista de documentos del alumno.
      */
     @PostMapping("/upload/{clave}/{nie}")
-    public String cargandoArchivo(@PathVariable("clave") String clave, @PathVariable("nie") int nie,
-            @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public String cargandoArchivo(@PathVariable String clave, @PathVariable int nie,
+            @RequestParam MultipartFile file, RedirectAttributes redirectAttributes) {
         // Busca al alumno por su NIE
         Alumno alumno = alumnoService.buscarPorIdAlumno(nie);
         // Obtiene el anexo del alumno
@@ -185,8 +185,8 @@ public class AnexoAlumnoController {
      * @return Una cadena que redirige a la vista de documentos del alumno.
      */
     @GetMapping("/delete/{clave}/{id}/{nie}")
-    public String deleteAnexo(@PathVariable("clave") String clave, @PathVariable("id") int id, Model model,
-            @PathVariable("nie") int nie, RedirectAttributes redirectAttributes) {
+    public String deleteAnexo(@PathVariable String clave, @PathVariable int id, Model model,
+            @PathVariable int nie, RedirectAttributes redirectAttributes) {
         // Busca el anexo por su ID
         AnexoAlumno archivo = anexoService.buscarAnexoPorId(id);
 
@@ -233,7 +233,7 @@ public class AnexoAlumnoController {
      */
     @GetMapping("/ExpedienteAlumno/files/{clave}/{id}")
     @ResponseBody
-    public ResponseEntity<ByteArrayResource> mostrarAnexo(@PathVariable int id, @PathVariable("clave") String clave) {
+    public ResponseEntity<ByteArrayResource> mostrarAnexo(@PathVariable int id, @PathVariable String clave) {
         // Busca el archivo en el repositorio por su ID
         AnexoAlumno fileEntity = anexoRepository.findById(id).orElseThrow(() -> new RuntimeException("File not found"));
 

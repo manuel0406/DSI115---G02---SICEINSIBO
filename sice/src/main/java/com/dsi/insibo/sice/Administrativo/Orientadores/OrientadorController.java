@@ -44,8 +44,8 @@ public class OrientadorController {
     AlumnoService alumnoService;
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
     @GetMapping("/Asignar")
-    public String asignacion(Model model, @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "20") int size) {
+    public String asignacion(Model model, @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size) {
 
         Orientador orientador = new Orientador();
         List<Bachillerato> listaBachilleratos = bachilleratoService.listaBachilleratos();
@@ -99,7 +99,7 @@ public class OrientadorController {
     }
 
     @GetMapping("/eliminar/{id}")
-    public String eliminarOrientador(@PathVariable("id") int id, RedirectAttributes attributes) {
+    public String eliminarOrientador(@PathVariable int id, RedirectAttributes attributes) {
 
         orientadorService.eliminarOrientador(id);
         attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");
@@ -107,13 +107,13 @@ public class OrientadorController {
     }
 
     @GetMapping("/seccionAsigada/{id}")
-    public String verAlumno(Model model, @PathVariable("id") int id,
-            @RequestParam(value = "carrera", required = false) String carrera,
-            @RequestParam(value = "grado", required = false) String grado,
-            @RequestParam(value = "seccion", required = false) String seccion,
-            @RequestParam(value = "genero", required = false) String genero,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "50") int size) {
+    public String verAlumno(Model model, @PathVariable int id,
+            @RequestParam(required = false) String carrera,
+            @RequestParam(required = false) String grado,
+            @RequestParam(required = false) String seccion,
+            @RequestParam(required = false) String genero,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "50") int size) {
 
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(id);
         // Convertir cadenas vacías a null para evitar problemas con las consultas
@@ -163,11 +163,11 @@ public class OrientadorController {
     }
 
     @GetMapping(value = "/seccionAsigada/{id}", produces = "application/pdf")
-    public ModelAndView verAlumnosPdf(Model model, @PathVariable("id") int id,
-            @RequestParam(value = "carrera", required = false) String carrera,
-            @RequestParam(value = "grado", required = false) String grado,
-            @RequestParam(value = "seccion", required = false) String seccion,
-            @RequestParam(value = "genero", required = false) String genero) {
+    public ModelAndView verAlumnosPdf(Model model, @PathVariable int id,
+            @RequestParam(required = false) String carrera,
+            @RequestParam(required = false) String grado,
+            @RequestParam(required = false) String seccion,
+            @RequestParam(required = false) String genero) {
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(id);
         // Convertir cadenas vacías a null para evitar problemas con las consultas
 
@@ -201,7 +201,7 @@ public class OrientadorController {
     }
 
     @GetMapping("/editar/{id}/{nie}")
-    public String editar(@PathVariable("nie") int nie, @PathVariable("id") int id, Model model,
+    public String editar(@PathVariable int nie, @PathVariable int id, Model model,
             RedirectAttributes attributes) {
 
         Alumno alumno = null;
@@ -247,7 +247,7 @@ public class OrientadorController {
 
     @PostMapping("/actualizar/{id}")
     public String actualizarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes,
-            @PathVariable("id") int id) {
+            @PathVariable int id) {
 
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(id);
         alumno.setBachillerato(bachillerato);

@@ -101,7 +101,7 @@ public class PapeleriaController {
     }
 
     @PostMapping("/InventarioPapeleria")
-    public String guardarProducto(Model model, @Validated @ModelAttribute("nuevoProducto") InventarioPapeleria nuevoProducto, BindingResult result, RedirectAttributes attributes) {
+    public String guardarProducto(Model model, @Validated @ModelAttribute InventarioPapeleria nuevoProducto, BindingResult result, RedirectAttributes attributes) {
         List<InventarioPapeleria> listadoProductos = inventarioPapeleriaService.listarProductos();
 
         if (result.hasErrors()) {
@@ -117,7 +117,7 @@ public class PapeleriaController {
 
 
     @GetMapping("/InventarioPapeleria/delete/{idArticulo}")
-    public String eliminarProducto(@PathVariable("idArticulo") int idArticulo, RedirectAttributes attribute) {
+    public String eliminarProducto(@PathVariable int idArticulo, RedirectAttributes attribute) {
         try {
             // Intenta eliminar el artículo
             inventarioPapeleriaService.eliminar(idArticulo);
@@ -135,12 +135,12 @@ public class PapeleriaController {
 
     @GetMapping("/InventarioPapeleria/edit/{idArticulo}")
     @ResponseBody
-    public InventarioPapeleria obtenerArticuloPorId(@PathVariable("idArticulo") int idArticulo) {
+    public InventarioPapeleria obtenerArticuloPorId(@PathVariable int idArticulo) {
         return inventarioPapeleriaService.buscarPorId(idArticulo);
     }
 
     @PostMapping("/InventarioPapeleria/update")
-    public String actualizarProducto(@Validated @ModelAttribute("producto") InventarioPapeleria producto, BindingResult result, RedirectAttributes attributes) {
+    public String actualizarProducto(@Validated @ModelAttribute InventarioPapeleria producto, BindingResult result, RedirectAttributes attributes) {
         if (result.hasErrors()) {
             return "redirect:/Biblioteca/Papeleria/InventarioPapeleria";
         }
@@ -158,7 +158,7 @@ public class PapeleriaController {
     public String ControlPapeleria(Model model,
                 @RequestParam(defaultValue = "0") int page,
                 @RequestParam(defaultValue = "9") int size,
-                @RequestParam(value = "query", required = false) String query) {
+                @RequestParam(required = false) String query) {
     
         // Obtener la lista completa de entregas
         List<EntregaPapeleria> listadoEntregas = entregaPapeleriaService.listarEntregas();
@@ -205,7 +205,7 @@ public class PapeleriaController {
     }
 
     @PostMapping("/Control/entrega")
-    public String registrarEntrega(@ModelAttribute("nuevaEntrega") EntregaPapeleria nuevaEntrega, Model model, RedirectAttributes redirectAttributes) {
+    public String registrarEntrega(@ModelAttribute EntregaPapeleria nuevaEntrega, Model model, RedirectAttributes redirectAttributes) {
         // Obtener el producto seleccionado
         InventarioPapeleria producto = inventarioPapeleriaService.buscarPorId(nuevaEntrega.getInventarioPapeleria().getIdArticulo());
 
@@ -232,7 +232,7 @@ public class PapeleriaController {
     }
 
     @PostMapping("/Control/editar")
-    public String actualizarEntrega(@ModelAttribute("entrega") EntregaPapeleria entrega, Model model, RedirectAttributes redirectAttributes) {
+    public String actualizarEntrega(@ModelAttribute EntregaPapeleria entrega, Model model, RedirectAttributes redirectAttributes) {
         // Obtener la entrega original
         EntregaPapeleria entregaOriginal = entregaPapeleriaService.buscarPorId(entrega.getIdEntregaPapeleria());
 
@@ -269,7 +269,7 @@ public class PapeleriaController {
     }
 
     @GetMapping(value = "/verEntregasPdf", produces = "application/pdf")
-    public ModelAndView verEntregasPdf(@RequestParam(value = "query", required = false) String query) {
+    public ModelAndView verEntregasPdf(@RequestParam(required = false) String query) {
         List<EntregaPapeleria> listadoEntregas = entregaPapeleriaService.listarEntregas();
     
         // Filtrar las entregas si se proporciona una consulta de búsqueda
@@ -288,7 +288,7 @@ public class PapeleriaController {
 
     @GetMapping("/buscarPersonas")
     @ResponseBody
-    public List<String> buscarPersonas(@RequestParam("term") String term) {
+    public List<String> buscarPersonas(@RequestParam String term) {
         List<String> resultados = new ArrayList<>();
         
         // Obtener alumnos y docentes que coincidan con el término de búsqueda

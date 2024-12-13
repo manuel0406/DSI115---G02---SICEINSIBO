@@ -27,7 +27,7 @@ public class SancionesController {
     private SancionesService sancionesService;
 
     @GetMapping("/Sanciones/{idAlumno}")
-    public String sancionesAlumno(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
+    public String sancionesAlumno(@PathVariable int idAlumno, Model model, RedirectAttributes attributes) {
         Alumno alumno = null;
         if (idAlumno > 0) {
             // Busca al alumno por su número de identificación estudiantil (NIE)
@@ -65,7 +65,7 @@ public class SancionesController {
     }
 
     @PostMapping("/GuardarSancion/{idAlumno}")
-    public String guardarSancion(@PathVariable("idAlumno") int idAlumno,@ModelAttribute Sancion sancion, RedirectAttributes attributes){
+    public String guardarSancion(@PathVariable int idAlumno,@ModelAttribute Sancion sancion, RedirectAttributes attributes){
 
         //Buscar el alumno por su id
         Alumno alumno =alumnoService.buscarPorIdAlumno(idAlumno);
@@ -77,7 +77,7 @@ public class SancionesController {
     }
 
     @GetMapping("/eliminarSancion/{nie}/{id}")
-    public String eliminarSancion(@PathVariable("id") int id,@PathVariable("id") int nie, RedirectAttributes attributes)
+    public String eliminarSancion(@PathVariable int id,@PathVariable("id") int nie, RedirectAttributes attributes)
     {
         sancionesService.EliminarSancion(id);
         attributes.addFlashAttribute("warning", "¡Registro eliminado con éxito!");

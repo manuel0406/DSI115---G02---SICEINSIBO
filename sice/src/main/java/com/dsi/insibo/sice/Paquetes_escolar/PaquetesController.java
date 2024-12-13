@@ -104,8 +104,8 @@ public class PaquetesController {
     // Modificar la cantidad de donación, agregando al inventario de un registro especifico
     @PostMapping("/modificarCantidad")
     public String modificarCantidad(
-            @RequestParam("donacionId") int donacionId,
-            @RequestParam("nuevaCantidad") int nuevaCantidad,
+            @RequestParam int donacionId,
+            @RequestParam int nuevaCantidad,
             RedirectAttributes redirectAttributes) {
 
         // Obtener la cantidad actual desde el servicio
@@ -129,8 +129,8 @@ public class PaquetesController {
     // Modificar la cantidad de donación, restando al inventario de un registro especifico
     @PostMapping("/modificarMenosCantidad")
     public String modificarMenosCantidad(
-            @RequestParam("donacionId") int donacionId,
-            @RequestParam("nuevaCantidad") int nuevaCantidad,
+            @RequestParam int donacionId,
+            @RequestParam int nuevaCantidad,
             RedirectAttributes redirectAttributes) {
 
         // Obtener la cantidad actual desde el servicio
@@ -179,8 +179,8 @@ public class PaquetesController {
     /**obtener las fechas de entregas de paquetes escolares según el tipo de paquete seleccionado, para llenar un select */
     @GetMapping("/fechasPaquete")
     @ResponseBody
-    public List<String> obtenerFechasPaquete(@RequestParam("tipoPaquete") String tipoPaquete,
-            @RequestParam("idBachillerato") int idBachillerato) {
+    public List<String> obtenerFechasPaquete(@RequestParam String tipoPaquete,
+            @RequestParam int idBachillerato) {
         List<String> fechas = new ArrayList<>();
         switch (tipoPaquete) {
             case "paqueteZapatos":
@@ -201,10 +201,10 @@ public class PaquetesController {
     /**Obtener listado de entregas según el tipo de entregas existente */
     @GetMapping("/reporteEntregas")
     public String filtrarEntregasAdm(
-            @RequestParam("tipoPaquete") String tipoPaquete,
-            @RequestParam("fechaPaquete") String fechaPaquete,
-            @RequestParam("estadoEntrega") String estadoEntrega,
-            @RequestParam("idBachillerato") int idBachillerato,
+            @RequestParam String tipoPaquete,
+            @RequestParam String fechaPaquete,
+            @RequestParam String estadoEntrega,
+            @RequestParam int idBachillerato,
             Model model) {
 
         // Obtener el año académico activo desde el servicio
@@ -295,10 +295,10 @@ public class PaquetesController {
     /**Metodo de impresión de entregas de paquetes escolares */
     @GetMapping("/imprimirEntregas")
     public void imprimirEntregas(HttpServletResponse response,
-            @RequestParam("tipoPaquete") String tipoPaquete,
-            @RequestParam("fechaPaquete") String fechaPaquete,
-            @RequestParam("estadoEntrega") String estadoEntrega,
-            @RequestParam("idBachillerato") int idBachillerato) throws IOException, DocumentException {
+            @RequestParam String tipoPaquete,
+            @RequestParam String fechaPaquete,
+            @RequestParam String estadoEntrega,
+            @RequestParam int idBachillerato) throws IOException, DocumentException {
 
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "inline; filename=Entregas_Paquetes.pdf");

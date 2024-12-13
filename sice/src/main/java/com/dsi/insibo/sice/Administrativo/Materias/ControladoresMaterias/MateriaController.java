@@ -27,7 +27,7 @@ public class MateriaController {
 
     @GetMapping("/GestionMaterias")
     public String gestionarMaterias(
-            @RequestParam(value = "tipo", defaultValue = "") String tipo,
+            @RequestParam(defaultValue = "") String tipo,
             @RequestParam(required = false, defaultValue = "1") int pagina,
             Model model) {
 

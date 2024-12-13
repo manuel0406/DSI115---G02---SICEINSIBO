@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class LoginController {
 
     @GetMapping("/login")
-    public String login(Model model, @RequestParam(name = "error", required = false) String error, HttpServletRequest request) {
+    public String login(Model model, @RequestParam(required = false) String error, HttpServletRequest request) {
         if (error != null) {
             String errorMessage = (String) request.getSession().getAttribute("error");
             model.addAttribute("error", errorMessage);
