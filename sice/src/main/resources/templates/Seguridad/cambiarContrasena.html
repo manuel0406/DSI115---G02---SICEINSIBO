@@ -1,77 +1,197 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Update Password</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recuperar Contraseña</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" th:href="@{/Imagenes/INSIBO.ico}">
+
     <style>
-        body {
-            background-color: #f8f9fa;
+        .password-strength .progress {
+            height: 10px;
+            margin-bottom: 0; /* O ajusta este valor según sea necesario */
         }
-        .update-password-container {
-            margin-top: 100px;
+
+        .password-toggle {
+            cursor: pointer;
         }
-        .update-password-card {
-            border: 1px solid #28a745;
+        
+        #strength-bar {
+            width: 0%; /* Inicialmente, hasta que se actualice con JS */
         }
-        .update-password-card-header {
-            background-color: #28a745;
-            color: white;
+
+        .criteria-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 10px;
         }
-        .btn-primary {
-            background-color: #28a745;
-            border-color: #28a745;
+
+        .criteria-list li {
+            display: flex;
+            align-items: center;
         }
-        .btn-primary:hover {
-            background-color: #218838;
-            border-color: #218838;
+
+        .criteria-list li i {
+            margin-right: 10px;
         }
-        .form-label {
-            font-weight: bold;
+
+        .criteria-list li.valid {
+            color: green;
+        }
+
+        .criteria-list li.invalid {
+            color: red;
+        }
+
+        .progress-bar {
+            width: 100%; /* Asegura que la barra ocupe el 100% del contenedor */
         }
     </style>
 </head>
 <body>
-<div class="container update-password-container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card update-password-card">
-                <div class="card-header update-password-card-header">
-                    <h2 class="text-center">Update Password</h2>
-                </div>
-                <div class="card-body">
-                    <form th:action="@{/update-password}" method="post">
-                        <div class="form-group">
-                            <label class="form-label">Current Password:</label>
-                            <input type="password" name="currentPassword" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">New Password:</label>
-                            <input type="password" name="newPassword" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Confirm New Password:</label>
-                            <input type="password" name="confirmNewPassword" class="form-control" />
-                        </div>
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn btn-primary btn-block">Update Password</button>
-                        </div>
-                        <div th:if="${error}" class="form-group text-center">
-                            <p style="color: red;">[[${error}]]</p>
-                        </div>
-                        <div th:if="${message}" class="form-group text-center">
-                            <p style="color: green;">[[${message}]]</p>
-                        </div>
-                    </form>
+    <header th:replace="~{home :: header}"></header>
+    <div class="container mt-3 my-5 py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h3><b>Actualizar Contraseña</b></h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:replace="~{alertas :: alertas}"></div>
+
+                        <form class="needs-validation" novalidate th:action="@{/update-password}" method="post">
+                            <div class="form-group mb-3">
+                                <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                                <div class="input-group">
+                                    <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Ingrese su nueva contraseña" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text password-toggle" onclick="togglePasswordVisibility('newPassword')">
+                                            <i class="bi bi-eye" id="newPasswordIcon"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Por favor, escriba la nueva contraseña.</div>
+                            </div>
+
+                            <!-- Barra de progreso con estilo rayado -->
+                            <div class="form-group mb-3 password-strength" id="password-strength-bar">
+                                <div class="progress">
+                                    <div id="strength-bar" class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <small id="strength-message" class="text-muted"></small>
+                            </div>
+
+                            <div class="mt-3">
+                                <h5>Criterios de contraseña:</h5>
+                                <ul class="criteria-list">
+                                    <li id="length-criteria" class="invalid"><i class="bi bi-x-circle"></i> Al menos 8 caracteres</li>
+                                    <li id="lowercase-criteria" class="invalid"><i class="bi bi-x-circle"></i> Una letra minúscula</li>
+                                    <li id="uppercase-criteria" class="invalid"><i class="bi bi-x-circle"></i> Una letra mayúscula</li>
+                                    <li id="number-criteria" class="invalid"><i class="bi bi-x-circle"></i> Un número</li>
+                                    <li id="special-criteria" class="invalid"><i class="bi bi-x-circle"></i> Un carácter especial</li>
+                                </ul>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                                <div class="input-group">
+                                    <input type="password" id="confirmNewPassword" name="confirmNewPassword" class="form-control" placeholder="Confirme su nueva contraseña" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text password-toggle" onclick="togglePasswordVisibility('confirmPassword')">
+                                            <i class="bi bi-eye" id="confirmPasswordIcon"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Boton guardar -->
+                            <div class="container mt-3 d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary btn-block">Actualizar Contraseña</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script>
+        const strengthBar = document.getElementById('strength-bar');
+        const strengthMessage = document.getElementById('strength-message');
+
+        function checkPasswordStrength(password) {
+            let strength = 0;
+
+            const lengthValid = password.length >= 8;
+            if (lengthValid) strength++;
+            document.getElementById('length-criteria').classList.toggle('valid', lengthValid);
+            document.getElementById('length-criteria').classList.toggle('invalid', !lengthValid);
+
+            const lowercaseValid = /[a-z]/.test(password);
+            if (lowercaseValid) strength++;
+            document.getElementById('lowercase-criteria').classList.toggle('valid', lowercaseValid);
+            document.getElementById('lowercase-criteria').classList.toggle('invalid', !lowercaseValid);
+
+            const uppercaseValid = /[A-Z]/.test(password);
+            if (uppercaseValid) strength++;
+            document.getElementById('uppercase-criteria').classList.toggle('valid', uppercaseValid);
+            document.getElementById('uppercase-criteria').classList.toggle('invalid', !uppercaseValid);
+
+            const numberValid = /[0-9]/.test(password);
+            if (numberValid) strength++;
+            document.getElementById('number-criteria').classList.toggle('valid', numberValid);
+            document.getElementById('number-criteria').classList.toggle('invalid', !numberValid);
+
+            const specialValid = /[^a-zA-Z0-9]/.test(password);
+            if (specialValid) strength++;
+            document.getElementById('special-criteria').classList.toggle('valid', specialValid);
+            document.getElementById('special-criteria').classList.toggle('invalid', !specialValid);
+
+            const strengthPercentage = (strength / 5) * 100;
+            strengthBar.style.width = strengthPercentage + '%';
+            strengthBar.setAttribute('aria-valuenow', strengthPercentage);
+
+            if (strengthPercentage < 50) {
+                strengthBar.classList.add('bg-danger');
+                strengthBar.classList.remove('bg-warning', 'bg-success', 'bg-info');
+                strengthMessage.textContent = 'Débil';
+            } else if (strengthPercentage < 75) {
+                strengthBar.classList.add('bg-warning');
+                strengthBar.classList.remove('bg-danger', 'bg-success', 'bg-info');
+                strengthMessage.textContent = 'Moderada';
+            } else if (strengthPercentage < 100) {
+                strengthBar.classList.add('bg-info');
+                strengthBar.classList.remove('bg-danger', 'bg-warning', 'bg-success');
+                strengthMessage.textContent = 'Buena';
+            } else {
+                strengthBar.classList.add('bg-success');
+                strengthBar.classList.remove('bg-danger', 'bg-warning', 'bg-info');
+                strengthMessage.textContent = 'Fuerte';
+            }
+        }
+
+        function togglePasswordVisibility(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = document.getElementById(fieldId + 'Icon');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.replace('bi-eye', 'bi-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.replace('bi-eye-slash', 'bi-eye');
+            }
+        }
+
+        document.getElementById('newPassword').addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+        });
+    </script>
 </body>
 </html>

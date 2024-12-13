@@ -51,14 +51,12 @@ public class ConfiguracionSeguridad {
     // CONFIGURACION DE FILTROS BASICOS
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
-        
-        // He dejado activo el .csrf(csrf -> csrf.disable())
+    
         return httpSecurity
-                // ALWAYS = Siempre crea una nueva sesión HTTP, incluso si ya existe una sesión.
-                // STATELESS =  No crea una sesión, pero utilizará una sesión existente si ya está presente.
-                // NEVER = La sesión solo se crea si es requerida.
-                // IF_REQUIERED = No crea ni utiliza sesiones HTTP en absoluto.
-                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .csrf(csrf -> {
+                    // Configuración del repositorio CSRF usando cookies
+                    csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                })
                 .sessionManagement(session -> {
                     session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED); // Políticas de sesiones
                     session.maximumSessions(1).sessionRegistry(sessionRegistry()); // Número máximo de sesiones
@@ -71,17 +69,16 @@ public class ConfiguracionSeguridad {
                     http.requestMatchers(HttpMethod.GET, "/logout-success").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/login").permitAll();
                     http.requestMatchers(HttpMethod.POST, "/login").permitAll();
-
-                    //http.anyRequest().permitAll();
+    
                     http.anyRequest().authenticated(); // AUTENTIFICACIÓN A TODOS
-               })
+                })
                 .formLogin(form -> form
                     .loginPage("/login")
                     .successHandler(successHandler()) // Manejador de éxito personalizado
                     .failureHandler(customAuthenticationFailureHandler)
                     .permitAll()
                 )
-               .logout(logout -> logout
+                .logout(logout -> logout
                     .logoutUrl("/logout")
                     .logoutSuccessUrl("/logout-success")
                     .invalidateHttpSession(true)  // Invalidar la sesión
@@ -90,7 +87,7 @@ public class ConfiguracionSeguridad {
                 .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
-
+    
     // CONTROLADOR DE SECCIONES INICIADAS
     @Bean
     AuthenticationSuccessHandler successHandler() {

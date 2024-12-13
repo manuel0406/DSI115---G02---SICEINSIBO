@@ -11,6 +11,7 @@ import com.dsi.insibo.sice.entity.Usuario;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -29,37 +30,35 @@ public class PasswordController {
     private SessionService sessionService;
 
     @GetMapping("/update-password")
-    public String verActualizarContrasena() {
+    public String verActualizarContrasena(Model model) {
         return "Seguridad/cambiarContrasena";
     }
 
     @PostMapping("/update-password")
     public String actualizarContrasena(@RequestParam String newPassword,
                                        @RequestParam String confirmNewPassword,
-                                       Model model) {
-        
+                                       RedirectAttributes redirectAttributes, Model model) {
+        System.out.println("Hola");
         // Validamos y actualizar la contraseña para el usuario autentificado
         try {
 
             // Validación de confirmación de contraseña
             if (!newPassword.equals(confirmNewPassword)) {
-                model.addAttribute("error", "Las nuevas contraseñas no coinciden");
+                redirectAttributes.addFlashAttribute("error", "Las nuevas contraseñas no coinciden");
                 return "redirect:/update-password";
             }
 
             // Actualización de contraseña 
             Usuario usuario = sessionService.usuarioSession();
             usuario.setContrasenaUsuario(passwordEncoder.encode(newPassword));
+            usuario.setPrimerIngreso(false);
             usuarioService.guardarUsuario(usuario);
-
-            // Confirmación de actualización con exito
-            model.addAttribute("success", "Contraseña actualizada con exito");
 
         // Capturador de excepciones
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-        return "redirect:/login?actualizado=true";    
+        return "redirect:/";    
     }
     
 }

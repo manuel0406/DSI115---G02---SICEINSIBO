@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class contrasenaFilter extends OncePerRequestFilter {
+public class ContrasenaFilter extends OncePerRequestFilter {
     @Autowired
     private UsuarioService usuarioService;
 
@@ -39,10 +39,20 @@ public class contrasenaFilter extends OncePerRequestFilter {
         Usuario usuario = usuarioService.buscarPorCorreo(username);
 
         if (usuario.isPrimerIngreso() && !request.getRequestURI().equals("/update-password")) {
-            response.sendRedirect("/update-password");
-            return;
+            // Asegúrate de no redirigir si la solicitud es a recursos estáticos
+            if (!request.getRequestURI().startsWith("/css/") && !request.getRequestURI().startsWith("/js/") && !request.getRequestURI().startsWith("/Imagenes/")) {
+                response.sendRedirect("/update-password");
+                return;
+            }
         }
-
+        
         filterChain.doFilter(request, response);
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.startsWith("/css/") || path.startsWith("/js/") || path.startsWith("/images/");
+    }
+
 }
