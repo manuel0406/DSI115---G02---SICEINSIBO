@@ -76,8 +76,8 @@ public class AsistenciaController {
 	// inicio de asistencia docente
 	@GetMapping("/listaGeneral")
 	public String asistenciaGeneralDoc(Model model,
-			@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "size", defaultValue = "10") int size,
+			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "10") int size,
 			@RequestParam(value = "docenteAparato", required = false) Integer numeroAparato,
 			@RequestParam(value = "docenteDepart", required = false) String departamento) {
 
@@ -149,8 +149,8 @@ public class AsistenciaController {
 	// listar general asistencia administrativa
 	@GetMapping("/listaGeneralAdm")
 	public String asistenciaGeneralAdm(Model model,
-			@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "size", defaultValue = "10") int size,
+			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "10") int size,
 			@RequestParam(value = "admAparato", required = false) Integer numeroAparato,
 			@RequestParam(value = "admDepart", required = false) String departamento) {
 		PageRequest pageable = PageRequest.of(page - 1, size);

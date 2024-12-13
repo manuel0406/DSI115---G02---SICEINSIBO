@@ -35,8 +35,8 @@ public class AnexoAdministrativoController {
 
     // Controlador para subir archivos
     @GetMapping("/administrativo/Subir/{clave}/{duiPersonal}")
-    public String subirAdministrativo(@PathVariable("clave") String clave,
-            @PathVariable("duiPersonal") String duiPersonal, Model model) {
+    public String subirAdministrativo(@PathVariable String clave,
+            @PathVariable String duiPersonal, Model model) {
         if (clave.equals("dui")) {
             model.addAttribute("tituloB", "Seleccione su DUI");
         } else if (clave.equals("curriculum")) {
@@ -63,8 +63,8 @@ public class AnexoAdministrativoController {
 
     // Controlador para cargar archivos
     @PostMapping("/administrativo/upload/{clave}/{duiPersonal}")
-    public String cargandoArchivo(@PathVariable("clave") String clave, @PathVariable("duiPersonal") String duiPersonal,
-            @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public String cargandoArchivo(@PathVariable String clave, @PathVariable String duiPersonal,
+            @RequestParam MultipartFile file, RedirectAttributes redirectAttributes) {
 
         // Busca al administrativo por su duiPersonal y obtiene sus anexos
         PersonalAdministrativo administrativo = administrativoService.buscarPorIdAdministrativo(duiPersonal);
@@ -157,8 +157,8 @@ public class AnexoAdministrativoController {
 
     // Controlador para eliminar archivos
     @GetMapping("/administrativo/delete/{clave}/{id}/{duiPersonal}")
-    public String deleteAnexo(@PathVariable("clave") String clave, @PathVariable("id") int id, Model model,
-            @PathVariable("duiPersonal") String duiPersonal, RedirectAttributes redirectAttributes) {
+    public String deleteAnexo(@PathVariable String clave, @PathVariable int id, Model model,
+            @PathVariable String duiPersonal, RedirectAttributes redirectAttributes) {
 
         // Obtiene los anexos del administrativo
         AnexoPersonalAdministrativo archivo = anexoService.buscarAnexoPorId(id);
@@ -205,7 +205,7 @@ public class AnexoAdministrativoController {
     // Controlador para mostrar archivos
     @GetMapping("/administrativo/expedienteadministrativo/files/{clave}/{id}")
     @ResponseBody
-    public ResponseEntity<ByteArrayResource> mostrarAnexo(@PathVariable int id, @PathVariable("clave") String clave) {
+    public ResponseEntity<ByteArrayResource> mostrarAnexo(@PathVariable int id, @PathVariable String clave) {
         // Busca el archivo en el repositorio por su ID
         AnexoPersonalAdministrativo fileEntity = anexoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("File not found"));

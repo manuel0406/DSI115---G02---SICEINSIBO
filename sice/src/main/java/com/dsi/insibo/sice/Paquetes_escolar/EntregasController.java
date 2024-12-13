@@ -77,8 +77,8 @@ public class EntregasController {
     private ZapatosService zapatosService;
 
     @GetMapping("/seccionAsigada/{id}")
-    public String verAlumno(Model model, @PathVariable("id") int id,
-            @RequestParam(value = "tipoPaquete", required = false) String tipoPaquete) {
+    public String verAlumno(Model model, @PathVariable int id,
+            @RequestParam(required = false) String tipoPaquete) {
 
         // Obtener la información del Bachillerato
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(id);
@@ -94,9 +94,9 @@ public class EntregasController {
     }
 
     @GetMapping("/seccion/{id}")
-    public String miSeccion(Model model, @PathVariable("id") int id,
-            @RequestParam(value = "tipoPaquete", required = false) String tipoPaquete,
-            @RequestParam(value = "genero", required = false) String genero) {
+    public String miSeccion(Model model, @PathVariable int id,
+            @RequestParam(required = false) String tipoPaquete,
+            @RequestParam(required = false) String genero) {
 
         // Obtener la información del Bachillerato por ID
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(id);
@@ -140,7 +140,7 @@ public class EntregasController {
 
     /**Metodo para guardar el estado de entrega de paquetes  */
     @PostMapping("/entregarPaquete")
-    public String entregarPaquete(@RequestParam("tipoPaquete") String tipoPaquete,
+    public String entregarPaquete(@RequestParam String tipoPaquete,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
         try {
@@ -193,8 +193,8 @@ public class EntregasController {
     /**Imprimir listado de entrega de seccion para el docente orientador, para la entrega fisica, genera ficha de entrega donde se debe firmar de recibido el paquete por parte del alumno/encargado */
     @GetMapping("/imprimirListado/{id}")
     public void imprimirListado(HttpServletResponse response,
-            @PathVariable("id") int id,
-            @RequestParam("tipoPaquete") String tipoPaquete) throws IOException, DocumentException {
+            @PathVariable int id,
+            @RequestParam String tipoPaquete) throws IOException, DocumentException {
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "inline; filename=Listado_Paquetes.pdf");
 
@@ -369,7 +369,7 @@ public class EntregasController {
     }
 
     @GetMapping("/reportesEntrega/{id}")
-    public String generarReporte(@PathVariable("id") int id, Model model) {
+    public String generarReporte(@PathVariable int id, Model model) {
         model.addAttribute("id", id);
         return "Paquetes_escolares/reporteEntrega";
     }
@@ -377,8 +377,8 @@ public class EntregasController {
     /**obtener las fechas de entregas de paquetes escolares según el tipo de paquete seleccionado, para llenar un select */
     @GetMapping("/fechasPaquete")
     @ResponseBody
-    public List<String> obtenerFechasPaquete(@RequestParam("tipoPaquete") String tipoPaquete,
-            @RequestParam("idBachillerato") int idBachillerato) {
+    public List<String> obtenerFechasPaquete(@RequestParam String tipoPaquete,
+            @RequestParam int idBachillerato) {
         List<String> fechas = new ArrayList<>();
         switch (tipoPaquete) {
             case "paqueteZapatos":
@@ -400,9 +400,9 @@ public class EntregasController {
     @GetMapping("/reporteEntrega/{id}")
     public String filtrarEntregas(
             @PathVariable("id") int idBachillerato,
-            @RequestParam(value = "tipoPaquete", required = false) String tipoPaquete,
-            @RequestParam(value = "fechaPaquete", required = false) String fechaPaquete,
-            @RequestParam(value = "estadoEntrega", required = false) String estadoEntrega,
+            @RequestParam(required = false) String tipoPaquete,
+            @RequestParam(required = false) String fechaPaquete,
+            @RequestParam(required = false) String estadoEntrega,
             Model model) {
 
         List<Object[]> resultados;
@@ -471,12 +471,12 @@ public class EntregasController {
     /**Metodo para guardar el editar estado de entrega de paquete escolar, se realiza para cada uno de los registros */
     @PostMapping("/editarEntrega")
     public String editarEntrega(@RequestParam("id_entrega") Integer idEntrega,
-            @RequestParam("entregado") boolean entregado,
-            @RequestParam("tipoPaquete") String tipoPaquete,
-            @RequestParam("id") Integer id,
-            @RequestParam(value = "tipo", required = false) String tipo,
-            @RequestParam(value = "fecha", required = false) String fecha,
-            @RequestParam(value = "estado", required = false) String estado,
+            @RequestParam boolean entregado,
+            @RequestParam String tipoPaquete,
+            @RequestParam Integer id,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String fecha,
+            @RequestParam(required = false) String estado,
             RedirectAttributes redirectAttributes) {
 
         boolean success = false;

@@ -119,7 +119,7 @@ public class ControllerBachilleratos {
     }
 
     @GetMapping("/Oferta/{idAnio}")
-    public String oferta(Model model, @PathVariable("idAnio") int idAnio, RedirectAttributes attributes) {
+    public String oferta(Model model, @PathVariable int idAnio, RedirectAttributes attributes) {
 
         AnioAcademico anioAcademico = new AnioAcademico();
 
@@ -145,8 +145,8 @@ public class ControllerBachilleratos {
     }
 
     @PostMapping("/Oferta/guardar/{idAnio}")
-    public String crearOferta(@PathVariable("idAnio") int idAnio,
-            @RequestParam("secciones") List<String> secciones,
+    public String crearOferta(@PathVariable int idAnio,
+            @RequestParam List<String> secciones,
             Model model) {
 
         AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnio);
@@ -170,7 +170,7 @@ public class ControllerBachilleratos {
     }
 
     @GetMapping("/VerOferta/{idAnio}")
-    public String verOferta(Model model, @PathVariable("idAnio") int idAnio, RedirectAttributes attributes) {
+    public String verOferta(Model model, @PathVariable int idAnio, RedirectAttributes attributes) {
 
         AnioAcademico anioAcademico = new AnioAcademico();
         if (idAnio > 0) {
@@ -199,8 +199,8 @@ public class ControllerBachilleratos {
     }
 
     @PostMapping("/guardarBachillerato/{idAnio}")
-    public String guardarBachillerato(@ModelAttribute Bachillerato bachillerato, @RequestParam("nivel") String nivel,
-            @PathVariable("idAnio") int idAnio, Model model, RedirectAttributes attributes) {
+    public String guardarBachillerato(@ModelAttribute Bachillerato bachillerato, @RequestParam String nivel,
+            @PathVariable int idAnio, Model model, RedirectAttributes attributes) {
         // Convertir el valor de nivel a entero y asignarlo a grado
         AnioAcademico anioAcademico = anioService.buscarPoridAnioAcademico(idAnio);
         int grado = Integer.parseInt(nivel);
@@ -224,7 +224,7 @@ public class ControllerBachilleratos {
     }
 
     @GetMapping("/deleteBachillerato/{codigoBachillerato}")
-    public String eliminarBachillerato(@PathVariable("codigoBachillerato") int codigoBachillerato,
+    public String eliminarBachillerato(@PathVariable int codigoBachillerato,
             RedirectAttributes attributes) {
 
         Bachillerato bachillerato = bachilleratoService.bachilleratoPorId(codigoBachillerato);
@@ -241,7 +241,7 @@ public class ControllerBachilleratos {
     }
 
     @GetMapping("/cierreAcademico/{idAnioAcademico}")
-    public String cierreAcademnico(Model model, @PathVariable("idAnioAcademico") int idAnioAcademico) {
+    public String cierreAcademnico(Model model, @PathVariable int idAnioAcademico) {
 
         List<Bachillerato> listadoBachilleratos = bachilleratoService.listadOfertaPorAnio(idAnioAcademico);
         boolean aprobado = true;

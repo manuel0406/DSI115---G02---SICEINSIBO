@@ -109,7 +109,7 @@ public class gestionarBloqueadosController {
 
 // ------------------------------------------------------------------------------------------------------------------------------
     @GetMapping("/buscarUsuarioBloqueado")
-    public String buscarUsuario(@RequestParam("correoUsuario") String correoUsuario, RedirectAttributes redirectAttributes, Model model) {
+    public String buscarUsuario(@RequestParam String correoUsuario, RedirectAttributes redirectAttributes, Model model) {
         Usuario usuarioBuscado = usuarioService.buscarPorCorreoActivo(correoUsuario);
         
 

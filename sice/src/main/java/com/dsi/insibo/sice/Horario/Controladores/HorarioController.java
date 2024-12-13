@@ -46,9 +46,9 @@ public class HorarioController {
 
     @GetMapping("/asignarHoras")
     public String asignar(Model model,
-            @RequestParam(value = "carrera", required = false) String carrera,
-            @RequestParam(value = "grado", required = false) String grado,
-            @RequestParam(value = "seccion", required = false) String seccion) {
+            @RequestParam(required = false) String carrera,
+            @RequestParam(required = false) String grado,
+            @RequestParam(required = false) String seccion) {
 
         boolean formSubmitted = (carrera != null || grado != null || seccion != null);
 
@@ -111,9 +111,9 @@ public class HorarioController {
 
     @GetMapping("/editarHoras")
     public String editarHoras(Model model,
-            @RequestParam(value = "carrera", required = false) String carrera,
-            @RequestParam(value = "grado", required = false) String grado,
-            @RequestParam(value = "seccion", required = false) String seccion) {
+            @RequestParam(required = false) String carrera,
+            @RequestParam(required = false) String grado,
+            @RequestParam(required = false) String seccion) {
 
         boolean formSubmitted = (carrera != null || grado != null || seccion != null);
 
@@ -168,9 +168,9 @@ public class HorarioController {
 
     @GetMapping("/generarHorarioSeccion")
     public String generarHorarioSeccion(Model model,
-            @RequestParam(value = "carrera", required = false) String carrera,
-            @RequestParam(value = "grado", required = false) String grado,
-            @RequestParam(value = "seccion", required = false) String seccion) {
+            @RequestParam(required = false) String carrera,
+            @RequestParam(required = false) String grado,
+            @RequestParam(required = false) String seccion) {
 
         boolean formSubmitted = (carrera != null || grado != null || seccion != null);
 
@@ -229,7 +229,7 @@ public class HorarioController {
 
     @GetMapping("/generarHorarioDocente")
     public String generarHorarioDocente(Model model,
-            @RequestParam(value = "duiDocente", required = false) String duiDocente,
+            @RequestParam(required = false) String duiDocente,
             RedirectAttributes redirectAttributes) {
 
         boolean formSubmitted = (duiDocente != null);
@@ -289,10 +289,10 @@ public class HorarioController {
             @RequestParam("codigoBachillerato") String idBachillerato,
             @RequestParam("dia") String nombreDia,
             @RequestParam("horaBase") String horaDia,
-            @RequestParam("duiDocente") String duiDocente,
-            @RequestParam(value = "carrera", required = false) String carrera,
-            @RequestParam(value = "grado", required = false) String grado,
-            @RequestParam(value = "seccion", required = false) String seccion,
+            @RequestParam String duiDocente,
+            @RequestParam(required = false) String carrera,
+            @RequestParam(required = false) String grado,
+            @RequestParam(required = false) String seccion,
             RedirectAttributes redirectAttributes) {
 
         carrera = extraerPrimerValor(carrera);
@@ -396,10 +396,10 @@ public class HorarioController {
             @RequestParam("codigoBachillerato") String idBachillerato,
             @RequestParam("dia") String nombreDia,
             @RequestParam("horaBase") String horaDia,
-            @RequestParam("duiDocente") String duiDocente,
-            @RequestParam(value = "carrera", required = false) String carrera,
-            @RequestParam(value = "grado", required = false) String grado,
-            @RequestParam(value = "seccion", required = false) String seccion,
+            @RequestParam String duiDocente,
+            @RequestParam(required = false) String carrera,
+            @RequestParam(required = false) String grado,
+            @RequestParam(required = false) String seccion,
             RedirectAttributes redirectAttributes) {
 
         carrera = extraerPrimerValor(carrera);
@@ -453,9 +453,9 @@ public class HorarioController {
 
     @GetMapping("/eliminarHora/{id}")
     public String eliminarHora(@PathVariable("id") Integer idAsignacionHorario,
-            @RequestParam(value = "carrera", required = false) String carrera,
-            @RequestParam(value = "grado", required = false) String grado,
-            @RequestParam(value = "seccion", required = false) String seccion,
+            @RequestParam(required = false) String carrera,
+            @RequestParam(required = false) String grado,
+            @RequestParam(required = false) String seccion,
             RedirectAttributes redirectAttributes) {
 
         carrera = extraerPrimerValor(carrera);
@@ -470,10 +470,10 @@ public class HorarioController {
     }
 
     @PostMapping("/eliminarHoras")
-    public String eliminarHoras(@RequestParam("ids") List<Integer> ids,
-            @RequestParam(value = "carrera", required = false) String carrera,
-            @RequestParam(value = "grado", required = false) String grado,
-            @RequestParam(value = "seccion", required = false) String seccion,
+    public String eliminarHoras(@RequestParam List<Integer> ids,
+            @RequestParam(required = false) String carrera,
+            @RequestParam(required = false) String grado,
+            @RequestParam(required = false) String seccion,
             RedirectAttributes redirectAttributes) {
 
         carrera = extraerPrimerValor(carrera);

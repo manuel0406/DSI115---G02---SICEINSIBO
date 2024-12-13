@@ -27,7 +27,7 @@ public class recuperarContraController {
     private EnvioCorreo envioCorreo;
 
     @GetMapping("/recuperarContra")
-    public String verRecuperarContra(Model model, @ModelAttribute("mensaje") String mensaje){
+    public String verRecuperarContra(Model model, @ModelAttribute String mensaje){
         Usuario usuario = new Usuario();
         model.addAttribute("usuario", usuario);
         model.addAttribute("mensaje", mensaje);

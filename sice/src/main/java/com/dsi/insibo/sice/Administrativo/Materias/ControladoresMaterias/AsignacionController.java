@@ -212,8 +212,8 @@ public class AsignacionController {
     
     @PostMapping("/crearAsignacion")
     public String crearAsignacionMateria(
-            @RequestParam("idMateria") int idMateria,
-            @RequestParam("duiDocente") String duiDocente,
+            @RequestParam int idMateria,
+            @RequestParam String duiDocente,
             @RequestParam("codigoBachillerato") List<Integer> codigosBachillerato,
             RedirectAttributes redirectAttributes) {
         
@@ -239,11 +239,11 @@ public class AsignacionController {
 
     @PostMapping("/actualizarAsignacion")
     public String actualizarAsignacion(
-        @RequestParam("idAsignacion") int idAsignacion,
+        @RequestParam int idAsignacion,
         @RequestParam("materia") String nomMateria,  // Nombre actualizado para coincidir con el formulario
         @RequestParam("bachillerato") String codigoBachillerato, // Nombre actualizado para coincidir con el formulario
-        @RequestParam("duiDocente") String duiDocente,
-        @RequestParam("idMateria") int idMateria, // Asegúrate de recibir idMateria
+        @RequestParam String duiDocente,
+        @RequestParam int idMateria, // Asegúrate de recibir idMateria
         RedirectAttributes redirectAttributes) 
     {
         // Crear o encontrar la entidad Asignacion
@@ -276,8 +276,8 @@ public class AsignacionController {
 
 @GetMapping("/eliminarAsignacion")
 public String eliminarAsignacion(
-    @RequestParam("idMateria") int idMateria,
-    @RequestParam("idAsignacion") int idAsignacion,
+    @RequestParam int idMateria,
+    @RequestParam int idAsignacion,
     RedirectAttributes redirectAttributes) {
 
     try {

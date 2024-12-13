@@ -122,7 +122,7 @@ public class ListarLibrosPdf extends AbstractPdfView {
             addTableCell(tablaInventario, libro.getTituloLibro(), bodyFont);
             addTableCell(tablaInventario, libro.getTipoLibro(), bodyFont);
             addTableCell(tablaInventario, libro.getAutorLibro(), bodyFont);
-            addTableCell(tablaInventario, String.format("%.2f", libro.getPrecioUnitario()), bodyFont);
+            addTableCell(tablaInventario, "%.2f".formatted(libro.getPrecioUnitario()), bodyFont);
             addTableCell(tablaInventario, String.valueOf(libro.getExistenciaLibro()), bodyFont);
             addTableCell(tablaInventario, String.valueOf(libro.getCantidadMalEstado()), bodyFont);
 

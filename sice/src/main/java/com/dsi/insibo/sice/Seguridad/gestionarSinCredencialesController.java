@@ -147,7 +147,7 @@ public class gestionarSinCredencialesController {
 
     // -------------------------------------------------------------------------------------------------------------------------------
     @GetMapping("/buscarUsuario")
-    public String buscarUsuario(@RequestParam("correoUsuario") String correoUsuario,
+    public String buscarUsuario(@RequestParam String correoUsuario,
             RedirectAttributes redirectAttributes, Model model) {
         Usuario usuarioBuscado = usuarioService.buscarPorCorreo(correoUsuario);
 

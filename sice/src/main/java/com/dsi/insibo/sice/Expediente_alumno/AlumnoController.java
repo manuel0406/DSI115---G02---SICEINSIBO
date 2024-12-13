@@ -60,9 +60,9 @@ public class AlumnoController {
 	 */
 	@PostMapping("/guardar")
 	public String guardarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes,
-			@RequestParam(value = "carrera", required = false) String carrera,
-			@RequestParam(value = "grado", required = false) String grado,
-			@RequestParam(value = "seccion", required = false) String seccion) {
+			@RequestParam(required = false) String carrera,
+			@RequestParam(required = false) String grado,
+			@RequestParam(required = false) String seccion) {
 
 		// Busca si el NIE proporcionado ya existe
 		Alumno alumnoExistente = alumnoService.buscarPorIdAlumno(alumno.getNie());
@@ -135,8 +135,8 @@ public class AlumnoController {
 	}
 
 	@GetMapping("/secciones")
-	public ResponseEntity<List<String>> getSecciones(@RequestParam("carrera") String carrera,
-			@RequestParam("grado") String grado, @RequestParam("matricula") String matricula) {
+	public ResponseEntity<List<String>> getSecciones(@RequestParam String carrera,
+			@RequestParam String grado, @RequestParam String matricula) {
 		if (carrera == null || grado == null || carrera.isEmpty() || grado.isEmpty()) {
 			return ResponseEntity.ok(Collections.emptyList());
 		}
@@ -167,7 +167,7 @@ public class AlumnoController {
 	 */
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/editar/{idAlumno}")
-	public String editar(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
+	public String editar(@PathVariable int idAlumno, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (idAlumno > 0) {
@@ -227,9 +227,9 @@ public class AlumnoController {
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@PostMapping("/actualizar")
 	public String actualizarAlumno(@ModelAttribute Alumno alumno, RedirectAttributes attributes,
-			@RequestParam(value = "carrera", required = false) String carrera,
-			@RequestParam(value = "grado", required = false) String grado,
-			@RequestParam(value = "seccion", required = false) String seccion) {
+			@RequestParam(required = false) String carrera,
+			@RequestParam(required = false) String grado,
+			@RequestParam(required = false) String seccion) {
 
 		try {
 
@@ -264,7 +264,7 @@ public class AlumnoController {
 	 * @return Una cadena que redirige a la vista de listado de alumnos.
 	 */
 	@GetMapping("/delete/{idAlumno}")
-	public String eliminarAlumno(@PathVariable("idAlumno") int idAlumno, RedirectAttributes attributes) {
+	public String eliminarAlumno(@PathVariable int idAlumno, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (idAlumno > 0) {
@@ -326,12 +326,12 @@ public class AlumnoController {
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA' )")
 	@GetMapping("/ver")
 	public String verAlumno(Model model,
-			@RequestParam(value = "carrera", required = false) String carrera,
-			@RequestParam(value = "grado", required = false) String grado,
-			@RequestParam(value = "seccion", required = false) String seccion,
-			@RequestParam(value = "genero", required = false) String genero,
-			@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "size", defaultValue = "50") int size) {
+			@RequestParam(required = false) String carrera,
+			@RequestParam(required = false) String grado,
+			@RequestParam(required = false) String seccion,
+			@RequestParam(required = false) String genero,
+			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "50") int size) {
 
 		// Convertir cadenas vacías a null para evitar problemas con las consultas
 		if (carrera != null && carrera.isEmpty()) {
@@ -403,7 +403,7 @@ public class AlumnoController {
 	 */
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/Alumno/{idAlumno}")
-	public String informacionAlumno(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
+	public String informacionAlumno(@PathVariable int idAlumno, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (idAlumno > 0) {
@@ -454,7 +454,7 @@ public class AlumnoController {
 	 */
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/Enfermedades/{idAlumno}")
-	public String enfermedadAlumno(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
+	public String enfermedadAlumno(@PathVariable int idAlumno, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (idAlumno > 0) {
@@ -503,7 +503,7 @@ public class AlumnoController {
 	 */
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/Responsable/{idAlumno}")
-	public String responsableAlumno(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
+	public String responsableAlumno(@PathVariable int idAlumno, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (idAlumno > 0) {
@@ -540,7 +540,7 @@ public class AlumnoController {
 
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping("/Documentos/{idAlumno}")
-	public String alumnoDocumentos(@PathVariable("idAlumno") int idAlumno, Model model, RedirectAttributes attributes) {
+	public String alumnoDocumentos(@PathVariable int idAlumno, Model model, RedirectAttributes attributes) {
 
 		Alumno alumno = null;
 		if (idAlumno > 0) {
@@ -600,10 +600,10 @@ public class AlumnoController {
 	@PreAuthorize("hasAnyRole('DOCENTE','ADMINISTRADOR','DIRECTOR','SUBDIRECTORA','SECRETARIA')")
 	@GetMapping(value = "/ver", produces = "application/pdf")
 	public ModelAndView verAlumnosPdf(Model model,
-			@RequestParam(value = "carrera", required = false) String carrera,
-			@RequestParam(value = "grado", required = false) String grado,
-			@RequestParam(value = "seccion", required = false) String seccion,
-			@RequestParam(value = "genero", required = false) String genero) {
+			@RequestParam(required = false) String carrera,
+			@RequestParam(required = false) String grado,
+			@RequestParam(required = false) String seccion,
+			@RequestParam(required = false) String genero) {
 		// Convertir cadenas vacías a null para los parámetros opcionales
 		if (carrera != null && carrera.isEmpty()) {
 			carrera = null;

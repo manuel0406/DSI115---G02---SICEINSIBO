@@ -40,9 +40,9 @@ public class actividadesController {
 
 	@PreAuthorize("hasAnyRole('DOCENTE')")
 	@GetMapping("/{idMateria}/{codigoBachillerato}")
-	public String verActividades(Model model, @PathVariable("idMateria") int idMateria,
-			@PathVariable("codigoBachillerato") int codigoBachillerato,
-			RedirectAttributes attributes, @RequestParam(value = "pe", required = false) String pe) {
+	public String verActividades(Model model, @PathVariable int idMateria,
+			@PathVariable int codigoBachillerato,
+			RedirectAttributes attributes, @RequestParam(required = false) String pe) {
 
 		// System.out.println("el periodo es: " + pe);
 		Bachillerato bachillerato = null;
@@ -134,9 +134,9 @@ public class actividadesController {
 
 	@PreAuthorize("hasAnyRole('DOCENTE')")
 	@GetMapping("/{idMateria}/{codigoBachillerato}/delete/{idActividad}")
-	public String eliminarActividad(@PathVariable("idMateria") int idMateria,
-			@PathVariable("codigoBachillerato") int codigoBachillerato,
-			@PathVariable("idActividad") int idActividad, RedirectAttributes attributes) {
+	public String eliminarActividad(@PathVariable int idMateria,
+			@PathVariable int codigoBachillerato,
+			@PathVariable int idActividad, RedirectAttributes attributes) {
 		int pe = 0;
 		Actividad actividad = null;
 		if (idActividad > 0) {

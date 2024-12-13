@@ -108,7 +108,7 @@ public class BibliotecaController {
     }
 
     @PostMapping("/InventarioLibros")
-    public String guardarLibro(Model model, @Validated @ModelAttribute("nuevoLibro") InventarioLibro nuevoLibro, BindingResult result, RedirectAttributes attributes) {
+    public String guardarLibro(Model model, @Validated @ModelAttribute InventarioLibro nuevoLibro, BindingResult result, RedirectAttributes attributes) {
         List<InventarioLibro> listadoLibros = inventarioLibroService.listarLibros();
     
         // Validación personalizada: Verificar si existe un libro con el mismo título y autor
@@ -134,7 +134,7 @@ public class BibliotecaController {
     }
     
     @GetMapping("/InventarioLibros/delete/{idInventarioLibros}")
-    public String eliminarLibro(@PathVariable("idInventarioLibros") int idInventarioLibros, RedirectAttributes attribute) {
+    public String eliminarLibro(@PathVariable int idInventarioLibros, RedirectAttributes attribute) {
         try {
             // Intenta eliminar el libro
             inventarioLibroService.eliminar(idInventarioLibros);
@@ -152,12 +152,12 @@ public class BibliotecaController {
 
     @GetMapping("/InventarioLibros/edit/{idInventarioLibros}")
     @ResponseBody
-    public InventarioLibro obtenerLibroPorId(@PathVariable("idInventarioLibros") int idInventarioLibros) {
+    public InventarioLibro obtenerLibroPorId(@PathVariable int idInventarioLibros) {
         return inventarioLibroService.buscarPorId(idInventarioLibros);
     }
 
     @PostMapping("/InventarioLibros/update")
-    public String actualizarLibro(@Validated @ModelAttribute("libro") InventarioLibro libro, BindingResult result, RedirectAttributes attributes) {
+    public String actualizarLibro(@Validated @ModelAttribute InventarioLibro libro, BindingResult result, RedirectAttributes attributes) {
         if (result.hasErrors()) {
             return "redirect:/Biblioteca/InventarioLibros";
         }
@@ -172,7 +172,7 @@ public class BibliotecaController {
     public String PrestamosBiblioteca(Model model,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size,
-            @RequestParam(value = "nombreAlumno", required = false) String nombreAlumno) {
+            @RequestParam(required = false) String nombreAlumno) {
     
         // Obtener todos los préstamos con estado "Pendiente"
         List<PrestamoLibro> listadoPrestamos = prestamoLibroService.listarPrestamos().stream()
@@ -227,7 +227,7 @@ public class BibliotecaController {
     }
 
     @PostMapping("/Prestamos/registrar")
-    public String registrarPrestamo(@ModelAttribute("nuevoPrestamo") PrestamoLibro nuevoPrestamo, Model model, RedirectAttributes attribute) {
+    public String registrarPrestamo(@ModelAttribute PrestamoLibro nuevoPrestamo, Model model, RedirectAttributes attribute) {
         // Obtener el libro seleccionado
         InventarioLibro libro = inventarioLibroService.buscarPorId(nuevoPrestamo.getInventarioLibro().getIdInventarioLibros());
 
@@ -251,7 +251,7 @@ public class BibliotecaController {
 
     @PostMapping("/Prestamos/devolver/{id}")
     public String devolverPrestamo(@PathVariable("id") int idPrestamoLibro, 
-                                @RequestParam("cantidadPrestamo") int cantidadPrestamo, 
+                                @RequestParam int cantidadPrestamo, 
                                 @RequestParam("idInventario") int idInventarioLibros, 
                                 RedirectAttributes attributes) {
         // Buscar el préstamo por su ID
@@ -289,7 +289,7 @@ public class BibliotecaController {
     public String PrestamosDevueltos(Model model,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size,
-            @RequestParam(value = "nombreAlumno", required = false) String nombreAlumno) {
+            @RequestParam(required = false) String nombreAlumno) {
     
         // Obtener todos los préstamos con estado "Devuelto"
         List<PrestamoLibro> listadoPrestamos = prestamoLibroService.listarPrestamos().stream()
@@ -389,7 +389,7 @@ public class BibliotecaController {
     }
 
     @GetMapping(value = "/verPrestamosPorGrado", produces = "application/pdf")
-    public ModelAndView verPrestamosPorGradoPdf(@RequestParam("codigoBachillerato") String codigoBachillerato) {
+    public ModelAndView verPrestamosPorGradoPdf(@RequestParam String codigoBachillerato) {
         List<PrestamoLibro> listaPrestamos = prestamoLibroService.listarPrestamos();
         
         // Filtrar los préstamos que tienen estado "Pendiente" y el bachillerato correcto
@@ -415,7 +415,7 @@ public class BibliotecaController {
 
     @GetMapping("/buscarAlumnos")
     @ResponseBody
-    public List<Alumno> buscarAlumnos(@RequestParam("term") String term) {
+    public List<Alumno> buscarAlumnos(@RequestParam String term) {
         // Aquí debes obtener la lista de alumnos que coincidan con el término de búsqueda
         return alumnoService.buscarPorNombre(term);
     }
