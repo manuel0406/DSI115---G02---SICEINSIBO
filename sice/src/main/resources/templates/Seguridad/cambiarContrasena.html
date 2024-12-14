@@ -10,15 +10,6 @@
     <link rel="icon" type="image/x-icon" th:href="@{/Imagenes/INSIBO.ico}">
 
     <style>
-        .password-strength .progress {
-            height: 10px;
-            margin-bottom: 0; /* O ajusta este valor según sea necesario */
-        }
-
-        .password-toggle {
-            cursor: pointer;
-        }
-
         .criteria-list {
             list-style-type: none;
             padding: 0;
@@ -50,7 +41,7 @@
                             <div class="input-group">
                               <input th:value="${newPassword != null ? newPassword : ''}" type="password" id="newPassword" minlength="8" name="newPassword" class="form-control" placeholder="Ingrese su nueva contraseña" required>
                               <div class="input-group-append">
-                                <span class="input-group-text password-toggle" onclick="togglePasswordVisibility('newPassword')">
+                                <span class="input-group-text pe-auto" style="cursor: pointer;" onclick="togglePasswordVisibility('newPassword')">
                                   <i class="bi bi-eye" id="newPasswordIcon"></i>
                                 </span>
                               </div>
@@ -97,7 +88,7 @@
                               <div class="input-group">
                                   <input type="password" id="confirmNewPassword" minlength="8" name="confirmNewPassword" class="form-control" placeholder="Confirme su nueva contraseña" required>
                                   <div class="input-group-append">
-                                      <span class="input-group-text password-toggle" onclick="togglePasswordVisibility('confirmNewPassword')">
+                                      <span class="input-group-text" style="cursor: pointer;" onclick="togglePasswordVisibility('confirmNewPassword')">
                                           <i class="bi bi-eye" id="confirmPasswordIcon"></i>
                                       </span>
                                   </div>
