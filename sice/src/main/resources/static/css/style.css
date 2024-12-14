@@ -775,6 +775,16 @@ td {
 }
 
 /* ----------------------------------------------------------------------------------------- */
+/*               SEGURIDAD (CRITERIOS DE ACTUALIZACIÓN DE CONTRASEÑA) - Iván                 */
+/* ----------------------------------------------------------------------------------------- */
+/* Usado en la lista de criterios para nivelar a su titulo y eliminar la viñeta por defecto*/
+.criteria-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+/* ----------------------------------------------------------------------------------------- */
 /*                               ENTRADA DE ARCHIVOS (HORARIO) - Iván                        */
 /* ----------------------------------------------------------------------------------------- */
 .inputExcel{

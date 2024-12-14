@@ -9,13 +9,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" th:href="@{/Imagenes/INSIBO.ico}">
 
-    <style>
-        .criteria-list {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 10px;
-        }
-    </style>
 </head>
 <body>
     <header th:replace="~{home :: header}"></header>
@@ -45,7 +38,7 @@
                                   <i class="bi bi-eye" id="newPasswordIcon"></i>
                                 </span>
                               </div>
-                              <div class="invalid-feedback">Por favor, escriba la nueva contraseña.</div>
+                              <div class="invalid-feedback">Por favor, escriba la nueva contraseña <b>[Considera los criterios]</b></div>
                             </div>
                           </div>
 
