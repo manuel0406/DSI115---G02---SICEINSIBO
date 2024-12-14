@@ -1,5 +1,7 @@
 package com.dsi.insibo.sice.Seguridad;
 
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -40,25 +42,54 @@ public class PasswordController {
                                        RedirectAttributes redirectAttributes, Model model) {
         // Validamos y actualizar la contraseña para el usuario autentificado
         try {
-
+    
             // Validación de confirmación de contraseña
             if (!newPassword.equals(confirmNewPassword)) {
                 redirectAttributes.addFlashAttribute("error", "Las nuevas contraseñas no coinciden");
                 redirectAttributes.addFlashAttribute("newPassword", newPassword);
                 return "redirect:/update-password";
             }
-
+    
+            // Validación de la nueva contraseña
+            int validCriteriaCount = validatePasswordCriteria(newPassword);
+            if (validCriteriaCount < 4) {
+                redirectAttributes.addFlashAttribute("error", "La contraseña debe cumplir con al menos 4 de los criterios.");
+                redirectAttributes.addFlashAttribute("newPassword", newPassword);
+                return "redirect:/update-password";
+            }
+    
             // Actualización de contraseña 
             Usuario usuario = sessionService.usuarioSession();
             usuario.setContrasenaUsuario(passwordEncoder.encode(newPassword));
             usuario.setPrimerIngreso(false);
             usuarioService.guardarUsuario(usuario);
-
+    
         // Capturador de excepciones
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/";    
+    }
+    
+    private int validatePasswordCriteria(String password) {
+        int criteriaMet = 0;
+    
+        // Criterio 1: Longitud mínima de 8 caracteres
+        if (password.length() >= 8) criteriaMet++;
+    
+        // Criterio 2: Al menos una letra mayúscula
+        if (Pattern.compile("[A-Z]").matcher(password).find()) criteriaMet++;
+    
+        // Criterio 3: Al menos una letra minúscula
+        if (Pattern.compile("[a-z]").matcher(password).find()) criteriaMet++;
+    
+        // Criterio 4: Al menos un número
+        if (Pattern.compile("[0-9]").matcher(password).find()) criteriaMet++;
+    
+        // Criterio 5: Al menos un carácter especial
+        if (Pattern.compile("[^a-zA-Z0-9]").matcher(password).find()) criteriaMet++;
+    
+        return criteriaMet;
     }
     
 }
