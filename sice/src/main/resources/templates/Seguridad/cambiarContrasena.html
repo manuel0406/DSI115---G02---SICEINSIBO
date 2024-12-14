@@ -18,24 +18,11 @@
         .password-toggle {
             cursor: pointer;
         }
-        
-        #strength-bar {
-            width: 0%; /* Inicialmente, hasta que se actualice con JS */
-        }
 
         .criteria-list {
             list-style-type: none;
             padding: 0;
             margin-top: 10px;
-        }
-
-        .criteria-list li {
-            display: flex;
-            align-items: center;
-        }
-
-        .criteria-list li i {
-            margin-right: 10px;
         }
 
         .criteria-list li.valid {
@@ -45,74 +32,80 @@
         .criteria-list li.invalid {
             color: red;
         }
-
-        .progress-bar {
-            width: 100%; /* Asegura que la barra ocupe el 100% del contenedor */
-        }
     </style>
 </head>
 <body>
     <header th:replace="~{home :: header}"></header>
     <div class="container mt-3 my-5 py-5">
+      <!-- Contenedor de contenido -->
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
+                  <!-- Titulo principal-->
                     <div class="card-header text-center">
                         <h3><b>Actualizar Contraseña</b></h3>
                     </div>
+                  <!-- Cuerpo principal -->
                     <div class="card-body">
+                        <!-- Alertas de falla de llenado de formulario -->
                         <div th:replace="~{alertas :: alertas}"></div>
 
+                        <!-- Inicio del formulario-->
                         <form class="needs-validation" novalidate th:action="@{/update-password}" method="post">
-                            <div class="form-group mb-3">
-                                <label for="newPassword" class="form-label">Nueva Contraseña</label>
-                                <div class="input-group">
-                                    <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Ingrese su nueva contraseña" required>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text password-toggle" onclick="togglePasswordVisibility('newPassword')">
-                                            <i class="bi bi-eye" id="newPasswordIcon"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="invalid-feedback">Por favor, escriba la nueva contraseña.</div>
+                          <!-- Campo Nueva Contraseña: Ingreso de la nueva contraseña-->
+                          <div class="form-group mb-3">
+                            <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                            <div class="input-group">
+                              <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Ingrese su nueva contraseña" required>
+                              <div class="input-group-append">
+                                <span class="input-group-text password-toggle" onclick="togglePasswordVisibility('newPassword')">
+                                  <i class="bi bi-eye" id="newPasswordIcon"></i>
+                                </span>
+                              </div>
                             </div>
+                            <!-- Retroalimentación de nueva contraseña vacia-->
+                            <div class="invalid-feedback">Por favor, escriba la nueva contraseña.</div>
+                          </div>
 
-                            <!-- Barra de progreso con estilo rayado -->
-                            <div class="form-group mb-3 password-strength" id="password-strength-bar">
-                                <div class="progress">
-                                    <div id="strength-bar" class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <small id="strength-message" class="text-muted"></small>
+                          <!-- Barra de progreso con estilo rayado -->
+                          <div class="form-group mb-3 password-strength" id="password-strength-bar">
+                            <div class="progress">
+                                <div id="strength-bar" class="progress-bar progress-bar-striped w-0" role="progressbar" style="width: 0%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
+                            <small id="strength-message" class="text-muted"></small>
+                          </div>
 
-                            <div class="mt-3">
-                                <h5>Criterios de contraseña:</h5>
-                                <ul class="criteria-list">
-                                    <li id="length-criteria" class="invalid"><i class="bi bi-x-circle"></i> Al menos 8 caracteres</li>
-                                    <li id="lowercase-criteria" class="invalid"><i class="bi bi-x-circle"></i> Una letra minúscula</li>
-                                    <li id="uppercase-criteria" class="invalid"><i class="bi bi-x-circle"></i> Una letra mayúscula</li>
-                                    <li id="number-criteria" class="invalid"><i class="bi bi-x-circle"></i> Un número</li>
-                                    <li id="special-criteria" class="invalid"><i class="bi bi-x-circle"></i> Un carácter especial</li>
-                                </ul>
-                            </div>
+                          <!-- Criterios a cumplir con la nueva contraseña-->
+                          <div class="mt-3">
+                              <h5>Criterios de contraseña:</h5>
+                              <ul class="criteria-list">
+                                  <li id="length-criteria" class="invalid"><i class="bi bi-x-circle"></i> Al menos 8 caracteres</li>
+                                  <li id="lowercase-criteria" class="invalid"><i class="bi bi-x-circle"></i> Una letra minúscula</li>
+                                  <li id="uppercase-criteria" class="invalid"><i class="bi bi-x-circle"></i> Una letra mayúscula</li>
+                                  <li id="number-criteria" class="invalid"><i class="bi bi-x-circle"></i> Un número</li>
+                                  <li id="special-criteria" class="invalid"><i class="bi bi-x-circle"></i> Un carácter especial</li>
+                              </ul>
+                          </div>
 
-                            <div class="form-group mb-3">
-                                <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
-                                <div class="input-group">
-                                    <input type="password" id="confirmNewPassword" name="confirmNewPassword" class="form-control" placeholder="Confirme su nueva contraseña" required>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text password-toggle" onclick="togglePasswordVisibility('confirmPassword')">
-                                            <i class="bi bi-eye" id="confirmPasswordIcon"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                          <!-- Campos Confirmar Contraseña: Ingreso de confirmación de la nueva contraseña -->
+                          <div class="form-group mb-3">
+                              <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                              <div class="input-group">
+                                  <input type="password" id="confirmNewPassword" name="confirmNewPassword" class="form-control" placeholder="Confirme su nueva contraseña" required>
+                                  <div class="input-group-append">
+                                      <span class="input-group-text password-toggle" onclick="togglePasswordVisibility('confirmPassword')">
+                                          <i class="bi bi-eye" id="confirmPasswordIcon"></i>
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
 
-                            <!-- Boton guardar -->
-                            <div class="container mt-3 d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary btn-block">Actualizar Contraseña</button>
-                            </div>
+                          <!-- Boton guardar -->
+                          <div class="container mt-3 d-flex justify-content-center">
+                              <button type="submit" class="btn btn-primary btn-block">Actualizar Contraseña</button>
+                          </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -195,3 +188,4 @@
     </script>
 </body>
 </html>
+
