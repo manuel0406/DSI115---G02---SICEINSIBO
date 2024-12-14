@@ -38,13 +38,13 @@ public class PasswordController {
     public String actualizarContrasena(@RequestParam String newPassword,
                                        @RequestParam String confirmNewPassword,
                                        RedirectAttributes redirectAttributes, Model model) {
-        System.out.println("Hola");
         // Validamos y actualizar la contraseña para el usuario autentificado
         try {
 
             // Validación de confirmación de contraseña
             if (!newPassword.equals(confirmNewPassword)) {
                 redirectAttributes.addFlashAttribute("error", "Las nuevas contraseñas no coinciden");
+                redirectAttributes.addFlashAttribute("newPassword", newPassword);
                 return "redirect:/update-password";
             }
 
