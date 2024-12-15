@@ -112,7 +112,6 @@ function checkPasswordStrength(password) {
     const strengthPercentage = (strength / 5) * 100;
     strengthBar.style.width = strengthPercentage + '%';
     strengthBar.setAttribute('aria-valuenow', strengthPercentage);
-
     if (strengthPercentage < 50) {
         strengthBar.classList.add('bg-danger');
         strengthMessage.classList.add('bg-danger');
