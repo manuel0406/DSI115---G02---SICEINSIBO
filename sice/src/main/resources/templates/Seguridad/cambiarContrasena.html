@@ -11,14 +11,13 @@
 
 </head>
 <body>
-    <header th:replace="~{home :: header}"></header>
-    <div class="container mt-3 my-5 py-5">
+    <div class="container mt-1 my-2 py-2">
       <!-- Contenedor de contenido -->
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
                   <!-- Titulo principal-->
-                    <div class="card-header text-center">
+                    <div class="card-header text-center text-white" style="background-color: #005187;">
                         <h3><b>Actualizar Contraseña</b></h3>
                     </div>
                   <!-- Cuerpo principal -->
@@ -140,7 +139,11 @@
                               <button type="submit" class="btn btn-primary btn-block">Actualizar Contraseña</button>
                           </div>
                         </form>
-
+                        <form class="mt-2 d-flex justify-content-center" th:action="@{/logout}" method="post">
+                            <button class="btn btn-danger text-white" type="submit" th:href="@{/logout}">
+                                <i class="bi bi-box-arrow-in-right"></i> Cerrar sesión
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
